@@ -1,0 +1,131 @@
+from langchain_core.runnables import RunnablePassthrough
+from langchain_core.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+import json
+import re
+import os
+import yaml
+
+def load_deepseek_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_config.yaml"):
+    with open(config_path, "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+    return config["deepseek-v3"]
+
+deepseek_config = load_deepseek_config()
+
+def extract_mutant_info(mutant_json_path, mutant_number):
+    """从变异体JSON文件中提取指定变异体编号的信息"""
+    with open(mutant_json_path, 'r', encoding='utf-8') as f:
+        mutants = json.load(f)
+
+    # 构造完整的变异体ID，如"MUT_001"
+    target_id = f"MUT_{mutant_number.zfill(3)}"
+
+    for mutant in mutants:
+        if mutant['mutant_id'] == target_id:
+            return mutant
+
+    return None
+
+
+def extract_data_info(data_json_path):
+    """从PDG DATA JSON文件中提取信息"""
+    with open(data_json_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+
+def extract_reachability_path(llm, data_info, mutant_info):
+    """使用LLM提取数据依赖信息"""
+    template = """根据提供的PDG数据依赖图和变异体信息，首先分析变异影响的变量，再严格按照以下要求提取变量的数据依赖路径：
+1. 提取范围：
+   - 从变异语句开始
+   - 到程序输出语句结束，不要扩展无关分支
+   - 若无到输出的数据依赖，则提取到终止节点的完整路径
+2. 输出格式要求：
+   [变量名] 的数据依赖路径:
+   [路径编号]. [路径链]
+   其中：
+   - 语句必须包含原始代码和行号
+3. 示例格式：
+变异影响的变量为：a
+   变量a的数据依赖路径:
+   1. (line 16: if (a >= c)) → if True: (line 16) --[Control True]--> (line 17: mid = c) --[Flows mid]--> (line 25: return mid)→ if False: (line 16) --[Control False]--> (line 19: mid = a) --[Flows mid]--> (line 25: return mid)
+4. 特殊处理：
+   - 对复合条件语句，需展开所有可能路径
+   - 对循环依赖，标注循环起点和终点
+   - 对并行路径，分别独立列出
+5. 最终输出：
+   - 按变量分组
+   - 每条路径独立编号
+   - 只输出依赖路径信息即可，无需做路径说明
+
+数据依赖信息:
+{data_info}
+
+变异体信息:
+{mutant_info}
+"""
+
+    prompt = PromptTemplate(
+        input_variables=["data_info", "mutant_info"],
+        template=template
+    )
+
+    #chain = LLMChain(llm=llm, prompt=prompt)
+    #result = chain.run(cfg_info=json.dumps(cfg_info, indent=2),
+                       #mutant_info=json.dumps(mutant_info, indent=2))
+    # 使用新的 Runnable 语法
+    chain = (
+            {"data_info": RunnablePassthrough(), "mutant_info": RunnablePassthrough()}
+            | prompt
+            | llm
+    )
+
+    # 获取 AI 响应对象
+    response = chain.invoke({
+        "data_info": json.dumps(data_info, indent=2),
+        "mutant_info": json.dumps(mutant_info, indent=2)
+    })
+
+    # 提取响应内容（关键修复）
+    # response_text = response.content if hasattr(response, 'content') else str(response)
+
+    # 正则匹配
+    # match = re.search(r"可达性路径条件组合:\s*(.*)", response_text)
+    # return match.group(1).strip() if match else "NULL"
+    return response.content if hasattr(response, 'content') else str(response)
+
+
+def main():
+    # 初始化LLM
+    llm = ChatOpenAI(
+        openai_api_key=deepseek_config["api_key"],
+        model="deepseek-chat",
+        temperature=0,
+        openai_api_base=deepseek_config["base_url"],
+    )
+
+    # 示例路径
+    data_path = r"D:\bishe_code\progex_benchmark\mutant_programs\Insert\mutants\mutant_001\outdir\Insert-PDG-DATA.json"
+    mutant_json_path = r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantsIDJson\Insertmutants.json"
+
+    # 从data路径中提取变异体编号
+    mutant_number = os.path.basename(os.path.dirname(os.path.dirname(data_path))).split('_')[-1]
+
+    # 提取信息
+    mutant_info = extract_mutant_info(mutant_json_path, mutant_number)
+    data_info = extract_data_info(data_path)
+
+    if not mutant_info:
+        print(f"未找到变异体 MUT_{mutant_number.zfill(3)} 的信息")
+        return
+
+    # 提取数据依赖信息
+    data_path = extract_reachability_path(llm, data_info, mutant_info)
+
+    # print("可达性路径条件组合:")
+    print(data_path)
+
+
+if __name__ == "__main__":
+    main()
