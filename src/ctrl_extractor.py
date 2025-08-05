@@ -6,7 +6,7 @@ import re
 import os
 import yaml
 
-def load_deepseek_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_config.yaml"):
+def load_deepseek_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_configs.yaml"):
     with open(config_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
     return config["deepseek-v3"]
@@ -95,7 +95,7 @@ def extract_reachability_path(llm, ctrl_info, mutant_info):
     return response.content if hasattr(response, 'content') else str(response)
 
 
-def main():
+def get_ctrl_info():
     # 初始化LLM
     llm = ChatOpenAI(
         openai_api_key=deepseek_config["api_key"],
@@ -120,11 +120,11 @@ def main():
         return
 
     # 提取数据依赖信息
-    ctrl_path = extract_reachability_path(llm, ctrl_info, mutant_info)
+    return extract_reachability_path(llm, ctrl_info, mutant_info)
 
     # print("可达性路径条件组合:")
-    print(ctrl_path)
+    # print(ctrl_path)
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+    #main()
