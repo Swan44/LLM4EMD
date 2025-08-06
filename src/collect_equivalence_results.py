@@ -14,7 +14,7 @@ def setup_logging(program_path):
 
     # 从程序路径中提取原程序名称
     program_name = os.path.splitext(os.path.basename(program_path))[0]
-    log_filename = os.path.join(output_dir, f"{program_name}_results.log")
+    log_filename = os.path.join(output_dir, f"{program_name}_results_1.log")
 
     # 清除所有现有的handlers
     logging.getLogger().handlers = []
@@ -34,6 +34,10 @@ def setup_logging(program_path):
         handlers=[file_handler, console_handler],
         format='%(message)s'
     )
+    # 禁用HTTP请求日志
+    logging.getLogger("http.client").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    logging.getLogger("requests").setLevel(logging.WARNING)
 
 
 # 调用分析程序并获取结果
