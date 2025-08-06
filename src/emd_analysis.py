@@ -105,13 +105,13 @@ def extract_program_code(program_path):
 
 
 # 3. 提取变异体信息
-def extract_mutant_info(mutant_json_path, mutant_id):
-    with open(mutant_json_path, "r", encoding="utf-8") as f:
-        mutants = json.load(f)
-    for mutant in mutants:
-        if mutant["mutant_id"] == mutant_id:
-            return mutant
-    return None
+#def extract_mutant_info(mutant_json_path, mutant_id):
+    #with open(mutant_json_path, "r", encoding="utf-8") as f:
+       # mutants = json.load(f)
+    #for mutant in mutants:
+        #if mutant["mutant_id"] == mutant_id:
+            #return mutant
+    #return None
 
 
 
@@ -189,20 +189,29 @@ a > 0 && b > 0 && c > 0 && a != b && a != c && b != c
 基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，且变异体造成的程序状态改变均可直接传递至输出，不存在状态覆盖现象，故该变异体属于非等价变异体。
 结论：等价变异体判定结果：NO。
 ## 待识别变异体信息
-请基于以下信息与分析步骤判断该变异体是否为等价变异体，并输出每步分析与结论，若某一步已足以判断该变异体为等价变异体，则不再继续后续分析步骤，直接给出最终结论。
+请基于以下信息与分析步骤判断该变异体是否为等价变异体，并输出每步分析与结论。
+注意：若某一步已足以判断该变异体为等价变异体，则不再继续后续分析步骤，直接给出最终结论。
 原程序：
 {PROGRAM}
 
 变异体信息：
 {MUTANT_INFORMATION}
 
-1. 可达性：程序到变异语句的路径条件组合为{REACHABILITY_CONSTRAINT}
-2. 必要性：原程序与变异体语句为{DIFFERENCE}
-3. 数据依赖：变异语句到输出语句的数据依赖路径为{DATA_DEPENDENCY}
-4. 控制依赖：变异语句到输出语句的控制依赖路径为{CTRL_DEPENDENCY}
+1. 可达性：程序到变异语句的路径条件组合为{REACHABILITY_CONSTRAINT}，请分析该变异语句是否可达。
+2. 必要性：原程序与变异体语句为{DIFFERENCE}，请分析在变异语句可达情况下，结合其路径约束判断该变异是否实际改变了程序状态。
+3. 数据依赖：变异语句到输出语句的数据依赖路径为{DATA_DEPENDENCY}，请分析变异影响的变量是否通过数据依赖链传播到程序输出节点。
+4. 控制依赖：变异语句到输出语句的控制依赖路径为{CTRL_DEPENDENCY}，请分析变异语句是否通过控制流影响输出语句。
+5. 状态覆盖：请结合以上信息与分析结论，分析变异引入的错误状态是否在后续执行中被修正或抵消，从而导致程序最终输出未受影响。
 
-请按照以下步骤分析该变异体是否为等价变异体：
-{analysis_steps}"""
+## 输出格式要求
+每个步骤输出如下：
+步骤[name]：
+说明理由： 
+分析结论： 
+……
+最终结论：等价变异体判定结果：YES或等价变异体判定结果：NO。
+
+"""
 
     prompt = PromptTemplate.from_template(template)
 
@@ -218,7 +227,7 @@ a > 0 && b > 0 && c > 0 && a != b && a != c && b != c
                 "DIFFERENCE": RunnablePassthrough(),
                 "DATA_DEPENDENCY": RunnablePassthrough(),
                 "CTRL_DEPENDENCY": RunnablePassthrough(),
-                "analysis_steps": RunnablePassthrough()
+                # "analysis_steps": RunnablePassthrough()
             }
             | prompt
             | llm
@@ -226,7 +235,7 @@ a > 0 && b > 0 && c > 0 && a != b && a != c && b != c
 
 
 # 5. 主函数
-def main():
+def analyze_mutant(program_path, mutant):
     # 加载配置
     config = load_config()
 
@@ -240,26 +249,20 @@ def main():
 
     # 提取数据
     program_code = extract_program_code(
-        r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\Insert.java"
+        # r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\Insert.java"
+        program_path
     )
 
-    mutant_info = extract_mutant_info(
-        r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantsIDJson\Insertmutants.json",
-        "MUT_001"
-    )
+    #mutant_info = extract_mutant_info(
+        #r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantsIDJson\Insertmutants.json",
+        #"MUT_001"
+    #)
 
     # 假设这些是从其他模块获取的结果
     reachability_constraint = get_reachability_path()  # 来自reachability_extractor.py
     data_dependency = get_data_info()  # 来自data_extractor.py
     ctrl_dependency = get_ctrl_info()  # 来自ctrl_extractor.py
 
-    # 构建分析步骤
-    analysis_steps = """
-1. 可达性分析：判断变异语句是否可达
-2. 必要性分析：分析变异是否改变程序状态  
-3. 数据依赖分析：检查变异影响是否传播到输出
-4. 控制依赖分析：检查控制流影响
-5. 状态覆盖分析：检查错误状态是否被覆盖"""
 
     # 构建并执行分析链
     analysis_chain = build_analysis_chain(llm)
@@ -269,20 +272,20 @@ def main():
         "example2_program": EXAMPLE2_PROGRAM,
         "example2_mutant": EXAMPLE2_MUTANT,
         "PROGRAM": program_code,
-        "MUTANT_INFORMATION": json.dumps(mutant_info, indent=2),
+        "MUTANT_INFORMATION": json.dumps(mutant, indent=2),
         "REACHABILITY_CONSTRAINT": reachability_constraint,
-        "DIFFERENCE": mutant_info["difference"],
+        "DIFFERENCE": mutant["difference"],
         "DATA_DEPENDENCY": data_dependency,
         "CTRL_DEPENDENCY": ctrl_dependency,
-        "analysis_steps": analysis_steps
+        # "analysis_steps": analysis_steps
     })
 
-    print("=== 变异体等价性分析结果 ===")
-    print(result.content)
+    # print("=== 变异体等价性分析结果 ===")
+    return result.content
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+    #main()
 
 '''
 === 变异体等价性分析结果 ===
@@ -337,4 +340,35 @@ if __name__ == "__main__":
 3. 状态覆盖：变异引入的状态改变被覆盖。
 
 **等价变异体判定结果：YES**。
+'''
+
+'''
+=== 变异体等价性分析结果 ===
+### 步骤1：可达性分析
+说明理由：变异语句位于程序的输出循环中，路径条件组合为`[number >= end, i < 4]/[number < end, i < 3, a[i] > number, j < 4, i < 4]`。这些条件在程序执行过程中是可满足的，例如当`number >= end`且`i < 4`时，变异语句会被执行。因此，变异语句是可达的。
+
+分析结论：变异语句可达。
+
+### 步骤2：必要性分析
+说明理由：原程序语句为`System.out.printf("%6d", a[i]);`，变异体语句为`System.out.printf("%6d", a[i]++);`。变异体在输出`a[i]`的同时对`a[i]`进行了自增操作。虽然`a[i]`的值被修改，但输出的是自增前的值，因此输出的结果与原程序相同。然而，`a[i]`的状态确实被改变，但这种改变是否影响程序输出需要进一步分析。
+
+分析结论：变异语句改变了程序状态（`a[i]`的值被修改），但这种改变是否影响输出需要看后续步骤。
+
+### 步骤3：数据依赖分析
+说明理由：变异影响的变量是数组`a`。数据依赖路径显示`a`的值被修改后，可能会影响后续的输出。然而，由于输出的是自增前的值，且后续的输出语句（`System.out.printf("%6d", a[i]++)`）在循环中，每次输出的`a[i]`都是当前值自增前的值。因此，虽然`a[i]`的值被修改，但输出的内容与原程序一致。
+
+分析结论：变异影响的变量`a`的数据依赖路径存在，但输出的内容不受影响。
+
+### 步骤4：控制依赖分析
+说明理由：变异语句位于循环中，控制依赖路径显示其输出语句依赖于循环条件。变异语句的执行不会改变循环的控制流，也不会影响后续的输出语句的执行。因此，变异语句的控制依赖路径不影响程序输出。
+
+分析结论：变异语句的控制依赖路径不影响程序输出。
+
+### 步骤5：状态覆盖分析
+说明理由：虽然变异语句修改了`a[i]`的值，但输出的内容是自增前的值，因此程序的可观察输出（即打印的内容）与原程序完全一致。变异引入的状态改变（`a[i]`的自增）被后续的输出逻辑所覆盖，未影响最终输出。
+
+分析结论：变异引入的状态改变被覆盖，不影响程序输出。
+
+### 最终结论
+等价变异体判定结果：YES。
 '''
