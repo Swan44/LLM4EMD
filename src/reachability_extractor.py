@@ -81,45 +81,6 @@ def extract_reachability_path(llm, cfg_info, mutant_info):
     match = re.search(r"可达性路径条件组合:\s*(.*)", response_text)
     return match.group(1).strip() if match else "NULL"
 
-
-
-'''
-def main():
-    # 初始化LLM
-    llm = ChatOpenAI(
-        openai_api_key=deepseek_config["api_key"],
-        model="deepseek-chat",
-        temperature=0,
-        openai_api_base=deepseek_config["base_url"],
-    )
-
-    # 示例路径
-    cfg_path = r"D:\bishe_code\progex_benchmark\mutant_programs\Insert\mutants\mutant_001\outdir\Insert-CFG.json"
-    mutant_json_path = r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantsIDJson\Insertmutants.json"
-
-    # 从CFG路径中提取变异体编号
-    mutant_number = os.path.basename(os.path.dirname(os.path.dirname(cfg_path))).split('_')[-1]
-
-    # 提取信息
-    mutant_info = extract_mutant_info(mutant_json_path, mutant_number)
-    cfg_info = extract_cfg_info(cfg_path)
-
-    if not mutant_info:
-        print(f"未找到变异体 MUT_{mutant_number.zfill(3)} 的信息")
-        return
-
-    # 提取可达性路径条件组合
-    reachability_path = extract_reachability_path(llm, cfg_info, mutant_info)
-
-    print("可达性路径条件组合:")
-    print(reachability_path)
-
-
-if __name__ == "__main__":
-    main()
-'''
-
-
 def get_reachability_path():
     """直接返回变异体的可达性路径条件组合"""
     # 初始化LLM
@@ -131,20 +92,38 @@ def get_reachability_path():
     )
 
     # 示例路径
-    cfg_path = r"D:\bishe_code\progex_benchmark\mutant_programs\Insert\mutants\mutant_001\outdir\Insert-CFG.json"
-    mutant_json_path = r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantsIDJson\Insertmutants.json"
+    mutants_dir = r"D:\bishe_code\progex_benchmark\mutant_programs\Min\mutants"
+    mutant_json_path = r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantsDelJson\Minmutants.json"
 
-    # 从CFG路径中提取变异体编号
-    mutant_number = os.path.basename(os.path.dirname(os.path.dirname(cfg_path))).split('_')[-1]
+    # 读取变异体JSON文件获取所有变异体ID
+    with open(mutant_json_path, 'r') as f:
+        mutants_data = json.load(f)
 
-    # 提取信息
-    mutant_info = extract_mutant_info(mutant_json_path, mutant_number)
-    cfg_info = extract_cfg_info(cfg_path)
+    # 遍历每个变异体
+    results = []
+    for mutant in mutants_data:
+        mutant_id = mutant.get("mutant_id")  # 例如 "MUT_001"
+        if not mutant_id:
+            continue
 
-    if not mutant_info:
-        print(f"未找到变异体 MUT_{mutant_number.zfill(3)} 的信息")
-        return
+        # 从MUT_001提取数字部分
+        mutant_number = mutant_id.split('_')[-1].zfill(3)
+        mutant_dir = f"mutant_{mutant_number}"
 
-    # 返回可达性路径
-    result = extract_reachability_path(llm, cfg_info, mutant_info)
-    return f"可达性路径条件组合: {result}"
+        # 构建CFG路径
+        cfg_path = os.path.join(mutants_dir, mutant_dir, "outdir", "Min-CFG.json")
+
+        if not os.path.exists(cfg_path):
+            print(f"未找到变异体 {mutant_id} 的CFG文件: {cfg_path}")
+            continue
+
+        # 提取信息
+        cfg_info = extract_cfg_info(cfg_path)
+
+        # 返回可达性路径
+        result = extract_reachability_path(llm, cfg_info, mutant)
+        print(f"可达性路径分析结果: {result}")
+        results.append(f"{mutant_id} 的可达性路径条件组合: {result}")
+
+if __name__ == "__main__":
+    get_reachability_path()
