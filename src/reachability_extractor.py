@@ -13,21 +13,6 @@ def load_deepseek_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_configs
 
 deepseek_config = load_deepseek_config()
 
-def extract_mutant_info(mutant_json_path, mutant_number):
-    """从变异体JSON文件中提取指定变异体编号的信息"""
-    with open(mutant_json_path, 'r', encoding='utf-8') as f:
-        mutants = json.load(f)
-
-    # 构造完整的变异体ID，如"MUT_001"
-    target_id = f"MUT_{mutant_number.zfill(3)}"
-
-    for mutant in mutants:
-        if mutant['mutant_id'] == target_id:
-            return mutant
-
-    return None
-
-
 def extract_cfg_info(cfg_json_path):
     """从CFG JSON文件中提取信息"""
     with open(cfg_json_path, 'r', encoding='utf-8') as f:
@@ -58,9 +43,6 @@ def extract_reachability_path(llm, cfg_info, mutant_info):
         template=template
     )
 
-    #chain = LLMChain(llm=llm, prompt=prompt)
-    #result = chain.run(cfg_info=json.dumps(cfg_info, indent=2),
-                       #mutant_info=json.dumps(mutant_info, indent=2))
     # 使用新的 Runnable 语法
     chain = (
             {"cfg_info": RunnablePassthrough(), "mutant_info": RunnablePassthrough()}
