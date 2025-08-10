@@ -116,7 +116,7 @@ def get_data_info():
         mutant_number = mutant_id.split('_')[-1].zfill(3)
         mutant_dir = f"mutant_{mutant_number}"
 
-        # 构建CFG路径
+        # 构建data路径
         data_path = os.path.join(mutants_dir, mutant_dir, "outdir", "Min-PDG-DATA.json")
 
         if not os.path.exists(data_path):

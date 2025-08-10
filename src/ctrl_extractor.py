@@ -13,20 +13,6 @@ def load_deepseek_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_configs
 
 deepseek_config = load_deepseek_config()
 
-def extract_mutant_info(mutant_json_path, mutant_number):
-    """从变异体JSON文件中提取指定变异体编号的信息"""
-    with open(mutant_json_path, 'r', encoding='utf-8') as f:
-        mutants = json.load(f)
-
-    # 构造完整的变异体ID，如"MUT_001"
-    target_id = f"MUT_{mutant_number.zfill(3)}"
-
-    for mutant in mutants:
-        if mutant['mutant_id'] == target_id:
-            return mutant
-
-    return None
-
 
 def extract_ctrl_info(ctrl_json_path):
     """从PDG ctrl JSON文件中提取信息"""
@@ -34,7 +20,7 @@ def extract_ctrl_info(ctrl_json_path):
         return json.load(f)
 
 
-def extract_reachability_path(llm, ctrl_info, mutant_info):
+def extract_ctrl_path(llm, ctrl_info, mutant_info):
     """使用LLM提取控制依赖信息"""
     template = """请根据提供的PDG控制依赖图和变异体信息，严格按照以下要求提取变异语句的控制依赖路径：
 1. 提取范围：
@@ -86,12 +72,6 @@ def extract_reachability_path(llm, ctrl_info, mutant_info):
         "mutant_info": json.dumps(mutant_info, indent=2)
     })
 
-    # 提取响应内容（关键修复）
-    # response_text = response.content if hasattr(response, 'content') else str(response)
-
-    # 正则匹配
-    # match = re.search(r"可达性路径条件组合:\s*(.*)", response_text)
-    # return match.group(1).strip() if match else "NULL"
     return response.content if hasattr(response, 'content') else str(response)
 
 
@@ -105,26 +85,39 @@ def get_ctrl_info():
     )
 
     # 示例路径
-    ctrl_path = r"D:\bishe_code\progex_benchmark\mutant_programs\Insert\mutants\mutant_001\outdir\Insert-PDG-CTRL.json"
-    mutant_json_path = r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantsIDJson\Insertmutants.json"
+    mutants_dir = r"D:\bishe_code\progex_benchmark\mutant_programs\Min\mutants"
+    mutant_json_path = r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantsDelJson\Minmutants.json"
 
-    # 从ctrl路径中提取变异体编号
-    mutant_number = os.path.basename(os.path.dirname(os.path.dirname(ctrl_path))).split('_')[-1]
+    # 读取变异体JSON文件获取所有变异体ID
+    with open(mutant_json_path, 'r') as f:
+        mutants_data = json.load(f)
+    # 遍历每个变异体
+    # results = []
+    for mutant in mutants_data:
+        mutant_id = mutant.get("mutant_id")  # 例如 "MUT_001"
+        if not mutant_id:
+            continue
 
-    # 提取信息
-    mutant_info = extract_mutant_info(mutant_json_path, mutant_number)
-    ctrl_info = extract_ctrl_info(ctrl_path)
+        # 从MUT_001提取数字部分
+        mutant_number = mutant_id.split('_')[-1].zfill(3)
+        mutant_dir = f"mutant_{mutant_number}"
 
-    if not mutant_info:
-        print(f"未找到变异体 MUT_{mutant_number.zfill(3)} 的信息")
-        return
+        # 构建ctrl路径
+        ctrl_path = os.path.join(mutants_dir, mutant_dir, "outdir", "Min-PDG-CTRL.json")
 
-    # 提取数据依赖信息
-    return extract_reachability_path(llm, ctrl_info, mutant_info)
+        if not os.path.exists(ctrl_path):
+            print(f"未找到变异体 {mutant_id} 的PDG-CTRL文件: {ctrl_path}")
+            continue
 
-    # print("可达性路径条件组合:")
-    # print(ctrl_path)
+        # 提取信息
+        ctrl_info = extract_ctrl_info(ctrl_path)
+
+        # 返回可达性路径
+        result = extract_ctrl_path(llm, ctrl_info, mutant)
+        print(result)
+        # results.append(f"{mutant_id} 的可达性路径条件组合: {result}")
 
 
-#if __name__ == "__main__":
-    #main()
+
+if __name__ == "__main__":
+    get_ctrl_info()
