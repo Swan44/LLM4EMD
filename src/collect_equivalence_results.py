@@ -35,20 +35,6 @@ def setup_logging(program_path):
         format='%(message)s'
     )
 
-
-# 调用分析程序并获取结果
-#def analyze_mutant(program_path, mutant_info):
-    # 这里假设emd_analysis.py接受程序路径和变异体信息作为参数
-    # 并返回分析结果（JSON格式或其他可解析格式）
-    #cmd = [
-        #'python', 'emd_analysis.py',
-        #'--program', program_path,
-        #'--mutant', json.dumps(mutant_info)
-    #]
-    #result = subprocess.run(cmd, capture_output=True, text=True)
-    #return result.stdout.strip()
-
-
 # 主函数
 def main():
     program_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Triangle.java"
