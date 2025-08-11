@@ -52,21 +52,13 @@ def main():
     for mutant in mutants:
         mutant_id = mutant["mutant_id"]
         logging.info(f"开始分析变异体 {mutant_id}...")
-
         # 调用分析程序
         analysis_result = analyze_mutant(program_path, mutant)
-
         # 存储结果
         results[mutant_id] = analysis_result
-
         # 立即写入日志
         logging.info(json.dumps({mutant_id: analysis_result}, ensure_ascii=False))
-
         logging.info(f"完成变异体 {mutant_id} 的分析\n")
-
-    # 返回所有结果（可选）
-    return results
-
 
 if __name__ == "__main__":
     main()

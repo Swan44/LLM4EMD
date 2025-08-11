@@ -1,5 +1,6 @@
 # coding=utf-8
 import json
+import os
 import yaml
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
@@ -102,18 +103,6 @@ def load_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_configs.yaml"):
 def extract_program_code(program_path):
     with open(program_path, "r", encoding="utf-8") as f:
         return f.read()
-
-
-# 3. 提取变异体信息
-#def extract_mutant_info(mutant_json_path, mutant_id):
-    #with open(mutant_json_path, "r", encoding="utf-8") as f:
-       # mutants = json.load(f)
-    #for mutant in mutants:
-        #if mutant["mutant_id"] == mutant_id:
-            #return mutant
-    #return None
-
-
 
 # 4. 构建分析链
 def build_analysis_chain(llm):
@@ -247,21 +236,14 @@ def analyze_mutant(program_path, mutant):
     )
 
     # 提取数据
-    program_code = extract_program_code(
-        # r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\Insert.java"
-        program_path
-    )
+    program_code = extract_program_code(program_path)
 
-    #mutant_info = extract_mutant_info(
-        #r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantsIDJson\Insertmutants.json",
-        #"MUT_001"
-    #)
+    program_name = os.path.splitext(os.path.basename(program_path))[0]
 
     # 假设这些是从其他模块获取的结果
-    reachability_constraint = get_reachability_path()  # 来自reachability_extractor.py
-    data_dependency = get_data_info()  # 来自data_extractor.py
-    ctrl_dependency = get_ctrl_info()  # 来自ctrl_extractor.py
-
+    reachability_constraint = get_reachability_path(program_name, mutant)  # 来自reachability_extractor.py
+    data_dependency = get_data_info(program_name, mutant)  # 来自data_extractor.py
+    ctrl_dependency = get_ctrl_info(program_name, mutant)  # 来自ctrl_extractor.py
 
     # 构建并执行分析链
     analysis_chain = build_analysis_chain(llm)
@@ -276,12 +258,5 @@ def analyze_mutant(program_path, mutant):
         "DIFFERENCE": mutant["difference"],
         "DATA_DEPENDENCY": data_dependency,
         "CTRL_DEPENDENCY": ctrl_dependency,
-        # "analysis_steps": analysis_steps
     })
-
-    # print("=== 变异体等价性分析结果 ===")
     return result.content
-
-
-#if __name__ == "__main__":
-    #main()

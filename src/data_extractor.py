@@ -87,7 +87,7 @@ def extract_data_path(llm, data_info, mutant_info):
     return response.content if hasattr(response, 'content') else str(response)
 
 
-def get_data_info():
+def get_data_info(program_name, mutant):
     # 初始化LLM
     llm = ChatOpenAI(
         openai_api_key=deepseek_config["api_key"],
@@ -97,39 +97,22 @@ def get_data_info():
     )
 
     # 示例路径
-    mutants_dir = r"D:\bishe_code\progex_benchmark\mutant_programs\Min\mutants"
-    # data_path = r"D:\bishe_code\progex_benchmark\mutant_programs\Insert\mutants\mutant_001\outdir\Insert-PDG-DATA.json"
-    mutant_json_path = r"D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantsDelJson\Minmutants.json"
+    # mutants_dir = r"D:\bishe_code\progex_benchmark\mutant_programs\Min\mutants"
+    base_dir = r"D:\bishe_code\progex_benchmark\mutant_programs"
+    mutants_dir = os.path.join(base_dir, program_name, "mutants")
 
-    # 读取变异体JSON文件获取所有变异体ID
-    with open(mutant_json_path, 'r') as f:
-        mutants_data = json.load(f)
+    mutant_id = mutant.get("mutant_id")  # 例如 "MUT_001"
 
-    # 遍历每个变异体
-    # results = []
-    for mutant in mutants_data:
-        mutant_id = mutant.get("mutant_id")  # 例如 "MUT_001"
-        if not mutant_id:
-            continue
+    # 从MUT_001提取数字部分
+    mutant_number = mutant_id.split('_')[-1].zfill(3)
+    mutant_dir = f"mutant_{mutant_number}"
 
-        # 从MUT_001提取数字部分
-        mutant_number = mutant_id.split('_')[-1].zfill(3)
-        mutant_dir = f"mutant_{mutant_number}"
+    # 构建data路径
+    data_path = os.path.join(mutants_dir, mutant_dir, "outdir", f"{program_name}-PDG-DATA.json")
 
-        # 构建data路径
-        data_path = os.path.join(mutants_dir, mutant_dir, "outdir", "Min-PDG-DATA.json")
+    # 提取信息
+    data_info = extract_data_info(data_path)
 
-        if not os.path.exists(data_path):
-            print(f"未找到变异体 {mutant_id} 的PDG-DATA文件: {data_path}")
-            continue
-
-        # 提取信息
-        data_info = extract_data_info(data_path)
-
-        # 返回可达性路径
-        result = extract_data_path(llm, data_info, mutant)
-        print(result)
-        # results.append(f"{mutant_id} 的可达性路径条件组合: {result}")
-
-if __name__ == "__main__":
-    get_data_info()
+    # 返回数据依赖路径
+    result = extract_data_path(llm, data_info, mutant)
+    return result
