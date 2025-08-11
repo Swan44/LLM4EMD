@@ -9,7 +9,7 @@ from emd_analysis import analyze_mutant
 # 配置日志
 def setup_logging(program_path):
     # 创建输出目录（如果不存在）
-    output_dir = r"D:\bishe_code\LLM4EMD\outputs"
+    output_dir = r"D:\bishe_code\LLM4EMD\outputs_new"
     os.makedirs(output_dir, exist_ok=True)
 
     # 从程序路径中提取原程序名称
@@ -38,7 +38,7 @@ def setup_logging(program_path):
 # 主函数
 def main():
     program_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Triangle.java"
-    mutants_json_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Trianglemutants.json"
+    mutants_json_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Trianglemutants200.json"
 
     setup_logging(program_path)
 

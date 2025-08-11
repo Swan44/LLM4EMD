@@ -11,82 +11,16 @@ from ctrl_extractor import get_ctrl_info
 
 # 1. 示例代码和变异体信息（提取为变量）
 EXAMPLE1_PROGRAM = """
-public class Mid {
-    public static int main(int a, int b, int c) {
-        int mid;
-        if (a < b) {
-            if (c < b) {
-                if (a < c) {
-                    mid = c;
-                } else {
-                    mid = a;
-                }
-            } else {
-                mid = b;
-            }
-        } else {
-            if (c > b) {
-                if (a > c) {
-                    mid = c;
-                } else {
-                    mid = a;
-                }
-            } else {
-                mid = b;
-            }
-        }
-        return mid;
-    }
-}
+public class Mid {public static int main(int a, int b, int c) {int mid;if (a < b) {if (c < b) {if (a < c) {mid = c;} else {mid = a;}} else {mid = b;}} else {if (c > b) {if (a > c) {mid = c;} else {mid = a;}} else {mid = b;}}return mid;}}
 """
-
 EXAMPLE1_MUTANT = """{
     "difference": "@@ -16 +16 @@\\n-\\t\\t\\t\\tif (a > c) {{\\n+\\t\\t\\t\\tif (a >= c) {{",
     "equivalence": True,
     "operator": "ROR"
 }"""
-
 EXAMPLE2_PROGRAM = """
-public static int classify(int a, int b, int c) {
-    int trian;
-    if (a <= 0 || b <= 0 || c <= 0) {
-        return INVALID;
-    }
-    trian = 0;
-    if (a == b) {
-        trian = trian + 1;
-    }
-    if (a == c) {
-        trian = trian + 2;
-    }
-    if (b == c) {
-        trian = trian + 3;
-    }
-    if (trian == 0) {
-        if (a + b < c || a + c < b || b + c < a) {
-            return INVALID;
-        } else {
-            return SCALENE;
-        }
-    }
-    if (trian > 3) {
-        return EQUILATERAL;
-    }
-    if (trian == 1 && a + b > c) {
-        return ISOSCELES;
-    } else {
-        if (trian == 2 && a + c > b) {
-            return ISOSCELES;
-        } else {
-            if (trian == 3 && b + c > a) {
-                return ISOSCELES;
-            }
-        }
-    }
-    return INVALID;
-}
+public static int classify(int a, int b, int c) {int trian;if (a <= 0 || b <= 0 || c <= 0) {return INVALID;}trian = 0;if (a == b) {trian = trian + 1;}if (a == c) {trian = trian + 2;}if (b == c) {trian = trian + 3;}if (trian == 0) {if (a + b < c || a + c < b || b + c < a) {return INVALID;} else {return SCALENE;}}if (trian > 3) {return EQUILATERAL;}if (trian == 1 && a + b > c) {return ISOSCELES;} else {if (trian == 2 && a + c > b) {return ISOSCELES;} else {if (trian == 3 && b + c > a) {return ISOSCELES;}}}return INVALID;}
 """
-
 EXAMPLE2_MUTANT = """{
     "difference": "@@ -32 +32 @@\\n-            if (a + b < c || a + c < b || b + c < a) {{\\n+            if (a + b < c || a + c < b-- || b + c < a) {{",
     "equivalence": False,
@@ -171,7 +105,7 @@ a > 0 && b > 0 && c > 0 && a != b && a != c && b != c
 分析得，该变异b—改变了b的值，使得a+c<b—的判定结果可能发生变化，而改变会通过条件判断直接影响程序的返回值，因此变异所引入的状态差异可以通过数据依赖链传播到程序输出，存在数据依赖条件。
 4. 控制依赖分析：
 控制依赖路径信息：
-    (19: if (a + b < c || a + c < b-- || b + c < a)) --True--> (21: return INVALID;)
+(19: if (a + b < c || a + c < b-- || b + c < a)) --True--> (21: return INVALID;)
 (19: if (a + b < c || a + c < b-- || b + c < a)) --False--> (23: return SCALENE;)
 分析得，变异语句控制了程序分支的走向，而程序的输出语句控制依赖于变异语句的真假结果，进而影响最终的返回值。变异语句与输出语句存在控制依赖路径，变异语句影响输出语句的执行，故变异效果可以传递至输出。
 5. 状态覆盖分析：

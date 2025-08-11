@@ -104,3 +104,13 @@ def get_ctrl_info(program_name, mutant):
     # 返回可达性路径
     result = extract_ctrl_path(llm, ctrl_info, mutant)
     return result
+
+'''
+if __name__ == "__main__":
+    program_name = "Triangle"  # 替换成你的目标程序名
+    mutant = {"mutant_id": "MUT_001"}  # 替换成你的变异体 ID
+
+    # 调用函数
+    result = get_ctrl_info(program_name, mutant)
+    print("最终结果:", result)
+'''

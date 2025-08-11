@@ -70,7 +70,7 @@ def get_reachability_path(program_name, mutant):
         openai_api_key=deepseek_config["api_key"],
         model="deepseek-chat",
         temperature=0,
-        openai_api_base=deepseek_config["base_url"],
+        openai_api_base=deepseek_config["base_url"]
     )
 
     # 示例路径

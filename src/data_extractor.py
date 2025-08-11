@@ -13,21 +13,6 @@ def load_deepseek_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_configs
 
 deepseek_config = load_deepseek_config()
 
-def extract_mutant_info(mutant_json_path, mutant_number):
-    """从变异体JSON文件中提取指定变异体编号的信息"""
-    with open(mutant_json_path, 'r', encoding='utf-8') as f:
-        mutants = json.load(f)
-
-    # 构造完整的变异体ID，如"MUT_001"
-    target_id = f"MUT_{mutant_number.zfill(3)}"
-
-    for mutant in mutants:
-        if mutant['mutant_id'] == target_id:
-            return mutant
-
-    return None
-
-
 def extract_data_info(data_json_path):
     """从PDG DATA JSON文件中提取信息"""
     with open(data_json_path, 'r', encoding='utf-8') as f:
@@ -116,3 +101,13 @@ def get_data_info(program_name, mutant):
     # 返回数据依赖路径
     result = extract_data_path(llm, data_info, mutant)
     return result
+
+'''
+if __name__ == "__main__":
+    program_name = "Triangle"  # 替换成你的目标程序名
+    mutant = {"mutant_id": "MUT_001"}  # 替换成你的变异体 ID
+
+    # 调用函数
+    result = get_data_info(program_name, mutant)
+    print("最终结果:", result)
+'''
