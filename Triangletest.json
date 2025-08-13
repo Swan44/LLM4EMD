@@ -1,0 +1,5 @@
+[{
+  "mutant_id" : "MUT_006",
+  "difference" : "@@ -28 +28 @@\n-        if (b == c) {\n+        if (false) {",
+  "operator" : "ROD"
+}]

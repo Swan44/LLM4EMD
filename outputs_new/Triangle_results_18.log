@@ -1,0 +1,143 @@
+开始分析变异体 MUT_001...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_001": "### 步骤1：可达性分析  \n说明理由：变异语句将原条件`if (a <= 0 || b <= 0 || c <= 0)`修改为`if (true)`，即无条件执行分支。原条件可能为真或假，但变异后恒为真，因此变异语句始终可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性分析  \n说明理由：原条件检查输入是否合法（任一参数≤0则返回`INVALID`），而变异体直接跳过检查。当存在`a>0 && b>0 && c>0`时，原程序与变异体行为一致；但当任一参数≤0时，原程序返回`INVALID`而变异体继续执行后续逻辑，程序状态被改变。  \n分析结论：变异实际改变了程序语义，满足必要性。  \n\n### 步骤3：数据依赖分析  \n说明理由：变异移除的变量`a`、`b`、`c`在后续逻辑中仍被使用（如`if (a == b)`、`if (a + b < c)`等）。若输入非法（如`a=-1`），原程序直接返回，而变异体会错误地进入后续逻辑，导致`trian`计算或三角形判定错误，最终影响返回值。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。  \n\n### 步骤4：控制依赖分析  \n说明理由：变异语句直接控制是否进入`return INVALID`分支。变异后，无论输入是否合法，均跳过该分支，转而执行后续控制流（如`trian`累加、三角形类型判断等），最终返回值可能因非法输入的错误传播而改变。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n### 步骤5：状态覆盖分析  \n说明理由：当输入合法时，变异体与原程序行为一致；但当输入非法时，变异体不会提前返回`INVALID`，而是继续执行错误逻辑（如对非正数进行运算），最终可能返回错误的`SCALENE`/`ISOSCELES`等结果。错误状态未被后续逻辑修正或抵消。  \n分析结论：变异引入的错误状态未被覆盖，影响最终输出。  \n\n### 最终结论  \n等价变异体判定结果：NO。"}
+完成变异体 MUT_001 的分析
+
+开始分析变异体 MUT_002...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_002": "### 步骤1：可达性分析\n说明理由：变异语句位于条件判断 `if (a + b < c || a + c < b-- || b + c < a)` 中，其路径条件为 `a > 0 && b > 0 && c > 0 && a != b && a != c && b != c`。这些条件组合是可满足的，例如 `a=3, b=2, c=1` 满足所有条件。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件判断为 `if (a + b < c || a + c < b || b + c < a)`，变异体将其修改为 `if (a + b < c || a + c < b-- || b + c < a)`。变异体引入了 `b--`，这会改变变量 `b` 的值。例如，对于输入 `a=3, b=2, c=1`，原程序的条件判断为 `false`，而变异体的条件判断为 `true`（因为 `a + c < b--` 会先比较 `a + c` 和 `b`，然后 `b` 减1）。因此，变异体改变了程序状态。\n分析结论：变异体改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `b`，其数据依赖路径如下：\n1. 变异语句 `if (a + b < c || a + c < b-- || b + c < a)` 的结果直接影响 `return INVALID;` 或 `return SCALENE;`。\n2. 变量 `b` 的值通过条件判断传播到输出语句。\n因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (a + b < c || a + c < b-- || b + c < a)` 直接控制两个输出语句：\n1. 如果条件为 `true`，执行 `return INVALID;`。\n2. 如果条件为 `false`，执行 `return SCALENE;`。\n因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体改变了程序状态（如 `b` 的值和条件判断结果），但这种改变会直接影响程序的输出（返回 `INVALID` 或 `SCALENE`）。没有证据表明变异引入的错误状态会被后续执行修正或抵消。例如，对于输入 `a=3, b=2, c=1`，原程序返回 `SCALENE`，而变异体返回 `INVALID`，输出结果不同。\n分析结论：变异引入的错误状态未被修正或抵消，程序输出受影响。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_002 的分析
+
+开始分析变异体 MUT_003...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_003": "### 步骤1：可达性分析\n说明理由：变异语句位于第26行`trian = trian % 2`，其可达性路径条件为`(a > 0 && b > 0 && c > 0 && a == b && a == c)`或`(a > 0 && b > 0 && c > 0 && a != b && a == c)`。这些条件在输入满足时均可满足（例如`a=2, b=1, c=2`满足第二种情况），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原语句为`trian = trian + 2`，变异为`trian = trian % 2`。当`trian`初始为0时：\n- 原语句结果：`trian = 0 + 2 = 2`\n- 变异语句结果：`trian = 0 % 2 = 0`\n两者结果不同，程序状态被改变。即使后续存在`trian = trian + 3`（路径`a == c && b == c`），原程序结果为`trian = 5`，变异体结果为`trian = (0 % 2) + 3 = 3`，仍不同。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量`trian`通过数据依赖链传播到多个输出节点（如`return SCALENE/EQUILATERAL/ISOSCELES/INVALID`）。例如：\n- 路径`a == c && b != c`：变异后`trian`值直接影响`if (trian == 0)`的分支选择。\n- 路径`a == c && b == c`：变异后`trian`值通过`trian > 3`等条件影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句位于条件`if (a == c)`的分支内，其值直接影响后续控制流（如`if (trian == 0)`、`if (trian > 3)`等），进而影响输出语句的执行路径。例如：\n- 当`trian`因变异从2变为0时，可能使原程序返回`SCALENE`而变异体返回`INVALID`。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了`trian`的值，但通过数据和控制依赖分析，其影响会传递到最终输出。例如：\n- 输入`a=2, b=1, c=2`（满足`a != b && a == c`）：\n  - 原程序：`trian = 0 + 2 = 2` → `trian == 0`为假 → 可能返回`ISOSCELES`。\n  - 变异体：`trian = 0 % 2 = 0` → `trian == 0`为真 → 可能返回`SCALENE`或`INVALID`。\n输出结果可能不同，无状态覆盖。\n分析结论：变异引入的错误状态未被抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_003 的分析
+
+开始分析变异体 MUT_004...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_004": "### 步骤[不可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0) && !(trian == 0) && !(trian > 3) && !(trian == 1 && a + b > c)]`，即 `a > 0 && b > 0 && c > 0 && trian != 0 && trian <= 3 && (trian != 1 || a + b <= c)`。该条件可以满足（例如 `a=2, b=2, c=3` 时 `trian=1` 且 `a+b=4>3=c` 不满足，但 `a=2, b=1, c=3` 时 `trian=0` 不满足，需具体值验证）。从程序逻辑看，存在输入（如 `a=2, b=2, c=3`）可使路径可达。\n分析结论：变异语句可达。\n\n### 步骤[非必要性]：\n说明理由：原程序条件为 `if (trian == 2 && a + c > b)`，变异后为 `if (a + c > b)`。在可达路径下（`trian != 0 && trian <= 3 && (trian != 1 || a + b <= c)`），若 `trian == 2`，原程序与变异体行为一致；若 `trian != 2`（如 `trian=3`），原程序跳过该分支，而变异体会执行 `a + c > b` 的判断，可能进入不同分支。例如 `a=3, b=2, c=4, trian=3` 时，原程序跳过，变异体可能返回 `ISOSCELES`，程序状态改变。\n分析结论：变异实际改变了程序语义，不满足非必要性。\n\n### 步骤[数据依赖缺失]：\n说明理由：变异影响的变量为 `trian` 和 `a`。`trian` 的值影响控制流（如 `trian == 2` 的判断被移除），`a` 的值直接影响 `a + c > b` 的结果。两者均通过控制流或数据流传播到输出语句（如 `return ISOSCELES` 或后续分支）。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点，数据依赖存在。\n\n### 步骤[控制依赖缺失]：\n说明理由：变异语句 `if (a + c > b)` 直接控制输出语句 `return ISOSCELES` 或后续分支（如 `if (trian == 3 && b + c > a)`）。变异语句的真假结果直接影响程序输出。\n分析结论：变异语句通过控制流影响输出语句，控制依赖存在。\n\n### 步骤[执行状态覆盖]：\n说明理由：在 `trian == 2` 时，原程序与变异体行为一致；但当 `trian != 2`（如 `trian=3`）时，变异体可能因移除 `trian == 2` 的条件而进入不同分支（如直接返回 `ISOSCELES` 而非检查 `trian == 3`）。此时程序输出可能不同（如 `a=3, b=2, c=4, trian=3` 时，原程序返回 `ISOSCELES`，变异体也返回 `ISOSCELES`，但路径逻辑已改变）。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_004 的分析
+
+开始分析变异体 MUT_005...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_005": "### 步骤[可达性]：\n说明理由：变异语句位于第32行的条件判断语句，其路径条件组合为 `a > 0 && b > 0 && c > 0 && a != b && a != c && b != c`（即 `trian == 0` 时的路径）。该条件组合是可满足的，例如输入 `a=2, b=3, c=4` 可以触发该路径。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为 `a + b < c`，变异后为 `b < c`。在 `a > 0` 的约束下，存在输入（如 `a=1, b=2, c=3`）使得 `a + b < c`（3 < 3 为假）与 `b < c`（2 < 3 为真）结果不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `b`，其数据依赖路径为：\n1. `(line 32: if (b < c || ...)) → (line 33: return INVALID)`（条件为真时）\n2. `(line 32: if (b < c || ...)) → (line 35: return SCALENE)`（条件为假时）\n变异通过条件判断直接影响程序返回值，存在数据依赖链传播到输出节点。\n分析结论：数据依赖条件满足。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制程序分支走向，其控制依赖路径为：\n1. `(line 32: if (b < c || ...)) → (line 33: return INVALID)`（条件为真时）\n2. `(line 32: if (b < c || ...)) → (line 35: return SCALENE)`（条件为假时）\n变异语句直接决定输出语句的执行，存在控制依赖路径。\n分析结论：控制依赖条件满足。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体满足可达性、必要性、数据依赖和控制依赖条件，但需要检查是否存在输入使得变异体与原程序输出相同。例如：\n- 输入 `a=1, b=2, c=4`：原程序 `a + b < c`（3 < 4 为真）返回 `INVALID`，变异体 `b < c`（2 < 4 为真）也返回 `INVALID`，输出相同。\n- 输入 `a=1, b=3, c=2`：原程序 `a + b < c`（4 < 2 为假）返回 `SCALENE`，变异体 `b < c`（3 < 2 为假）也返回 `SCALENE`，输出相同。\n然而，存在输入如 `a=1, b=2, c=3`：原程序 `a + b < c`（3 < 3 为假）返回 `SCALENE`，变异体 `b < c`（2 < 3 为真）返回 `INVALID`，输出不同。因此，变异体并非在所有情况下与原程序行为一致。\n分析结论：错误状态未被完全覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_005 的分析
+
+开始分析变异体 MUT_006...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_006": "### 步骤1：可达性  \n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && (a == b || a != b) && (a == c || a != c)]`。该条件逻辑上可满足（例如 `a=1, b=2, c=3`），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性  \n说明理由：原程序条件为 `if (b == c)`，变异后为 `if (false)`。在可达路径下（如 `b != c`），原程序执行 `if (false)` 分支，变异体同样执行 `if (false)` 分支，程序状态（`trian` 值）未改变。但若 `b == c`（如 `a=1, b=2, c=2`），原程序会执行 `trian = trian + 3`，而变异体跳过此操作，导致 `trian` 值不同，进而可能影响后续输出。  \n分析结论：变异可能改变程序状态，不满足必要性。  \n\n### 步骤3：数据依赖  \n说明理由：变异影响的变量 `b` 和 `c` 通过 `trian` 的计算传递到输出节点（如 `return ISOSCELES` 或 `return INVALID`）。若 `b == c`，原程序会更新 `trian`，而变异体不会，导致输出差异（例如 `trian` 值不同可能改变三角形类型判断）。  \n分析结论：变异影响通过数据依赖链传播到输出节点。  \n\n### 步骤4：控制依赖  \n说明理由：变异语句 `if (false)` 直接控制是否执行 `trian = trian + 3`，进而通过 `trian` 的值影响后续所有条件分支（如 `if (trian > 3)`）和输出语句（如 `return EQUILATERAL`）。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n### 步骤5：状态覆盖  \n说明理由：在 `b == c` 时，变异体跳过 `trian` 的更新，导致后续分支判断结果可能不同（如原程序返回 `EQUILATERAL`，变异体可能返回 `ISOSCELES` 或 `INVALID`）。程序输出可能因 `trian` 值差异而改变，错误状态未被覆盖。  \n分析结论：变异引入的错误状态未被修正或抵消。  \n\n### 最终结论  \n等价变异体判定结果：NO。"}
+完成变异体 MUT_006 的分析
+
+开始分析变异体 MUT_007...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_007": "### 步骤1：可达性分析  \n说明理由：变异语句位于条件`if (b == c)`，其路径约束为`!(a <= 0 || b <= 0 || c <= 0) && !(a == b) && !(a == c)`。该条件可满足（例如`a=1, b=2, c=2`），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n---  \n### 步骤2：必要性分析  \n说明理由：原条件为`b == c`，变异后为`b == ++c`。`++c`会先自增`c`再比较，而原条件直接比较。当`b == c`时：  \n- 原程序：条件为真，执行`trian = trian + 3`。  \n- 变异体：`++c`使`c`变为`c+1`，条件为假，跳过分支。  \n程序状态（如`trian`值和后续分支选择）因此改变。  \n分析结论：变异实际改变程序状态，满足必要性。  \n\n---  \n### 步骤3：数据依赖分析  \n说明理由：变量`c`的自增影响后续所有依赖`c`的路径（如`if (a + c > b)`、`if (b + c > a)`等）。数据依赖路径明确显示`c`的值通过`trian`或直接传递到输出语句（如`return ISOSCELES`或`return INVALID`）。  \n分析结论：变异影响的变量`c`通过数据依赖链传播到输出节点。  \n\n---  \n### 步骤4：控制依赖分析  \n说明理由：变异语句的分支结果（真/假）直接影响`trian`的赋值，进而控制后续所有依赖`trian`的分支（如`if (trian > 3)`、`if (trian == 3 && b + c > a)`等），最终影响输出语句的执行路径。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n---  \n### 步骤5：状态覆盖分析  \n说明理由：虽然变异改变了中间状态（如`trian`值和`c`值），但存在输入（如`a=1, b=2, c=1`）使原程序与变异体的输出不同：  \n- 原程序：`b != c`，跳过分支，最终可能返回`SCALENE`。  \n- 变异体：`b == ++c`（`c`变为2），条件为真，`trian`增加3，可能返回`EQUILATERAL`或`ISOSCELES`。  \n错误状态未被抵消，输出结果可能不同。  \n分析结论：变异引入的错误状态未被覆盖，影响最终输出。  \n\n---  \n### 最终结论  \n等价变异体判定结果：NO。"}
+完成变异体 MUT_007 的分析
+
+开始分析变异体 MUT_008...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_008": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0, trian == 0]`。这些条件在逻辑上是可以满足的，例如当 `a=1, b=2, c=3` 且 `trian=0` 时，路径条件成立。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `b + c < a`，变异后为 `b + c <= a`。在路径约束 `a > 0 && b > 0 && c > 0 && trian == 0` 下，存在输入（如 `a=2, b=1, c=1`）使得原始表达式为 `false`（因为 `1+1 < 2` 为 `false`），而变异表达式为 `true`（因为 `1+1 <= 2` 为 `true`）。因此，变异确实改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a`, `b`, `c`，它们通过条件判断直接控制程序的分支走向。具体路径如下：\n1. 如果条件为 `true`，程序返回 `INVALID`。\n2. 如果条件为 `false`，程序返回 `SCALENE`。\n因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a + b < c || a + c < b || b + c <= a)` 直接控制两个分支：\n1. 条件为 `true` 时，执行 `return INVALID;`。\n2. 条件为 `false` 时，执行 `return SCALENE;`。\n因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了条件判断的逻辑（从 `<` 到 `<=`），但在某些输入（如 `a=2, b=1, c=1`）下，变异会导致程序从返回 `SCALENE` 变为返回 `INVALID`。这表明变异引入的错误状态未被修正或抵消，程序输出确实受到影响。\n分析结论：变异引入的错误状态未被覆盖，程序输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_008 的分析
+
+开始分析变异体 MUT_009...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_009": "### 步骤1：可达性分析\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[a > 0 && b > 0 && c > 0, trian == 0]`。这些条件是逻辑上可满足的（例如 `a=1, b=1, c=2` 满足 `a > 0 && b > 0 && c > 0` 且 `trian == 0`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序与变异体语句分别为 `if (a + b < c || a + c < b || b + c < a)` 和 `if (a + b < c || a + c < b || b++ + c < a)`。变异体引入了 `b++`，这会改变变量 `b` 的值。在路径约束 `[a > 0 && b > 0 && c > 0, trian == 0]` 下，存在输入（例如 `a=1, b=1, c=3`）使得原程序与变异体的条件判断结果不同（原程序为 `false`，变异体为 `true`），从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量为 `b`，其数据依赖路径显示 `b` 的值会传播到后续的 `return` 语句（例如 `return INVALID` 或 `return SCALENE`）。变异语句修改了 `b` 的值，且 `b` 的值会影响后续条件判断和输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (a + b < c || a + c < b || b++ + c < a)` 直接控制程序分支的走向（`return INVALID` 或 `return SCALENE`），因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体改变了程序状态（`b` 的值），但程序输出（`return INVALID` 或 `return SCALENE`）直接依赖于变异语句的条件判断结果。由于变异体的条件判断结果可能与原程序不同（如步骤2所示），程序输出可能因此改变，不存在状态覆盖现象。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_009 的分析
+
+开始分析变异体 MUT_010...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_010": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && b == c]`。这些条件在逻辑上是可以满足的（例如 `a=1, b=2, c=2`），因此变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序语句为 `trian = trian + 3`，变异体为 `trian = ~trian + 3`。在路径约束 `b == c` 下，`trian` 的初始值为 `0`（因为 `a != b` 和 `a != c` 是隐含条件）。原程序计算 `trian = 0 + 3 = 3`，而变异体计算 `trian = ~0 + 3 = -1 + 3 = 2`。因此，变异确实改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `trian`，其数据依赖路径显示 `trian` 的值会传播到多个条件判断和最终的返回值（如 `if (trian > 3)`、`if (trian == 1)` 等）。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `trian = ~trian + 3` 的结果直接影响后续的条件判断（如 `if (trian > 3)` 和 `if (trian == 1)` 等），而这些条件判断又控制着程序的输出语句（如 `return EQUILATERAL` 或 `return ISOSCELES`）。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖条件。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体改变了 `trian` 的值（从 `3` 变为 `2`），但需要检查这种改变是否会影响最终输出。在路径约束 `b == c` 下：\n- 原程序：`trian = 3`，执行 `if (trian > 3)` 为 `false`，然后检查 `if (trian == 3 && b + c > a)`，若为 `true` 则返回 `ISOSCELES`。\n- 变异体：`trian = 2`，执行 `if (trian > 3)` 为 `false`，然后检查 `if (trian == 2 && a + c > b)`，若为 `true` 则返回 `ISOSCELES`。\n  如果 `a + c > b` 和 `b + c > a` 同时为 `true`（例如 `a=1, b=2, c=2`），则原程序和变异体的输出均为 `ISOSCELES`。此时变异引入的错误状态被后续逻辑覆盖，未影响最终输出。\n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_010 的分析
+
+开始分析变异体 MUT_011...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_011": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a>0 && b>0 && c>0 && a!=b && a==c && b!=c && trian==2 && trian<=3 && trian!=1]`。这些条件可以同时满足，例如当 `a=2, b=1, c=2` 时，`trian=2`（因为 `a==c`），且其他条件也满足。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `if (trian == 2 && a + c > b)`，变异后为 `if (trian == 2 && false)`。在路径约束下（`a==c`），原条件 `a + c > b` 等价于 `2a > b`，而变异后条件恒为 `false`。因此，变异将原本可能为真的条件强制改为假，改变了程序的控制流。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a`、`b` 和 `c`。数据依赖路径显示，变异语句的控制流直接影响输出语句（如 `return ISOSCELES` 或 `return INVALID`）。具体来说，变异语句的真假决定了程序是执行 `return ISOSCELES` 还是继续检查后续条件，最终可能返回 `INVALID`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示，变异语句 `if (trian == 2 && false)` 直接控制 `return ISOSCELES` 或后续的 `if (trian == 3 && b + c > a)` 语句。变异语句的真假决定了程序的分支走向，从而影响输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的控制流，但在路径约束 `a==c` 下，原程序的条件 `a + c > b` 可能为真或假，而变异后条件恒为假。因此，原程序可能返回 `ISOSCELES`，而变异体可能跳过该分支，进入后续条件检查。例如，当 `a=2, b=1, c=2` 时，原程序 `a + c > b` 为真（`4 > 1`），返回 `ISOSCELES`；变异体条件为假，进入后续检查，可能返回 `INVALID`。因此，程序输出可能不同。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_011 的分析
+
+开始分析变异体 MUT_012...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_012": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断 `if (a + b < c || a + c < b || b + c < a)` 的分支中，其可达路径条件为 `a > 0 && b > 0 && c > 0 && a != b && a != c && b != c`。这些条件可以通过具体输入（如 `a=3, b=2, c=1`）满足，因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回 `INVALID`（值为4），变异体返回 `-INVALID`（值为-4）。在路径条件 `a + b < c || a + c < b || b + c < a` 为真时，原程序与变异体的返回值不同（4 vs -4），程序状态被改变。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `$THIS.INVALID`，其数据依赖路径为 `(line 17: int trian) → (line 33: return -INVALID;)`。变异后的返回值 `-INVALID` 直接通过数据依赖链传播到程序输出节点。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `return -INVALID;` 是输出语句，直接控制程序输出，不存在中间控制依赖路径。变异效果直接传递至输出。  \n分析结论：变异语句直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体在满足路径条件时返回 `-INVALID`，与原程序返回 `INVALID` 不同，且无后续逻辑修正或抵消该差异。程序输出因此改变。  \n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_012 的分析
+
+开始分析变异体 MUT_013...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_013": "### 步骤[1]：可达性分析  \n说明理由：根据提供的可达性约束条件 `[a>0 && b>0 && c>0 && (a==b || a!=b) && (a==c || a!=c) && (b==c || b!=c) && trian!=0 && trian<=3 && !(trian==1 && a+b>c) && !(trian==2 && a+c>b)]`，变异语句 `if (trian == 3 && b + c > a)` 的路径条件是可满足的。例如，当 `a=2, b=1, c=1` 时，满足 `trian=3`（因为 `b==c`）且 `b + c > a`（1+1 > 2 为假，但条件本身逻辑可触发）。因此，变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤[2]：必要性分析  \n说明理由：原条件为 `if (trian == 3 && b + c > a)`，变异后为 `if (false)`。在可达路径下（如 `trian=3`），原条件可能为真（当 `b + c > a` 时），而变异后条件恒为假。这将导致程序跳过原分支（返回 `ISOSCELES`），转而执行 `else` 分支（返回 `INVALID`），从而改变程序状态。  \n分析结论：变异实际改变了程序语义，满足必要性。  \n\n### 步骤[3]：数据依赖分析  \n说明理由：变异影响的变量为 `trian`、`b`、`c`、`a`。原条件中这些变量的值通过控制流直接影响输出（如 `trian=3` 时返回 `ISOSCELES`）。变异后，由于条件恒为假，程序不再依赖这些变量的值，而是直接跳转到 `return INVALID`。因此，变异切断了原数据依赖链，但新的控制流路径（`return INVALID`）仍与输出直接相关。  \n分析结论：数据依赖链被破坏，但变异通过控制流影响输出。  \n\n### 步骤[4]：控制依赖分析  \n说明理由：变异语句 `if (false)` 直接控制程序是否执行 `return ISOSCELES`。其控制依赖路径为：  \n- `if (false)` 为假时，控制流跳转到 `return INVALID`。  \n因此，变异语句通过控制流直接影响输出语句的执行。  \n分析结论：变异语句通过控制依赖路径影响输出。  \n\n### 步骤[5]：状态覆盖分析  \n说明理由：在原始程序中，当 `trian == 3 && b + c > a` 为真时返回 `ISOSCELES`，否则继续执行后续逻辑。变异后，该分支恒为假，程序直接跳过 `ISOSCELES` 返回逻辑，转而执行 `return INVALID`。例如：  \n- 输入 `a=2, b=1, c=1` 时，原程序因 `trian=3` 但 `b + c <= a` 返回 `INVALID`，变异体同样返回 `INVALID`（行为一致）。  \n- 输入 `a=1, b=1, c=1` 时，原程序因 `trian>3` 返回 `EQUILATERAL`，但若通过其他路径使得 `trian=3` 且 `b + c > a`（如 `a=1, b=2, c=2`），原程序返回 `ISOSCELES`，而变异体返回 `INVALID`（行为不一致）。  \n因此，存在输入使程序输出不同，变异未被覆盖。  \n分析结论：变异引入的错误状态未被抵消，影响最终输出。  \n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_013 的分析
+
+开始分析变异体 MUT_014...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_014": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && trian != 0 && trian <= 3 && !(trian == 1 && a + b > c)]`。这些条件可以满足，例如当 `a=2, b=2, c=3` 时（此时 `trian=1` 但 `a + b > c` 不成立），路径可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序条件为 `trian == 2`，变异后为 `trian <= 2`。在路径约束下（`trian != 0 && trian <= 3`），当 `trian=1` 时，原条件为假而变异条件为真，程序状态可能改变（例如返回 `ISOSCELES` 或进入后续分支）。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量 `trian` 和 `a` 通过数据依赖链传播到输出语句（如 `return ISOSCELES` 或 `return INVALID`）。例如：\n- `trian` 的值直接影响条件判断和返回结果。\n- `a` 的值参与 `a + c > b` 的计算，影响分支走向。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句直接控制分支走向（如 `if (trian <= 2 && a + c > b)`），其真假结果决定执行 `return ISOSCELES` 或进入后续分支（如 `if (trian == 3 && b + c > a)`）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体在某些情况下（如 `trian=1`）会改变分支走向，但程序输出可能仍为 `ISOSCELES`（例如当 `trian=1` 且 `a + c > b` 时）。然而，存在其他情况（如 `trian=1` 且 `a + c <= b`）会导致输出不同（如返回 `INVALID` 而非原程序的 `ISOSCELES`），因此错误状态未被完全覆盖。\n分析结论：变异引入的错误状态未被完全抵消，可能影响最终输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_014 的分析
+
+开始分析变异体 MUT_015...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_015": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径条件组合为`!(a <= 0 || b <= 0 || c <= 0)`，即`a > 0 && b > 0 && c > 0`。该条件可满足（例如`a=1, b=1, c=1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异是删除了整个条件块`if (a + b < c || a + c < b || b + c < a)`及其分支逻辑。在`trian == 0`（即三边均不相等）时，原程序会检查三角形有效性，而变异体直接跳过该检查。例如输入`a=1, b=2, c=3`（不满足三角形不等式），原程序返回`INVALID`，而变异体跳过检查后继续执行后续逻辑（可能返回`SCALENE`或其他结果），程序状态必然改变。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`a, b, c`通过数据依赖链直接传播到输出节点。原条件块中的`a + b < c`等表达式直接影响返回值（`INVALID`或`SCALENE`），删除该条件块后，程序行为完全依赖于后续逻辑，数据依赖链被破坏。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（原条件块）直接控制两个输出分支（`return INVALID`或`return SCALENE`）。删除该条件块后，程序的控制流直接跳过这两个分支，转而执行后续的`if (trian > 3)`等逻辑。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异删除的条件块是独立的分支逻辑，其错误状态（跳过三角形有效性检查）不会被后续执行修正或抵消。例如输入`a=1, b=2, c=3`时，原程序返回`INVALID`，而变异体可能错误地返回`SCALENE`，最终输出必然不同。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_015 的分析
+
+开始分析变异体 MUT_016...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_016": "### 步骤1：可达性分析  \n说明理由：根据提供的变异体信息，变异语句位于第44行的条件判断语句。路径条件组合为`[!(a <= 0 || b <= 0 || c <= 0), !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c)]`，即输入满足`a > 0 && b > 0 && c > 0`且`trian`不为0、不大于3且不等于1（或`a + b <= c`）。这些条件在逻辑上可满足（例如`a=2, b=1, c=3`时`trian=2`满足所有约束），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性分析  \n说明理由：原条件为`if (trian == 2 && a + c > b)`，变异后为`if (true && a + c > b)`。在可达路径下（`trian == 2`成立），原条件与变异条件的逻辑值完全一致（均为`a + c > b`的结果）。因此，变异未改变程序语义。  \n分析结论：变异未改变程序状态，属于非必要性变异。  \n\n### 步骤3：数据依赖分析  \n说明理由：由于步骤2已判定变异未改变程序语义，数据依赖分析无需进行。但补充说明：即使分析，变异影响的变量`a`和`c`通过`a + c > b`直接影响输出（`return ISOSCELES`），但因其逻辑等价性，数据依赖链的传播效果与原程序一致。  \n分析结论：数据依赖存在，但变异未改变实际行为。  \n\n### 步骤4：控制依赖分析  \n说明理由：变异语句直接控制输出分支（`return ISOSCELES`或进入后续条件），但其逻辑等价性使得控制流路径与原程序一致。  \n分析结论：控制依赖存在，但变异未改变控制流效果。  \n\n### 步骤5：状态覆盖分析  \n说明理由：虽然变异语句可达且存在数据/控制依赖，但其逻辑等价性导致程序状态始终与原程序一致，无错误状态需要覆盖。  \n分析结论：变异未引入需覆盖的错误状态。  \n\n### 最终结论  \n等价变异体判定结果：YES。  \n\n（注：步骤2已直接判定为等价变异体，后续步骤仅为完整性补充。）"}
+完成变异体 MUT_016 的分析
+
+开始分析变异体 MUT_017...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_017": "### 步骤1：可达性分析\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：a > 0 && b > 0 && c > 0 && a != b && a != c && b != c && trian != 0 && trian <= 3 && (trian != 1 || a + b <= c) && (trian != 2 || a + c <= b)。这些条件在逻辑上是可以满足的，例如当a=2, b=3, c=4时满足所有条件。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原始表达式为`if (trian == 3 && b + c > a)`，变异后为`if (true && b + c > a)`。在路径约束下，`trian`的值可能为3（因为`trian <= 3`且`trian != 1`和`trian != 2`）。因此，原表达式和变异表达式的区别在于是否检查`trian == 3`。当`trian == 3`时，两者行为一致；但当`trian != 3`时，原表达式为false，而变异表达式仅取决于`b + c > a`，可能导致不同的程序状态。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`b`和`c`（因为`b + c > a`被保留）。这些变量的数据依赖路径如下：\n- `b`和`c`的值直接影响条件`b + c > a`的结果，进而影响控制流和返回值（`ISOSCELES`或`INVALID`）。\n- 变异语句直接控制程序分支的走向，而程序的输出语句依赖于变异语句的真假结果。\n分析结论：变异所引入的状态差异可以通过数据依赖链传播到程序输出，存在数据依赖条件。\n\n### 步骤4：控制依赖分析\n说明理由：控制依赖路径如下：\n- `(47: if (true && b + c > a)) --True--> (48: return ISOSCELES;)`\n- `(47: if (true && b + c > a)) --False--> (52: return INVALID;)`\n变异语句直接决定了程序的分支走向，进而影响最终的返回值。因此，变异语句与输出语句存在控制依赖路径。\n分析结论：变异效果可以通过控制流传递到输出，存在控制依赖条件。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体满足可达性、必要性、数据依赖与控制依赖条件，但在特定情况下（如`trian != 3`且`b + c > a`为true时），原程序会返回`INVALID`（因为`trian != 3`导致原条件为false），而变异体会返回`ISOSCELES`（因为`true && b + c > a`为true）。因此，存在输入可以区分原程序和变异体的行为。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出可能受影响。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_017 的分析
+
+开始分析变异体 MUT_018...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_018": "### 步骤1：可达性分析\n说明理由：变异语句的条件从`if (a <= 0 || b <= 0 || c <= 0)`变为`if (a <= 0 || b <= 0 || c >= 0)`。原程序路径条件为`a > 0 && b > 0 && c > 0`，变异后路径条件为`a > 0 && b > 0 && c >= 0`。存在输入满足`a > 0 && b > 0 && c == 0`时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：当`c == 0`时，原条件`c <= 0`为真，变异条件`c >= 0`也为真，程序行为一致；当`c < 0`时，原条件为真，变异条件为假，程序行为不同。因此存在输入（如`a=1, b=1, c=-1`）使程序状态改变。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量`c`通过数据依赖链传播到输出节点。例如：\n- 当`c >= 0`为假时，程序继续执行后续逻辑，`c`的值会影响`if (a == c)`、`if (b == c)`等条件判断，最终影响返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句直接控制程序是否返回`INVALID`，且其后续分支中的多个条件判断（如`if (a == c)`等）也依赖`c`的值，最终影响返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异在某些情况下（如`c == 0`）不会改变程序输出，但在其他情况下（如`c < 0`）会改变程序行为（原程序返回`INVALID`，变异体继续执行后续逻辑）。因此变异引入的错误状态未被完全覆盖。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_018 的分析

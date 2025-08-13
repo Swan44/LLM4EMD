@@ -1,4 +1,5 @@
 import json
+import time
 import subprocess
 import os
 import logging
@@ -37,8 +38,8 @@ def setup_logging(program_path):
 
 # 主函数
 def main():
-    program_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Triangle.java"
-    mutants_json_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Trianglemutants200.json"
+    program_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\BubbleSort.java"
+    mutants_json_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\BubbleSortmutants.json"
 
     setup_logging(program_path)
 
@@ -46,19 +47,35 @@ def main():
     with open(mutants_json_path, 'r', encoding='utf-8') as f:
         mutants = json.load(f)
 
-    results = {}
+    # results = {}
 
     # 遍历每个变异体
     for mutant in mutants:
         mutant_id = mutant["mutant_id"]
         logging.info(f"开始分析变异体 {mutant_id}...")
-        # 调用分析程序
-        analysis_result = analyze_mutant(program_path, mutant)
-        # 存储结果
-        results[mutant_id] = analysis_result
-        # 立即写入日志
-        logging.info(json.dumps({mutant_id: analysis_result}, ensure_ascii=False))
-        logging.info(f"完成变异体 {mutant_id} 的分析\n")
+        # 记录开始时间
+        start_time = time.time()
+
+        try:
+            # 调用分析程序
+            analysis_result = analyze_mutant(program_path, mutant)
+            # 计算耗时（保留4位小数）
+            time_cost = round(time.time() - start_time, 4)  # 关键行：计算耗时
+            # 存储结果
+            # results[mutant_id] = analysis_result
+            # 立即写入日志
+            logging.info(json.dumps({mutant_id: analysis_result}, ensure_ascii=False))
+            logging.info(f"完成变异体 {mutant_id} 的分析, 耗时: {time_cost:.4f} 秒\n")
+
+        except Exception as e:
+            time_cost = round(time.time() - start_time, 4)
+            error_msg = str(e)
+
+            logging.error(f"变异体 {mutant_id} 分析失败！耗时: {time_cost:.4f} 秒，错误: {error_msg}")
+
+            # 可以选择存储错误信息，方便后续排查
+            # results[mutant_id] = {"error": error_msg}
+            continue  # 继续下一个 mutant
 
 if __name__ == "__main__":
     main()

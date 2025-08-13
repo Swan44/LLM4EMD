@@ -1,0 +1,5 @@
+[ {
+  "mutant_id" : "MUT_001",
+  "difference" : "@@ -40 +40 @@\n-\tif(leap==1&&month>2)\n+\tif(leap==1&&month++>2)",
+  "operator" : "AOIS"
+} ]
