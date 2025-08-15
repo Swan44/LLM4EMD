@@ -10,7 +10,7 @@ from emd_analysis import analyze_mutant
 # 配置日志
 def setup_logging(program_path):
     # 创建输出目录（如果不存在）
-    output_dir = r"D:\bishe_code\LLM4EMD\output_test"
+    output_dir = r"D:\bishe_code\LLM4EMD\outputs_new"
     os.makedirs(output_dir, exist_ok=True)
 
     # 从程序路径中提取原程序名称
@@ -82,11 +82,15 @@ def main(program_paths, mutants_json_paths):
 if __name__ == "__main__":
     # 示例调用方式
     program_paths = [
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Triangle.java",
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Day.java"
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Insert.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Mid.java"
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Min.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Prime_num.java"
     ]
     mutants_json_paths = [
-        "D:\\bishe_code\\LLM4EMD\\Triangletest.json",
-        "D:\\bishe_code\\LLM4EMD\\Daytest.json"
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Insertmutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Midmutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Minmutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Prime_nummutants.json"
     ]
     main(program_paths, mutants_json_paths)

@@ -9,9 +9,16 @@ import yaml
 def load_deepseek_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_configs.yaml"):
     with open(config_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
-    return config["deepseek-v3"]
+    return config["deepseek-v3-g"]
 
 deepseek_config = load_deepseek_config()
+
+def load_gpt_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_configs.yaml"):
+    with open(config_path, "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+    return config["gpt-3.5-turbo"]
+
+gpt_config = load_gpt_config()
 
 
 def extract_ctrl_info(ctrl_json_path):
@@ -81,8 +88,16 @@ def get_ctrl_info(program_name, mutant):
         openai_api_key=deepseek_config["api_key"],
         model="deepseek-chat",
         temperature=0,
-        openai_api_base=deepseek_config["base_url"],
+        openai_api_base=deepseek_config["base_url"]
     )
+    '''
+    llm = ChatOpenAI(
+        openai_api_key=gpt_config["api_key"],
+        model="gpt-3.5-turbo",
+        temperature=0,
+        openai_api_base=gpt_config["base_url"]
+    )
+    '''
 
     # 示例路径
     # mutants_dir = r"D:\bishe_code\progex_benchmark\mutant_programs\Min\mutants"

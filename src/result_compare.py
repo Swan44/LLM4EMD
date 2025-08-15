@@ -50,6 +50,6 @@ def compare_equivalence(json_file_path, txt_file_path):
 
 
 # 使用示例
-json_file_path = 'D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsIDJson\\Trianglemutants18.json'  # 替换为你的JSON文件路径
-txt_file_path = 'D:\\bishe_code\\LLM4EMD\\result_output_new\\Triangle_results_18'  # 替换为你的TXT文件路径
+json_file_path = 'D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsIDJson\\Trianglemutants.json'  # 替换为你的JSON文件路径
+txt_file_path = 'D:\\bishe_code\\LLM4EMD\\result_output_new\\Triangle_results'  # 替换为你的TXT文件路径
 compare_equivalence(json_file_path, txt_file_path)

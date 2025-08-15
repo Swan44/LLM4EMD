@@ -1,1 +1,40 @@
+开始分析变异体 MUT_001...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_001": "### 步骤[可达性]：\n说明理由：变异语句位于`if (a < b)`为真的分支内，路径条件为`a < b`。该条件在输入满足`a < b`时可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`if (c < b)`，变异为`if (c <= b)`。当`c == b`时，原条件为假而变异条件为真，会进入不同分支（原程序执行`mid = b`，变异体执行`if (a < c)`分支）。此时若`a >= c`（即`a >= b`，但外层条件为`a < b`，矛盾），因此实际执行中`c == b`时必然`a < c`，变异体执行`mid = c`（即`mid = b`），与原程序`mid = b`结果相同。其他情况下（`c < b`或`c > b`）行为完全一致。\n分析结论：变异未实际改变程序语义，属于非必要性等价。\n\n### 步骤[数据依赖]：\n说明理由：由于必要性分析已确认语义等价，无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于必要性分析已确认语义等价，无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于必要性分析已确认语义等价，无需进一步分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_001 的分析, 耗时: 90.4442 秒
+
+开始分析变异体 MUT_002...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_002": "### 步骤[可达性]：\n说明理由：变异语句位于第6行的条件判断 `if (a <= c)`，其路径条件组合为 `[a < b && c < b]`。该条件组合在输入满足 `a < b` 且 `c < b` 时可满足，例如 `a=1, b=3, c=2`。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序条件为 `if (a < c)`，变异后为 `if (a <= c)`。在路径条件 `a < b && c < b` 下，存在输入（如 `a=1, c=1`）使得原程序条件为 `false`，而变异后条件为 `true`，导致程序状态改变（`mid` 的赋值来源不同）。因此，变异实际改变了程序状态。\n分析结论：变异满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `a` 和 `c`。数据依赖路径显示：\n1. 若 `a <= c` 为 `true`，则 `mid = c`，返回值 `c`。\n2. 若 `a <= c` 为 `false`，则 `mid = a`，返回值 `a`。\n变量 `a` 和 `c` 的值直接影响 `mid` 的赋值，而 `mid` 是返回值，因此变异状态可通过数据依赖链传播到输出。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a <= c)` 控制两个分支：\n1. `true` 分支：`mid = c` → `return mid`。\n2. `false` 分支：`mid = a` → `return mid`。\n输出语句 `return mid` 直接依赖于变异语句的分支结果，因此变异效果可通过控制流传递到输出。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：在输入 `a == c`（如 `a=2, c=2`）时：\n- 原程序：`a < c` 为 `false`，执行 `mid = a`，返回 `a`（即 `2`）。\n- 变异体：`a <= c` 为 `true`，执行 `mid = c`，返回 `c`（即 `2`）。\n虽然分支选择不同，但最终返回值相同，变异引入的错误状态被逻辑抵消。\n分析结论：存在状态覆盖。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_002 的分析, 耗时: 125.9408 秒
+
+开始分析变异体 MUT_003...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_003": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a < b && c < b && a < c && c > b, a < b && c < b && !(a < c) && c > b, a < b && !(c < b) && c > b, !(a < b) && c > b]`。这些条件中，例如 `! (a < b) && c > b` 是逻辑上可满足的（例如 `a=3, b=2, c=4`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `if (a > c)`，变异表达式为 `if (a >= c)`。在路径约束 `! (a < b) && c > b` 下，存在输入 `a=3, b=2, c=3`（即 `a == c`），此时原表达式为 `false`，变异表达式为 `true`，程序状态会改变（原程序执行 `mid = a`，变异体执行 `mid = c`）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `a` 和 `c` 的数据依赖路径为：\n1. `if (a >= c)` 为 `True`：`mid = c` → `return mid`；\n2. `if (a >= c)` 为 `False`：`mid = a` → `return mid`。\n因此，变异影响的变量会通过 `mid` 传递到输出。\n分析结论：数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a >= c)` 直接控制 `mid = c` 或 `mid = a` 的执行，而 `mid` 的值直接决定输出 `return mid`。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：在输入 `a == c` 时，虽然原程序执行 `mid = a`，变异体执行 `mid = c`，但由于 `a == c`，最终返回值 `mid` 相同。因此，变异引入的状态差异被逻辑抵消，程序输出未受影响。\n分析结论：变异引入的错误状态被覆盖，不影响输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_003 的分析, 耗时: 90.3484 秒
+
+开始分析变异体 MUT_004...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_004": "### 步骤[可达性]：\n说明理由：变异语句 `if (a <= b)` 的控制流路径条件组合为 `a` 和 `b` 的任意可能值，没有逻辑上的不可满足条件。例如，`a = 1, b = 2` 或 `a = 2, b = 2` 均可满足 `a <= b` 的条件。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `if (a < b)`，变异后的条件是 `if (a <= b)`。当 `a == b` 时，原程序的条件为 `false`，而变异后的条件为 `true`。这会改变程序的控制流，例如在 `a == b` 时，原程序会进入 `else` 分支，而变异体会进入 `if` 分支。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `a` 和 `b` 通过数据依赖链传播到程序输出节点 `return mid`。例如，`a` 和 `b` 的值直接影响 `mid` 的赋值，而 `mid` 是最终的返回值。因此，变异引入的状态差异可以通过数据依赖链传播到输出。\n分析结论：数据依赖链存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a <= b)` 控制了程序的分支走向，而输出语句 `return mid` 的执行依赖于变异语句的真假结果。例如，`if (a <= b)` 的真假决定了 `mid` 的赋值来源（`a`、`b` 或 `c`），进而影响最终的返回值。因此，变异语句与输出语句存在控制依赖路径。\n分析结论：控制依赖路径存在。\n\n### 步骤[状态覆盖]：\n说明理由：在 `a == b` 的情况下，原程序会执行 `else` 分支，而变异体会执行 `if` 分支。具体来说：\n- 原程序：`if (a < b)` 为 `false`，进入 `else` 分支，后续可能执行 `mid = b` 或 `mid = a`（取决于 `c` 的值）。\n- 变异体：`if (a <= b)` 为 `true`，进入 `if` 分支，后续可能执行 `mid = b` 或 `mid = a`（取决于 `c` 的值）。\n   - 如果 `a == b`，无论进入哪个分支，`mid` 的赋值结果可能相同（例如 `mid = b` 或 `mid = a`，而 `a == b`），因此最终输出 `mid` 的值可能相同。\n   - 但在某些情况下（如 `a == b` 且 `c` 的值导致不同分支），`mid` 的赋值可能不同（例如 `mid = c` 与原程序的 `mid = a`），但由于 `a == b`，逻辑上可能覆盖错误状态。\n然而，更一般地，当 `a == b` 时，变异体的行为可能与原程序不同（例如 `mid` 的赋值来源不同），但由于 `a == b`，最终输出可能相同。因此，变异引入的错误状态可能被逻辑覆盖。\n分析结论：错误状态被覆盖。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_004 的分析, 耗时: 136.2193 秒
+
+开始分析变异体 MUT_005...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_005": "### 步骤1：可达性分析\n说明理由：变异语句位于`if (c >= b)`，其路径条件为`a >= b`。该条件组合`a >= b`是可满足的（例如a=2, b=1），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原表达式为`if (c > b)`，变异为`if (c >= b)`。在路径条件`a >= b`下，当`c == b`时：\n- 原程序：`c > b`为false，执行`else {mid = b;}`分支\n- 变异体：`c >= b`为true，执行`if (a > c)`分支\n   - 若`a > c`为true，则`mid = c`（此时`c == b`）\n   - 若`a > c`为false，则`mid = a`\n当`a == b == c`时，原程序返回b，变异体返回a（此时a=b=c），最终输出相同；但当`a > b == c`时，原程序返回b，变异体返回a，输出不同。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量b和c通过以下路径传播到输出：\n1. `if (c >= b)` → `if (a > c)` → `mid = c` → `return mid`\n2. `if (c >= b)` → `if (a > c)` → `mid = a` → `return mid`\n3. `if (c >= b)` → `else` → `mid = b` → `return mid`\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句直接控制三个分支：\n1. `if (c >= b)`为true时控制`if (a > c)`分支\n2. `if (c >= b)`为false时控制`else`分支\n所有分支最终都影响`return mid`。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：在特定输入`a == b == c`时，虽然执行路径不同，但最终输出相同（状态被覆盖）；但在`a > b == c`时输出不同（如a=3,b=2,c=2，原程序返回2，变异体返回3）。\n分析结论：变异引入的错误状态未被完全覆盖。\n\n### 最终结论\n等价变异体判定结果：NO"}
+完成变异体 MUT_005 的分析, 耗时: 80.4729 秒
 

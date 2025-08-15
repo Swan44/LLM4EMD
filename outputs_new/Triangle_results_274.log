@@ -1,0 +1,968 @@
+开始分析变异体 MUT_201...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_201": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), trian != 0, !(trian > 3)]`，即 `a > 0 && b > 0 && c > 0 && trian != 0 && trian <= 3`。这些条件可以同时满足，例如当 `a=2, b=2, c=3` 时，`trian=1`（因为 `a == b`），满足所有条件。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件为 `trian == 1 && a + b > c`，变异后的条件为 `trian == 1 ^ a + b > c`。这两个条件的语义不同：原条件要求 `trian == 1` 和 `a + b > c` 同时为真，而变异条件要求两者异或（即一个为真，另一个为假）。例如：\n- 当 `trian == 1` 且 `a + b > c` 为真时，原条件为真，变异条件为假。\n- 当 `trian == 1` 且 `a + b > c` 为假时，原条件为假，变异条件为真。\n因此，变异确实改变了程序的状态。\n分析结论：变异改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量为 `trian`, `a`, `b`, `c`。从数据依赖路径可以看出：\n- `trian` 的值直接影响变异条件的结果，进而影响控制流。\n- `a`, `b`, `c` 的值通过 `a + b > c` 的计算影响变异条件的结果。\n这些变量的值通过控制依赖路径传递到输出语句（如 `return ISOSCELES;` 或 `return INVALID;`），因此变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：从控制依赖路径可以看出，变异语句 `if (trian == 1 ^ a + b > c)` 直接控制以下输出语句：\n1. 如果为真，执行 `return ISOSCELES;`。\n2. 如果为假，进入后续的 `if` 判断，可能执行 `return ISOSCELES;` 或 `return INVALID;`。\n因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了程序的控制流逻辑，但在某些情况下，程序的最终输出可能仍然相同。例如：\n- 当 `trian == 1` 且 `a + b > c` 为真时，原程序返回 `ISOSCELES`，变异程序返回 `INVALID`（因为变异条件为假，进入后续判断）。\n- 当 `trian == 1` 且 `a + b > c` 为假时，原程序返回 `INVALID`，变异程序返回 `ISOSCELES`（因为变异条件为真）。\n因此，存在输入（如 `a=2, b=2, c=5`）使得原程序和变异程序的输出不同（原程序返回 `INVALID`，变异程序返回 `ISOSCELES`）。这说明变异引入的错误状态未被完全覆盖或抵消。\n分析结论：变异引入的错误状态未被覆盖，程序输出可能改变。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_201 的分析, 耗时: 134.8008 秒
+
+开始分析变异体 MUT_202...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_202": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c)`，即`a > 0 && b > 0 && c > 0 && a != b && a != c`。这些条件在逻辑上是可满足的，例如`a=2, b=1, c=3`就满足所有条件。因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`if (b == c)`，变异体为`if (b == c++)`。变异操作是对变量`c`进行后置自增。在可达路径下（`a != b && a != c`），当`b == c`时：\n1. 原程序执行`trian = trian + 3`（因为`b == c`为真）\n2. 变异体先比较`b == c`（为真），然后`c`自增，再执行`trian = trian + 3`\n虽然`c`的值被改变，但`trian`的赋值行为与原程序一致。当`b != c`时，两者行为也完全一致。因此变异未改变程序语义。\n分析结论：变异未实际改变程序状态，满足必要性条件。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`c`通过数据依赖链传播到多个输出节点（如`return ISOSCELES`等），但根据必要性分析，`c`的变化不会影响程序输出结果。\n分析结论：虽然存在数据依赖链，但变异不影响最终输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句（如控制`trian`的赋值和后续分支），但根据必要性分析，控制流的变化不会导致输出结果改变。\n分析结论：虽然存在控制依赖，但变异不影响最终输出。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的`c`自增操作会改变`c`的值，但这种改变：\n1. 不影响当前`if`条件的判断结果（因为是后置自增）\n2. 不影响后续所有依赖`c`的判断逻辑（因为`c`的变化被后续逻辑覆盖）\n因此错误状态被完全抵消。\n分析结论：变异引入的错误状态被后续执行覆盖。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_202 的分析, 耗时: 302.7957 秒
+
+开始分析变异体 MUT_203...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_203": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[a > 0 && b > 0 && c > 0, trian != 0, trian <= 3]`。这些条件在输入满足 `a > 0 && b > 0 && c > 0` 且 `trian` 的值为 1、2 或 3 时是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件为 `if (trian == 1 && a + b > c)`，变异后的条件为 `if (trian == 1 || a + b > c)`。在 `trian == 1` 时，无论 `a + b > c` 是否为真，变异后的条件都会为真；而在 `trian != 1` 时，变异后的条件是否为真取决于 `a + b > c`。因此，变异改变了程序的逻辑，可能导致程序状态改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `trian` 和 `a`。`trian` 的值直接影响条件判断的结果，而 `a` 的值也参与条件判断。变异后的条件结果会通过控制流影响输出语句（如 `return ISOSCELES` 或后续的其他条件判断）。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (trian == 1 || a + b > c)` 直接控制程序的分支走向，其结果为真时会执行 `return ISOSCELES`，为假时会进入后续的条件判断。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：控制依赖路径存在。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了条件逻辑，但在某些情况下（如 `trian == 1` 且 `a + b > c` 为假时），原程序会返回 `INVALID`，而变异后的程序会返回 `ISOSCELES`。这种情况下，程序的输出会不同，因此变异引入的错误状态未被完全覆盖或抵消。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_203 的分析, 耗时: 73.0611 秒
+
+开始分析变异体 MUT_204...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_204": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && a == b]`。这些条件可以同时满足（例如 `a=1, b=1, c=2`），因此变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `trian = trian + 1`，变异体为 `trian = trian % 1`。在路径约束 `a == b` 下，`trian` 的初始值为 0。对于任何整数 `n`，`n % 1` 的结果恒为 0，因此 `trian` 的值在执行变异语句后仍为 0，与原程序执行 `trian + 1` 后的值 1 不同。然而，`trian` 的后续使用（如条件判断 `if (trian == 0)`）可能因这一改变而受影响。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `trian` 通过数据依赖链传播到多个输出节点。例如：\n1. `trian` 用于条件判断 `if (trian == 0)`，直接影响是否返回 `SCALENE` 或进入其他分支。\n2. `trian` 的值还用于后续的 `if (trian > 3)`、`if (trian == 1 && a + b > c)` 等条件判断，最终影响返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `trian = trian % 1` 的结果直接影响后续多个控制流分支（如 `if (trian == 0)`、`if (trian > 3)` 等），而这些分支直接决定程序的输出（如 `return SCALENE`、`return EQUILATERAL` 等）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `trian` 的值（从 1 变为 0），但需要检查这种改变是否在后续执行中被抵消。例如：\n1. 如果 `a == b` 且 `a != c` 且 `b != c`，原程序会将 `trian` 设为 1，而变异体会将其设为 0。此时：\n   - 原程序可能进入 `if (trian == 1 && a + b > c)` 分支。\n   - 变异体可能进入 `if (trian == 0)` 分支。\n   两者的输出可能不同（如原程序返回 `ISOSCELES`，变异体返回 `SCALENE`）。\n2. 如果 `a == b == c`，原程序和变异体都会将 `trian` 设为 0（因为 `trian` 会被后续 `+2` 和 `+3` 覆盖），最终输出相同（`EQUILATERAL`）。\n   但存在输入（如 `a=1, b=1, c=2`）会导致输出不同。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_204 的分析, 耗时: 86.6711 秒
+
+开始分析变异体 MUT_205...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_205": "### 步骤1：可达性分析  \n说明理由：根据提供的路径条件组合 `[!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), !(b == c), !(trian == 0), !(trian > 3)]`，变异语句位于 `trian == 1` 的分支下。这些条件表明输入满足 `a, b, c > 0` 且互不相等，且 `trian` 的值为1（即 `a == b` 不成立但 `a == c` 或 `b == c` 可能成立，但根据条件 `!(a == c)` 和 `!(b == c)`，`trian` 只能为1）。因此，变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性分析  \n说明理由：原条件为 `a + b > c`，变异为 `a + b >= c`。在 `trian == 1` 的路径下（即 `a == b` 不成立且其他相等条件不成立），存在输入使得 `a + b == c`（例如 `a=2, b=3, c=5`）。此时原条件为 `false`，变异条件为 `true`，导致程序状态改变（返回 `ISOSCELES` 或进入其他分支）。因此，变异实际改变了程序语义。  \n分析结论：变异满足必要性（程序状态改变）。  \n\n### 步骤3：数据依赖分析  \n说明理由：变异影响的变量为 `a, b, c`，其数据依赖路径直接关联到输出语句（`return ISOSCELES` 或其他分支的返回语句）。例如：  \n- `a` 和 `b` 的值通过 `a + b >= c` 影响条件判断，进而决定返回值。  \n- 若条件结果改变，返回值可能从 `ISOSCELES` 变为 `INVALID` 或其他值。  \n分析结论：变异通过数据依赖链传播到输出节点。  \n\n### 步骤4：控制依赖分析  \n说明理由：变异语句（`if (trian == 1 && a + b >= c)`）直接控制后续分支的执行（返回 `ISOSCELES` 或进入其他分支）。其控制依赖路径明确影响输出语句（如 `return ISOSCELES` 或后续分支的返回）。  \n分析结论：变异通过控制流影响输出语句。  \n\n### 步骤5：状态覆盖分析  \n说明理由：在特定输入下（如 `a=2, b=3, c=5`），原程序返回 `INVALID`（因 `a + b > c` 为 `false`），而变异体返回 `ISOSCELES`（因 `a + b >= c` 为 `true`）。程序输出结果不同，错误状态未被覆盖。  \n分析结论：变异引入的状态差异未被抵消，影响最终输出。  \n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_205 的分析, 耗时: 123.0958 秒
+
+开始分析变异体 MUT_206...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_206": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0), !(trian == 0), !(trian > 3)`。这意味着变异语句在满足`a > 0 && b > 0 && c > 0 && trian != 0 && trian <= 3`的条件下是可执行的。例如，当`a=2, b=2, c=3`时（此时`trian=1`），可以触发该变异语句的执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`if (trian == 1 && a + b > c)`，变异后为`if (trian == -1 && a + b > c)`。在变异语句可达的条件下（`trian=1`），原表达式可能为真（当`a + b > c`时），而变异表达式恒为假（因为`trian=1 != -1`）。这将导致程序选择不同的分支，从而改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`trian`和`a`、`b`、`c`。`trian`的值直接影响条件判断的结果，进而影响程序的返回值。具体数据依赖路径为：`trian` → 条件判断 → 返回值。例如，`trian`的值通过`if (trian == -1 && a + b > c)`直接决定是否返回`ISOSCELES`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian == -1 && a + b > c)`的控制依赖路径直接影响输出语句。例如：\n1. 若条件为真，执行`return ISOSCELES;`；\n2. 若条件为假，继续检查其他条件（如`trian == 2`等），最终可能返回`ISOSCELES`或`INVALID`。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了程序的分支选择（例如从`trian == 1`变为`trian == -1`），但在实际执行中，`trian`的值由前面的逻辑决定（如`a == b`等），不会为-1。因此，变异后的条件`trian == -1`恒为假，程序行为与原程序在逻辑上保持一致（因为原程序在`trian == 1`时可能返回`ISOSCELES`，而变异体在此情况下会跳过该分支，但其他分支可能仍返回相同结果）。然而，存在输入（如`a=2, b=2, c=3`，此时`trian=1`）使得原程序返回`ISOSCELES`，而变异体返回`INVALID`（因为`trian == -1`为假且其他条件不满足）。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_206 的分析, 耗时: 141.6489 秒
+
+开始分析变异体 MUT_207...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_207": "### 步骤[不可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && a != b && a != c && b != c]`，这些条件是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[非必要性]：\n说明理由：原始表达式为 `if (trian == 0)`，变异后为 `if (trian <= 0)`。在路径约束 `a > 0 && b > 0 && c > 0 && a != b && a != c && b != c` 下，`trian` 的初始值为 0，且后续可能增加 1、2 或 3。因此，`trian` 的可能值为 0、1、2、3、4、5、6。对于 `trian == 0` 和 `trian <= 0`，只有在 `trian == 0` 时两者行为一致，其他情况下 `trian <= 0` 会引入额外的行为（如 `trian` 为负数时，但根据路径约束不可能为负数）。因此，变异未改变程序状态。\n分析结论：变异未改变程序状态，属于等价变异体。\n\n### 步骤[数据依赖缺失]：\n说明理由：由于在非必要性分析中已确定变异未改变程序状态，因此无需进一步分析数据依赖。\n分析结论：无需分析。\n\n### 步骤[控制依赖缺失]：\n说明理由：由于在非必要性分析中已确定变异未改变程序状态，因此无需进一步分析控制依赖。\n分析结论：无需分析。\n\n### 步骤[执行状态覆盖]：\n说明理由：由于在非必要性分析中已确定变异未改变程序状态，因此无需进一步分析状态覆盖。\n分析结论：无需分析。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_207 的分析, 耗时: 111.6230 秒
+
+开始分析变异体 MUT_208...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_208": "### 步骤[可达性]：\n说明理由：变异语句位于`if (a == b)`的条件判断处，变异后为`if (++a == b)`。根据可达性约束`[!(a <= 0 || b <= 0 || c <= 0)]`，即输入参数a、b、c均为正整数时，该变异语句可达。例如，当a=1, b=1, c=1时，程序会执行到该变异语句。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序判断`a == b`，而变异体在判断前对a进行了自增操作`++a`。这会改变变量a的值，从而可能改变条件判断的结果。例如，当a=1, b=2时，原程序判断`1 == 2`为false，而变异体判断`2 == 2`为true，导致程序状态改变。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是a，其数据依赖路径显示a的值会传播到后续的`trian`变量和输出语句。例如，当`++a == b`为true时，会执行`trian = trian + 1`，进而影响后续的`trian`相关判断和返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (++a == b)`控制后续分支的执行，直接影响`trian`的赋值和后续的条件判断。例如，当`++a == b`为true时，会执行`trian = trian + 1`，进而影响后续的`if (trian == 0)`等控制流。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了状态改变（a的自增和分支条件变化），但这种改变会直接影响到程序的输出结果。例如，当a=1, b=2时，原程序可能返回`SCALENE`，而变异体可能返回`ISOSCELES`，输出结果不同。\n分析结论：变异引入的错误状态未被修正或抵消，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_208 的分析, 耗时: 270.9716 秒
+
+开始分析变异体 MUT_209...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_209": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断 `if (a <= 0 || ~b <= 0 || c <= 0)`，路径条件为 `a > 0 && b > 0 && c > 0`。由于 `~b <= 0` 等价于 `b >= -1`（假设 `b` 是整数），在 `b > 0` 的路径条件下，`~b <= 0` 的值与 `b <= 0` 的值不同（`b > 0` 时 `b <= 0` 为假，`~b <= 0` 也为假）。因此，变异语句的路径条件可满足，变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `b <= 0`，变异表达式为 `~b <= 0`。在 `b > 0` 的路径条件下，`b <= 0` 为假，`~b <= 0` 也为假（因为 `~b` 是 `b` 的按位取反，`b > 0` 时 `~b` 的值通常为负数，`~b <= 0` 为真）。因此，变异前后的条件判断结果可能不同，程序状态可能改变。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `b`，其数据依赖路径为：`b` 在条件判断中被使用，直接影响程序是否返回 `INVALID`。如果条件判断结果改变，可能影响程序的输出。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a <= 0 || ~b <= 0 || c <= 0)` 直接控制程序是否返回 `INVALID`。如果条件判断结果改变，可能影响程序的输出路径。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖条件。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句可能改变程序的分支走向，但在 `b > 0` 的路径条件下，`b <= 0` 和 `~b <= 0` 的值可能不同，导致程序输出不同。例如，当 `b = 1` 时，`b <= 0` 为假，`~b <= 0` 为真（假设 `~b` 为负数），程序可能返回 `INVALID` 而非继续执行后续逻辑。因此，变异引入的错误状态未被修正或抵消，可能影响程序输出。\n分析结论：错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_209 的分析, 耗时: 139.6690 秒
+
+开始分析变异体 MUT_210...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_210": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[a > 0 && b > 0 && c > 0 && trian == 0]`。该条件组合是可满足的（例如 `a=1, b=1, c=1` 满足条件），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `if (a + b < c || a + c < b || b + c < a)` 和 `if (a + b < c || ++a + c < b || b + c < a)`。变异体将 `a + c < b` 修改为 `++a + c < b`，即对变量 `a` 进行了自增操作。在路径约束 `[a > 0 && b > 0 && c > 0 && trian == 0]` 下，`++a` 会改变 `a` 的值，从而可能改变条件判断的结果（例如 `a=1, b=3, c=1` 时，原表达式为 `false`，变异体表达式为 `true`）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a`。根据数据依赖路径分析，`a` 的值会通过以下路径传播到输出节点：\n1. 直接影响条件判断 `if (a + b < c || ++a + c < b || b + c < a)` 的结果，从而决定程序返回 `INVALID` 或 `SCALENE`。\n2. 后续还可能影响 `if (trian == 1 && a + b > c)` 等条件判断，从而影响返回值。\n分析结论：变异影响的变量 `a` 通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a + b < c || ++a + c < b || b + c < a)` 直接控制程序分支的走向：\n- 若为 `true`，则返回 `INVALID`。\n- 若为 `false`，则返回 `SCALENE`。\n因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体修改了 `a` 的值，且该修改会直接影响条件判断和后续程序逻辑。没有证据表明变异引入的错误状态会被后续执行修正或抵消（例如 `++a` 的副作用会持续影响后续逻辑）。\n分析结论：变异引入的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_210 的分析, 耗时: 67.4443 秒
+
+开始分析变异体 MUT_211...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_211": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && trian == 0]`。这些条件是可满足的，例如当 `a=1, b=1, c=1` 时满足所有条件。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `if (a + b < c || a + c < b || b + c < a)`，变异体将其修改为 `if (a + b < c || a + c < b)`，即删除了第三个子条件 `b + c < a`。在 `trian == 0` 的情况下（即 `a, b, c` 互不相等），存在输入（例如 `a=1, b=1, c=3`）使得原条件为 `false`（因为 `1+1 < 3` 为 `false`，`1+3 < 1` 为 `false`，`1+3 < 1` 为 `false`），而变异体条件为 `false`，因此此时行为一致。然而，也存在输入（例如 `a=2, b=2, c=1`）使得原条件为 `false`（因为 `2+2 < 1` 为 `false`，`2+1 < 2` 为 `false`，`2+1 < 2` 为 `false`），而变异体条件为 `false`，因此行为仍然一致。但更一般地，如果 `b + c < a` 为 `true` 而其他子条件为 `false`（例如 `a=5, b=2, c=2`），原程序会返回 `INVALID`，而变异体会返回 `SCALENE`，此时行为不同。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a, b, c`，这些变量的值直接用于条件判断，并通过控制流影响返回值。具体来说，条件语句的结果决定了是返回 `INVALID` 还是 `SCALENE`，因此变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a + b < c || a + c < b)` 的结果直接控制是否执行 `return INVALID` 或 `return SCALENE`。因此，变异语句通过控制流直接影响输出语句。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：根据必要性分析，存在输入（例如 `a=5, b=2, c=2`）使得原程序返回 `INVALID`，而变异体返回 `SCALENE`。此时程序的输出不同，且没有后续执行可以修正或抵消这种差异。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_211 的分析, 耗时: 117.4894 秒
+
+开始分析变异体 MUT_212...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_212": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断 `if (trian++ == 1 && a + b > c)`，其路径条件为 `a > 0 && b > 0 && c > 0 && trian == 1`。这些条件可以通过输入满足（例如 `a=2, b=2, c=3` 且 `trian=1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为 `trian == 1`，变异后为 `trian++ == 1`。虽然 `trian++` 会修改 `trian` 的值（从1变为2），但该修改仅影响后续条件判断（如 `if (trian == 2)`）。在当前条件判断中，`trian++ == 1` 和 `trian == 1` 的返回值完全相同（因为 `trian` 的初始值为1时两者均为真，否则为假）。因此，变异未改变当前条件判断的语义。\n分析结论：变异未实际改变程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `trian` 通过数据依赖链传播到输出节点（如 `return ISOSCELES` 或 `return INVALID`）。例如，`trian++` 修改后的值会影响后续 `if (trian == 2)` 和 `if (trian == 3)` 的判断，从而可能改变程序输出。\n分析结论：变异影响的变量可通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (trian++ == 1 && a + b > c)` 控制后续分支的执行（如直接返回 `ISOSCELES` 或进入其他条件判断）。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异修改了 `trian` 的值（从1变为2），但这一修改仅在后续条件判断中生效。对于当前条件判断 `if (trian++ == 1 && a + b > c)`，其返回值与原程序一致，因此程序输出不受影响。此外，即使 `trian` 的值被修改，后续条件判断可能覆盖其影响（例如 `if (trian == 2)` 和 `if (trian == 3)` 可能返回相同结果）。\n分析结论：变异引入的错误状态被后续执行覆盖，程序最终输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_212 的分析, 耗时: 110.6423 秒
+
+开始分析变异体 MUT_213...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_213": "### 步骤1：可达性分析  \n说明理由：变异语句位于条件判断`if (a + b > c)`，其可达性路径条件为`!(a <= 0 || b <= 0 || c <= 0) && !(trian == 0) && !(trian > 3)`。该条件可满足（例如`a=2, b=2, c=3`时`trian=1`），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性分析  \n说明理由：原条件为`trian == 1 && a + b > c`，变异后为`a + b > c`。在`trian != 1`但`a + b > c`时（例如`trian=2, a=3, b=3, c=5`），原条件为`false`而变异条件为`true`，程序状态（控制流分支）会改变。  \n分析结论：变异实际改变了程序语义，满足必要性。  \n\n### 步骤3：数据依赖分析  \n说明理由：变异影响的变量为`a, b, c`和`trian`。`a + b > c`的结果直接决定是否返回`ISOSCELES`（通过控制依赖），且`trian`的值影响后续分支（如`trian == 2`的检查）。数据依赖路径完整传递到输出节点（如`return ISOSCELES`）。  \n分析结论：变异状态可通过数据依赖链传播到输出。  \n\n### 步骤4：控制依赖分析  \n说明理由：变异语句控制后续分支（如直接返回`ISOSCELES`或跳转到其他条件判断），其输出语句（如`return ISOSCELES`）直接依赖于变异语句的真假结果。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n### 步骤5：状态覆盖分析  \n说明理由：在`trian == 1`时，原程序与变异体行为一致；但当`trian != 1`且`a + b > c`时（如`trian=2, a=3, b=3, c=5`），原程序跳过分支而变异体进入分支，导致返回`ISOSCELES`而非原程序的后续检查。此时输出结果可能不同（如原程序可能返回`INVALID`）。  \n分析结论：错误状态未被覆盖，影响最终输出。  \n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_213 的分析, 耗时: 211.4655 秒
+
+开始分析变异体 MUT_214...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_214": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[a > 0 && b > 0 && c > 0, trian == 0]`。这些条件是可满足的，例如 `a=1, b=1, c=1` 满足 `a > 0 && b > 0 && c > 0`，但 `trian == 0` 需要 `a != b && a != c && b != c`，例如 `a=1, b=2, c=3` 满足所有条件。因此，变异点可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原始表达式为 `if (a + b < c || a + c < b || b + c < a)`，变异表达式为 `if (a-- + b < c || a + c < b || b + c < a)`。变异操作是 `a--`，这会改变 `a` 的值。在路径约束 `a > 0 && b > 0 && c > 0 && trian == 0` 下，存在输入（例如 `a=2, b=3, c=6`）使得原表达式和变异表达式的值不同（原表达式为 `false`，变异表达式为 `true`），从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `a`，其数据依赖路径显示 `a` 的值会影响 `if` 条件的结果，进而通过控制流影响 `return INVALID` 或 `return SCALENE`。此外，`a` 的值还会影响后续的 `if (trian == 1 && a + b > c)` 等条件。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句 `if (a-- + b < c || a + c < b || b + c < a)` 直接控制两个输出语句 `return INVALID` 和 `return SCALENE`。变异语句的真假结果决定了程序的分支走向，进而影响最终的返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体引入了状态改变（`a--`），并且这种改变通过数据和控制依赖传播到输出，但不存在输入使得这种改变在后续执行中被修正或抵消。例如，对于输入 `a=2, b=3, c=6`，原程序返回 `SCALENE`，而变异体由于 `a--` 导致条件为 `true`，返回 `INVALID`，输出不同。因此，变异体的错误状态未被覆盖。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_214 的分析, 耗时: 61.8746 秒
+
+开始分析变异体 MUT_215...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_215": "### 步骤[可达性]：\n说明理由：变异语句位于程序入口的条件判断处，路径条件为`(a <= 0 || b <= 0) != c <= 0`。该条件可以通过多种输入组合满足（例如：a=1,b=1,c=0时原表达式为false，变异表达式为true），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式`a <= 0 || b <= 0 || c <= 0`与变异表达式`(a <= 0 || b <= 0) != c <= 0`在语义上存在差异。例如当a=0,b=1,c=1时，原表达式返回true（因为a<=0），而变异表达式返回false（因为true != false）。这会改变程序的控制流。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量a/b/c通过控制流直接影响返回值（INVALID）。当变异导致条件判断结果改变时，会直接触发不同的return语句（如从返回INVALID变为继续执行后续三角形类型判断）。\n分析结论：变异效果可通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句作为程序首个条件判断，直接控制是否进入\"return INVALID\"分支。其布尔结果通过控制依赖边直接影响所有后续输出节点（包括所有return语句）。\n分析结论：变异语句通过控制流直接影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异会改变中间控制流，但在某些情况下（如a=0,b=1,c=0）会导致程序从返回INVALID变为执行后续代码，最终可能产生不同的输出结果（如返回SCALENE而非INVALID）。\n分析结论：不存在完全的状态覆盖，变异可导致输出改变。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_215 的分析, 耗时: 232.7201 秒
+
+开始分析变异体 MUT_216...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_216": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0, trian == 0]`。这些条件在逻辑上是可满足的，例如当 `a=1, b=1, c=1` 时（虽然 `trian` 会不为0，但存在其他输入如 `a=2, b=3, c=4` 满足 `trian == 0`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原条件为 `a + b < c || a + c < b || b + c < a`，变异后为 `a + b < c ^ a + c < b || b + c < a`。异或（`^`）和逻辑或（`||`）的真值表不同。例如，当 `a=1, b=2, c=3` 时：\n- 原条件：`1+2 < 3 || 1+3 < 2 || 2+3 < 1` → `false || false || false` → `false`。\n- 变异条件：`1+2 < 3 ^ 1+3 < 2 || 2+3 < 1` → `false ^ false || false` → `false || false` → `false`。\n但当 `a=1, b=2, c=2` 时：\n- 原条件：`1+2 < 2 || 1+2 < 2 || 2+2 < 1` → `false || false || false` → `false`。\n- 变异条件：`1+2 < 2 ^ 1+2 < 2 || 2+2 < 1` → `false ^ false || false` → `false || false` → `false`。\n虽然部分输入下语义相同，但存在输入（如 `a=1, b=2, c=1`）：\n- 原条件：`1+2 < 1 || 1+1 < 2 || 2+1 < 1` → `false || true || false` → `true`。\n- 变异条件：`1+2 < 1 ^ 1+1 < 2 || 2+1 < 1` → `false ^ true || false` → `true || false` → `true`。\n此时语义仍相同，但异或的真值表与逻辑或不同，可能在某些输入下导致状态改变。\n分析结论：变异可能改变程序状态，不满足必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量 `a, b, c` 通过数据依赖链传播到输出节点。例如：\n- `a` 的路径：`(line 32: if (a + b < c ^ a + c < b || b + c < a))` → `return INVALID` 或 `return SCALENE`。\n- `b` 和 `c` 同理。\n因此，变异影响的变量会直接影响输出。\n分析结论：存在数据依赖。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句 `if (a + b < c ^ a + c < b || b + c < a)` 直接控制 `return INVALID` 或 `return SCALENE` 的执行，因此变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异可能改变条件表达式的值，但需要检查是否会导致最终输出不同。例如：\n- 当 `a=1, b=2, c=1` 时：\n  - 原条件：`true` → `return INVALID`。\n  - 变异条件：`true` → `return INVALID`。\n- 当 `a=1, b=2, c=3` 时：\n  - 原条件：`false` → `return SCALENE`。\n  - 变异条件：`false` → `return SCALENE`。\n目前未发现输入导致输出不同，但异或的真值表与逻辑或不同，可能存在输入使输出不同。\n分析结论：未完全覆盖所有情况，但初步判断可能为等价变异体。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_216 的分析, 耗时: 80.4413 秒
+
+开始分析变异体 MUT_217...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_217": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `a > 0 && b > 0 && c > 0 && trian == 0`。这些条件可以同时满足（例如 `a=1, b=1, c=1` 不满足 `trian == 0`，但 `a=2, b=3, c=4` 满足），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序表达式为 `a + c < b`，变异体表达式为 `a % c < b`。在路径约束 `a > 0 && b > 0 && c > 0 && trian == 0` 下，存在输入（例如 `a=2, b=3, c=2`）使得 `a + c < b` 为 `false`（4 < 3 为 `false`），而 `a % c < b` 为 `true`（0 < 3 为 `true`），导致程序状态改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `a, c`。数据依赖路径显示：\n- `a` 和 `c` 的值直接影响条件判断结果，进而通过控制依赖决定返回 `INVALID` 或 `SCALENE`。\n- 变异后的表达式 `a % c` 的结果会传播到输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a + b < c || a % c < b || b + c < a)` 直接控制两个分支：\n- 条件为 `true` 时返回 `INVALID`；\n- 条件为 `false` 时返回 `SCALENE`。\n变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序状态（如 `a % c < b` 可能与 `a + c < b` 结果不同），但不存在后续执行覆盖或抵消这种改变的情况。变异体的状态改变会直接传递到输出。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_217 的分析, 耗时: 52.6875 秒
+
+开始分析变异体 MUT_218...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_218": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`a > 0 && b > 0 && c > 0 && a != b && a == c && b != c && trian == 2 && trian != 0 && trian <= 3`。这些条件在逻辑上是可以满足的，例如当a=2, b=1, c=2时，所有条件均成立。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`a + b > c`，变异表达式为`a % b > c`。在路径约束条件下（a == c且a != b），考虑a=3, b=2, c=3时：原表达式`3 + 2 > 3`为true，变异表达式`3 % 2 > 3`（即1 > 3）为false。因此，变异会导致程序状态改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量a、b、c通过数据依赖路径直接连接到输出节点。例如，变量a的路径：`(line 15: a) → (line 24: if (trian == 1 && a % b > c)) → (line 25: return ISOSCELES)`。变异后的表达式结果直接影响控制流分支的选择，进而影响返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian == 1 && a % b > c)`直接控制后续的返回语句（如line 25的`return ISOSCELES`）。其真假结果决定了程序是否进入该分支，因此与输出语句存在直接控制依赖。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序状态（如a=3, b=2, c=3时分支结果不同），但在当前路径约束下（trian == 2），该变异语句所在的`if (trian == 1 && ...)`分支不会被执行，程序会进入`else`分支处理`trian == 2`的情况。因此，变异引入的状态改变不会影响最终输出。\n分析结论：变异引入的错误状态被路径条件覆盖，程序最终输出未受影响。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_218 的分析, 耗时: 121.2384 秒
+
+开始分析变异体 MUT_219...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_219": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`a > 0 && b > 0 && c > 0 && a != b && a == c && b != c && trian == 2 && trian <= 3`。这些条件可以同时满足，例如当`a=2, b=1, c=2`时，所有条件都为真。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序条件为`if (trian == 2 && a + c > b)`，变异后为`if (trian == 2 && a > b)`。在路径约束`a == c`下，`a + c > b`等价于`a + a > b`，而`a > b`与之不等价。例如当`a=2, b=1, c=2`时，原条件`2+2>1`为真，变异条件`2>1`也为真；但当`a=1, b=2, c=1`时，原条件`1+1>2`为假，变异条件`1>2`也为假。然而，当`a=1, b=1.5, c=1`时，原条件`1+1>1.5`为真，变异条件`1>1.5`为假，此时程序状态会改变。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为a和b。变量a和b的数据依赖路径显示它们直接影响条件判断结果，进而通过控制流影响返回值（ISOSCELES或进入后续判断）。具体路径为：`if (trian == 2 && a > b)`的结果直接决定是否返回ISOSCELES或进入后续判断。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian == 2 && a > b)`的控制依赖路径显示其直接决定程序是否返回ISOSCELES或进入后续判断（可能返回ISOSCELES或INVALID）。因此变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序语义，但在特定输入下（如`a=2, b=1, c=2`和`a=1, b=2, c=1`），原程序和变异体的输出相同。然而存在输入（如`a=1, b=1.5, c=1`）使得原程序返回ISOSCELES而变异体进入后续判断可能返回INVALID，导致输出不同。因此变异引入的错误状态未被完全覆盖。\n分析结论：变异引入的错误状态未被完全覆盖，影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_219 的分析, 耗时: 91.0084 秒
+
+开始分析变异体 MUT_220...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_220": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), b == c]`，即 `a > 0 && b > 0 && c > 0 && a != b && a != c && b == c`。该条件可满足（例如 `a=1, b=2, c=2`），因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `trian = trian + 3`，变异体为 `trian = trian - 3`。在路径约束 `b == c` 下，原程序将 `trian` 增加 3，而变异体将其减少 3。这将导致 `trian` 的值发生显著变化（例如初始 `trian=0` 时，原程序结果为 3，变异体结果为 -3），从而影响后续条件判断（如 `if (trian == 0)` 或 `if (trian > 3)`）。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `trian` 通过数据依赖链传播到程序输出节点。具体路径为：  \n1. `trian` 的值直接影响 `if (trian == 0)` 和 `if (trian > 3)` 的分支判断。  \n2. 分支判断的结果进一步决定程序返回 `INVALID`、`SCALENE`、`EQUILATERAL` 或 `ISOSCELES`。  \n因此，变异对 `trian` 的修改会传递到程序输出。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `trian = trian - 3` 的控制依赖路径包括：  \n1. 通过 `if (trian == 0)` 控制是否进入 `SCALENE` 或 `INVALID` 分支。  \n2. 通过 `if (trian > 3)` 控制是否返回 `EQUILATERAL`。  \n3. 通过后续 `if (trian == 1/2/3)` 控制是否返回 `ISOSCELES`。  \n因此，变异语句通过控制流直接影响输出语句的执行。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体将 `trian` 的值从 `+3` 改为 `-3`，导致后续所有依赖 `trian` 的条件判断结果可能不同（例如 `trian == 0` 或 `trian > 3` 的取值变化）。未发现错误状态被后续执行修正或抵消的情况。  \n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_220 的分析, 耗时: 85.3892 秒
+
+开始分析变异体 MUT_221...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_221": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断 `if (trian == 2 && a + c > b)` 中。从程序入口到该变异点的路径需要满足 `a > 0 && b > 0 && c > 0 && trian == 2 && a + c > b`。这些条件在逻辑上是可以满足的，例如当 `a=3, b=2, c=2` 时，`trian` 可以通过 `a == c` 和 `b == c` 的计算得到 `trian = 2`，且 `a + c > b` 成立。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `if (trian == 2 && a + c > b)`，变异后为 `if (trian-- == 2 && a + c > b)`。变异引入了 `trian--` 操作，这会直接修改 `trian` 的值（减1）。在原始程序中，`trian` 的值仅用于条件判断，而变异后 `trian` 的值会被修改，从而可能影响后续的条件判断（如 `if (trian == 3 && b + c > a)`）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `trian`。`trian` 的数据依赖路径显示，其值会传播到后续的条件判断 `if (trian == 3 && b + c > a)` 和输出语句 `return ISOSCELES` 或 `return INVALID`。因此，`trian` 的修改会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (trian-- == 2 && a + c > b)` 直接控制程序的分支走向。如果条件为真，执行 `return ISOSCELES`；如果为假，继续执行后续的条件判断 `if (trian == 3 && b + c > a)`。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了 `trian--` 操作，但 `trian` 的修改会直接影响后续的条件判断和输出。例如，如果 `trian` 原值为2，变异后变为1，可能导致后续 `if (trian == 3 && b + c > a)` 的条件不成立，从而改变程序的输出（如从 `return ISOSCELES` 变为 `return INVALID`）。因此，变异引入的错误状态未被修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_221 的分析, 耗时: 71.7455 秒
+
+开始分析变异体 MUT_222...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_222": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`!(a <= 0 || b <= 0 || c <= 0)`，即`a > 0 && b > 0 && c > 0`。该条件逻辑上可满足（例如`a=1, b=1, c=1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序为`trian = 0`，变异体为`trian = 1`。变量`trian`用于后续的条件判断（如`if (trian == 0)`），其初始值从0变为1会直接影响这些条件判断的结果（例如`trian == 0`从true变为false）。因此，变异实际改变了程序语义。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`trian`通过数据依赖链传播到多个输出节点。例如：\n1. `trian = 1` → `if (trian == 0)` → `return SCALENE`或`return INVALID`。\n2. `trian = 1` → `if (trian > 3)` → `return EQUILATERAL`或后续分支。\n3. `trian = 1` → `if (trian == 1 && a + b > c)` → `return ISOSCELES`。\n因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`trian = 1`通过控制流直接影响输出语句。例如：\n1. `trian = 1` → `if (trian == 0)` → 控制流分支决定后续输出。\n2. `trian = 1` → `if (trian > 3)` → 控制流分支决定后续输出。\n因此，变异语句通过控制流影响输出语句的执行路径。\n分析结论：控制依赖路径存在。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`trian`的初始值，但在某些路径下（例如`a == b`时`trian = trian + 1`），`trian`的值会被后续操作覆盖，但最终输出仍可能因初始值改变而不同（例如`if (trian == 0)`的分支行为变化）。因此，变异引入的错误状态未被完全抵消。\n分析结论：错误状态未被完全覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_222 的分析, 耗时: 191.5023 秒
+
+开始分析变异体 MUT_223...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_223": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), trian == 2, !(trian == 0), !(trian > 3), !(trian == 1)]`，即 `a > 0 && b > 0 && c > 0 && trian == 2`。这些条件可以同时满足（例如 `a=2, b=1, c=1` 时 `trian=2`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原条件为 `if (trian == 2 && a + c > b)`，变异后为 `if (trian == 2 && true)`。变异移除了对 `a + c > b` 的检查，直接简化为 `true`。在 `trian == 2` 时，原程序的行为依赖于 `a + c > b` 的真假，而变异体直接进入分支，可能改变程序状态。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `a` 和 `b`（原条件 `a + c > b` 被移除）。从数据依赖路径看，`a` 和 `b` 的值会影响 `trian` 的计算，进而影响输出。但变异体直接忽略 `a + c > b` 的条件，因此 `a` 和 `b` 的值不再直接影响分支选择，而是直接进入 `return ISOSCELES`。\n分析结论：变异移除的条件变量 `a` 和 `b` 不再通过数据依赖链传播到输出节点，数据依赖缺失。\n\n### 步骤4：控制依赖\n说明理由：变异语句 `if (trian == 2 && true)` 的控制依赖路径直接指向 `return ISOSCELES`。原程序的分支选择依赖于 `a + c > b`，而变异体直接进入分支，因此控制流被改变。\n分析结论：变异语句通过控制流影响输出语句，控制依赖存在。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体直接进入 `return ISOSCELES`，但原程序在 `trian == 2` 时也只有在 `a + c > b` 为真时才返回 `ISOSCELES`。如果 `a + c > b` 为假，原程序会继续检查其他条件，而变异体会错误地返回 `ISOSCELES`。因此，变异引入的错误状态未被修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_223 的分析, 耗时: 108.4042 秒
+
+开始分析变异体 MUT_224...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_224": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[a > 0 && b > 0 && c > 0, trian == 0]`，这些条件在逻辑上是可以满足的。例如，当`a=1, b=1, c=1`时，所有条件均成立，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为`if (a + b < c || a + c < b || b + c < a)`，变异后的表达式为`if (a - b < c || a + c < b || b + c < a)`。在路径约束`a > 0 && b > 0 && c > 0 && trian == 0`下，存在输入（例如`a=2, b=1, c=4`）使得原表达式为`false`（因为`2+1 < 4`为`false`，`2+4 < 1`为`false`，`1+4 < 2`为`false`），而变异表达式为`true`（因为`2-1 < 4`为`true`）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`a, b, c`。根据数据依赖路径，这些变量的值直接影响条件判断的结果，进而通过控制流影响输出语句（`return INVALID`或`return SCALENE`）。例如，变量`a`的修改会通过条件判断传播到输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (a - b < c || a + c < b || b + c < a)`直接控制两个输出分支：`return INVALID`（条件为`true`）和`return SCALENE`（条件为`false`）。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序状态（如步骤2所示），但并未在后续执行中被修正或抵消。例如，输入`a=2, b=1, c=4`会导致原程序返回`SCALENE`，而变异体返回`INVALID`，程序输出被改变。因此，不存在状态覆盖现象。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_224 的分析, 耗时: 51.4369 秒
+
+开始分析变异体 MUT_225...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_225": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0)`、`trian != 0`、`trian <= 3`。这些条件可以同时满足，例如当`a=2, b=2, c=3`时（此时`trian=1`），所有条件均成立。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`if (trian == 1 && a + b > c)`，变异后为`if (!(trian == 1) && a + b > c)`。在`trian=1`的情况下，原表达式为真而变异后为假，会改变程序的控制流。例如输入`a=2, b=2, c=3`（此时`trian=1`且`a+b=4>c=3`），原程序会返回`ISOSCELES`，而变异体会跳过该分支。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`trian`和`a`。`trian`的值直接影响条件判断的结果，进而通过控制流影响返回值。例如当`trian=1`时，原程序会进入`return ISOSCELES`分支，而变异体不会进入该分支，导致不同的返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (!(trian == 1) && a + b > c)`直接控制程序是否进入`return ISOSCELES`分支。其真假结果会直接影响后续的控制流路径，进而影响最终的返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些情况下会改变程序的控制流（如`trian=1`时），但程序的其他分支（如`trian=2`或`trian=3`时）可能返回相同的结果。然而，存在输入（如`a=2, b=2, c=3`）会导致不同的返回值（原程序返回`ISOSCELES`，变异体返回`INVALID`）。\n分析结论：变异引入的错误状态未被完全覆盖，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_225 的分析, 耗时: 124.4512 秒
+
+开始分析变异体 MUT_226...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_226": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), a == b, a <= c]`。这意味着程序执行到变异点时需要满足 `a > 0 && b > 0 && c > 0 && a == b && a <= c`。例如输入 `a=1, b=1, c=2` 可以满足这些条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序的条件是 `if (a == c)`，变异后为 `if (a <= c)`。在路径约束 `a == b && a <= c` 下：\n- 当 `a == c` 时，原程序和变异体的条件都为真，行为一致。\n- 当 `a < c` 时，原程序条件为假，变异体条件为真，行为不同（`trian` 的值会不同）。\n因此，变异在某些情况下会改变程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量是 `a` 和 `c`。数据依赖路径显示：\n- 如果 `a <= c` 为真，会执行 `trian = trian + 2`，进而影响后续的 `trian` 相关判断和返回值。\n- 如果 `a <= c` 为假，则跳过该语句，`trian` 的值不受影响。\n因此，变异影响的变量会通过 `trian` 传播到程序输出。\n分析结论：数据依赖链存在，变异效果可传播到输出。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句 `if (a <= c)` 的控制依赖路径直接影响 `trian` 的赋值，进而影响后续的 `if (trian == 0)`、`if (trian > 3)` 等控制流，最终影响返回值（如 `return ISOSCELES` 或 `return INVALID`）。\n分析结论：控制依赖路径存在，变异效果可通过控制流传递到输出。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异体在某些情况下会改变程序状态（如 `a < c` 时），但在 `a == c` 时行为与原程序一致。然而，当 `a < c` 时，变异体会导致 `trian` 的值增加 2，可能改变后续控制流和返回值。例如：\n- 输入 `a=1, b=1, c=2`：原程序 `trian=1`（仅 `a == b`），变异体 `trian=3`（`a == b` 和 `a <= c`），可能导致不同的返回值。\n因此，变异体的错误状态未被完全覆盖，可能影响输出。\n分析结论：状态未被完全覆盖，可能影响输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_226 的分析, 耗时: 135.8972 秒
+
+开始分析变异体 MUT_227...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_227": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0, a == b, a == c, b == c, trian > 3]`。这些条件表示输入必须满足所有变量为正且三者相等，同时 `trian` 的值必须大于3（即 `trian == 6`，因为 `a == b == c` 时 `trian = 1 + 2 + 3 = 6`）。这是一个可满足的路径条件，例如 `a = b = c = 1` 即可触发该路径。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回 `EQUILATERAL`（值为3），而变异体返回 `~EQUILATERAL`（即按位取反，`~3` 在Java中为 `-4`）。在路径约束 `trian > 3` 下，原程序返回3，变异体返回-4，程序状态（返回值）被显著改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `$THIS.EQUILATERAL`，其数据依赖路径直接连接到输出语句 `return ~EQUILATERAL;`。此外，`trian` 的值通过控制依赖影响输出分支的选择（`if (trian > 3)`），但变异并未直接修改 `trian`，而是修改了返回值表达式。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `return ~EQUILATERAL;` 是输出语句本身，不通过控制流影响其他输出语句。其执行完全由 `if (trian > 3)` 的控制流决定，但变异并未改变控制流逻辑。\n分析结论：变异语句不通过控制流影响其他输出语句，但直接修改了输出值。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（返回值从3变为-4）未被后续执行修正或抵消，程序最终输出被显式修改。\n分析结论：错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_227 的分析, 耗时: 69.2341 秒
+
+开始分析变异体 MUT_228...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_228": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), b == c, !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c), !(trian == 2 && a + c > b)`。这些条件可以满足，例如当`a=2, b=1, c=1`时，所有条件均为真，变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`if (trian == 3 && b + c > a)`，变异表达式为`if (trian == 3 && b++ + c > a)`。变异引入了对`b`的自增操作，这会改变`b`的值。例如，当`trian == 3`且`b + c == a`时，原始表达式为`false`，但变异表达式会先比较`b + c > a`（`false`），然后`b`自增，导致后续使用`b`的值发生变化。因此，变异实际改变了程序状态。  \n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`b`。数据依赖路径显示：  \n1. 如果条件为真（`b++ + c > a`），返回`ISOSCELES`，此时`b`的值已自增。  \n2. 如果条件为假（`b++ + c <= a`），返回`INVALID`，此时`b`的值也已自增。  \n虽然`b`的自增会影响其后续值，但程序在返回后不再使用`b`，因此`b`的变化不会传播到输出。  \n分析结论：数据依赖链未传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流直接影响输出语句：  \n1. 条件为真时，返回`ISOSCELES`。  \n2. 条件为假时，返回`INVALID`。  \n然而，`b`的自增操作并不影响控制流的分支选择（仅影响`b`的值），因此控制依赖并未传递变异的效果。  \n分析结论：控制依赖未传递变异效果。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`b`的值，但程序在返回后不再使用`b`，因此`b`的变化不会影响输出。无论`b`是否自增，程序的返回值仅由条件`b++ + c > a`的原始值决定，且返回值本身不依赖`b`的后续值。因此，变异引入的状态变化被后续执行逻辑覆盖。  \n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_228 的分析, 耗时: 57.7739 秒
+
+开始分析变异体 MUT_229...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_229": "### 步骤1：可达性分析\n说明理由：变异语句位于`if (a == b)`条件判断处，变异后为`if (a-- == b)`。根据可达性约束`[!(a <= 0 || b <= 0 || c <= 0)]`，即`a > 0 && b > 0 && c > 0`，该路径条件可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序判断`a == b`，变异后判断`a-- == b`。虽然`a--`会改变`a`的值（减1），但`a--`的返回值是`a`的原始值，因此`a-- == b`与`a == b`的判断结果相同。但由于`a`的值被修改，程序状态可能改变。\n分析结论：变异未改变条件判断结果，但改变了程序状态（`a`的值减1），满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`a`，`a`的值在后续代码中被多次使用（如`if (a == c)`、`if (trian == 1 && a + b > c)`等），并通过`trian`变量间接影响程序输出。数据依赖路径显示`a`的变化会传播到输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句`if (a-- == b)`控制后续分支的执行（如`trian = trian + 1`），而这些分支又通过`trian`的值影响最终的返回语句（如`return ISOSCELES`或`return EQUILATERAL`）。控制依赖路径显示变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了`a`的值，但`a`的变化仅在特定条件下会影响输出（如`a == c`或`a + b > c`等）。在某些情况下（如`a`的修改不影响后续条件判断），程序输出可能不变。但存在输入（如`a == b && a - 1 != c`）会导致输出不同，因此错误状态未被完全覆盖。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_229 的分析, 耗时: 128.2587 秒
+
+开始分析变异体 MUT_230...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_230": "### 步骤[1. 可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径条件组合为 `a > 0 && b > 0 && c > 0 && trian == 0`。这些条件在逻辑上是可满足的，例如输入 `a=1, b=1, c=1` 可以满足这些条件。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序的条件表达式为 `if (a + b < c || a + c < b || b + c < a)`，变异后的表达式为 `if (a + b < c || a + c >= b || b + c < a)`。在路径约束 `a > 0 && b > 0 && c > 0 && trian == 0` 下，存在输入（例如 `a=1, b=2, c=4`）使得原表达式为 `true`（因为 `1+2 < 4`），而变异后的表达式也为 `true`（因为 `1+2 < 4`）。然而，也存在输入（例如 `a=2, b=3, c=4`）使得原表达式为 `false`（因为 `2+3 >= 4`, `2+4 >= 3`, `3+4 >= 2`），而变异后的表达式为 `true`（因为 `2+4 >= 3`）。因此，变异改变了程序的状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量为 `a, b, c`。这些变量的数据依赖路径如下：\n- 变量 `a`：`if (a + b < c || a + c >= b || b + c < a)` → `return INVALID` 或 `return SCALENE`。\n- 变量 `b`：`if (a + b < c || a + c >= b || b + c < a)` → `return INVALID` 或 `return SCALENE`。\n- 变量 `c`：`if (a + b < c || a + c >= b || b + c < a)` → `return INVALID` 或 `return SCALENE`。\n变异语句的条件结果直接决定了程序是返回 `INVALID` 还是 `SCALENE`，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句 `if (a + b < c || a + c >= b || b + c < a)` 的控制依赖路径如下：\n- `True` 分支：直接到达 `return INVALID`。\n- `False` 分支：直接到达 `return SCALENE`。\n变异语句的真假结果直接决定了程序的输出，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异体改变了程序的状态（步骤2），并且这种改变通过数据和控制依赖传递到输出（步骤3和4），但在某些输入下（例如 `a=1, b=2, c=3`），原程序和变异体的输出可能相同（都返回 `SCALENE`）。然而，存在其他输入（例如 `a=2, b=3, c=4`）使得原程序返回 `SCALENE`，而变异体返回 `INVALID`。因此，变异引入的错误状态并未被完全覆盖或抵消。\n分析结论：变异引入的错误状态未被完全覆盖或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_230 的分析, 耗时: 66.6188 秒
+
+开始分析变异体 MUT_231...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_231": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0) && !(trian == 0) && !(trian > 3) && !(trian == 1 && a + b > c) && !(trian == 2 && a + c > b)]`。这意味着程序执行到变异语句的条件是：a、b、c都大于0，trian不等于0且不大于3，且不满足前两个条件分支。这些条件是可以满足的，例如当a=2, b=2, c=3时（trian=3）。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件是 `if (trian == 3 && b + c > a)`，变异后为 `if (trian <= 3 && b + c > a)`。在trian=3时，两者行为一致；但当trian=1或2时，原条件为假，变异条件可能为真。例如，当trian=1, b=2, c=3, a=4时，原程序返回INVALID，变异体可能返回ISOSCELES。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `trian`，其数据依赖路径显示 `trian` 的值直接影响条件判断和最终的返回值。变异后的条件 `trian <= 3` 会改变程序的控制流，进而影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (trian <= 3 && b + c > a)` 直接控制两个输出分支：返回ISOSCELES或INVALID。变异后的条件可能改变控制流，从而影响输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然在某些情况下（如trian=3），变异体和原程序的行为一致，但在其他情况下（如trian=1或2），变异体会导致不同的输出。因此，变异引入的错误状态未被完全覆盖。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_231 的分析, 耗时: 105.8798 秒
+
+开始分析变异体 MUT_232...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_232": "### 步骤1：可达性\n说明理由：变异语句位于第22行的条件判断语句，路径条件组合为`a > 0 && b > 0 && c > 0`。这些条件在程序执行时可以被满足（例如a=1, b=1, c=1），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原始表达式为`if (a == b)`，变异后为`if (a <= b)`。当`a < b`时，原表达式为false而变异后为true，会导致程序状态改变（trian的值不同）。例如输入a=1, b=2时，原程序不会进入if分支，而变异体会进入。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量a和b通过trian的值传递到多个return语句（如EQUILATERAL/ISOSCELES等）。具体路径显示trian的值会直接影响最终输出结果。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句控制着trian的赋值，而trian的值直接决定了后续多个if分支的执行路径和最终的return语句。控制依赖路径显示从变异语句到输出语句存在完整控制流路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异会改变trian的值，但在某些情况下（如a==b时）输出结果可能相同。但存在其他情况（如a<b时）会导致不同的输出结果（如原程序不增加trian而变异体增加）。\n分析结论：变异引入的错误状态未被完全覆盖，会影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO"}
+完成变异体 MUT_232 的分析, 耗时: 325.2729 秒
+
+开始分析变异体 MUT_233...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_233": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), a == b]`，即 `a > 0 && b > 0 && c > 0 && a == b`。该条件逻辑上可满足（例如 `a = b = 1, c = 2`），因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序为 `if (a == c)`，变异体为 `if (--a == c)`。在 `a == b` 的路径约束下，`--a` 会修改 `a` 的值（`a` 减1），因此 `a == c` 和 `--a == c` 的判定结果可能不同（例如 `a = b = 2, c = 1`：原程序为 `false`，变异体为 `true`）。这会改变程序状态（`trian` 的赋值和后续控制流）。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a`。数据依赖路径显示，`a` 的值通过 `trian` 或直接传递到输出语句（如 `return ISOSCELES` 或 `return INVALID`）。例如：\n- 若 `--a == c` 为 `true`，`trian` 增加2，后续可能影响 `trian > 3` 或 `trian == 2` 的判定。\n- `a` 的值还直接参与 `a + b > c` 等条件判断，最终影响返回值。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示，变异语句 `if (--a == c)` 的分支结果直接影响后续控制流（如 `trian = trian + 2` 或跳过该分支），进而影响输出语句的执行（如 `return ISOSCELES` 或 `return EQUILATERAL`）。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序状态（如 `a` 的值和 `trian` 的赋值），但存在输入使得原程序和变异体的最终输出不同。例如：\n- 输入 `a = b = 2, c = 1`：\n  - 原程序：`a == c` 为 `false`，`trian` 保持0，最终返回 `SCALENE`。\n  - 变异体：`--a == c` 为 `true`，`trian = 2`，后续可能返回 `ISOSCELES`。\n因此，变异引入的错误状态未被完全覆盖。  \n分析结论：错误状态未被抵消，程序输出可能改变。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_233 的分析, 耗时: 135.5367 秒
+
+开始分析变异体 MUT_234...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_234": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为`[a > 0 && b > 0 && c > 0 && trian == 0]`，这是一个可满足的条件组合。例如，当`a=1, b=1, c=1`时（注意此时`trian`会因为`a==b==c`而不为0，但存在其他输入如`a=2, b=3, c=4`满足`trian==0`），可以触发该变异语句的执行路径。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原始表达式为`if (a + b < c || a + c < b || b + c < a)`，变异后为`if (a + b != c || a + c < b || b + c < a)`。在满足`a > 0 && b > 0 && c > 0 && trian == 0`的条件下，存在输入使得两个表达式的值不同。例如，当`a=1, b=2, c=3`时，原表达式`a + b < c`为`3 < 3`（false），变异表达式`a + b != c`为`3 != 3`（false），此时两者行为一致；但当`a=2, b=3, c=5`时，原表达式`a + b < c`为`5 < 5`（false），变异表达式`a + b != c`为`5 != 5`（false），仍然一致；再比如`a=1, b=1, c=2`时，原表达式`a + b < c`为`2 < 2`（false），变异表达式`a + b != c`为`2 != 2`（false）。然而，当`a=1, b=2, c=3`时，两者行为一致，但需要更精确的输入。实际上，当`a + b == c`且`a + c >= b`且`b + c >= a`时，原表达式为false，变异表达式为true。例如，`a=1, b=2, c=3`满足`a + b == c`，此时原表达式为false（因为`1+2 < 3`为false，其他条件也为false），变异表达式为true（因为`1+2 != 3`为false，但其他条件可能为true）。因此，变异确实可能改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量为`a, b, c`，它们通过条件语句直接控制程序的分支走向。具体数据依赖路径为：\n- 变量`a, b, c`在条件语句`if (a + b != c || a + c < b || b + c < a)`中使用，其值直接影响是否执行`return INVALID`或`return SCALENE`。因此，变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句`if (a + b != c || a + c < b || b + c < a)`直接控制两个输出语句`return INVALID`（True分支）和`return SCALENE`（False分支）。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异可能改变条件语句的结果，但需要检查是否存在输入使得变异后的程序输出与原程序不同。例如，当`a=1, b=2, c=3`时：\n- 原程序：`a + b < c`为`3 < 3`（false），`a + c < b`为`4 < 2`（false），`b + c < a`为`5 < 1`（false），整体条件为false，返回`SCALENE`。\n- 变异体：`a + b != c`为`3 != 3`（false），其他条件同上，整体条件为false，返回`SCALENE`。\n当`a=1, b=2, c=2`时：\n- 原程序：`a + b < c`为`3 < 2`（false），其他条件类似，整体为false，返回`SCALENE`。\n- 变异体：`a + b != c`为`3 != 2`（true），整体条件为true，返回`INVALID`。\n此时，变异体和原程序的行为不同（原程序返回`SCALENE`，变异体返回`INVALID`），因此存在输入可以区分两者。\n分析结论：变异引入的错误状态未被完全覆盖，程序输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_234 的分析, 耗时: 72.5808 秒
+
+开始分析变异体 MUT_235...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_235": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && a == b && a != c && b != c && trian == 1 && trian <= 3]`。这些条件可以同时满足，例如 `a=2, b=2, c=1, trian=1`，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件是 `a + b > c`，变异后的条件是 `a % b > c`。由于 `a == b`，`a % b` 的结果为 `0`。因此，`a % b > c` 等价于 `0 > c`，而 `a + b > c` 等价于 `2a > c`。显然，`0 > c` 和 `2a > c` 在 `c > 0` 时语义不同（例如 `a=2, b=2, c=1` 时，原条件为 `4 > 1`（True），变异条件为 `0 > 1`（False））。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量 `a, b, c, trian` 的数据依赖路径显示，这些变量的值会直接影响 `return ISOSCELES` 或 `return INVALID` 的输出。例如，`a % b > c` 的结果直接决定是否返回 `ISOSCELES`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (trian == 1 && a % b > c)` 的控制依赖路径直接决定是否执行 `return ISOSCELES` 或进入后续条件判断。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了程序状态（如步骤2所示），但并未在后续执行中被修正或抵消。例如，当 `a=2, b=2, c=1` 时，原程序返回 `ISOSCELES`，而变异程序返回 `INVALID`（因为 `0 > 1` 为 False，进入后续条件判断后可能返回 `INVALID`）。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_235 的分析, 耗时: 97.2995 秒
+
+开始分析变异体 MUT_236...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_236": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `!(a <= 0 || b <= 0 || c <= 0), trian == 1, !(trian > 3)`，即 `a > 0 && b > 0 && c > 0 && trian == 1 && trian <= 3`。这些条件可以同时满足（例如 `a=2, b=1, c=1` 时 `trian=1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为 `trian == 1 && a + b > c`，变异后为 `trian == 1 && false`。当 `trian == 1` 时，原条件可能为 `true` 或 `false`（取决于 `a + b > c`），而变异后恒为 `false`。因此，变异会强制跳过原分支，导致程序状态改变（例如原应返回 `ISOSCELES` 的情况被跳过）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `trian` 和 `a, b, c`。`trian` 的值直接决定是否进入 `ISOSCELES` 分支，而 `a, b, c` 的值影响 `a + b > c` 的判断。变异后，`trian == 1` 时分支恒不执行，导致返回值可能从 `ISOSCELES` 变为其他值（如 `INVALID`）。因此，变异效果通过数据依赖传递到输出。\n分析结论：存在数据依赖链传播到程序输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (trian == 1 && false)` 直接控制是否执行 `return ISOSCELES`。变异后，该分支永不执行，程序会进入后续的 `else` 分支（如 `if (trian == 2 && a + c > b)`），从而可能改变最终返回值。因此，变异通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（强制跳过 `ISOSCELES` 分支）未被后续执行修正。例如，当 `trian == 1 && a + b > c` 时，原程序返回 `ISOSCELES`，而变异体返回 `INVALID`（或其他值），导致输出不一致。\n分析结论：错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_236 的分析, 耗时: 123.2816 秒
+
+开始分析变异体 MUT_237...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_237": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[a > 0 && b > 0 && c > 0, trian == 0]`。这些条件是可满足的，例如当 `a=1, b=2, c=3` 时，所有条件均成立，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `if (a + b < c || a + c < b || b + c < a)`，变异后为 `if (a + b < c || a + c < b || b + c != a)`。在路径约束 `a > 0 && b > 0 && c > 0 && trian == 0` 下，存在输入（如 `a=1, b=1, c=2`）使得原表达式为 `false`（因为 `1+1 < 2` 不成立，`1+2 < 1` 不成立，`1+2 < 1` 不成立），而变异表达式为 `true`（因为 `1+2 != 1` 成立）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a, b, c`。数据依赖路径显示：\n- 变量 `a, b, c` 的值直接影响条件判断结果，进而通过控制流影响 `return INVALID` 或 `return SCALENE`。\n- 变异后的条件 `b + c != a` 可能改变条件判断结果，从而影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示：\n- 变异语句 `if (a + b < c || a + c < b || b + c != a)` 直接控制分支走向，决定执行 `return INVALID` 或 `return SCALENE`。\n- 变异语句的真假结果直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序状态（如 `b + c != a` 可能使条件判断结果不同），但不存在逻辑上的状态覆盖或抵消现象。变异引入的状态改变会直接传递到输出，导致程序输出可能不同（如 `a=1, b=1, c=2` 时原程序返回 `SCALENE`，变异体返回 `INVALID`）。\n分析结论：变异引入的错误状态未被修正或抵消，程序输出可能改变。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_237 的分析, 耗时: 55.1666 秒
+
+开始分析变异体 MUT_238...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_238": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && trian == 0]`，这是一个可满足的条件组合（例如 `a=2, b=3, c=4` 满足所有约束）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为 `b + c < a`，变异后为 `b + ~c < a`。对于 `c > 0`，`~c` 是 `c` 的按位取反（例如 `c=1` 时 `~c=-2`），这会显著改变表达式的值。例如，输入 `a=5, b=1, c=2` 时：\n- 原表达式：`1 + 2 < 5` 为 `true`\n- 变异表达式：`1 + (-3) < 5` 为 `true`（值相同）\n但输入 `a=3, b=1, c=1` 时：\n- 原表达式：`1 + 1 < 3` 为 `true`\n- 变异表达式：`1 + (-2) < 3` 为 `true`（值相同）\n虽然部分输入下结果相同，但存在输入（如 `a=3, b=2, c=1`）使结果不同：\n- 原表达式：`2 + 1 < 3` 为 `false`\n- 变异表达式：`2 + (-2) < 3` 为 `true`\n因此，变异实际改变了程序状态。\n分析结论：变异改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `c`，其数据依赖路径直接连接到输出语句：\n1. `c` 在变异条件 `b + ~c < a` 中被使用，该条件的真假直接控制是否返回 `INVALID` 或 `SCALENE`。\n2. 变量 `c` 的其他数据依赖路径（如 `if (a == c)` 等）在 `trian == 0` 时不会被执行，因此主要影响当前分支。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a + b < c || a + c < b || b + ~c < a)` 直接控制两个输出分支：\n1. 条件为真时返回 `INVALID`。\n2. 条件为假时返回 `SCALENE`。\n因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异可能改变中间状态（如条件表达式的值），但不存在后续操作修正或抵消这种改变。变异直接决定程序的分支走向和最终返回值，且存在输入（如 `a=3, b=2, c=1`）使原程序和变异体的输出不同（原程序返回 `SCALENE`，变异体返回 `INVALID`）。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_238 的分析, 耗时: 84.1544 秒
+
+开始分析变异体 MUT_239...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_239": "### 步骤1：可达性  \n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && a == b]`。该条件在输入满足 `a > 0, b > 0, c > 0` 且 `a == b` 时可满足，因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性  \n说明理由：原程序语句为 `trian = trian + 1`，变异体为 `trian = trian / 1`。在 `trian` 的初始值为 0 的情况下：  \n- 原程序：`trian = 0 + 1 = 1`  \n- 变异体：`trian = 0 / 1 = 0`  \n由于 `trian` 的值被修改为 0 而非 1，程序状态发生改变。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n### 步骤3：数据依赖  \n说明理由：变量 `trian` 的数据依赖路径显示其值会传播到后续的条件判断（如 `if (trian == 0)`）和返回值（如 `return SCALENE` 或 `return ISOSCELES`）。因此，变异影响的变量会通过数据依赖链传播到程序输出。  \n分析结论：数据依赖条件满足。  \n\n### 步骤4：控制依赖  \n说明理由：变异语句 `trian = trian / 1` 的结果会影响后续控制流（如 `if (trian == 0)` 的分支选择），进而间接影响输出语句的执行路径。  \n分析结论：控制依赖条件满足。  \n\n### 步骤5：状态覆盖  \n说明理由：虽然变异改变了 `trian` 的值（从 1 变为 0），但后续逻辑中：  \n- 若 `a == c` 或 `b == c` 成立，`trian` 会被重新赋值为其他值（如 `trian + 2` 或 `trian + 3`），可能覆盖变异引入的状态。  \n- 但存在路径（如 `a == b` 且 `a != c` 且 `b != c`）使得 `trian` 的最终值仍为 0，导致程序返回 `SCALENE` 而非原程序的 `ISOSCELES`。因此，变异未被完全覆盖。  \n分析结论：状态未被完全覆盖，程序输出可能改变。  \n\n### 最终结论  \n等价变异体判定结果：NO。"}
+完成变异体 MUT_239 的分析, 耗时: 198.6168 秒
+
+开始分析变异体 MUT_240...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_240": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0, a == b]`，这些条件在输入满足 `a > 0 && b > 0 && c > 0 && a == b` 时是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `trian = trian + 1`，变异体为 `trian = trian * 1`。在 `trian` 初始值为 0 的情况下，`trian + 1` 结果为 1，而 `trian * 1` 结果为 0。因此，变异确实改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `trian` 通过数据依赖链传播到程序输出节点。`trian` 的值会影响后续的条件判断（如 `if (trian == 0)`、`if (trian > 3)` 等），从而影响最终的返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `trian = trian * 1` 的结果会影响后续的控制流（如 `if (trian == 0)` 等），从而间接影响输出语句的执行路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `trian` 的值（从 1 变为 0），但在后续的执行中，`trian` 的值可能会被其他语句修改（如 `trian = trian + 2` 或 `trian = trian + 3`），从而覆盖变异引入的错误状态。然而，在特定路径（如 `a == b` 且 `a != c` 且 `b != c`）下，`trian` 的值可能不会被覆盖，导致程序输出与原始程序不同。\n分析结论：变异引入的错误状态在某些路径下未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_240 的分析, 耗时: 138.3427 秒
+
+开始分析变异体 MUT_241...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_241": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `~a > 0 && b > 0 && c > 0`。根据逻辑非运算规则，`~a > 0` 等价于 `a <= 0`（因为 `~a` 是位取反，对于整数 `a`，`~a <= 0` 等价于 `a >= -1`，但具体语义需结合语言规范）。因此路径条件可简化为 `a <= 0 && b > 0 && c > 0`，这是一个可满足的条件组合（例如 `a = 0, b = 1, c = 1`）。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `a <= 0`，变异后为 `~a <= 0`。对于整数 `a`，`~a <= 0` 的语义与 `a >= -1` 等价（假设 `~a` 是位取反）。因此，当 `a = -2` 时，原表达式为 `true`，变异后为 `false`；当 `a = 0` 时，两者均为 `true`。因此存在输入（如 `a = -2`）使程序状态改变。\n分析结论：变异改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a`。数据依赖路径显示，`a` 的值直接影响条件判断 `if (~a <= 0 || b <= 0 || c <= 0)` 的结果，进而通过控制流影响返回值（如 `return INVALID` 或其他分支的返回值）。具体路径包括：\n1. 变异条件为真时直接返回 `INVALID`；\n2. 变异条件为假时影响后续所有控制流分支的返回值（如 `EQUILATERAL`、`ISOSCELES` 等）。\n分析结论：变异影响的变量 `a` 通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (~a <= 0 || b <= 0 || c <= 0)` 直接控制程序的分支走向：\n- 若为真，执行 `return INVALID`；\n- 若为假，进入后续所有三角形分类逻辑。\n所有输出语句（如 `return SCALENE`、`return EQUILATERAL` 等）均控制依赖于该变异语句。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序状态（如 `a = -2` 时原程序返回 `INVALID`，变异体可能进入其他分支），但不存在逻辑上的抵消或覆盖机制。例如：\n- 当 `a = -2` 时，原程序返回 `INVALID`，而变异体可能返回其他结果（如 `SCALENE`），导致输出不同。\n- 没有后续操作能修正因 `~a <= 0` 与 `a <= 0` 差异引入的状态改变。\n分析结论：变异引入的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_241 的分析, 耗时: 154.8202 秒
+
+开始分析变异体 MUT_242...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_242": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[a > 0 && b > 0 && c > 0, trian == 0]`。这些条件是可满足的，例如当 `a=1, b=1, c=1` 时（尽管 `trian` 会不为0，但存在其他输入如 `a=2, b=3, c=4` 满足 `trian == 0`），因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `if (a + b < c || a + c < b || b + c < a)`，变异后为 `if (a + b >= c || a + c < b || b + c < a)`。在路径约束 `a > 0 && b > 0 && c > 0 && trian == 0` 下，存在输入使原表达式与变异表达式结果不同。例如 `a=1, b=1, c=3`：原表达式为 `(1+1<3)=true`，变异表达式为 `(1+1>=3)=false`，导致程序状态改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `a, b, c`，其数据依赖路径直接连接到输出语句（`return INVALID` 或 `return SCALENE`）。例如，`a` 和 `b` 在条件 `a + b >= c` 中的变化会通过控制流影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a + b >= c || ...)` 的控制依赖路径直接决定输出语句的执行（`return INVALID` 或 `return SCALENE`）。例如，条件为真时返回 `INVALID`，为假时返回 `SCALENE`。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了条件逻辑，但存在输入（如 `a=1, b=2, c=3`）使原程序返回 `SCALENE`，而变异体因 `a + b >= c` 为假也返回 `SCALENE`，看似输出相同。但其他输入（如 `a=1, b=1, c=3`）会导致原程序返回 `SCALENE`，变异体返回 `INVALID`，输出不同。因此，错误状态未被完全覆盖或抵消。\n分析结论：变异引入的错误状态未被修正或抵消，程序输出可能改变。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_242 的分析, 耗时: 62.6851 秒
+
+开始分析变异体 MUT_243...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_243": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[a > 0 && b > 0 && c > 0, trian == 0]`，这些条件在输入满足`a > 0 && b > 0 && c > 0`且`a != b && a != c && b != c`（即`trian == 0`）时是可满足的。例如，输入`a=1, b=2, c=3`可以触发该变异语句的执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件为`b + c < a`，变异后的条件为`b + c != a`。在`trian == 0`的路径下，当`b + c == a`时，原条件为`false`，而变异条件为`true`。例如，输入`a=5, b=2, c=3`时，原程序返回`SCALENE`，而变异体返回`INVALID`。因此，变异改变了程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`a, b, c`通过条件判断直接控制程序的分支走向。数据依赖路径显示，变异语句的结果（`True`或`False`）直接影响`return INVALID`或`return SCALENE`的输出。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (a + b < c || a + c < b || b + c != a)`直接控制两个分支：`return INVALID`（True分支）和`return SCALENE`（False分支）。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些输入（如`a=5, b=2, c=3`）下会改变程序的分支行为（从`SCALENE`到`INVALID`），但这种改变是程序语义的实际变化，而非错误状态的抵消或修正。因此，变异引入的错误状态未被覆盖，程序输出确实受到影响。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_243 的分析, 耗时: 63.3328 秒
+
+开始分析变异体 MUT_244...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_244": "### 步骤[可达性]：\n说明理由：根据提供的变异体信息和程序控制流图，变异语句位于`if (trian == 1 && a / b > c)`的条件判断中。路径条件组合为`[!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), !(b == c), !(trian == 0), !(trian > 3)]`，即`a > 0 && b > 0 && c > 0 && a != b && a != c && b != c && trian == 1`。这些条件可以同时满足（例如`a=2, b=1, c=3, trian=1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件为`if (trian == 1 && a + b > c)`，变异后为`if (trian == 1 && a / b > c)`。在`trian == 1`的路径约束下，比较`a + b > c`和`a / b > c`的语义差异。例如，当`a=3, b=1, c=2`时，原条件为`3 + 1 > 2`（True），变异条件为`3 / 1 > 2`（True）；但当`a=3, b=2, c=2`时，原条件为`3 + 2 > 2`（True），变异条件为`3 / 2 > 2`（False）。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`a, b, c`，其数据依赖路径显示：\n- 变量`a, b, c`的值直接影响条件`if (trian == 1 && a / b > c)`的真假。\n- 条件判断的结果直接控制`return ISOSCELES`或后续其他分支的执行，最终影响返回值。\n- 因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian == 1 && a / b > c)`的控制依赖路径显示：\n- 其真分支直接指向`return ISOSCELES`。\n- 其假分支指向后续的其他条件判断（如`if (trian == 2 && a + c > b)`等），最终影响返回值。\n- 因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序状态（如`a / b > c`与`a + b > c`的差异），但并未在后续执行中被修正或抵消。例如：\n- 当`a / b > c`为True时，直接返回`ISOSCELES`，与原程序`a + b > c`为True时的行为一致。\n- 但当`a / b > c`为False而`a + b > c`为True时，程序可能进入其他分支（如`if (trian == 2 && a + c > b)`），导致返回值不同（如返回`INVALID`而非`ISOSCELES`）。\n- 因此，变异引入的错误状态未被覆盖，会影响最终输出。\n分析结论：变异引入的错误状态未被覆盖，影响输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_244 的分析, 耗时: 78.2491 秒
+
+开始分析变异体 MUT_245...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_245": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[a > 0 && b > 0 && c > 0, a != b, a != c, b == c]`。这些条件可以同时满足（例如 `a=1, b=2, c=2`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `trian = trian + 3`，变异体为 `trian = trian + -3`。在路径约束 `b == c` 下，原程序会将 `trian` 增加3，而变异体会将 `trian` 减少3。这会显著改变 `trian` 的值（例如从0变为3或-3），从而影响后续的条件判断和返回值。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `trian` 的数据依赖路径清晰：\n1. `trian` 的值直接影响 `if (trian == 0)` 的判断，进而影响后续的 `if (trian > 3)` 和 `if (trian == 1/2/3)` 等条件分支。\n2. 这些条件分支直接决定了程序的返回值（如 `return INVALID`、`return SCALENE` 等）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `trian = trian + -3` 的结果通过控制流影响多个输出语句：\n1. 它直接控制 `if (trian == 0)` 的分支，进而影响 `return INVALID` 或 `return SCALENE`。\n2. 它还间接影响 `if (trian > 3)` 和 `if (trian == 1/2/3)` 的分支，从而影响 `return EQUILATERAL`、`return ISOSCELES` 等。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `trian` 的值，但程序的行为会因 `trian` 的不同值而完全改变。例如：\n- 原程序在 `b == c` 时 `trian` 增加3，可能进入 `trian > 3` 分支返回 `EQUILATERAL`。\n- 变异体在 `b == c` 时 `trian` 减少3，可能进入 `trian == 0` 分支返回 `SCALENE` 或 `INVALID`。\n不存在状态被后续执行修正或抵消的情况。\n分析结论：变异引入的错误状态未被覆盖，程序输出会受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_245 的分析, 耗时: 79.2953 秒
+
+开始分析变异体 MUT_246...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_246": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[!(a <= 0 || b <= 0 || c <= 0), a == c]`，即`a > 0 && b > 0 && c > 0 && a == c`。这是一个可满足的条件（例如a=2, b=1, c=2），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序为`trian = trian + 2`，变异体为`trian = trian + -2`。在路径条件`a == c`下，`trian`的值会被修改为`trian - 2`而非`trian + 2`，这会直接改变程序状态（`trian`的值）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`trian`通过数据依赖链传播到多个输出节点（如`if (trian == 0)`、`if (trian > 3)`等），最终影响返回值（如`return SCALENE`、`return ISOSCELES`等）。具体路径显示`trian`的值直接参与控制流决策和返回值计算。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`trian = trian + -2`的结果通过控制依赖路径影响后续所有基于`trian`的条件判断（如`if (trian == 0)`、`if (trian > 3)`等），最终影响输出语句的执行路径（如`return SCALENE`或`return ISOSCELES`）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`trian`的值，但程序后续逻辑中会根据`trian`的不同值分支到不同的输出路径。例如：\n- 若原`trian + 2`使`trian > 3`成立，而变异后`trian - 2`可能不成立，会导致分支路径不同，最终返回值不同。\n- 具体输入如`a=2, b=1, c=2`时：\n  - 原程序：`trian = 0 + 2 = 2`，最终可能返回`ISOSCELES`。\n  - 变异体：`trian = 0 - 2 = -2`，最终可能返回`INVALID`或`SCALENE`。\n因此，变异引入的状态差异未被后续执行覆盖，会导致输出不同。\n分析结论：变异引入的错误状态未被修正或抵消，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_246 的分析, 耗时: 97.1678 秒
+
+开始分析变异体 MUT_247...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_247": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), trian != 0]`，即 `a > 0 && b > 0 && c > 0 && trian != 0`。该条件是可满足的，例如输入 `a=1, b=1, c=1` 可以满足条件并执行到变异语句。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序条件为 `if (trian > 3)`，变异体条件为 `if (trian > -3)`。在 `trian` 的取值范围（非负整数）下，`trian > -3` 等价于 `trian >= 0`。由于 `trian` 的最小值为 0（初始化值），且后续通过加法递增，因此 `trian > -3` 恒为真。而原条件 `trian > 3` 仅在 `trian` 大于 3 时为真。因此，变异体将原条件放宽为恒真，改变了程序的控制流。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `trian`，其数据依赖路径显示 `trian` 的值直接影响 `if (trian > -3)` 的判断结果，进而通过控制流影响后续的返回语句（如 `return EQUILATERAL;` 或 `return ISOSCELES;`）。因此，变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (trian > -3)` 的控制依赖路径直接决定了后续返回语句的执行（如 `return EQUILATERAL;` 或进入其他分支）。由于变异体将条件改为恒真，原程序 `trian > 3` 为假的分支在变异体中可能为真，从而改变输出结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体将条件改为恒真，但原程序 `trian > 3` 的分支仅在 `trian` 大于 3 时返回 `EQUILATERAL`，而变异体会在 `trian` 为 0、1、2、3 时也进入该分支。例如：\n- 输入 `a=2, b=2, c=2`：原程序 `trian=6`，返回 `EQUILATERAL`；变异体同样返回 `EQUILATERAL`。\n- 输入 `a=2, b=2, c=3`：原程序 `trian=3`，返回 `ISOSCELES`；变异体返回 `EQUILATERAL`（因为 `trian > -3` 为真）。\n因此，变异体在某些输入下会输出与原程序不同的结果。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出可能受影响。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_247 的分析, 耗时: 108.0940 秒
+
+开始分析变异体 MUT_248...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_248": "### 步骤1：可达性\n说明理由：根据提供的变异体信息和路径约束条件，变异语句位于`if (trian == 2 && a + c > b)`的条件判断中。路径约束条件为`[!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), !(b == c), !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c)]`，这意味着程序执行到该变异语句的条件是满足的，即变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是`if (trian == 2 && a + c > b)`，变异后的条件是`if (trian++ == 2 && a + c > b)`。变异操作`trian++`会改变`trian`的值（先比较后自增），这会影响后续的条件判断和程序状态。例如，如果`trian`原本为2，变异后的条件判断为真，但`trian`的值会变为3，可能影响后续的`if (trian == 3 && b + c > a)`的判断。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`trian`，其数据依赖路径显示`trian`的值会传播到多个输出节点（如`return ISOSCELES`、`return INVALID`等）。变异后的`trian++`操作会改变`trian`的值，从而影响后续的条件判断和程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句`if (trian++ == 2 && a + c > b)`的控制依赖路径显示，其真分支和假分支都会影响输出语句（如`return ISOSCELES`或`return INVALID`）。变异后的条件判断会改变程序的控制流，从而影响输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异引入了`trian++`操作，改变了`trian`的值，但这种改变会直接影响后续的条件判断和程序输出。例如，`trian`的值从2变为3可能导致程序从返回`ISOSCELES`变为返回`INVALID`或其他值。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_248 的分析, 耗时: 62.4729 秒
+
+开始分析变异体 MUT_249...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_249": "### 步骤[可达性]：\n说明理由：变异语句的条件为`if (a == 0 || b <= 0 || c <= 0)`，其路径条件组合为`a > 0 && b > 0 && c > 0`时可达。例如输入`a=1, b=1, c=1`可以满足路径条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`a <= 0`，变异后为`a == 0`。当`a < 0`时，原条件为真而变异条件为假，程序行为会发生变化（原程序返回`INVALID`，变异体继续执行后续逻辑）。因此变异实际改变了程序语义。\n分析结论：变异具有必要性，改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`a`，其数据依赖路径显示`a`的值会直接影响`if`条件判断结果，进而通过控制流影响返回值（如`return INVALID`或后续逻辑）。因此变异效果可通过数据依赖传播到输出。\n分析结论：存在数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制程序分支走向（如是否返回`INVALID`），且输出语句（如`return INVALID`或`return SCALENE`等）控制依赖于该条件判断结果。因此变异语句通过控制流影响输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异在`a < 0`时改变了程序行为（如跳过`INVALID`返回），但后续逻辑中若`a`的取值不再影响输出（例如`trian`的计算和最终分类结果），则可能被覆盖。但根据数据依赖分析，`a`的值会参与后续条件判断（如`a + b < c`），因此错误状态可能未被完全覆盖。\n分析结论：错误状态未被完全覆盖，可能影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。  \n（尽管在某些路径下变异可能被覆盖，但存在输入如`a=-1, b=2, c=3`使程序行为不同，故为非等价变异体。）"}
+完成变异体 MUT_249 的分析, 耗时: 131.2661 秒
+
+开始分析变异体 MUT_250...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_250": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c)]`，即 `a > 0 && b > 0 && c > 0 && trian != 0 && trian <= 3 && (trian != 1 || a + b <= c)`。这些条件可以同时满足，例如当 `a=2, b=2, c=3` 时，`trian=1`（因为 `a == b`），且 `a + b = 4 > c = 3` 不满足 `a + b <= c`，因此路径可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序条件为 `a + c > b`，变异后为 `a + c >= b`。在 `a + c == b` 的情况下，原程序条件为 `false`，变异后条件为 `true`，会导致程序执行不同的分支（原程序可能返回 `INVALID`，变异体可能返回 `ISOSCELES`）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a`、`b`、`c` 和 `trian`。这些变量的数据依赖路径显示，变异语句的条件判断结果直接影响 `return ISOSCELES` 或后续的条件判断（如 `if (trian == 3 && b + c > a)`），最终影响程序输出。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (trian == 2 && a + c >= b)` 的控制依赖路径直接连接到输出语句 `return ISOSCELES` 或后续的条件判断（如 `if (trian == 3 && b + c > a)`），最终影响程序输出。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了条件判断的逻辑（`a + c > b` 变为 `a + c >= b`），但在 `a + c == b` 的情况下，原程序会执行 `else` 分支（可能返回 `INVALID`），而变异体会执行 `if` 分支（返回 `ISOSCELES`）。因此，变异引入的错误状态未被修正或抵消，程序输出可能不同。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_250 的分析, 耗时: 68.1168 秒
+
+开始分析变异体 MUT_251...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_251": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), a != b, a != c, b != c]`，即 `a > 0 && b > 0 && c > 0 && a != b && a != c && b != c`。该条件是可满足的，例如 `a=1, b=2, c=3` 满足所有约束条件。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是 `if (trian == 0)`，变异体改为 `if (trian == -1)`。在路径约束 `a > 0 && b > 0 && c > 0 && a != b && a != c && b != c` 下，`trian` 的初始值为 0，且不会被修改为 -1（因为 `a != b && a != c && b != c` 时 `trian` 不会被增加）。因此，原程序的条件 `trian == 0` 恒为真，而变异体的条件 `trian == -1` 恒为假。这会导致程序执行不同的分支，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `trian`，其数据依赖路径如下：\n1. `trian = 0` → `if (trian == -1)` → `if (a + b < c || a + c < b || b + c < a)` → `return INVALID` 或 `return SCALENE`。\n2. `trian = 0` → `if (trian == -1)` → `if (trian > 3)` → 其他返回语句。\n由于 `trian` 的值直接影响条件判断和后续返回语句，变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句 `if (trian == -1)` 控制以下分支：\n1. 如果为真，执行 `if (a + b < c || a + c < b || b + c < a)` 分支。\n2. 如果为假，执行 `if (trian > 3)` 等其他分支。\n这些分支直接影响程序的返回值，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：在路径约束 `a > 0 && b > 0 && c > 0 && a != b && a != c && b != c` 下：\n- 原程序执行 `if (trian == 0)` 为真，进入 `if (a + b < c || a + c < b || b + c < a)` 分支。\n- 变异体执行 `if (trian == -1)` 为假，进入 `if (trian > 3)` 等其他分支。\n由于 `trian` 的值不同，程序会执行不同的分支，导致不同的返回值（例如 `SCALENE` 或 `INVALID`），因此变异引入的错误状态未被修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_251 的分析, 耗时: 87.5083 秒
+
+开始分析变异体 MUT_252...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_252": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[!(a <= 0 || b <= 0 || c <= 0) && trian == 3]`，即`a > 0 && b > 0 && c > 0 && trian == 3`。这是一个可满足的条件，例如输入`a=2, b=2, c=2`时满足该条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`if (trian == 3 && b + c > a)`，变异后为`if (trian == 3 ^ b + c > a)`。当`trian == 3`时：\n- 原表达式：仅当`b + c > a`为真时整体为真\n- 变异表达式：当`b + c > a`为假时整体为真（因为`true ^ false = true`）\n因此存在输入（如`a=2, b=1, c=1`，此时`trian=3`且`b + c = 2 > a = 2`为假）会使原表达式和变异表达式结果不同（原为假，变异为真），从而改变程序控制流。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`trian, a, b, c`通过数据依赖链传播到输出节点。具体路径为：\n1. `trian`：变异点→条件判断→return语句\n2. `a, b, c`：变异点→条件判断中的`b + c > a`→return语句\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制两个输出分支：\n1. 条件为真→返回ISOSCELES\n2. 条件为假→返回INVALID\n变异语句的真假直接决定程序执行哪个return语句。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的控制流，但在某些情况下（如`trian != 3`）不会影响输出。然而当`trian == 3`时，变异会导致不同的返回结果（如前述`a=2, b=1, c=1`时原程序返回INVALID而变异体返回ISOSCELES），因此错误状态未被覆盖。\n分析结论：变异引入的错误状态未被完全覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_252 的分析, 耗时: 121.0280 秒
+
+开始分析变异体 MUT_253...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_253": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0, trian == 0]`。这些条件是可满足的，例如当 `a=1, b=2, c=3` 时，满足 `a > 0 && b > 0 && c > 0` 且 `trian == 0`（因为 `a != b && a != c && b != c`）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序的条件为 `b + c < a`，变异后的条件为 `b + c != a`。在路径约束 `a > 0 && b > 0 && c > 0 && trian == 0` 下，存在输入使得这两个条件的值不同。例如：\n- 当 `a=5, b=2, c=3` 时：\n  - 原条件 `b + c < a` 为 `5 < 5`（false）\n  - 变异条件 `b + c != a` 为 `5 != 5`（false）\n- 当 `a=5, b=2, c=2` 时：\n  - 原条件 `b + c < a` 为 `4 < 5`（true）\n  - 变异条件 `b + c != a` 为 `4 != 5`（true）\n- 当 `a=5, b=2, c=3` 时：\n  - 原条件 `b + c < a` 为 `5 < 5`（false）\n  - 变异条件 `b + c != a` 为 `5 != 5`（false）\n看起来似乎没有区别，但进一步分析：\n- 当 `a=5, b=2, c=3` 时：\n  - 原条件 `b + c < a` 为 `5 < 5`（false）\n  - 变异条件 `b + c != a` 为 `5 != 5`（false）\n- 当 `a=5, b=3, c=2` 时：\n  - 原条件 `b + c < a` 为 `5 < 5`（false）\n  - 变异条件 `b + c != a` 为 `5 != 5`（false）\n实际上，`b + c < a` 和 `b + c != a` 只有在 `b + c == a` 时有区别：\n- 原条件 `b + c < a` 为 false\n- 变异条件 `b + c != a` 为 false\n因此，这两个条件在逻辑上是等价的，不会改变程序状态。\n分析结论：变异未实际改变程序语义，属于非必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：虽然变异语句可达且似乎改变了条件逻辑，但根据必要性分析，变异并未实际改变程序语义。因此，数据依赖分析可以跳过，因为变异体与原程序在语义上等价。\n分析结论：数据依赖不影响等价性判定。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句的控制依赖路径确实存在，但由于变异未实际改变程序语义（必要性分析），控制依赖不影响最终输出。\n分析结论：控制依赖不影响等价性判定。\n\n### 步骤[5. 状态覆盖]：\n说明理由：由于变异条件 `b + c != a` 与原条件 `b + c < a` 在 `b + c == a` 时的行为一致（均为 false），且在其他情况下行为也一致，因此变异引入的“错误状态”实际上并未改变程序的行为。程序输出不受影响。\n分析结论：变异引入的状态差异被逻辑覆盖，不影响输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_253 的分析, 耗时: 70.6717 秒
+
+开始分析变异体 MUT_254...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_254": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0) && !(a == b) && !(a == c) && !(b == c) && (trian == 0)`。这些条件可以满足，例如当a=2, b=3, c=4时，所有条件均为真，因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`if (a + b < c || a + c < b || b + c < a)`，变异表达式为`if (a + b <= c || a + c < b || b + c < a)`。在变异语句可达的情况下，存在输入（如a=1, b=2, c=3）使得原表达式为`false`（1+2=3不小于3），而变异表达式为`true`（1+2=3等于3），导致程序状态改变（返回INVALID而非SCALENE）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量a、b、c通过数据依赖链直接传播到输出节点。具体路径为：变异条件的结果控制了两个分支：返回INVALID或SCALENE。因此，变异影响的变量通过控制流直接影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (a + b <= c || a + c < b || b + c < a)`直接控制两个输出语句：`return INVALID;`和`return SCALENE;`。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，且变异体造成的程序状态改变可直接传递至输出。例如，输入a=1, b=2, c=3时，原程序返回SCALENE，变异体返回INVALID，输出结果不同，不存在状态覆盖现象。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_254 的分析, 耗时: 94.5660 秒
+
+开始分析变异体 MUT_255...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_255": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断`if (a >= c)`，其路径条件组合为`a > 0 && b > 0 && c > 0`（由前置条件`a <= 0 || b <= 0 || c <= 0`的否定得出）。该路径条件可满足（例如`a=1, b=1, c=1`），因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`if (a == c)`，变异后为`if (a >= c)`。当`a == c`时两者行为一致，但当`a > c`时原条件为false而变异条件为true。例如输入`(a=2, b=1, c=1)`会使`trian`的累加逻辑改变（原程序不执行`trian = trian + 2`，变异体会执行），从而影响后续控制流。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`a`和`c`通过`trian`的值直接影响输出。具体路径为：`a/c → trian → 返回值`。例如当`a > c`时，变异体会额外执行`trian += 2`，可能改变最终的`EQUILATERAL/ISOSCELES`判断结果。\n分析结论：变异效果可通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制`trian = trian + 2`的执行，而`trian`的值决定后续所有`if (trian == x)`的分支走向，最终影响`return`语句的选择（如控制路径11显示`trian`变化可导致从`return ISOSCELES`变为`return INVALID`）。\n分析结论：变异效果可通过控制依赖路径传递到输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异在某些情况下（如`a == c`）不会改变输出，但存在输入（如`a=3, b=2, c=1`）使原程序返回`SCALENE`而变异体返回`INVALID`，说明错误状态未被完全覆盖。\n分析结论：变异可导致程序输出改变。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_255 的分析, 耗时: 137.2864 秒
+
+开始分析变异体 MUT_256...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_256": "### 步骤[可达性]：\n说明理由：根据REACHABILITY_CONSTRAINT提供的路径条件组合`[!(a <= 0 || b <= 0 || c <= 0), !(a == b), a == c, !(b == c), !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c)]`，可以推导出满足条件的输入存在（例如a=2, b=1, c=2）。变异语句位于`trian == 2`的分支内，且前置条件`a == c`成立，因此该变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`a + c > b`，变异为`a / c > b`。在路径约束`a == c`下（例如a=2, b=1, c=2）：\n- 原表达式：2 + 2 > 1 → True  \n- 变异表达式：2 / 2 > 1 → 1 > 1 → False  \n两者结果不同，导致程序分支选择改变（原程序返回ISOSCELES，变异体可能进入后续分支）。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`a, c`通过条件判断直接控制返回值（如返回ISOSCELES或进入后续分支）。数据依赖路径显示：\n- `a/c`的结果通过控制依赖直接影响`return ISOSCELES`或后续分支的返回值（如`return INVALID`）。  \n分析结论：变异效果通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian == 2 && a / c > b)`的控制流直接影响输出语句（如第45行`return ISOSCELES`或第52行`return INVALID`）。控制依赖路径明确存在从变异节点到输出节点的边。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些输入下（如a=2, b=1, c=2）会导致分支选择不同，但最终输出可能因逻辑抵消而相同（例如原程序返回ISOSCELES，变异体因`a / c > b`为False而进入后续分支，但若后续条件`trian == 3`不满足，仍返回INVALID）。然而，存在其他输入（如a=3, b=1, c=3）：\n- 原程序：3 + 3 > 1 → 返回ISOSCELES  \n- 变异体：3 / 3 > 1 → 1 > 1 → False → 可能返回INVALID  \n此时输出不同，说明错误状态未被完全覆盖。  \n分析结论：变异效果未被后续执行完全抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。  \n（关键依据：存在输入使变异体与原程序输出不同，如`a=3, b=1, c=3`时，原程序返回ISOSCELES，变异体返回INVALID）"}
+完成变异体 MUT_256 的分析, 耗时: 73.5020 秒
+
+开始分析变异体 MUT_257...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_257": "### 步骤[可达性]：\n说明理由：根据变异体的可达性约束条件 `[!(a <= 0 || b <= 0 || c <= 0) && a == c && trian == 2 && !(trian == 0) && !(trian > 3) && !(trian == 1 && a + b > c)]`，可以推导出以下条件：\n1. `a > 0 && b > 0 && c > 0`（所有边长必须为正数）\n2. `a == c`（边长a和c相等）\n3. `trian == 2`（表示a和c相等，但b不等）\n4. 其他条件排除了其他三角形类型（非等边、非第一种等腰情况）\n\n这些条件在数学上是可满足的（例如 `a=2, b=3, c=2` 满足所有约束），因此变异语句可达。\n\n分析结论：变异语句可达。\n\n---\n\n### 步骤[必要性]：\n说明理由：原条件为 `a + c > b`，变异后为 `a - c > b`。在可达路径的约束下：\n1. 已知 `a == c`，因此原条件简化为 `a + a > b` → `2a > b`\n2. 变异条件简化为 `a - a > b` → `0 > b`\n\n由于 `b > 0`（由可达性约束），变异条件 `0 > b` 恒为假，而原条件 `2a > b` 可能为真（例如 `a=2, b=3` 时为真，`a=2, b=5` 时为假）。因此，变异改变了程序的分支行为。\n\n分析结论：变异实际改变了程序状态。\n\n---\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a, b, c` 和 `trian`。数据依赖路径如下：\n1. 如果 `a - c > b` 为真（实际不可能，见必要性分析），返回 `ISOSCELES`。\n2. 如果为假（必然），进入后续条件判断 `trian == 3 && b + c > a`，最终可能返回 `ISOSCELES` 或 `INVALID`。\n\n由于变异条件的结果直接影响控制流，进而影响返回值，因此变异效果可通过数据依赖传递到输出。\n\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n---\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (trian == 2 && a - c > b)` 直接控制以下分支：\n1. 条件为真时返回 `ISOSCELES`（实际不可达）。\n2. 条件为假时进入后续判断逻辑。\n\n由于返回值直接或间接受该条件控制，变异语句与输出语句存在控制依赖。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n---\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的分支行为（`a - c > b` 恒为假，而原条件 `a + c > b` 可能为真），但在可达路径的约束下：\n1. 原程序在 `a + c > b` 为真时返回 `ISOSCELES`，为假时进入后续判断。\n2. 变异程序直接进入后续判断（因为 `a - c > b` 恒为假）。\n\n然而，由于 `a == c` 且 `trian == 2`，后续判断 `trian == 3` 必然为假，最终返回 `INVALID`。而原程序在 `a + c > b` 为假时也会返回 `INVALID`。因此，尽管分支路径不同，最终输出结果一致。\n\n分析结论：变异引入的错误状态被后续逻辑覆盖，程序最终输出未受影响。\n\n---\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_257 的分析, 耗时: 95.2789 秒
+
+开始分析变异体 MUT_258...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_258": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), trian != 0, trian <= 3, trian != 1, trian != 2]`。这些条件可以简化为 `a > 0 && b > 0 && c > 0 && trian == 3`。这是一个可满足的条件组合，例如 `a=2, b=2, c=2` 可以满足这些条件，因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原始表达式为 `if (trian == 3 && b + c > a)`，变异后为 `if (!(trian == 3) && b + c > a)`。在路径条件 `trian == 3` 下，原始表达式简化为 `if (true && b + c > a)`，而变异表达式简化为 `if (false && b + c > a)`。两者在 `trian == 3` 时的取值不同（原为 `true`，变异为 `false`），因此程序状态会改变。\n\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `trian`。`trian` 的值直接用于条件判断 `if (!(trian == 3) && b + c > a)`，而该条件判断的结果会直接影响程序的输出（返回 `ISOSCELES` 或 `INVALID`）。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n\n分析结论：存在数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (!(trian == 3) && b + c > a)` 直接控制两个输出分支：如果条件为真，返回 `ISOSCELES`；如果为假，返回 `INVALID`。因此，变异语句通过控制流直接影响输出语句。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：在路径条件 `trian == 3` 下，原始程序会执行 `if (true && b + c > a)`，如果 `b + c > a` 为真，则返回 `ISOSCELES`；否则返回 `INVALID`。变异程序会执行 `if (false && b + c > a)`，条件恒为假，因此总是返回 `INVALID`。因此，当 `b + c > a` 为真时，原始程序返回 `ISOSCELES`，而变异程序返回 `INVALID`，输出结果不同。\n\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出可能受影响。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_258 的分析, 耗时: 101.8695 秒
+
+开始分析变异体 MUT_259...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_259": "### 步骤1：可达性  \n说明理由：变异语句位于第22行的`if (a == b++)`，其路径条件为`!(a <= 0 || b <= 0 || c <= 0)`（即`a > 0 && b > 0 && c > 0`）。该条件可满足（例如输入`a=1, b=1, c=1`），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性  \n说明理由：原表达式为`if (a == b)`，变异后为`if (a == b++)`。后置递增操作会先比较`a`和`b`的原始值，再对`b`加1。若`a == b`成立，变异体的比较结果与原程序一致，但会额外修改`b`的值。例如输入`a=1, b=1, c=2`时，原程序执行`trian = trian + 1`，而变异体执行相同操作但会修改`b`为2，可能影响后续`if (b == c)`的判断。因此，变异实际改变了程序状态。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n### 步骤3：数据依赖  \n说明理由：变异影响的变量`b`通过数据依赖链传播到输出节点。例如：  \n1. `b`在`if (b == c)`中影响`trian`的赋值（如`trian = trian + 3`），进而影响`if (trian > 3)`等分支的返回值。  \n2. `b`在`if (a + b < c)`等条件中直接影响返回值（如`return INVALID`或`return SCALENE`）。  \n因此，变异效果可通过数据依赖传递到输出。  \n分析结论：存在数据依赖链传播到输出。  \n\n### 步骤4：控制依赖  \n说明理由：变异语句`if (a == b++)`控制后续分支的执行路径。例如：  \n- 若变异语句为真，执行`trian = trian + 1`，影响后续`trian`相关分支（如`if (trian == 1)`）。  \n- 若为假，跳过该分支，但`b`的修改仍可能影响其他条件（如`if (b == c)`）。  \n因此，变异语句通过控制流间接影响输出语句。  \n分析结论：存在控制依赖路径影响输出。  \n\n### 步骤5：状态覆盖  \n说明理由：虽然变异体修改了`b`的值并可能改变程序状态，但存在输入使得最终输出未被影响。例如：  \n- 输入`a=1, b=1, c=1`时，原程序执行路径为`trian = trian + 1` → `trian = trian + 3` → `return EQUILATERAL`；变异体执行相同路径（尽管`b`被修改为2，但`c=1`不满足`b == c`，不影响`trian`的累加结果）。  \n- 但其他输入（如`a=1, b=1, c=2`）会导致`trian`的值不同，进而影响输出（如`return ISOSCELES`变为`return INVALID`）。  \n因此，并非所有情况下错误状态被覆盖。  \n分析结论：状态覆盖不成立，变异体可能改变程序输出。  \n\n### 最终结论  \n等价变异体判定结果：NO。"}
+完成变异体 MUT_259 的分析, 耗时: 258.1666 秒
+
+开始分析变异体 MUT_260...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_260": "### 步骤1：可达性  \n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[a > 0 && b > 0 && c > 0 && trian == 0]`。该条件组合是可满足的（例如，`a=1, b=2, c=3` 满足所有约束），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性  \n说明理由：原始表达式为 `a + c < b`，变异后为 `--a + c < b`。变异操作是对变量 `a` 的前置递减，这会改变 `a` 的值和表达式的计算结果。例如，输入 `a=2, b=4, c=1` 时：  \n- 原程序：`2 + 1 < 4` 为 `true`，返回 `INVALID`。  \n- 变异体：`--a + 1 < 4`（即 `1 + 1 < 4`）为 `true`，但 `a` 的值从 `2` 变为 `1`，可能影响后续逻辑（若后续代码使用 `a`）。  \n因此，变异实际改变了程序状态。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n### 步骤3：数据依赖  \n说明理由：变异影响的变量是 `a`，其数据依赖路径从变异点（第32行）直接连接到输出语句（第33行或第35行）。例如：  \n- 若 `--a + c < b` 为 `true`，返回 `INVALID`；  \n- 若为 `false`，返回 `SCALENE`。  \n由于 `a` 的值被修改且直接影响条件判断结果，变异效果可通过数据依赖链传播到输出。  \n分析结论：存在数据依赖链传播到输出。  \n\n### 步骤4：控制依赖  \n说明理由：变异语句（第32行）通过控制流直接影响输出语句（第33行或第35行）。其控制依赖路径为：  \n- `32行条件为真` → `33行返回INVALID`；  \n- `32行条件为假` → `35行返回SCALENE`。  \n因此，变异语句的真假结果直接决定了输出分支。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n### 步骤5：状态覆盖  \n说明理由：虽然变异改变了 `a` 的值并影响了条件判断，但程序在输出前未再次使用 `a`，因此变异的效果未被后续逻辑修正或抵消。例如：  \n- 若变异导致条件从 `false` 变为 `true`，程序会从返回 `SCALENE` 改为返回 `INVALID`，输出结果改变。  \n分析结论：错误状态未被覆盖，影响最终输出。  \n\n### 最终结论  \n等价变异体判定结果：NO。"}
+完成变异体 MUT_260 的分析, 耗时: 171.1828 秒
+
+开始分析变异体 MUT_261...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_261": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), b == c, !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c), !(trian == 2 && a + c > b)`。这些条件可以满足，例如当`a=2, b=3, c=3`时，所有条件均为真，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`b + c > a`，变异表达式为`b % c > a`。在路径约束下（`b == c`且`a != b`），当`b == c`时，`b % c`等于0，而`b + c`等于`2b`。因此，当`a`在`(0, 2b)`范围内时，原始表达式为`true`，变异表达式为`false`，程序状态会改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`b`和`c`。数据依赖路径显示，`b`和`c`的值直接影响条件判断`if (trian == 3 && b % c > a)`的结果，进而影响返回值（`ISOSCELES`或`INVALID`）。变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian == 3 && b % c > a)`直接控制程序分支的走向，其真假结果决定执行`return ISOSCELES;`或`return INVALID;`。变异语句与输出语句存在直接控制依赖路径。\n分析结论：变异效果可以通过控制流传递到输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体满足可达性、必要性、数据依赖与控制依赖，但在特定输入下（如`a=1, b=3, c=3`），原始程序返回`ISOSCELES`（因为`3 + 3 > 1`），而变异体返回`INVALID`（因为`3 % 3 == 0`不大于`1`）。程序输出被改变，不存在状态覆盖现象。\n分析结论：变异引入的错误状态未被抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_261 的分析, 耗时: 140.4608 秒
+
+开始分析变异体 MUT_262...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_262": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), trian == 0, !(a + b < c || a + c < b || b + c < a)]`。这些条件表示输入满足 `a, b, c > 0`，`trian == 0`（即 `a != b && a != c && b != c`），且三角形满足两边之和大于第三边的条件。这些条件逻辑上可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序的条件为 `if (trian > 3)`，变异后为 `if (trian != 3)`。在 `trian == 0` 的路径约束下（即 `a, b, c` 互不相等），`trian` 的值只能是 `0`（因为 `a != b && a != c && b != c`）。因此，`trian > 3` 和 `trian != 3` 在 `trian == 0` 时结果相同（均为 `false`），程序状态未改变。\n分析结论：变异未实际改变程序状态，属于非必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：由于步骤2已判定变异未改变程序状态，无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[4. 控制依赖]：\n说明理由：由于步骤2已判定变异未改变程序状态，无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[5. 状态覆盖]：\n说明理由：由于步骤2已判定变异未改变程序状态，无需进一步分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_262 的分析, 耗时: 54.6383 秒
+
+开始分析变异体 MUT_263...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_263": "### 步骤[1]：可达性分析  \n说明理由：根据提供的路径约束条件 `[!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), b == c, !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c), !(trian == 2 && a + c > b)]`，可以推导出以下条件：  \n- `a > 0 && b > 0 && c > 0`  \n- `a != b && a != c && b == c`  \n- `trian == 3`（因为 `b == c` 导致 `trian = trian + 3`，且 `!(trian == 0)` 和 `!(trian > 3)`）  \n- `!(trian == 1 && a + b > c)` 和 `!(trian == 2 && a + c > b)` 自动满足，因为 `trian == 3`。  \n\n这些条件是可满足的，例如 `a=2, b=1, c=1`（满足 `b == c` 且 `a != b`）。因此，变异语句 `if (++trian == 3 && b + c > a)` 可达。  \n分析结论：变异语句可达。  \n\n---  \n### 步骤[2]：必要性分析  \n说明理由：原表达式为 `if (trian == 3 && b + c > a)`，变异后为 `if (++trian == 3 && b + c > a)`。  \n在路径约束下：  \n- 原程序：`trian` 初始为 0，经过 `b == c` 后 `trian = 3`，因此 `trian == 3` 为真。  \n- 变异体：`++trian` 将 `trian` 从 3 增加到 4，因此 `++trian == 3` 为假。  \n\n此时原程序可能返回 `ISOSCELES`（若 `b + c > a` 为真），而变异体可能返回 `INVALID`（因为条件为假）。因此，变异改变了程序状态。  \n分析结论：变异实际改变了程序语义，不满足非必要性。  \n\n---  \n### 步骤[3]：数据依赖分析  \n说明理由：变异影响的变量是 `trian`，其数据依赖路径如下：  \n1. `(line 30: if (++trian == 3 && b + c > a)) → (line 31: return ISOSCELES)`  \n2. `(line 30: if (++trian == 3 && b + c > a)) → (line 33: return INVALID)`  \n\n`trian` 的值直接决定分支走向，进而影响返回值（`ISOSCELES` 或 `INVALID`）。因此，变异状态可通过数据依赖传播到输出。  \n分析结论：存在数据依赖链连接到输出节点。  \n\n---  \n### 步骤[4]：控制依赖分析  \n说明理由：控制依赖路径如下：  \n1. `(47: if (++trian == 3 && b + c > a)) --True→ (48: return ISOSCELES)`  \n2. `(47: if (++trian == 3 && b + c > a)) --False→ (52: return INVALID)`  \n\n变异语句的真假直接控制输出语句的执行，因此存在控制依赖。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n---  \n### 步骤[5]：状态覆盖分析  \n说明理由：  \n- 在路径约束下，原程序 `trian == 3` 为真，而变异体 `++trian == 3` 为假。  \n- 若 `b + c > a` 为真，原程序返回 `ISOSCELES`，变异体返回 `INVALID`；若 `b + c > a` 为假，两者均返回 `INVALID`。  \n- 存在输入（如 `a=2, b=1, c=1`）使输出不同（原程序返回 `ISOSCELES`，变异体返回 `INVALID`）。  \n\n因此，变异引入的错误状态未被覆盖，会影响程序输出。  \n分析结论：无状态覆盖现象。  \n\n---  \n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_263 的分析, 耗时: 78.8427 秒
+
+开始分析变异体 MUT_264...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_264": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断`if (trian != 3 && b + c > a)`，其可达路径需要满足`a > 0 && b > 0 && c > 0`（前置条件）且能执行到该分支（即`trian <= 3 && trian != 0`）。根据程序逻辑，存在合法输入（如`a=2, b=2, c=3`）可使控制流到达该变异语句。\n分析结论：变异点可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`trian == 3`，变异为`trian != 3`。当`trian=3`时，原条件为真而变异条件为假；当`trian≠3`时则相反。存在输入（如`trian=3, b=2, c=2`）会使程序选择不同分支，导致不同的返回值（原程序返回ISOSCELES，变异体返回INVALID）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`trian`和`b,c`通过条件判断直接控制返回值。数据依赖路径清晰：`trian`的值决定是否进入`return ISOSCELES`分支，且`b+c>a`的计算结果也影响该分支的进入条件。\n分析结论：变异效果可通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制两个输出分支：`return ISOSCELES`（真）和`return INVALID`（假）。控制依赖路径明确存在。\n分析结论：变异语句通过控制流直接影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了控制流，但不存在后续操作能抵消这种改变。例如当`trian=3`时，原程序返回ISOSCELES而变异体返回INVALID，输出差异无法被覆盖。\n分析结论：错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_264 的分析, 耗时: 102.2025 秒
+
+开始分析变异体 MUT_265...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_265": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[a > 0 && b > 0 && c > 0 && trian == 0]`。这些条件是可满足的，例如输入 `a=1, b=1, c=1` 可以满足所有条件，因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `if (a + b < c || a + c < b || b + c < a)`，变异表达式为 `if (a + b < c || a + c < b || b + c >= a)`。在路径约束 `a > 0 && b > 0 && c > 0 && trian == 0` 下，存在输入（如 `a=1, b=1, c=3`）使得原表达式为 `true`（因为 `1+1 < 3`），而变异表达式也为 `true`（因为 `1+1 < 3`），此时语义相同；但存在输入（如 `a=2, b=2, c=2`）使得原表达式为 `false`（因为 `2+2 >= 2`），而变异表达式为 `true`（因为 `2+2 >= 2`），此时语义不同。因此，变异在某些输入下会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a, b, c`，其数据依赖路径如下：\n- 变量 `a`：`(line 32: if (a + b < c || a + c < b || b + c >= a))` → `if True: (line 33: return INVALID)` 或 `if False: (line 35: return SCALENE)`。\n- 变量 `b` 和 `c` 的依赖路径与 `a` 类似。\n变异语句的条件判断结果直接影响程序的返回值（`INVALID` 或 `SCALENE`），因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示：\n- `(32: if (a + b < c || a + c < b || b + c >= a)) --True--> (33: return INVALID;)`\n- `(32: if (a + b < c || a + c < b || b + c >= a)) --False--> (35: return SCALENE;)`\n变异语句的条件判断直接控制程序的分支走向，进而影响最终的返回值（`INVALID` 或 `SCALENE`），因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些输入下会改变程序状态（如 `a=2, b=2, c=2`），但需要检查这种改变是否会被后续执行抵消。在输入 `a=2, b=2, c=2` 时：\n- 原程序：`if (2+2 < 2 || 2+2 < 2 || 2+2 < 2)` 为 `false`，返回 `SCALENE`。\n- 变异体：`if (2+2 < 2 || 2+2 < 2 || 2+2 >= 2)` 为 `true`，返回 `INVALID`。\n此时输出不同，说明变异体的错误状态未被后续执行抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_265 的分析, 耗时: 64.6901 秒
+
+开始分析变异体 MUT_266...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_266": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0, trian != 0]`。这些条件是可满足的，例如当 `a=1, b=1, c=1` 时，`trian` 会被赋值为 3（满足 `trian != 0`），且所有输入均为正数。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `if (trian > 3)`，变异体将其改为 `if (false)`。在路径约束 `trian != 0` 下，`trian` 的值可能为 1、2 或 3（因为 `a == b`、`a == c`、`b == c` 的组合最多使 `trian` 增加到 3）。原条件 `trian > 3` 恒为假，而变异体直接改为 `false`，两者语义完全一致。因此，变异未改变程序状态。\n分析结论：变异未改变程序状态，属于非必要性。\n\n### 步骤[数据依赖]：\n说明理由：由于必要性分析已确认变异未改变程序状态，无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于必要性分析已确认变异未改变程序状态，无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异未改变程序状态，程序输出不受影响。\n分析结论：错误状态被逻辑抵消，程序输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_266 的分析, 耗时: 79.9465 秒
+
+开始分析变异体 MUT_267...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_267": "### 步骤[不可达性]：\n说明理由：变异语句的路径条件组合为`[!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), !(b == c)]`，即`a > 0 && b > 0 && c > 0 && a != b && a != c && b != c`。该条件是可满足的，例如`a=1, b=2, c=3`满足所有约束条件，因此变异语句可达。\n分析结论：变异语句可达，不满足不可达性条件。\n\n### 步骤[非必要性]：\n说明理由：原程序条件为`if (trian == 0)`，变异后为`if (trian <= 0)`。在路径约束下（`trian = 0`，因为`a != b && a != c && b != c`），两者行为完全一致（`trian`初始为0且未被修改）。因此变异未改变程序语义。\n分析结论：变异未改变程序状态，满足非必要性条件。\n\n### 步骤[数据依赖缺失]：\n说明理由：由于非必要性分析已确认变异未改变程序语义，数据依赖分析可以跳过。但即使分析，变量`trian`的数据依赖路径明确连接到输出节点（通过控制流影响返回值），因此数据依赖存在。\n分析结论：数据依赖存在，不满足数据依赖缺失条件。\n\n### 步骤[控制依赖缺失]：\n说明理由：变异语句`if (trian <= 0)`直接控制后续分支的执行路径（如返回INVALID或SCALENE），因此控制依赖存在。\n分析结论：控制依赖存在，不满足控制依赖缺失条件。\n\n### 步骤[执行状态覆盖]：\n说明理由：在路径约束下（`trian = 0`），原程序与变异体的条件判断结果完全相同（`0 == 0`和`0 <= 0`均为真），后续执行路径和输出完全一致。即使`trian`被修改为负值（实际不可能，因为`trian`最小为0），变异体的`<=`条件会扩大真值范围，但在此上下文中不影响输出。\n分析结论：变异引入的状态差异被逻辑覆盖，程序输出未受影响，满足执行状态覆盖条件。\n\n### 最终结论：\n等价变异体判定结果：YES。  \n（注：尽管控制依赖和数据依赖均存在，但由于变异在可达路径上未改变程序语义，且状态差异被覆盖，因此判定为等价变异体。）"}
+完成变异体 MUT_267 的分析, 耗时: 113.8489 秒
+
+开始分析变异体 MUT_268...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_268": "### 步骤[可达性]：\n说明理由：变异语句的条件为`if (a == 0 || b <= 0 || c <= 0)`，其路径条件组合为`a > 0 && b > 0 && c > 0`。该条件可满足（例如a=1, b=1, c=1），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`a <= 0`，变异后为`a == 0`。当`a < 0`时，原条件为真而变异条件为假，程序行为会改变（原程序返回INVALID，变异体继续执行后续逻辑）。因此变异实际改变了程序语义。\n分析结论：变异具有必要性，非等价。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`a`通过控制流直接影响返回值（INVALID或后续逻辑）。例如当`a=-1, b=1, c=1`时，原程序返回INVALID，变异体执行后续逻辑并可能返回其他值。\n分析结论：变异通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制是否执行`return INVALID`，其分支结果会影响后续所有控制流路径（如三角形分类逻辑）。\n分析结论：变异通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：在`a < 0`的情况下，变异导致程序跳过原本的INVALID返回，进入后续逻辑，最终输出结果与原程序不同（如可能返回SCALENE而非INVALID）。不存在状态覆盖现象。\n分析结论：变异效果未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_268 的分析, 耗时: 128.1154 秒
+
+开始分析变异体 MUT_269...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_269": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), b == c`。这些条件可以满足，例如当`a=1, b=2, c=2`时，所有条件都为真，因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`trian = trian + 3`，变异体为`trian = trian % 3`。在路径约束`b == c`且`trian`初始值为0的情况下，原语句会将`trian`设为3，而变异体将`trian`设为0（因为0%3=0）。这会改变程序状态，因为`trian`的值从3变为0。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`trian`通过数据依赖链传播到多个条件判断和返回语句。例如，`trian`的值会影响`if (trian == 0)`、`if (trian > 3)`等条件判断，进而影响程序的输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`trian = trian % 3`位于`if (b == c)`的真分支中，其后的条件判断和返回语句都控制依赖于该变异语句。例如，`if (trian == 0)`的结果直接受变异语句影响。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`trian`的值（从3变为0），但在`b == c`的情况下，原程序会进入`if (trian > 3)`的分支（因为`trian=3`不满足），而变异体会进入`if (trian == 0)`的分支（因为`trian=0`）。这会导致程序执行不同的路径，最终可能返回不同的结果（例如原程序可能返回`ISOSCELES`，而变异体可能返回`SCALENE`）。\n分析结论：变异引入的错误状态未被修正或抵消，会影响程序最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_269 的分析, 耗时: 84.9346 秒
+
+开始分析变异体 MUT_270...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_270": "### 步骤[可达性]：\n说明理由：变异语句的条件从`if (a <= 0 || b <= 0 || c <= 0)`修改为`if (true || b <= 0 || c <= 0)`。由于`true`是一个恒真条件，整个条件表达式将始终为真，因此变异语句总是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件`a <= 0`被替换为`true`，这意味着无论`a`的值如何，变异后的条件都会为真。这将导致程序的行为发生改变，因为原程序在某些情况下（当`a > 0`且`b > 0`且`c > 0`）会跳过`return INVALID;`，而变异体在这种情况下会直接执行`return INVALID;`。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`a`，但变异后的条件不再依赖于`a`的值。然而，`a`的值在后续的代码中仍然被使用（例如在`if (a == b)`等条件中）。变异通过控制流直接影响了程序的输出（`return INVALID;`），因此变异的效果可以通过控制依赖传递到输出。\n分析结论：变异影响的变量通过控制依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (true || b <= 0 || c <= 0)`直接控制了是否执行`return INVALID;`，而`return INVALID;`是程序的输出语句之一。因此，变异语句与输出语句存在直接的控制依赖路径。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（即强制返回`INVALID`）不会被后续执行修正或抵消。因为变异后的条件总是为真，程序将直接返回`INVALID`，而不会执行后续的逻辑。这与原程序的行为完全不同（原程序在某些情况下会继续执行后续逻辑）。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_270 的分析, 耗时: 148.9178 秒
+
+开始分析变异体 MUT_271...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_271": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0, trian == 0]`。这些条件可以同时满足，例如当 `a=1, b=1, c=1` 时，所有条件均为真，且 `trian` 可以通过其他分支计算为 0。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原始表达式为 `if (a + b < c || a + c < b || b + c < a)`，变异后为 `if (a + b < c || a + c < b || b + c < a--)`。变异影响的变量是 `a`，且 `a--` 会改变 `a` 的值。例如，当 `a=2, b=1, c=1` 时，原表达式为 `false`（因为 `2+1 < 1` 为假，`2+1 < 1` 为假，`1+1 < 2` 为假），而变异后 `a--` 会使 `a` 变为 1，此时 `b + c < a` 为 `1+1 < 1`（假），但 `a` 的值已被修改，可能影响后续逻辑。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量 `a` 的数据依赖路径显示，`a` 的值会通过控制流影响多个返回语句（如 `return INVALID;` 或 `return SCALENE;`）。例如，`a--` 会直接改变 `a` 的值，从而可能改变 `if (a + b < c || a + c < b || b + c < a--)` 的条件结果，进而影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句 `if (a + b < c || a + c < b || b + c < a--)` 直接控制两个输出语句：`return INVALID;`（条件为真时）和 `return SCALENE;`（条件为假时）。变异语句的真假结果决定了程序的分支走向，因此变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异体改变了 `a` 的值，但该改变会直接影响条件判断和后续输出，且不存在逻辑上的抵消或修正。例如，当 `a=2, b=1, c=1` 时，原程序返回 `SCALENE`，而变异体由于 `a--` 导致 `a=1`，可能使条件为真，返回 `INVALID`，从而改变程序输出。\n分析结论：变异引入的错误状态未被后续执行修正或抵消，程序输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_271 的分析, 耗时: 55.7560 秒
+
+开始分析变异体 MUT_272...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_272": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), b == c, !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c), !(trian == 2 && a + c > b)`。这些条件可以同时满足，例如当`a=2, b=3, c=3`时，所有条件均为真，因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`if (trian == 3 && b + c > a)`和`if (trian == 3 && b + c != a)`。在路径约束下（`b == c`且`trian == 3`），原表达式`b + c > a`与变异表达式`b + c != a`的语义不完全相同。例如，当`a=4, b=3, c=3`时，原表达式为`6 > 4`（真），变异表达式为`6 != 4`（真）；但当`a=6, b=3, c=3`时，原表达式为`6 > 6`（假），变异表达式为`6 != 6`（假）。然而，当`a=5, b=3, c=3`时，原表达式为`6 > 5`（真），变异表达式为`6 != 5`（真）。虽然在某些情况下语义相同，但存在输入（如`a=6`）导致语义差异，因此变异实际改变了程序状态。  \n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`a, b, c, trian`。数据依赖路径显示，这些变量的值直接影响条件判断结果，进而通过控制依赖决定返回值（`ISOSCELES`或`INVALID`）。例如，`b + c != a`的结果直接决定是否返回`ISOSCELES`，因此变异状态可通过数据依赖链传播到输出。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示，变异语句`if (trian == 3 && b + c != a)`的真假直接决定执行`return ISOSCELES;`或`return INVALID;`。因此，变异语句通过控制流影响输出语句。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些输入下（如`a=6, b=3, c=3`）会导致与原程序不同的控制流路径（原程序返回`INVALID`，变异体也返回`INVALID`），但这是由于`b + c > a`和`b + c != a`在`a=6`时均为假，属于逻辑巧合。对于其他输入（如`a=5, b=3, c=3`），两者行为一致。然而，变异并未引入被后续执行修正的错误状态，而是直接影响了输出逻辑。因此，不存在状态覆盖现象。  \n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_272 的分析, 耗时: 71.2077 秒
+
+开始分析变异体 MUT_273...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_273": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), b == c]`，即 `a > 0 && b > 0 && c > 0 && a != b && a != c && b == c`。该条件可满足（例如 `a=1, b=2, c=2`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序为 `trian = trian + 3`，变异体为 `trian = trian - 3`。在路径约束 `b == c` 下，`trian` 的初始值为 `0`（因为 `a != b && a != c`）。原程序执行后 `trian = 3`，变异体执行后 `trian = -3`。程序状态（`trian` 的值）被显著改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `trian` 通过数据依赖链传播到多个输出节点（如 `if (trian == 0)`、`if (trian > 3)` 等），最终影响返回值（如 `return SCALENE`、`return ISOSCELES` 等）。具体路径显示 `trian` 的值直接控制后续分支和输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `trian = trian - 3` 的结果通过控制依赖影响后续分支（如 `if (trian == 0)`、`if (trian > 3)` 等），进而影响输出语句的执行（如 `return INVALID` 或 `return ISOSCELES`）。控制依赖路径明确存在。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `trian` 的值（从 `+3` 到 `-3`），但程序后续逻辑中 `trian` 的值会被用于分支判断（如 `trian == 0`、`trian > 3` 等），且这些分支的输出结果与原程序不同（例如 `trian = -3` 时不会进入 `trian > 3` 分支，而原程序会）。因此，变异引入的错误状态未被修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_273 的分析, 耗时: 79.1391 秒
+
+开始分析变异体 MUT_274...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_274": "### 步骤1：可达性分析\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0) && !(trian == 0) && !(trian > 3)`。这意味着变异语句在满足这些条件时可达。例如，当`a > 0 && b > 0 && c > 0`且`trian == 1`时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原始表达式为`if (trian == 1 && a + b > c)`，变异后为`if (false)`。在变异语句可达的情况下（即`trian == 1`），原表达式可能为`true`或`false`，而变异后表达式恒为`false`。这将导致程序跳过原分支（返回`ISOSCELES`）并进入`else`分支，从而可能改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`trian`、`a`、`b`、`c`。原条件语句`if (trian == 1 && a + b > c)`被修改为`if (false)`，导致程序跳过原分支。`trian`的值通过控制流影响后续的`if`条件判断（如`if (trian == 2 && a + c > b)`），最终影响返回值。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句`if (false)`直接控制程序分支的走向。原程序在`trian == 1 && a + b > c`时返回`ISOSCELES`，而变异后程序会跳过该分支，进入后续的`else`分支（如`if (trian == 2 && a + c > b)`或最终返回`INVALID`）。因此，变异语句通过控制流影响输出语句。\n分析结论：控制依赖路径存在。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体改变了程序的控制流（跳过原分支），但在某些情况下（如`trian == 1 && a + b > c`为`false`时），原程序和变异体的行为一致（都会进入`else`分支）。然而，当`trian == 1 && a + b > c`为`true`时，原程序返回`ISOSCELES`，而变异体返回`INVALID`或其他值。因此，变异引入的错误状态未被完全覆盖，程序输出可能不同。\n分析结论：错误状态未被完全覆盖。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_274 的分析, 耗时: 116.0908 秒
+
+开始分析变异体 MUT_275...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_275": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0), !(a == b), a == c, !(b == c), !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c)`。这些条件可以同时满足，例如当`a=2, b=1, c=2`时，所有条件均为真。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`if (trian == 2 && a + c > b)`，变异表达式为`if (trian == 2 && a + ++c > b)`。变异引入了`++c`操作，这会改变变量`c`的值。在变异语句可达的情况下，`++c`会使得`c`的值增加1，从而可能改变条件`a + c > b`的判定结果。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`c`。变量`c`的数据依赖路径如下：\n1. `(line 44: if (trian == 2 && a + ++c > b))` → `(line 44: if (trian == 2 && a + ++c > b))`（循环依赖）\n2. `(line 44: if (trian == 2 && a + ++c > b))` → `(line 47: if (trian == 3 && b + c > a))` → `(line 48: return ISOSCELES)`（控制True）\n3. `(line 44: if (trian == 2 && a + ++c > b))` → `(line 47: if (trian == 3 && b + c > a))` → `(line 52: return INVALID)`（控制False）\n变异后的`c`值会直接影响后续的条件判断和返回值，因此变异所引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径信息如下：\n1. `(35: if (trian == 2 && a + ++c > b))` → `True` → `(36: THEN)` → `(37: return ISOSCELES;)`\n2. `(35: if (trian == 2 && a + ++c > b))` → `False` → `(38: ELSE)` → `(39: if (trian == 3 && b + c > a))` → `True` → `(40: THEN)` → `(41: return ISOSCELES;)`\n3. `(35: if (trian == 2 && a + ++c > b))` → `False` → `(38: ELSE)` → `(39: if (trian == 3 && b + c > a))` → `False` → `(42: ELSE)` → `(43: FOLLOW-4)` → `(44: return INVALID;)`\n变异语句直接控制了程序分支的走向，进而影响最终的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性，数据依赖与控制依赖路径均存在。变异体造成的程序状态改变（`c`值的增加）会直接影响后续的条件判断和返回值，且不存在状态被后续执行修正或抵消的情况。因此，变异引入的错误状态会传递到程序输出。\n分析结论：变异引入的错误状态未被修正或抵消，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_275 的分析, 耗时: 66.0121 秒
+
+开始分析变异体 MUT_276...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_276": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), trian == 0]`，即 `a > 0 && b > 0 && c > 0 && trian == 0`。该条件可以满足（例如 `a=1, b=1, c=1` 不满足 `trian == 0`，但 `a=2, b=3, c=4` 满足），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序与变异体语句分别为 `if (a + b < c || a + c < b || b + c < a)` 和 `if (a + b < c || a + c < b || b + c++ < a)`。变异体在 `b + c < a` 的判断中对 `c` 进行了后置自增操作。虽然 `c` 的值被修改，但该自增操作发生在条件判断之后，因此不会影响当前条件判断的结果。因此，变异并未实际改变程序语义。\n分析结论：变异未改变程序状态，属于等价变异体。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量是 `c`，其数据依赖路径显示 `c` 的值会传播到后续的条件判断和返回语句。然而，由于 `c++` 是后置自增，当前条件判断使用的是自增前的值，因此变异不会影响当前条件判断的结果。\n分析结论：变异未通过数据依赖链传播到程序输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句的控制依赖路径显示其直接影响输出语句的执行。然而，由于变异未改变条件判断的结果，因此控制流不会受到影响。\n分析结论：变异未通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：变异引入的错误状态（`c` 的自增）在后续执行中不会影响当前条件判断的结果，因此程序最终输出未受影响。\n分析结论：变异引入的错误状态被抵消，不影响输出。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_276 的分析, 耗时: 73.5012 秒
+
+开始分析变异体 MUT_277...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_277": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0)`、`trian != 0`、`!(trian > 3)`、`trian == 1`。这些条件可以同时满足，例如当`a=2, b=2, c=3`时（此时`trian=1`且满足所有其他约束），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件表达式为`a + b > c`，变异后为`a + b >= c`。在变异语句可达的情况下（如`a=2, b=2, c=4`），原表达式为`false`，变异表达式为`true`，导致程序状态改变（返回`ISOSCELES`或进入后续分支）。因此，变异实际改变了程序语义。\n分析结论：变异具有必要性，程序状态被改变。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`a`、`b`、`c`通过条件表达式直接控制返回值。数据依赖路径显示：若条件为`true`，返回`ISOSCELES`；若为`false`，进入后续分支并可能返回其他结果。因此，变异影响的变量通过数据依赖链传播到输出节点。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian == 1 && a + b >= c)`直接控制程序分支走向（返回`ISOSCELES`或进入后续分支）。控制依赖路径明确显示变异语句的真假结果直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：在特定输入下（如`a=2, b=2, c=4`），原程序返回`INVALID`（因`a + b > c`为`false`且后续分支不满足），而变异体返回`ISOSCELES`（因`a + b >= c`为`true`）。程序输出被改变，错误状态未被覆盖。\n分析结论：变异引入的错误状态未被抵消，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_277 的分析, 耗时: 70.9003 秒
+
+开始分析变异体 MUT_278...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_278": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为`[a > 0 && b > 0 && c > 0, a == b, a == c]`。这些条件在逻辑上是可以满足的，例如当`a = b = c = 1`时，所有条件均为真。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序中的语句是`trian = trian + 2`，变异后的语句是`trian = ~trian + 2`。在路径约束`a == b && a == c`下，`trian`的初始值为0（因为`a == b`和`a == c`会导致`trian`被设置为`trian + 1`和`trian + 2`）。原语句执行后`trian`的值为2，而变异语句执行后`trian`的值为`~0 + 2 = -1 + 2 = 1`。因此，变异确实改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`trian`。`trian`的值会直接影响后续的条件判断（如`if (trian == 0)`、`if (trian > 3)`等），从而影响程序的输出（如`return INVALID`、`return SCALENE`等）。因此，变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出。\n\n### 步骤4：控制依赖\n说明理由：变异语句`trian = ~trian + 2`的结果会影响后续的控制流（如`if (trian == 0)`、`if (trian > 3)`等），从而间接影响输出语句的执行。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了`trian`的值（从2变为1），但在后续的执行中，`trian`的值可能会被进一步修改（例如`if (b == c)`时`trian = trian + 3`）。然而，即使`trian`的值被修改，其最终值仍可能与原程序不同，从而导致程序输出不同。例如，当`a == b == c`时，原程序的`trian`值为6（`trian = 0 + 1 + 2 + 3`），而变异程序的`trian`值为`~0 + 2 + 3 = 4`，这会导致不同的输出（原程序返回`EQUILATERAL`，变异程序可能返回`ISOSCELES`或`INVALID`）。\n分析结论：变异引入的错误状态未被完全修正或抵消，可能影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_278 的分析, 耗时: 143.5186 秒
+
+开始分析变异体 MUT_279...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_279": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), trian != 0, trian <= 3, trian != 1, trian == 2]`。这些条件可以满足，例如当 `a=2, b=1, c=1` 时，所有条件均成立（`a>0, b>0, c>0`，`trian=2`，且其他约束也满足）。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件为 `if (trian == 2 && a + c > b)`，变异后的条件为 `if (trian == 2 && a + c >= b)`。在 `trian == 2` 的路径约束下，唯一区别是 `a + c > b` 和 `a + c >= b`。当 `a + c == b` 时，原条件为假，变异条件为真。例如，`a=1, b=2, c=1` 时，`a + c = 2 == b`，原程序返回 `INVALID`，而变异体返回 `ISOSCELES`。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `a, b, c, trian`。数据依赖路径显示：\n- `a, c` 的值直接影响 `a + c >= b` 的判断结果。\n- `trian` 的值决定是否进入该分支。\n- 分支结果直接控制程序返回 `ISOSCELES` 或进入后续判断。\n因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示：\n- 变异语句 `if (trian == 2 && a + c >= b)` 的真假直接决定程序返回 `ISOSCELES` 或进入后续判断（`if (trian == 3 && b + c > a)` 或最终返回 `INVALID`）。\n因此，变异语句通过控制流直接影响输出语句。\n分析结论：存在控制依赖路径影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些输入（如 `a + c == b`）下会改变程序的控制流（从返回 `INVALID` 改为返回 `ISOSCELES`），但这种改变是语义上的差异，而非状态覆盖。程序输出确实因变异而改变，不存在后续执行修正或抵消变异效果的情况。\n分析结论：错误状态未被覆盖，程序输出受变异影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_279 的分析, 耗时: 75.9595 秒
+
+开始分析变异体 MUT_280...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_280": "### 步骤1：可达性分析\n说明理由：变异语句的条件组合为 `a <= 0 || b++ <= 0 || c <= 0`，其中 `b++` 是变异引入的操作。路径条件为 `a > 0 && b > 0 && c > 0`，此时 `b++` 的值为 `b`（自增前），因此条件 `b++ <= 0` 为 `false`。整个条件表达式为 `false || false || false`，即 `false`，因此变异语句的可达性取决于其他路径条件。从控制流图来看，变异语句位于程序入口的第一个条件判断，因此是可达的。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原始表达式为 `if (a <= 0 || b <= 0 || c <= 0)`，变异表达式为 `if (a <= 0 || b++ <= 0 || c <= 0)`。在 `a > 0 && b > 0 && c > 0` 的路径条件下，原始表达式和变异表达式的值均为 `false`，因此不会改变程序的控制流。但是，变异引入了 `b++` 操作，会修改 `b` 的值，从而可能影响后续对 `b` 的使用。\n\n分析结论：变异实际改变了程序状态（`b` 的值被修改），满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `b`。从数据依赖路径来看，`b` 的值会影响 `if (a == b)`、`if (b == c)`、`if (a + b < c || a + c < b || b + c < a)` 等条件判断，进而影响 `trian` 的赋值和最终的返回值。例如：\n1. `b` 的变化会影响 `if (a == b)` 的结果，从而影响 `trian` 的值。\n2. `b` 的变化会影响 `if (a + b < c || a + c < b || b + c < a)` 的结果，从而可能改变程序的返回值（如从 `SCALENE` 变为 `INVALID`）。\n\n分析结论：变异影响的变量 `b` 通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：从控制依赖路径来看，变异语句直接控制程序的第一个分支（返回 `INVALID` 或继续执行）。如果变异导致 `b` 的值变化，可能改变后续条件判断的结果（如 `if (a == b)`），从而影响控制流和最终的返回值。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异引入了 `b++` 操作，但只有在 `b` 的初始值为 `1` 时，`b++` 会将其修改为 `2`，可能影响后续条件判断。例如：\n- 如果 `b` 初始为 `1`，`a` 为 `1`，则 `if (a == b)` 从 `true` 变为 `false`（因为 `b` 变为 `2`），从而影响 `trian` 的值和后续逻辑。\n- 这种变化可能导致程序输出从 `ISOSCELES` 变为 `INVALID` 或其他值。\n\n因此，变异引入的错误状态未被完全覆盖，可能影响程序输出。\n\n分析结论：变异引入的错误状态未被抵消，可能影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_280 的分析, 耗时: 131.9756 秒
+
+开始分析变异体 MUT_281...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_281": "### 步骤[可达性]：\n说明理由：变异语句的条件为`if (a <= 0 || false || c <= 0)`，其中`false`是一个恒假条件。根据可达性约束`[a > 0 && c > 0]`，原条件`if (a <= 0 || b <= 0 || c <= 0)`在`a > 0 && c > 0`时，其真假取决于`b <= 0`。变异后，由于`false`恒假，条件简化为`if (a <= 0 || c <= 0)`，在`a > 0 && c > 0`时恒为假。因此，变异语句在`a > 0 && c > 0`时可达，但与原条件的行为不同。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：在`a > 0 && c > 0`的条件下，原条件`if (a <= 0 || b <= 0 || c <= 0)`的真假取决于`b <= 0`，而变异后的条件`if (a <= 0 || false || c <= 0)`恒为假（因为`a > 0 && c > 0`）。因此，当`b <= 0`时，原条件为真，变异条件为假，程序状态会改变（原程序可能返回`INVALID`，而变异体不会）。\n\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`b`（因为`b <= 0`被替换为`false`）。变量`b`的数据依赖路径包括：\n1. 影响`if (a == b)`的判断，进而影响`trian`的值。\n2. 影响`if (a + b < c || a + c < b || b + c < a)`的判断，进而影响返回值。\n3. 影响`if (trian == 1 && a + b > c)`等条件判断。\n\n因此，变异影响的变量`b`通过数据依赖链传播到程序输出节点。\n\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (a <= 0 || false || c <= 0)`控制程序的分支走向。在`a > 0 && c > 0`时，原条件可能为真（当`b <= 0`），而变异条件恒为假。因此，变异语句的控制流会影响后续的输出语句（如是否返回`INVALID`）。\n\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了程序状态的改变（如`b <= 0`时原程序可能返回`INVALID`，而变异体不会），但这种改变并未被后续执行修正或抵消。因此，程序的最终输出可能因变异而不同。\n\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_281 的分析, 耗时: 121.1072 秒
+
+开始分析变异体 MUT_282...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_282": "### 步骤1：可达性分析\n说明理由：变异语句位于第31行，路径条件组合为`a > 0 && b > 0 && c > 0`。这些条件在输入满足正数时即可触发，不存在逻辑矛盾。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原条件为`trian == 0`，变异为`trian == 1`。当`trian`值为0时（即`a != b && a != c && b != c`），原程序进入该分支而变异体不会，导致程序状态改变。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变量`trian`通过控制流直接影响后续所有返回语句（INVALID/SCALENE/EQUILATERAL/ISOSCELES）。变异修改的判断条件会改变控制流路径。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句直接控制7条不同的返回路径（如返回INVALID/SCALENE等），每条路径都通过控制依赖边与输出节点相连。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：当`trian=0`时，原程序执行三角形有效性检查（返回SCALENE或INVALID），而变异体跳过该检查直接进入`trian>3`等后续判断。这种差异会导致不同输出（如输入2,3,4时原程序返回SCALENE而变异体返回INVALID）。\n分析结论：变异引入的错误状态未被覆盖，会持续影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_282 的分析, 耗时: 121.1440 秒
+
+开始分析变异体 MUT_283...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_283": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c), !(trian == 2 && a + c > b)]`。这意味着程序执行到变异点时，满足以下条件：`a > 0 && b > 0 && c > 0 && trian != 0 && trian <= 3 && (trian != 1 || a + b <= c) && (trian != 2 || a + c <= b)`。这些条件可以满足，例如当 `trian == 3` 时，路径是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `if (trian == 3 && b + c > a)`，变异后的条件是 `if (trian == 3 && b + c < a)`。两者逻辑完全相反，因此在 `trian == 3` 时，程序的行为会截然不同（原程序返回 `ISOSCELES` 而变异体可能返回 `INVALID`）。这种改变会直接影响程序状态。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a`、`b`、`c` 和 `trian`。变异条件 `b + c < a` 的结果直接决定了控制流走向（返回 `ISOSCELES` 或 `INVALID`），而返回值是程序的输出。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (trian == 3 && b + c < a)` 的控制流直接影响输出语句（`return ISOSCELES` 或 `return INVALID`）。从变异节点出发，存在控制依赖边到达输出节点。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的状态改变（`b + c < a` 的结果）直接决定了程序的返回值，且没有后续逻辑覆盖或修正这种改变。因此，变异的效果会直接反映在程序输出中。\n分析结论：变异引入的错误状态未被修正或抵消，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_283 的分析, 耗时: 178.4253 秒
+
+开始分析变异体 MUT_284...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_284": "### 步骤[可达性]：\n说明理由：变异语句的条件从`if (a <= 0 || b <= 0 || c <= 0)`变为`if (true || c <= 0)`。由于`true`的存在，无论`c <= 0`是否为真，整个条件表达式恒为真。因此，变异语句的路径条件组合为`true`，逻辑上总是可满足的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件`a <= 0 || b <= 0 || c <= 0`被简化为`true || c <= 0`，移除了对`a`和`b`的检查。这意味着即使`a`或`b`小于等于0，程序也不会返回`INVALID`，而是继续执行后续逻辑。这会改变程序的行为，因为原本在这些情况下程序会直接返回`INVALID`。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`a`和`b`。根据数据依赖路径，`a`和`b`的值会影响后续的条件判断（如`if (a == b)`、`if (a + b > c)`等）和返回值。因此，变异引入的状态改变会通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制了程序是否返回`INVALID`。由于变异后条件恒为真，程序将不再检查`a`和`b`的值，直接跳过`INVALID`的返回路径。这会影响后续所有依赖于`a`和`b`的控制流路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了状态改变（忽略`a`和`b`的检查），但这种改变会直接影响程序的输出。例如，当`a <= 0`或`b <= 0`时，原程序会返回`INVALID`，而变异程序会继续执行后续逻辑，可能导致不同的返回值（如`SCALENE`、`ISOSCELES`等）。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异效果未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_284 的分析, 耗时: 177.1198 秒
+
+开始分析变异体 MUT_285...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_285": "### 步骤[可达性]：\n说明理由：变异语句的条件组合为`a <= 0 != b <= 0 || c <= 0`，这是一个逻辑表达式，可以拆解为`(a <= 0) != (b <= 0) || (c <= 0)`。该条件在逻辑上是可满足的，例如当`a=1, b=-1, c=1`时，`a <= 0`为false，`b <= 0`为true，`c <= 0`为false，此时`false != true`为true，整个条件为true；当`a=1, b=1, c=-1`时，`c <= 0`为true，整个条件也为true。因此，变异语句的路径条件是可满足的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`a <= 0 || b <= 0 || c <= 0`，而变异后的条件是`(a <= 0) != (b <= 0) || (c <= 0)`。这两者在某些输入下会产生不同的结果。例如，当`a=1, b=1, c=1`时，原条件为false，变异条件为`false != false || false`即false；当`a=-1, b=-1, c=1`时，原条件为true，变异条件为`true != true || false`即false。因此，变异确实改变了程序的状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`a, b, c`。从数据依赖路径可以看出，这些变量的值会直接影响条件判断的结果，进而影响程序的返回值。例如，`a`和`b`的值通过条件判断直接决定是否返回`INVALID`，而`c`的值也会影响条件判断和后续的分支。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (a <= 0 != b <= 0 || c <= 0)`直接控制程序的后续分支走向。如果条件为true，程序会返回`INVALID`；如果为false，程序会继续执行后续的逻辑。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了程序的状态，并且这种改变可以通过数据和控制依赖传递到输出，但在某些情况下，变异引入的错误状态可能被后续逻辑覆盖。例如，当`a <= 0`和`b <= 0`同时为true或false时，`(a <= 0) != (b <= 0)`为false，此时变异条件和原条件的行为一致。然而，在其他情况下（如`a <= 0`为true，`b <= 0`为false），变异条件的行为与原条件不同，可能导致不同的输出。因此，变异引入的错误状态并未被完全覆盖。\n分析结论：变异引入的错误状态未被完全覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_285 的分析, 耗时: 231.3022 秒
+
+开始分析变异体 MUT_286...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_286": "### 步骤1：可达性分析\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0), !(a == b), a == c, !(b == c), !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c)`。这些条件可以同时满足，例如当`a=2, b=1, c=2`时，所有条件均为真，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原始表达式为`if (trian == 2 && a + c > b)`，变异后为`if (trian == 2 && c > b)`。在路径约束下（`a == c`），`a + c > b`等价于`2a > b`，而`c > b`等价于`a > b`。当`a=2, b=1`时，`2a=4 > 1`和`a=2 > 1`均为真；但当`a=2, b=3`时，`2a=4 > 3`为真，而`a=2 > 3`为假。因此存在输入使原表达式和变异表达式结果不同，程序状态可能改变。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`a`和`c`（因为条件从`a + c > b`改为`c > b`）。变量`c`的数据依赖路径显示其值直接影响条件判断结果，进而通过控制流影响返回值（如`return ISOSCELES`）。因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句`if (trian == 2 && c > b)`直接控制分支走向（如返回`ISOSCELES`或进入后续判断）。输出语句（如`return ISOSCELES`）控制依赖于变异语句的真假结果，因此变异效果可以通过控制流传递到输出。\n分析结论：存在控制依赖路径影响输出。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体满足可达性、必要性、数据依赖和控制依赖条件，但在特定输入下（如`a=2, b=1, c=2`），原程序与变异体的输出均为`ISOSCELES`，看似等价。但进一步分析发现，当`a=1, b=2, c=1`时（满足`a == c`且`trian == 2`），原程序因`a + c=2 > b=2`为假进入后续分支，而变异体因`c=1 > b=2`为假也进入后续分支，此时输出仍一致。然而，当`a=1, b=1.5, c=1`时，原程序`a + c=2 > b=1.5`为真返回`ISOSCELES`，而变异体`c=1 > b=1.5`为假进入后续分支，可能导致不同输出（如返回`INVALID`）。因此存在输入使输出不同。\n分析结论：错误状态未被完全覆盖，可能影响输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_286 的分析, 耗时: 141.1755 秒
+
+开始分析变异体 MUT_287...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_287": "### 步骤[1]：可达性分析\n说明理由：变异语句的条件从`if (a == b)`修改为`if (false)`。根据可达性约束`[!(a <= 0 || b <= 0 || c <= 0)]`，变异语句位于该条件之后，因此只要输入满足`a > 0 && b > 0 && c > 0`，变异语句即可被执行到。\n分析结论：变异语句可达。\n\n### 步骤[2]：必要性分析\n说明理由：原条件`a == b`和变异后的条件`false`在语义上完全不同。原条件会根据`a`和`b`的值决定是否执行`trian = trian + 1`，而变异后的条件永远不会执行该语句。这将直接影响`trian`的值，进而可能影响后续的控制流和返回值。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[3]：数据依赖分析\n说明理由：变异影响的变量是`a`和`b`。`trian`的值直接依赖于`a`和`b`的比较结果，而`trian`的值又会影响后续的条件判断和返回值。例如，如果`a == b`，原程序会增加`trian`的值，可能改变`trian > 3`或`trian == 1`等条件的判断结果，从而影响最终的返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4]：控制依赖分析\n说明理由：变异语句`if (false)`控制了是否执行`trian = trian + 1`，而`trian`的值直接影响了后续的多个条件判断（如`if (trian > 3)`、`if (trian == 1 && a + b > c)`等），这些条件判断又决定了程序的返回值。因此，变异语句通过控制流影响了输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5]：状态覆盖分析\n说明理由：虽然变异语句改变了`trian`的值，但这种改变在某些情况下可能被后续的逻辑覆盖。例如，如果`a == b`且`a == c`且`b == c`，原程序会将`trian`设为6，而变异程序会将其设为5（因为`if (false)`跳过了`trian + 1`，但`if (a == c)`和`if (b == c)`仍然执行）。然而，`trian > 3`在这两种情况下都会返回`EQUILATERAL`，因此最终输出可能相同。但并非所有情况下都如此，例如当`a == b`但`a != c`且`b != c`时，原程序会设置`trian = 1`，而变异程序会保持`trian = 0`，这将导致不同的返回值。\n分析结论：变异引入的错误状态并非在所有情况下都被覆盖，因此会影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_287 的分析, 耗时: 202.5302 秒
+
+开始分析变异体 MUT_288...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_288": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为`[a > 0 && b > 0 && c > 0 && a == b && a == c && b == c]`，即输入满足所有边长相等且为正数时可达。该条件逻辑上可满足（例如`a=b=c=1`）。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序返回`EQUILATERAL`（值为3），变异体返回`0`。在路径约束下（`trian > 3`成立时），原程序返回3而变异体返回0，程序状态被显式改变。\n分析结论：变异实际改变了程序语义。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是返回值本身（直接修改返回值常量），无中间变量依赖。返回值直接作为程序输出，存在完整的数据依赖链。\n分析结论：变异效果可通过数据依赖传播到输出。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句`return 0;`是终端输出节点，不受后续控制流影响。其控制依赖路径明确来自`if (trian > 3)`分支，但变异直接覆盖了原返回值。\n分析结论：变异语句独立影响最终输出。\n\n### 步骤5：状态覆盖分析\n说明理由：变异将返回值从3改为0，且无后续执行可修正该改变。程序输出会从`EQUILATERAL`变为`0`，可被测试用例检测到差异。\n分析结论：错误状态未被覆盖。\n\n### 最终结论\n等价变异体判定结果：NO。  \n（注：尽管原示例中标记为等价变异体，但根据实际分析，该变异体修改了返回值常量且无状态覆盖，应判定为非等价变异体）"}
+完成变异体 MUT_288 的分析, 耗时: 153.6755 秒
+
+开始分析变异体 MUT_289...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_289": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), !(b == c), !(trian == 0), !(trian > 3)`。这些条件可以同时满足，例如当`a=3, b=2, c=1`时，所有条件均为真，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`a + b > c`，变异表达式为`a > c`。在路径约束下（如`a=3, b=2, c=1`），原表达式为`3 + 2 > 1`（True），变异表达式为`3 > 1`（True），此时语义相同；但当`a=3, b=1, c=2`时，原表达式为`3 + 1 > 2`（True），变异表达式为`3 > 2`（True），语义仍相同；但当`a=2, b=1, c=3`时，原表达式为`2 + 1 > 3`（False），变异表达式为`2 > 3`（False），语义仍相同。然而，当`a=2, b=1, c=2`时，原表达式为`2 + 1 > 2`（True），变异表达式为`2 > 2`（False），此时语义不同，程序状态可能改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`a`和`trian`。变量`a`的数据依赖路径从变异语句直接连接到输出语句（如`return ISOSCELES`），变量`trian`同样通过控制流影响输出。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian == 1 && a > c)`直接控制程序分支的走向（如`return ISOSCELES`或进入后续条件判断），输出语句的执行依赖于变异语句的真假结果。因此，变异语句与输出语句存在控制依赖路径。\n分析结论：存在控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些输入下（如`a=2, b=1, c=2`）会改变程序的分支行为（原程序返回`ISOSCELES`，变异体进入后续条件判断），但由于后续条件判断可能返回相同结果（如最终仍返回`ISOSCELES`），错误状态可能被覆盖。但需具体输入验证。例如，当`trian == 1`且`a > c`不成立时，原程序与变异体的行为可能不同（如原程序可能返回`ISOSCELES`，而变异体可能返回`INVALID`），因此输出可能不同。\n分析结论：错误状态未被完全覆盖，可能影响输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_289 的分析, 耗时: 103.7740 秒
+
+开始分析变异体 MUT_290...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_290": "### 步骤1：可达性分析  \n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && trian == 0]`，该条件可满足（例如 `a=1, b=1, c=2` 满足约束且 `trian=0`），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性分析  \n说明理由：原条件为 `if (a + b < c || a + c < b || b + c < a)`，变异后为 `if (a + c < b || b + c < a)`，移除了 `a + b < c` 的判断。存在输入（如 `a=1, b=1, c=3`）使原条件为 `true`（`1+1<3`），而变异条件为 `false`（`1+3<1` 和 `1+3<1` 均为 `false`），导致程序状态改变（原程序返回 `INVALID`，变异体返回 `SCALENE`）。  \n分析结论：变异实际改变了程序语义，不满足非必要性。  \n\n### 步骤3：数据依赖分析  \n说明理由：变异影响的变量 `a, b, c` 通过条件语句直接控制程序分支（返回 `INVALID` 或 `SCALENE`），且返回值依赖条件结果。数据依赖路径明确存在（变异条件→分支→输出）。  \n分析结论：变异可通过数据依赖链传播到输出。  \n\n### 步骤4：控制依赖分析  \n说明理由：变异条件直接控制分支跳转（`return INVALID` 或 `return SCALENE`），输出语句的执行完全依赖于变异条件的真假结果。  \n分析结论：变异可通过控制依赖影响输出。  \n\n### 步骤5：状态覆盖分析  \n说明理由：变异引入的状态改变（如移除 `a + b < c` 判断）会导致某些输入（如 `a=1, b=1, c=3`）产生不同输出（原程序返回 `INVALID`，变异体返回 `SCALENE`），错误状态未被后续执行覆盖或抵消。  \n分析结论：变异效果未被覆盖，程序输出可能改变。  \n\n### 最终结论  \n等价变异体判定结果：NO。"}
+完成变异体 MUT_290 的分析, 耗时: 116.4495 秒
+
+开始分析变异体 MUT_291...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_291": "### 步骤[可达性]：\n说明理由：变异语句的条件为 `if (a <= 0 || b <= 0 || true)`，其中 `true` 是一个恒真条件。因此，只要 `a <= 0 || b <= 0` 为真，或者即使 `a > 0 && b > 0`，整个条件也为真（因为 `true` 的存在）。因此，变异语句的路径条件组合是可满足的，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始条件为 `if (a <= 0 || b <= 0 || c <= 0)`，变异后为 `if (a <= 0 || b <= 0 || true)`。变异将 `c <= 0` 替换为 `true`，这意味着无论 `c` 的值如何，条件的结果都取决于 `a` 和 `b`。因此，变异确实改变了程序的语义，因为 `c` 的影响被完全移除。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a` 和 `b`（因为 `c` 的条件被替换为 `true`）。`a` 和 `b` 的数据依赖路径显示它们会影响后续的条件判断和返回值。例如，`a` 和 `b` 的值会影响 `trian` 的计算，进而影响最终的返回值（如 `ISOSCELES`、`EQUILATERAL` 等）。因此，变异影响的变量可以通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (a <= 0 || b <= 0 || true)` 控制了程序的分支走向。例如，如果 `a <= 0 || b <= 0` 为真，程序会直接返回 `INVALID`；否则，程序会继续执行后续逻辑。变异语句的控制依赖路径直接影响输出语句（如 `return INVALID` 或其他返回值）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了条件判断的逻辑（移除 `c` 的影响），但在某些情况下（如 `a > 0 && b > 0`），变异体和原程序的行为是一致的（因为 `c` 的值不再影响条件）。然而，当 `c <= 0` 时，原程序可能返回 `INVALID`，而变异体可能继续执行后续逻辑（因为 `true` 的存在）。因此，变异引入的错误状态并未被完全抵消，程序输出可能因输入不同而改变。\n分析结论：变异引入的错误状态未被完全抵消，程序输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_291 的分析, 耗时: 270.3669 秒
+
+开始分析变异体 MUT_292...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_292": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断`if (trian <= 3 && b + c > a)`中，其路径条件为`a > 0 && b > 0 && c > 0 && trian == 3`（因为原条件为`trian == 3`）。这些条件在程序执行过程中是可满足的（例如输入`a=2, b=2, c=2`时`trian=3`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`trian == 3`，变异后为`trian <= 3`。当`trian == 3`时，两者行为一致；但当`trian < 3`时，原条件为假而变异条件可能为真。例如输入`a=2, b=2, c=1`时`trian=3`（无差异），但输入`a=1, b=1, c=2`时`trian=1`，原程序不会进入该分支，而变异体会进入。因此变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`trian`，其数据依赖路径为：`trian` → 条件判断 → 返回值（`ISOSCELES`或`INVALID`）。变异后的条件判断结果直接影响程序输出，因此存在数据依赖链传播到输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制两个输出分支（`return ISOSCELES`或`return INVALID`），其控制依赖路径明确存在：变异条件为真时返回`ISOSCELES`，为假时返回`INVALID`。\n分析结论：控制依赖路径存在。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在`trian < 3`时会改变控制流（例如`trian=1`时原程序跳过分支而变异体进入分支），但此时`b + c > a`的判定可能为假（如`a=1, b=1, c=2`中`1+2>1`为真），导致变异体返回`ISOSCELES`，而原程序会因`trian=1`在其他分支返回`ISOSCELES`。但存在输入（如`a=1, b=1, c=3`，`trian=1`）使原程序返回`INVALID`（因`1+1<3`），而变异体返回`ISOSCELES`（因`trian <=3 && 1+3>1`），最终输出不同。\n分析结论：错误状态未被覆盖，输出可能不同。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_292 的分析, 耗时: 130.8044 秒
+
+开始分析变异体 MUT_293...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_293": "### 步骤1：可达性分析\n说明理由：变异语句的条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), trian != 0]`，即 `a > 0 && b > 0 && c > 0 && trian != 0`。该条件可以通过输入满足（例如 `a=1, b=1, c=1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序条件为 `trian > 3`，变异后为 `trian >= 3`。当 `trian = 3` 时，原程序条件为 `false`，变异后条件为 `true`，会导致程序执行不同的分支（原程序进入 `else` 分支，变异体进入 `if` 分支返回 `EQUILATERAL`）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量 `trian` 通过数据依赖链传播到输出节点。例如，`trian` 的值直接决定 `if (trian >= 3)` 的分支，进而影响返回值（`EQUILATERAL` 或其他）。因此，变异效果可以通过数据依赖传递到输出。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (trian >= 3)` 直接控制后续分支的执行（如返回 `EQUILATERAL` 或进入其他条件判断）。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖影响输出。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体在 `trian = 3` 时执行了不同分支（返回 `EQUILATERAL`），但原程序在 `trian = 3` 时会进入 `else` 分支并进一步检查 `trian == 3 && b + c > a`，最终可能返回 `ISOSCELES` 或 `INVALID`。因此，变异体的输出与原程序可能不同（例如 `a=2, b=2, c=2` 时，原程序返回 `EQUILATERAL`，变异体也返回 `EQUILATERAL`；但 `a=2, b=2, c=1` 时，原程序返回 `ISOSCELES`，变异体返回 `EQUILATERAL`）。不存在状态覆盖现象。\n分析结论：错误状态未被覆盖，影响最终输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_293 的分析, 耗时: 107.8672 秒
+
+开始分析变异体 MUT_294...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_294": "### 步骤[1. 可达性]：\n说明理由：根据REACHABILITY_CONSTRAINT提供的路径条件组合`[!(a <= 0 || b <= 0 || c <= 0), !(a == b), a == c, !(b == c), !(trian == 0), !(trian > 3), !(trian == 1 && a + b > c)]`，可以推导出满足条件的输入存在（例如a=2, b=1, c=2）。变异语句位于`if (trian == 2 && a % c > b)`，在满足`a == c`且`trian == 2`（由`a == c`导致`trian = trian + 2`）时可达。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原表达式为`a + c > b`，变异为`a % c > b`。在路径约束下`a == c`（如a=2, c=2），原表达式为`2+2>1`（true），变异表达式为`2%2>1`即`0>1`（false）。此时程序状态从返回ISOSCELES变为进入后续else分支，行为发生改变。\n分析结论：变异实际改变了程序语义，不满足等价性。\n\n### 步骤[3. 数据依赖]：\n说明理由：变量`a,c,b`通过`a % c > b`直接影响条件判断结果，进而通过控制依赖决定返回ISOSCELES或进入后续分支。数据依赖路径明确存在：变异节点→条件判断→返回语句（ISOSCELES/INVALID）。\n分析结论：变异影响通过数据依赖链传播到输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句直接控制`return ISOSCELES`的执行（True分支）或后续`if (trian == 3...)`的判断（False分支）。控制依赖路径`(变异节点)→[True/False]→(输出节点)`完整存在。\n分析结论：变异通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：在`a == c`的输入下（如a=2, b=1, c=2），原程序返回ISOSCELES，变异体因`a%c=0>1`为false而进入else分支最终返回INVALID。错误状态未被覆盖，导致输出差异。\n分析结论：变异引入的错误状态未被抵消，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO"}
+完成变异体 MUT_294 的分析, 耗时: 74.9782 秒
+
+开始分析变异体 MUT_295...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_295": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[a > 0 && b > 0 && c > 0 && trian == 0]`，这些条件可以同时满足（例如a=2, b=3, c=4），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序条件为`a + b < c || a + c < b || b + c < a`，变异后为`a / b < c || a + c < b || b + c < a`。在路径约束下（如a=1, b=2, c=4），原条件`1+2<4`为true，而变异条件`1/2<4`也为true，此时语义相同；但当a=3, b=2, c=4时，原条件`3+2<4`为false，变异条件`3/2<4`为true，会导致不同分支选择。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量a、b、c通过条件判断直接控制程序流向`return INVALID`或`return SCALENE`。例如变量a的修改会通过`a / b < c`影响条件结果，进而传播到输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (a / b < c || ...)`直接控制后续的返回语句（INVALID或SCALENE），从变异节点到输出节点存在明确控制依赖路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了条件逻辑，但在特定输入（如a=1, b=2, c=4）下，变异条件和原条件均返回INVALID，输出相同；但在其他输入（如a=3, b=2, c=4）下，变异条件返回INVALID而原条件返回SCALENE，输出不同。因此错误状态未被完全覆盖。\n分析结论：变异引入的错误状态未被抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_295 的分析, 耗时: 68.7227 秒
+
+开始分析变异体 MUT_296...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_296": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断`if (a++ <= 0 || b <= 0 || c <= 0)`，该语句的路径条件组合为`a > 0 && b > 0 && c > 0`。这些条件在输入满足时（例如a=1, b=1, c=1）可以触发变异语句的执行，因此变异点是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`a <= 0`，变异后为`a++ <= 0`。变异引入了对变量a的后置自增操作。即使条件判断结果相同（例如a=1时两者均为false），变异体也会改变a的值（a从1变为2）。这会直接影响后续对a的依赖操作（如`if (a == b)`等），因此程序状态被实际改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量a通过数据依赖链传播到多个输出节点。例如：\n1. 变异后a的值影响`if (a == b)`的判断，进而影响trian的累加值。\n2. trian的值直接影响返回值（如`return ISOSCELES`或`return EQUILATERAL`）。\n3. 变量a还直接参与`if (a + b > c)`等条件判断，直接影响控制流和返回值。\n分析结论：变异影响的变量a通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (a++ <= 0 || ...)`控制多个分支的走向：\n1. 若条件为true，直接返回INVALID。\n2. 若为false，进入后续三角形类型判断逻辑（如`if (a == b)`等），这些分支的返回值（ISOSCELES/EQUILATERAL等）都控制依赖于初始变异语句。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了a的值，但这种改变会传播到后续所有依赖a的操作中（如相等判断、加法运算等），且没有任何逻辑会覆盖或抵消这种改变。例如：\n- 若原a=1, b=1，变异后a=2，导致`a == b`的判断结果从true变为false，最终可能改变返回值类型。\n分析结论：变异引入的错误状态未被覆盖，会影响程序最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_296 的分析, 耗时: 149.6768 秒
+
+开始分析变异体 MUT_297...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_297": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为`[a > 0 && b > 0 && c > 0, b == c]`。这些条件在输入满足`a > 0 && b > 0 && c > 0 && b == c`时是可满足的，例如`a=2, b=1, c=1`。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序语句为`trian = trian + 3`，变异体语句为`trian = trian / 3`。在路径约束`b == c`下，`trian`的初始值为0（若`a != b && a != c`）或已通过`a == b`或`a == c`的检查增加。例如：\n- 若`trian = 0`（`a != b && a != c`），原程序结果为`3`，变异体结果为`0`，状态改变。\n- 若`trian = 1`（`a == b`），原程序结果为`4`，变异体结果为`0`（整数除法），状态改变。\n因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量`trian`通过数据依赖链传播到多个输出节点（如`if (trian == 0)`、`if (trian > 3)`等），最终影响返回值（如`return SCALENE`、`return EQUILATERAL`等）。具体路径见DATA_DEPENDENCY字段。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句`trian = trian / 3`的结果直接控制后续分支条件（如`if (trian == 0)`、`if (trian > 3)`等），进而影响输出语句的执行。控制依赖路径见CTRL_DEPENDENCY字段。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体改变了`trian`的值，但在某些情况下（如`trian`初始值为0时），原程序返回`SCALENE`，而变异体可能返回`INVALID`（因`trian / 3 = 0`触发`trian == 0`分支）。因此，程序输出可能不同，错误状态未被覆盖。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_297 的分析, 耗时: 106.0755 秒
+
+开始分析变异体 MUT_298...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_298": "### 步骤[可达性]：\n说明理由：变异体的路径条件组合为 `[a > 0 && b > 0 && c > 0 && a != b && a != c && b == c && trian != 0 && trian <= 3 && !(trian == 1 && a + b > c) && !(trian == 2 && a + c > b)]`。这些条件可以同时满足，例如当 `a=2, b=1, c=1` 时（假设 `trian=3`），所有条件均成立。因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `if (trian == 3 && b + c > a)`，变异后为 `if (trian == 3)`。在路径约束下（`b == c`），原条件简化为 `if (trian == 3 && b + b > a)`，即 `if (trian == 3 && 2b > a)`。变异后移除了 `2b > a` 的约束。若存在 `trian == 3` 但 `2b <= a` 的情况（例如 `a=3, b=1, c=1`），原程序会跳过分支返回 `INVALID`，而变异体会进入分支返回 `ISOSCELES`。因此程序状态可能改变。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `trian`、`b` 和 `c`。`trian` 的值直接决定分支走向，而 `b` 和 `c` 通过 `b + c > a` 影响原程序的分支条件。变异后，`b` 和 `c` 不再影响分支，但 `trian` 仍通过控制依赖影响输出（返回 `ISOSCELES` 或 `INVALID`）。数据依赖路径完整：`trian` → 分支条件 → 返回值。\n分析结论：变异影响的变量通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (trian == 3)` 直接控制两个输出分支：`return ISOSCELES`（True）和 `return INVALID`（False）。控制依赖路径明确存在。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异移除了 `b + c > a` 的约束，导致在 `trian == 3` 但 `b + c <= a` 时，原程序返回 `INVALID` 而变异体返回 `ISOSCELES`。这种差异未被后续执行覆盖，会直接影响最终输出。\n分析结论：错误状态未被覆盖，影响输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_298 的分析, 耗时: 160.1986 秒
+
+开始分析变异体 MUT_299...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_299": "### 步骤1：可达性分析\n说明理由：变异语句的条件判断从 `if (a <= 0 || b <= 0 || c <= 0)` 修改为 `if (a <= 0 || true || c <= 0)`。由于 `true` 是一个恒真条件，因此无论 `b` 的值如何，只要 `a <= 0` 或 `c <= 0` 为真，或者两者都为假，变异语句的条件判断结果都会与原程序不同。路径条件组合为 `a > 0 && c > 0` 时，原程序的条件判断为 `false`，而变异体的条件判断为 `true`。因此，变异语句是可达的。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：变异将 `b <= 0` 替换为 `true`，这会导致条件判断的逻辑发生变化。具体来说，当 `a > 0` 且 `c > 0` 时，原程序的条件判断为 `false`，而变异体的条件判断为 `true`。这会直接导致程序的控制流发生变化（例如，原程序可能进入后续逻辑，而变异体可能直接返回 `INVALID`）。因此，变异实际改变了程序状态。\n\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `b`，但变异并未直接修改 `b` 的值，而是修改了条件判断中对 `b` 的检查逻辑。从数据依赖路径来看，`b` 的值在后续逻辑中仍被使用（例如 `if (a == b)`、`if (b == c)`、`if (a + b < c)` 等），因此变异的影响可以通过数据依赖链传播到程序输出。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句的条件判断直接控制了程序的返回逻辑（`return INVALID`）或后续执行路径。因此，变异语句通过控制流影响输出语句。例如，当 `a > 0` 且 `c > 0` 时，原程序会继续执行后续逻辑，而变异体会直接返回 `INVALID`，导致输出不同。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：变异引入的错误状态（条件判断逻辑的变化）会直接影响程序的输出结果（例如返回 `INVALID` 或继续执行后续逻辑）。在部分输入下（如 `a > 0` 且 `c > 0`），变异体会导致程序行为与原程序不同，且这种差异无法被后续逻辑修正或抵消。\n\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_299 的分析, 耗时: 133.5553 秒
+
+开始分析变异体 MUT_300...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_300": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断 `if (a + b < c || a + c < b++ || b + c < a)` 中，其路径约束为 `!(a <= 0 || b <= 0 || c <= 0) && trian == 0`。该约束表示输入必须为正整数且三边互不相等（`trian == 0`）。例如，`a=2, b=3, c=4` 满足此约束，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为 `a + c < b`，变异后为 `a + c < b++`。`b++` 是后置自增，会先比较 `a + c < b` 再自增 `b`。若 `a + c == b - 1`，原表达式为 `false`，变异后由于 `b++` 会使比较结果为 `true`（因为 `a + c < b` 为 `true`），从而改变程序状态。例如，`a=1, b=2, c=1` 时，原表达式为 `false`，变异后为 `true`。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `b` 通过以下数据依赖路径传播到输出：\n1. 直接影响 `if` 条件的结果，进而决定返回 `INVALID` 或 `SCALENE`。\n2. 后续分支中（如 `if (trian == 1 && a + b > c)`）也依赖 `b` 的值。\n例如，`a=1, b=2, c=1` 中，变异后 `b` 自增为 `3`，可能改变后续分支的判定结果。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制 `if` 分支的走向，决定执行 `return INVALID` 或 `return SCALENE`。例如，`a=1, b=2, c=1` 中，原程序返回 `SCALENE`，变异体可能返回 `INVALID`。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了状态改变（如 `b` 自增），但该改变未被后续逻辑修正或抵消。例如，`a=1, b=2, c=1` 的输入下，变异体会错误返回 `INVALID`，而原程序返回 `SCALENE`，输出结果不同。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_300 的分析, 耗时: 83.8152 秒
+
+开始分析变异体 MUT_301...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_301": "### 步骤1：可达性分析\n说明理由：变异语句位于条件判断 `if (b == c)` 被修改为 `if (!(b == c))`。程序入口到该变异语句的路径条件为 `a > 0 && b > 0 && c > 0`，且没有其他约束限制该路径的可行性。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原始条件为 `if (b == c)`，变异后为 `if (!(b == c))`。在 `b == c` 的情况下，原始条件为真，变异条件为假；在 `b != c` 的情况下，原始条件为假，变异条件为真。因此，变异会改变程序的控制流和状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `b` 和 `c`。数据依赖路径显示，`b` 和 `c` 的值会影响 `trian` 的赋值，进而影响后续的条件判断和返回值。例如：\n- 如果 `b == c`，原始程序会执行 `trian = trian + 3`，而变异程序不会执行该语句。\n- `trian` 的值直接影响 `if (trian == 0)`、`if (trian > 3)` 等条件判断，最终影响返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句的控制依赖路径显示，其分支结果直接影响后续语句的执行。例如：\n- 变异语句为真时，会执行 `trian = trian + 3`，进而影响后续的条件判断和返回值。\n- 变异语句为假时，会跳过该语句，直接进入后续条件判断。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异会改变程序的控制流和中间状态，但在某些情况下（如 `b == c` 时），原始程序会执行 `trian = trian + 3`，而变异程序不会执行该语句。这会导致 `trian` 的值不同，进而可能影响最终的返回值。因此，变异引入的错误状态不会被完全抵消。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_301 的分析, 耗时: 129.7382 秒
+
+开始分析变异体 MUT_302...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_302": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为`[a > 0 && b > 0 && c > 0 && a == b]`，这些条件可以同时满足（例如a=1, b=1, c=2），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原始表达式为`trian = trian + 1`，变异表达式为`trian = trian-- + 1`。虽然`trian--`会先使用`trian`的值再加1，然后`trian`减1，但由于`trian`的初始值为0，且该语句在单次执行中不影响最终`trian`的值（因为`trian-- + 1`的结果仍然是1，且`trian`的减1操作不影响后续逻辑），因此程序状态未改变。\n分析结论：变异未实际改变程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：由于步骤2已确定变异未改变程序状态，因此无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤4：控制依赖分析\n说明理由：由于步骤2已确定变异未改变程序状态，因此无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤5：状态覆盖分析\n说明理由：由于变异未改变程序状态，因此不存在错误状态需要覆盖。\n分析结论：跳过。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_302 的分析, 耗时: 110.5329 秒
+
+开始分析变异体 MUT_303...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_303": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`a > 0 && b > 0 && c > 0`，这是可满足的条件（例如a=1, b=1, c=1）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`if (trian == 0)`，变异后为`if (false)`。无论`trian`的值如何，变异后的条件恒为假，直接跳过原分支。这会强制程序进入后续逻辑（`if (trian > 3)`等分支），而原程序在`trian == 0`时会执行`if (a + b < c || ...)`的分支。因此，变异实际改变了程序的控制流和状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`trian`。数据依赖路径显示，`trian`的值直接影响后续条件分支（如`if (trian > 3)`）和返回值（如`return EQUILATERAL;`）。虽然变异跳过了`trian == 0`的分支，但`trian`的值仍通过其他路径传播到输出节点（如路径4和6返回`EQUILATERAL`，路径2和5返回`ISOSCELES`）。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (false)`直接控制后续分支的执行。例如：\n- 原程序在`trian == 0`时会执行`if (a + b < c || ...)`的分支，而变异体跳过该分支，直接进入`if (trian > 3)`等后续分支。\n- 控制依赖路径显示，变异语句的真假结果直接影响程序是否执行`return INVALID`或`return SCALENE`等输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异强制跳过了`trian == 0`的分支，但程序的其他分支（如`trian > 3`或`trian == 1`等）仍会根据`trian`的实际值返回正确结果。例如：\n- 若`trian == 0`，原程序可能返回`SCALENE`或`INVALID`，而变异体直接跳过该分支，进入后续逻辑（可能返回`EQUILATERAL`或`ISOSCELES`），导致输出不同。\n- 没有证据表明变异引入的错误状态会被后续执行逻辑修正或抵消。\n分析结论：变异引入的错误状态未被修正，程序输出可能改变。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_303 的分析, 耗时: 119.1540 秒
+
+开始分析变异体 MUT_304...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_304": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：a > 0 && b > 0 && c > 0 && a == b && a != c && b != c && trian == 1。这些条件是可满足的，例如a=2, b=2, c=3满足所有条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为a + b > c，变异表达式为a + b != c。在路径约束下（a == b且a != c），当a + b == c时，原表达式为false而变异表达式为true；当a + b > c时，两者都为true；当a + b < c时，两者都为false。因此存在输入（如a=2,b=2,c=4）使两者结果不同，程序状态会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量a、b、c和trian通过控制依赖路径直接影响返回值。具体来说，变异语句的条件判断结果直接决定了是返回ISOSCELES还是继续后续判断，最终影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句if (trian == 1 && a + b != c)直接控制两个输出路径：条件为真时返回ISOSCELES，为假时继续后续判断。因此变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些输入下会改变程序的控制流路径（如a=2,b=2,c=4时原程序返回INVALID而变异体返回ISOSCELES），但这种改变会导致程序输出不同（INVALID vs ISOSCELES），没有被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_304 的分析, 耗时: 115.5764 秒
+
+开始分析变异体 MUT_305...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_305": "### 步骤1：可达性  \n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && a == b]`，这是一个可满足的条件组合（例如 `a=1, b=1, c=1`）。因此，变异语句可以被执行到。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性  \n说明理由：原程序语句为 `trian = trian + 1`，变异体语句为 `trian = trian - 1`。在路径条件 `a == b` 下，`trian` 的初始值为 0，原程序执行后 `trian` 变为 1，而变异体执行后 `trian` 变为 -1。这显著改变了程序状态。  \n分析结论：变异实际改变了程序状态，满足必要性。  \n\n### 步骤3：数据依赖  \n说明理由：变量 `trian` 的数据依赖路径显示其值直接影响后续的条件判断（如 `if (trian == 0)`、`if (trian > 3)` 等）和最终的返回值（如 `return ISOSCELES` 或 `return INVALID`）。变异后的 `trian` 值会通过数据依赖链传播到输出节点。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。  \n\n### 步骤4：控制依赖  \n说明理由：控制依赖路径显示，变异语句的执行会影响后续条件分支的选择（例如 `if (trian == 0)` 的结果），进而影响输出语句的执行路径（如 `return SCALENE` 或 `return ISOSCELES`）。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n### 步骤5：状态覆盖  \n说明理由：虽然变异改变了 `trian` 的值，但后续逻辑（如 `if (a == c)` 或 `if (b == c)`）可能进一步修改 `trian` 的值。然而，存在输入（例如 `a=1, b=1, c=2`）使得 `trian` 的最终值与原程序不同，导致输出结果不同（例如原程序可能返回 `ISOSCELES`，而变异体可能返回 `INVALID`）。因此，变异引入的错误状态未被完全覆盖。  \n分析结论：变异引入的错误状态未被后续执行完全抵消。  \n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_305 的分析, 耗时: 223.2398 秒
+
+开始分析变异体 MUT_306...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_306": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c), !(b == c)`，即`a > 0 && b > 0 && c > 0 && a != b && a != c && b != c`。该条件逻辑上可满足（例如a=2, b=3, c=4），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`if (trian == 0)`，变异为`if (trian >= 0)`。在路径约束下（`trian`初始为0，且未修改时保持0），原条件为真时变异条件也为真；但当`trian`被修改为正值时（如`trian = trian + 1`），原条件为假而变异条件仍为真。因此变异可能改变程序状态。\n分析结论：变异实际改变了程序语义，不满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`trian`通过数据依赖链直接影响后续条件判断（如`if (trian > 3)`）和返回值（如`return SCALENE`）。具体路径为：`trian`→条件判断→分支选择→返回值。\n分析结论：变异变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian >= 0)`直接控制后续分支（如`if (a + b < c || ...)`或`if (trian > 3)`），进而影响最终返回语句（如`return SCALENE`或`return EQUILATERAL`）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了条件判断逻辑（如`trian == 0`→`trian >= 0`），但在`trian`为0时行为与原程序一致；当`trian > 0`时，程序会进入不同分支（如`if (trian > 3)`），导致不同的返回值（如`EQUILATERAL`或`ISOSCELES`），而非原程序的`SCALENE`。因此错误状态未被覆盖。\n分析结论：变异引入的状态差异未被抵消，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_306 的分析, 耗时: 122.0898 秒
+
+开始分析变异体 MUT_307...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_307": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && a == b]`，这是一个可满足的条件组合（例如 `a=1, b=1, c=2`）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `trian = trian + 1`，变异后为 `trian = trian / 1`。在初始条件下 `trian = 0`，因此：\n- 原始表达式结果为 `0 + 1 = 1`。\n- 变异表达式结果为 `0 / 1 = 0`。\n两者结果不同，程序状态被改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `trian`，其数据依赖路径显示 `trian` 的值会传播到多个条件判断和最终的 `return` 语句（如 `if (trian == 0)`、`if (trian > 3)` 等）。因此，变异后的 `trian` 值会直接影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `trian = trian / 1` 的结果会通过控制流影响后续的条件分支（如 `if (trian == 0)`），进而影响最终的 `return` 语句。控制依赖路径明确显示了这种依赖关系。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `trian` 的值（从 `1` 变为 `0`），但后续的 `if (a == c)` 和 `if (b == c)` 可能会重新修改 `trian` 的值。然而，在特定输入（如 `a=1, b=1, c=2`）下：\n- 原始程序：`trian = 1`（`a == b`），后续 `a != c` 和 `b != c` 不修改 `trian`，最终 `trian = 1`。\n- 变异程序：`trian = 0`（`a == b`），后续 `a != c` 和 `b != c` 不修改 `trian`，最终 `trian = 0`。\n此时程序行为不同（如 `trian == 1` 和 `trian == 0` 可能导致不同分支），因此错误状态未被完全覆盖。\n分析结论：变异引入的错误状态未被完全抵消，程序输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_307 的分析, 耗时: 148.8274 秒
+
+开始分析变异体 MUT_308...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_308": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断`if ((a + b < c || a + c < b) != b + c < a)`中，其路径条件为`a > 0 && b > 0 && c > 0 && a != b && a != c && b != c`。这些条件组合是可满足的（例如`a=3, b=2, c=1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`if (a + b < c || a + c < b || b + c < a)`，变异后为`if ((a + b < c || a + c < b) != b + c < a)`。在路径约束`a > 0 && b > 0 && c > 0 && a != b && a != c && b != c`下，存在输入（如`a=3, b=2, c=4`）使原表达式为`false`（3+2<4为false，3+4<2为false，2+4<3为false），而变异表达式为`(false || false) != true`即`false != true`为`true`，程序状态改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`a, b, c`通过数据依赖链直接传播到输出节点。例如，当变异条件为`true`时返回`INVALID`，为`false`时返回`SCALENE`，变量值的变化直接影响输出结果。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if ((a + b < c || a + c < b) != b + c < a)`直接控制两个输出分支：`return INVALID`（True分支）和`return SCALENE`（False分支），因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：根据前述分析，变异体满足可达性、必要性、数据依赖与控制依赖，且存在输入（如`a=3, b=2, c=4`）使程序输出从`SCALENE`（原程序）变为`INVALID`（变异体），说明错误状态未被覆盖或抵消。\n分析结论：变异引入的错误状态未被后续执行修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_308 的分析, 耗时: 76.6781 秒
+
+开始分析变异体 MUT_309...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_309": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0), !(a == b), !(a == c)]`，即 `a > 0 && b > 0 && c > 0 && a != b && a != c`。这些条件可以同时满足（例如 `a=2, b=3, c=4`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原语句为 `if (b == c)`，变异为 `if (b++ == c)`。在变异语句可达的情况下（`b != c`），原语句结果为 `false`，而变异语句会先比较 `b` 和 `c`（结果为 `false`），然后执行 `b++`，导致 `b` 的值增加1。这会改变程序状态（`b` 的值被修改）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量 `b` 有以下数据依赖路径：\n1. 影响 `if (trian == 1 && a + b > c)` 中的 `b`，进而可能影响 `return ISOSCELES`。\n2. 影响 `if (trian == 2 && a + c > b)` 中的 `b`，进而可能影响 `return ISOSCELES`。\n3. 影响 `if (trian == 3 && b + c > a)` 中的 `b`，进而可能影响 `return ISOSCELES`。\n4. 影响 `if (a + b < c || a + c < b || b + c < a)` 中的 `b`，进而可能影响 `return INVALID` 或 `return SCALENE`。\n因此，变异影响的变量 `b` 可以通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖路径。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (b++ == c)` 的控制依赖路径包括：\n1. 直接控制 `trian = trian + 3` 的执行。\n2. 间接控制后续的 `if (trian == 0)`、`if (trian > 3)` 等条件分支，最终影响 `return` 语句的执行。\n因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖路径。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异引入了 `b` 的值改变，且这种改变可以通过数据和控制依赖传递到输出，但在某些情况下（例如 `b` 的改变不影响后续条件判断的结果），程序输出可能不受影响。然而，存在输入（例如 `a=2, b=3, c=4`，初始 `trian=0`）使得 `b` 的改变会影响 `if (a + b < c || a + c < b || b + c < a)` 的结果，从而改变程序输出。因此，变异引入的错误状态未被完全覆盖。\n分析结论：错误状态未被完全覆盖。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_309 的分析, 耗时: 104.9922 秒
+
+开始分析变异体 MUT_310...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_310": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断 `if (a + ++b < c || a + c < b || b + c < a)` 中，其路径条件为 `a > 0 && b > 0 && c > 0 && a != b && a != c && b != c`。这些条件可以满足（例如 `a=3, b=2, c=1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为 `if (a + b < c || a + c < b || b + c < a)`，变异体为 `if (a + ++b < c || a + c < b || b + c < a)`。变异体对 `b` 进行了自增操作（`++b`），这会改变 `b` 的值，从而可能影响条件判断的结果。例如，输入 `a=3, b=2, c=1` 时，原表达式为 `false`，而变异体可能为 `true`（取决于 `++b` 的具体值）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `b`，其数据依赖路径显示 `b` 的值会直接影响条件判断的结果，进而影响程序的返回值（如 `return INVALID` 或 `return SCALENE`）。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制了程序分支的走向（如 `return INVALID` 或 `return SCALENE`），输出语句的执行依赖于变异语句的真假结果。因此，变异语句与输出语句存在控制依赖路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体引入的状态改变（`++b`）会直接影响条件判断和后续输出，且不存在逻辑抵消或覆盖现象。例如，输入 `a=3, b=2, c=1` 时，变异体的行为与原程序不同，且输出结果可能不同。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_310 的分析, 耗时: 92.8318 秒
+
+开始分析变异体 MUT_311...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_311": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0, trian == 0]`。这些条件在输入满足 `a > 0 && b > 0 && c > 0` 且 `a != b && a != c && b != c` 时是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `if (a + b < c || a + c < b || b + c < a)`，变异体为 `if (a + b < c || a + c < b || b + c < a++)`。变异体在 `a++` 处修改了 `a` 的值，但 `a++` 是后置自增操作，其返回值是 `a` 的原始值，因此条件判断的结果与原始表达式相同。虽然 `a` 的值被修改，但条件判断的语义未改变。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a`，其数据依赖路径显示 `a` 的值会通过控制流影响后续的 `return` 语句。但由于 `a++` 的返回值是原始值，条件判断的结果未变，因此数据依赖链的传播未导致程序输出的改变。\n分析结论：数据依赖链存在，但未导致输出改变。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流直接影响 `return` 语句，但由于条件判断的结果未变，控制依赖路径的传播也未导致程序输出的改变。\n分析结论：控制依赖路径存在，但未导致输出改变。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体修改了 `a` 的值，但由于 `a++` 的返回值是原始值，条件判断的结果与原始程序一致，因此变异引入的状态改变被逻辑抵消，程序最终输出未受影响。\n分析结论：变异引入的错误状态被抵消，程序输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_311 的分析, 耗时: 82.7550 秒
+
+开始分析变异体 MUT_312...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_312": "### 步骤1：可达性分析\n说明理由：变异语句位于条件判断`if (true && a + b > c)`，其路径条件组合为`[!(a <= 0 || b <= 0 || c <= 0), !(trian == 0), !(trian > 3)]`。这意味着程序执行到该变异语句的条件是：a、b、c均为正数，且`trian`不等于0且不大于3。这些条件可以满足，例如当`a=2, b=2, c=3`时，`trian=1`（因为`a == b`），满足所有路径条件。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件是`if (trian == 1 && a + b > c)`，变异后为`if (true && a + b > c)`。在路径条件下（`trian == 1`），原条件简化为`if (a + b > c)`，与变异后的条件完全一致。因此，变异并未改变程序的实际语义。\n分析结论：变异未改变程序语义，属于等价变异体。\n\n### 步骤3：数据依赖分析\n说明理由：由于步骤2已确定变异未改变程序语义，数据依赖分析在此情况下不影响最终结论。但为了完整性，可以观察到变量`a`、`b`、`c`的值通过条件判断直接影响返回值，但变异并未改变这些变量的值或依赖关系。\n分析结论：数据依赖路径存在，但变异未改变程序行为。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句控制程序分支的走向，但由于变异后的条件与原条件在路径约束下等价，控制流未发生实际变化。\n分析结论：控制依赖路径存在，但变异未改变程序行为。\n\n### 步骤5：状态覆盖分析\n说明理由：由于变异未改变程序的实际语义，所有可能的程序状态和输出均与原程序一致，不存在需要覆盖的错误状态。\n分析结论：变异未引入需要覆盖的错误状态。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_312 的分析, 耗时: 150.4488 秒
+
+开始分析变异体 MUT_313...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_313": "### 步骤1：可达性分析\n说明理由：根据提供的变异体信息和程序控制流图，变异语句位于条件判断`if (trian == 1 && a * b > c)`中。路径条件组合为`[!(a <= 0 || b <= 0 || c <= 0), (a == b)可选, (a == c)可选, (b == c)可选, !(trian == 0), !(trian > 3)]`，即满足`a > 0 && b > 0 && c > 0 && trian == 1`。这些条件可以同时满足（例如`a=2, b=1, c=1`时`trian=1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序条件为`a + b > c`，变异后为`a * b > c`。在`trian == 1`的路径下（即`a == b`），存在输入使两者结果不同。例如`a=2, b=2, c=3`时，原程序`2+2>3`为真，变异体`2*2>3`也为真；但`a=1, b=1, c=1.5`时，原程序`1+1>1.5`为真，变异体`1*1>1.5`为假。因此变异实际改变了程序语义。\n分析结论：变异改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量`a, b, c`通过控制依赖直接影响返回值。数据依赖路径显示：若`a * b > c`为真，返回`ISOSCELES`；否则进入后续条件判断。因此变异状态可通过数据依赖链传播到输出。\n分析结论：存在数据依赖传播路径。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句直接控制程序分支走向，其真假结果决定是否返回`ISOSCELES`或进入后续判断。控制依赖路径明确显示变异语句与输出语句的强依赖关系。\n分析结论：存在控制依赖影响。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体在某些输入下（如`a=2, b=2, c=3`）与原程序输出相同，但存在其他输入（如`a=1, b=1, c=1.5`）会导致不同输出（原程序返回`ISOSCELES`，变异体返回`INVALID`）。因此错误状态未被完全覆盖。\n分析结论：无状态覆盖现象。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_313 的分析, 耗时: 93.1195 秒
+
+开始分析变异体 MUT_314...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_314": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：a > 0 && b > 0 && c > 0 && a == b && a != c && b != c && trian == 1。这些条件可以同时满足，例如当a=2, b=2, c=3时，所有条件都为真。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`a + b > c`，变异表达式为`~a + b > c`。在路径约束下（a == b），考虑a=2, b=2, c=3时：原表达式2+2>3为true，变异表达式(~2)+2>3即(-3)+2>3为false。两者结果不同，说明变异确实改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量a通过数据依赖路径直接影响条件判断结果，进而影响返回值。具体路径：变异语句→条件判断→return语句。变量a的值变化会直接传播到输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian == 1 && ~a + b > c)`直接控制着程序是否执行`return ISOSCELES`语句。变异语句的真假结果决定了后续的控制流路径。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了中间状态（条件判断结果），但在某些输入下（如a=2,b=2,c=1）会导致程序走不同分支，最终可能返回不同结果（原程序返回ISOSCELES，变异体可能返回INVALID）。没有证据表明错误状态会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，会影响程序最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_314 的分析, 耗时: 93.6083 秒
+
+开始分析变异体 MUT_315...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_315": "### 步骤1：可达性分析  \n说明理由：变异语句的条件从`if (a <= 0 || b <= 0 || c <= 0)`简化为`if (c <= 0)`，移除了对`a`和`b`的检查。路径条件为`c > 0`（变异语句为`False`分支）或`c <= 0`（变异语句为`True`分支）。这两种情况均可通过输入满足（例如`a=1, b=1, c=1`或`a=1, b=1, c=0`），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性分析  \n说明理由：原条件检查`a`、`b`、`c`是否全部大于0，而变异体仅检查`c`。若输入满足`a <= 0`或`b <= 0`但`c > 0`（例如`a=-1, b=1, c=1`），原程序返回`INVALID`，而变异体继续执行后续逻辑，导致程序状态改变（如`trian`的赋值或三角形分类结果可能不同）。  \n分析结论：变异实际改变了程序语义，满足必要性。  \n\n### 步骤3：数据依赖分析  \n说明理由：  \n- **变量`a`和`b`的传播路径**：若变异体未检查`a`或`b`，后续逻辑（如`if (a == b)`、`if (a + b < c)`）可能使用非法值（如`a <= 0`），导致输出结果改变（如返回`INVALID`或错误分类）。  \n- **数据依赖链**：`a`和`b`直接影响`trian`的计算和最终返回值（如`ISOSCELES`、`EQUILATERAL`等）。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。  \n\n### 步骤4：控制依赖分析  \n说明理由：  \n- 变异语句直接控制是否进入`return INVALID`分支。若`a`或`b`不满足原条件但`c > 0`，变异体跳过该分支，转而执行后续分类逻辑，导致控制流改变。  \n- 后续输出语句（如`return SCALENE`）的执行依赖于变异语句的条件判断。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n### 步骤5：状态覆盖分析  \n说明理由：  \n- 变异体未覆盖`a`或`b`的非法状态，导致后续逻辑可能使用错误值（如`a <= 0`参与运算），最终输出可能不同（如原程序返回`INVALID`，变异体返回错误分类）。  \n- 无证据表明错误状态会被后续逻辑修正或抵消。  \n\n### 最终结论  \n等价变异体判定结果：NO。  \n\n（变异体改变了程序语义且影响输出，不满足等价条件。）"}
+完成变异体 MUT_315 的分析, 耗时: 239.4806 秒
+
+开始分析变异体 MUT_316...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_316": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!(a <= 0 || b <= 0 || c <= 0) && trian != 0 && trian <= 3 && trian != 1 && trian != 2]`，即满足 `a > 0 && b > 0 && c > 0 && trian == 3`。该条件可满足（例如 `a=2, b=2, c=2` 时 `trian=3`），因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为 `b + c > a`，变异后为 `false`。在 `trian == 3` 的路径下（即 `a == b == c`），原条件 `b + c > a` 恒为 `true`（因为 `a + a > a`），而变异后强制为 `false`，导致程序状态改变（控制流从返回 `ISOSCELES` 变为返回 `INVALID`）。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a` 和 `trian`。`trian` 的数据依赖路径直接连接到输出语句（`return ISOSCELES` 或 `return INVALID`），而 `a` 的依赖路径在变异语句终止。由于 `trian` 的值直接影响输出，变异效果可通过数据依赖链传播到程序输出。  \n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (trian == 3 && false)` 的控制依赖路径直接决定输出语句的执行（`True` 分支返回 `ISOSCELES`，`False` 分支返回 `INVALID`）。因此，变异语句通过控制流影响输出。  \n分析结论：存在控制依赖条件。\n\n### 步骤[状态覆盖]：\n说明理由：在 `trian == 3` 的路径下，原程序返回 `ISOSCELES`，而变异体因条件强制为 `false` 返回 `INVALID`。程序输出被显式改变，错误状态未被覆盖或抵消。  \n分析结论：变异效果未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_316 的分析, 耗时: 95.6106 秒
+
+开始分析变异体 MUT_317...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_317": "### 步骤1：可达性分析  \n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0, a == b, a == c]`。这些条件在输入满足 `a > 0, b > 0, c > 0` 且 `a == b == c` 时可同时成立（例如 `a=1, b=1, c=1`），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性分析  \n说明理由：原程序语句为 `trian = trian + 2`，变异体为 `trian = trian * 2`。在初始条件 `trian = 0` 时，两者结果相同（`0 + 2 = 0 * 2 = 0`），但当 `trian = 1` 时（例如 `a == b` 成立但 `a == c` 不成立时），原程序结果为 `3`（`1 + 2`），而变异体结果为 `2`（`1 * 2`），程序状态改变。  \n分析结论：变异实际改变了程序状态，满足必要性。  \n\n### 步骤3：数据依赖分析  \n说明理由：变异影响的变量 `trian` 通过数据依赖链传播到多个输出节点（如 `return EQUILATERAL`、`return ISOSCELES` 等）。例如，`trian` 的值直接决定 `if (trian > 3)` 和后续分支的走向，最终影响返回值。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出。  \n\n### 步骤4：控制依赖分析  \n说明理由：变异语句位于 `if (a == c)` 分支内，其赋值结果直接影响后续对 `trian` 的判断（如 `if (trian > 3)`），进而控制程序输出的分支选择（如返回 `EQUILATERAL` 或 `ISOSCELES`）。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n### 步骤5：状态覆盖分析  \n说明理由：虽然变异可能改变 `trian` 的值（如从 `3` 变为 `2`），但在某些路径下（如 `a == b == c`），原程序与变异体的最终返回值仍相同（例如均返回 `EQUILATERAL`）。然而，存在其他路径（如 `a == b != c` 且 `trian` 初始为 `1`）会导致返回值不同（原程序返回 `ISOSCELES`，变异体可能返回 `INVALID`）。因此，错误状态未被完全覆盖。  \n分析结论：变异引入的错误状态未被完全抵消，可能影响输出。  \n\n### 最终结论  \n等价变异体判定结果：NO。"}
+完成变异体 MUT_317 的分析, 耗时: 158.3824 秒
+
+开始分析变异体 MUT_318...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_318": "步骤1：可达性分析\n说明理由：变异语句的条件组合为a > 0 && b > 0 && c > 0，这些条件可以同时满足，例如a=1, b=2, c=3。因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤2：必要性分析\n说明理由：原条件为if (a == b)，变异后为if (!(a == b))。当a == b时，原条件为真而变异条件为假；当a != b时，原条件为假而变异条件为真。这会改变程序的控制流。\n分析结论：变异实际改变了程序语义。\n\n步骤3：数据依赖分析\n说明理由：变异影响的变量a和b通过trian变量传播到多个return语句。例如，当a == b时，原程序会增加trian的值，而变异体不会，这将影响后续的trian判断和返回值。\n分析结论：变异影响通过数据依赖链传播到程序输出。\n\n步骤4：控制依赖分析\n说明理由：变异语句直接控制是否执行trian = trian + 1，进而影响后续所有基于trian值的条件判断和return语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤5：状态覆盖分析\n说明理由：虽然变异改变了中间状态（trian的值），但在某些情况下（如a != b时）可能产生与原程序不同的最终输出。例如当a == b时，原程序会识别为等腰三角形，而变异体不会。\n分析结论：变异引入的错误状态未被完全覆盖。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_318 的分析, 耗时: 275.6483 秒
+
+开始分析变异体 MUT_319...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_319": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[!(a <= 0 || b <= 0 || c <= 0) && trian == 0]`。该条件组合可以满足，例如当 `a=1, b=1, c=2` 时，`a > 0 && b > 0 && c > 0` 且 `trian == 0`（因为 `a != b && a != c && b != c`），因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `if (a + b < c || a + c < b || b + c < a)`，变异表达式为 `if (a + b > c || a + c < b || b + c < a)`。在路径约束 `!(a <= 0 || b <= 0 || c <= 0) && trian == 0` 下，存在输入使原表达式和变异表达式的取值不同。例如，`a=2, b=2, c=3` 时，原表达式为 `false`（因为 `2+2 < 3` 为 `false`，`2+3 < 2` 为 `false`，`2+3 < 2` 为 `false`），变异表达式为 `true`（因为 `2+2 > 3` 为 `true`）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `a`、`b` 和 `c`。数据依赖路径显示，这些变量的值会直接影响条件判断的结果，进而通过控制流影响程序的返回值。例如：\n- 如果 `a + b > c` 为 `true`，程序返回 `INVALID`；\n- 如果为 `false`，程序返回 `SCALENE`。\n因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示，变异语句直接控制程序的分支走向：\n- `(19: if (a + b > c || a + c < b || b + c < a)) --True--> (21: return INVALID;)`\n- `(19: if (a + b > c || a + c < b || b + c < a)) --False--> (23: return SCALENE;)`\n因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于以上分析，变异体满足可达性、必要性、数据依赖和控制依赖条件，且变异引入的状态改变会直接传递到输出。例如：\n- 输入 `a=2, b=2, c=3` 时，原程序返回 `SCALENE`，变异体返回 `INVALID`，输出不同；\n- 输入 `a=1, b=1, c=3` 时，原程序返回 `INVALID`（因为 `1+1 < 3` 为 `true`），变异体返回 `INVALID`（因为 `1+1 > 3` 为 `false`，但 `1+3 < 1` 为 `false`，`1+3 < 1` 为 `false`，整体为 `false`），但原程序会返回 `INVALID` 因为 `1+1 < 3` 为 `true`，这里似乎矛盾，需要重新验证。\n实际上，对于输入 `a=1, b=1, c=3`：\n- 原程序：`1+1 < 3` 为 `true`，返回 `INVALID`；\n- 变异体：`1+1 > 3` 为 `false`，`1+3 < 1` 为 `false`，`1+3 < 1` 为 `false`，整体为 `false`，返回 `SCALENE`。\n因此，存在输入使输出不同，变异体的错误状态未被覆盖。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_319 的分析, 耗时: 132.7525 秒
+
+开始分析变异体 MUT_320...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_320": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`!(a <= 0 || b <= 0 || c <= 0)`、`trian != 0`、`!(trian == 0)`。这些条件可以同时满足，例如当`a=2, b=2, c=2`时，所有条件均为真，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`if (trian > 3)`，变异表达式为`if (trian != 3)`。在`trian`的值为4时（例如`a=2, b=2, c=2`，此时`trian=6`），两者都返回`true`；但当`trian`的值为5时，原始表达式返回`true`而变异表达式返回`true`；当`trian`的值为2时，原始表达式返回`false`而变异表达式返回`true`。因此，变异改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`trian`，其数据依赖路径显示`trian`的值直接影响到`if (trian != 3)`的判断结果，进而通过控制流影响最终的返回值（如`EQUILATERAL`、`ISOSCELES`等）。因此，变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (trian != 3)`直接控制后续分支的执行，例如当条件为`true`时返回`EQUILATERAL`，为`false`时进入其他分支判断。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序状态（如`trian=4`时原程序与变异体行为一致，但`trian=2`时行为不同），但存在输入（如`trian=2`）会导致程序输出不同（例如原程序可能返回`ISOSCELES`而变异体返回`EQUILATERAL`）。因此，变异引入的错误状态未被完全覆盖。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_320 的分析, 耗时: 100.7237 秒
+
+开始分析变异体 MUT_321...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_321": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为 `[a > 0 && b > 0 && c > 0 && trian != 0 && trian <= 3]`。这些条件在逻辑上是可以满足的，例如当 `a=2, b=2, c=2` 时（虽然 `trian` 会大于 3，但存在其他输入如 `a=2, b=2, c=1` 满足 `trian=1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原始表达式为 `if (trian == 1 && a + b > c)`，变异后为 `if (trian == -1 && a + b > c)`。在路径约束 `trian != 0 && trian <= 3` 下，`trian` 的取值只能是 1、2 或 3。原始条件 `trian == 1` 可能为真，而变异后 `trian == -1` 恒为假，因此程序状态会改变（原分支可能执行，变异后分支永不执行）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量是 `trian`。`trian` 的数据依赖路径显示其值会直接影响 `if` 条件判断，进而通过控制流决定返回值（如 `return ISOSCELES` 或 `return INVALID`）。因此，变异影响的变量会传播到程序输出节点。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句 `if (trian == -1 && a + b > c)` 直接控制后续分支的执行（如返回 `ISOSCELES` 或进入其他分支）。控制依赖路径明确显示变异语句的真假会影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异将 `trian == 1` 改为 `trian == -1`，导致原分支永不执行，但程序的其他分支（如 `trian == 2` 或 `trian == 3`）仍可能执行。对于 `trian == 1` 的输入，原程序可能返回 `ISOSCELES`，而变异体会跳过该分支，可能进入其他分支（如返回 `INVALID`），从而改变最终输出。因此，错误状态未被覆盖或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_321 的分析, 耗时: 141.6426 秒
+

@@ -163,9 +163,12 @@ def analyze_mutant(program_path, mutant):
 
     # 初始化LLM
     llm = ChatOpenAI(
-        api_key=config["deepseek-v3"]["api_key"],
-        base_url=config["deepseek-v3"]["base_url"],
+        api_key=config["deepseek-v3-g"]["api_key"],
+        base_url=config["deepseek-v3-g"]["base_url"],
         model="deepseek-chat",
+        # api_key=config["gpt-3.5-turbo"]["api_key"],
+        # base_url=config["gpt-3.5-turbo"]["base_url"],
+        # model="gpt-3.5-turbo",
         temperature=0
     )
 

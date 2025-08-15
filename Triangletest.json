@@ -1,5 +1,5 @@
 [{
-  "mutant_id" : "MUT_006",
-  "difference" : "@@ -28 +28 @@\n-        if (b == c) {\n+        if (false) {",
-  "operator" : "ROD"
+  "mutant_id" : "MUT_031",
+  "difference" : "@@ -18 +18 @@\n-        if (a <= 0 || b <= 0 || c <= 0) {\n+        if (a <= 0 || b <= 0 || c != 0) {",
+  "operator" : "ROR"
 }]
