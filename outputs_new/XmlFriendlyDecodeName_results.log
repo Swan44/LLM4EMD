@@ -1,0 +1,572 @@
+开始分析变异体 MUT_001...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_001": "### 步骤1：可达性分析\n说明理由：变异语句位于循环条件中，原程序的条件是`i < length`，变异后为`i <= length`。循环的路径条件组合为`i`从0开始递增，直到`i`超过或等于`length`。该路径条件是可满足的，因为`i`和`length`都是整数，且`length`是字符串的长度（非负整数），因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原循环条件是`i < length`，变异后为`i <= length`。在循环体内，`i`用于访问字符串`name`的字符。当`i == length`时，原程序会退出循环，而变异体会多执行一次循环体。这会导致`name.charAt(i)`抛出`StringIndexOutOfBoundsException`异常，因为`i`等于`length`时已越界。因此，变异体改变了程序的行为。\n\n分析结论：变异体改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`i`和`length`。`i`的值直接影响循环的执行次数和`name.charAt(i)`的访问。`length`的值决定循环的终止条件。变异体的额外循环会导致程序抛出异常，从而影响程序的输出（异常会导致程序提前终止，返回异常而非正常结果）。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句是循环条件，控制循环体的执行。循环体的执行直接影响程序的输出（如`result.append`和最终的`return s`）。变异体的额外循环会导致程序抛出异常，从而改变控制流和输出。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：变异体引入的错误状态（`i == length`时的越界访问）不会被后续执行修正或抵消，而是直接导致程序抛出异常，改变程序的输出行为。\n\n分析结论：错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_001 的分析, 耗时: 261.1504 秒
+
+开始分析变异体 MUT_002...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_002": "### 步骤1：可达性分析\n说明理由：变异语句位于`if (i > 0)`条件为真时的分支中，且`i`的值由循环`for (; i < length; i++ )`决定。只要输入字符串`name`的长度大于0且存在需要解码的字符（即`i < length`且`c`匹配特定字符），该变异语句就会被执行。路径条件`i > 0`是可满足的，因此变异点可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序使用`name.substring(0, i)`，而变异体使用`name.substring(-1, i)`。`substring`的起始索引为-1时，Java会抛出`StringIndexOutOfBoundsException`异常。因此，变异体与原程序的行为完全不同，会改变程序状态（抛出异常）。\n\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`result`和`name`。`result`的数据依赖路径显示其值最终会通过`s = result.toString()`传递到返回值`s`。然而，由于变异体会抛出异常，程序不会正常执行到输出语句，因此数据依赖链被异常中断。\n\n分析结论：变异影响的变量无法通过数据依赖链传播到程序输出节点（因异常中断）。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句位于`if (i > 0)`的分支中，其执行会影响后续的循环和输出语句。但由于变异体会抛出异常，控制流会被异常中断，无法正常到达输出语句。\n\n分析结论：变异语句无法通过控制流影响输出语句（因异常中断）。\n\n### 步骤5：状态覆盖分析\n说明理由：变异体引入的错误状态（异常）无法被后续执行修正或抵消，因为程序会直接终止。因此，程序的最终输出（或异常）与原程序不同。\n\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_002 的分析, 耗时: 97.3904 秒
+
+开始分析变异体 MUT_003...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_003": "### 步骤[可达性]：\n说明理由：变异语句位于一个循环内部，其路径条件为`s == null`且`i < length`。这些条件在程序执行过程中可以被满足（例如当缓存未命中且输入字符串非空时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件`c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)`被变异为`false && name.startsWith(dollarReplacement, i)`。由于`false && x`恒为false，该变异将导致原条件判断永远不成立，完全改变了控制流行为。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`c`和`dollarReplacementFirstChar`通过以下路径传播：\n1. `c`被用于后续的escape字符判断和直接追加到result\n2. `dollarReplacementFirstChar`影响快速检查阶段的控制流\n虽然变量有数据依赖路径，但变异将整个条件强制设为false，会跳过原本的`$`替换逻辑。\n分析结论：变异通过数据依赖影响输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制以下关键行为：\n1. 原本的`$`替换分支（变异后永不执行）\n2. 直接进入后续的escape字符判断或默认追加字符\n控制依赖路径明确连接到输出语句`return s`。\n分析结论：变异通过控制流显著影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：变异导致程序：\n1. 跳过所有`$`符号的替换处理\n2. 但保留`_`符号的替换逻辑\n对于包含`$`的输入，输出结果会不同（缺少`$`替换）。\n分析结论：错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_003 的分析, 耗时: 103.2842 秒
+
+开始分析变异体 MUT_004...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_004": "### 步骤1：可达性\n说明理由：变异语句位于`if (c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))`条件分支内。根据控制流图分析，该路径需要满足`s == null`为true且上述条件为true才能到达。这些条件在运行时可能被满足（例如当缓存未命中且遇到转义字符时），因此变异语句是可达的。\n分析结论：变异语句可达\n\n### 步骤2：必要性\n说明理由：原表达式`i += escapeCharReplacement.length() - 1`与变异表达式`i += escapeCharReplacement.length() % 1`有本质区别。对于任何正整数n，`n % 1`恒等于0，而`n - 1`等于n-1。因此变异会显著改变i的增量值（从length-1变为0），这将直接影响循环控制变量i的值。\n分析结论：变异实际改变了程序状态\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量i通过以下路径传播到输出：\n1. 变异语句修改i → for循环条件(i < length) → 影响循环次数 → 影响result的内容 → 影响返回值s\n2. 变异语句修改i → 后续字符处理位置 → 影响result的内容 → 影响返回值s\n数据依赖路径完整连接了变异点和程序输出。\n分析结论：存在有效的数据依赖链\n\n### 步骤4：控制依赖\n说明理由：变异语句位于条件分支内，其执行会影响：\n1. 是否执行`result.append('_')`\n2. 循环控制变量i的修改\n这些都会通过控制流最终影响输出语句`return s`的执行结果。\n分析结论：存在有效的控制依赖路径\n\n### 步骤5：状态覆盖\n说明理由：变异将i的增量从length-1改为0，这会：\n1. 导致循环次数增加（因为i增长变慢）\n2. 改变后续字符处理的位置\n3. 最终导致result构建的字符串内容不同\n这种状态改变会直接反映在输出结果中，不会被后续执行抵消。\n分析结论：错误状态未被覆盖\n\n### 最终结论\n等价变异体判定结果：NO"}
+完成变异体 MUT_004 的分析, 耗时: 79.3838 秒
+
+开始分析变异体 MUT_005...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_005": "### 步骤1：可达性分析\n说明理由：变异语句位于`final StringBuffer result = new StringBuffer(length - 8);`，其路径条件为`s == null && i == length == False`。根据程序逻辑，当`s == null`且`i != length`时（即快速检查发现需要解码的字符），该路径可达。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序使用`length + 8`初始化StringBuffer，而变异体使用`length - 8`。StringBuffer的初始容量会影响其内部数组的扩容频率，但不会改变最终存储的内容。只要`length - 8`不小于实际需要存储的字符数（即不发生负值），最终`result.toString()`的结果与原程序一致。根据程序逻辑，`length`是输入字符串的长度，且`i < length`，因此`length - 8`可能为负的情况需要验证。但即使为负，StringBuffer会处理负容量为默认容量（通常是16），最终结果仍可能一致。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量`result`通过`result.append`操作和`result.toString()`传播到输出`s`。数据依赖路径完整，变异对`result`的修改会传递到最终输出。\n分析结论：存在数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句是初始化操作，不直接控制程序分支。后续的`append`和`toString`操作不受初始化容量的控制流影响。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了StringBuffer的初始容量，但最终`result`存储的内容和`toString()`的结果与原程序一致。初始容量的差异在后续操作中被覆盖，不影响最终输出。\n分析结论：变异引入的错误状态被后续操作覆盖，不影响程序输出。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_005 的分析, 耗时: 133.9510 秒
+
+开始分析变异体 MUT_006...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_006": "### 步骤1：可达性\n说明理由：变异语句位于第17行的条件判断，路径条件为`s == null`和`i < length`。这两个条件在程序执行过程中是可满足的，特别是当缓存未命中（`s == null`）且字符串未遍历完（`i < length`）时，变异语句会被执行。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是`if (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar)`，变异后变为`if (c == dollarReplacementFirstChar)`。移除了对`escapeReplacementFirstChar`的检查。这意味着当`c == escapeReplacementFirstChar`时，原程序会执行`break`，而变异体不会。这会改变程序的控制流和后续状态。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`c`和`escapeReplacementFirstChar`。`c`的值会影响是否执行`break`，进而影响`i`的值和后续循环行为。`escapeReplacementFirstChar`的移除会影响第40行的条件判断。这些变量的变化会通过`result`和`s`传递到最终的返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句的控制流直接影响是否执行`break`，进而影响后续的循环和字符串处理逻辑。特别是，当`c == escapeReplacementFirstChar`时，原程序会提前退出循环，而变异体会继续循环，这会导致不同的字符串处理结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（未检查`escapeReplacementFirstChar`）会导致程序在遇到`escapeReplacementFirstChar`时不提前退出循环，而是继续处理。这会使得后续的字符串处理逻辑不同，最终可能导致不同的输出结果。例如，如果字符串中包含`escapeReplacementFirstChar`，原程序会提前退出循环并返回原字符串，而变异体会继续处理并可能修改字符串。\n分析结论：变异引入的错误状态未被修正或抵消，会影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_006 的分析, 耗时: 147.7927 秒
+
+开始分析变异体 MUT_007...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_007": "### 步骤[可达性]：\n说明理由：变异语句位于第35行的循环条件，修改为`for (; false; i++ )`。根据REACHABILITY_CONSTRAINT `[s == null]`，只有当`s == null`时才会进入该代码块。由于`s`的初始值为`(String)(ref == null ? null : ref.get())`，当`ref == null`或`ref.get() == null`时`s`为null，这是可满足的条件。因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原循环条件为`i < length`，变异后为`false`。这将导致循环体永远不会执行，直接跳过循环部分。这会显著改变程序的行为，因为循环体内的逻辑（如字符串处理）将不再执行，从而影响最终的`result`和`s`的值。\n\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量包括`i`、`result`和`s`。根据DATA_DEPENDENCY分析，`result`和`s`的数据依赖路径被截断，因为循环体不再执行。`s`的最终值将不再包含循环体内的处理结果，而是直接返回`result.toString()`（此时`result`只包含`name.substring(0, i)`的内容）。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：根据CTRL_DEPENDENCY分析，变异语句`for (; false; i++ )`直接控制是否执行循环体。由于条件为`false`，循环体被跳过，直接执行后续语句。这影响了程序的输出，因为循环体内的逻辑被完全跳过。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（循环体不执行）未被后续执行修正或抵消。循环体的逻辑（如处理`$`和`_`的替换）被完全跳过，导致最终的`s`值与原程序不同。\n\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_007 的分析, 耗时: 99.0345 秒
+
+开始分析变异体 MUT_008...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_008": "### 步骤1：可达性\n说明理由：变异语句位于`if (s == null)`条件块内，且该条件块在程序中有明确的执行路径（当缓存未命中时）。根据提供的可达性约束`[s == null]`，该路径是可满足的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原语句获取字符串的第一个字符(`charAt(0)`)，变异体改为获取第二个字符(`charAt(1)`)。当`escapeCharReplacement`长度大于1时，这两个操作会产生不同的字符值，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`escapeReplacementFirstChar`通过以下路径传播到输出：\n1. 影响第17行的条件判断，可能改变循环行为\n2. 直接影响第40行的转义字符匹配逻辑\n3. 最终通过`result`和`s`传播到返回值\n分析结论：存在完整的数据依赖链到输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句通过以下控制路径影响输出：\n1. 控制第17行的循环中断行为\n2. 控制第40行的转义字符处理分支\n3. 这些控制决策最终都会影响返回的字符串内容\n分析结论：存在控制依赖路径到输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异会影响中间状态，但：\n1. 当`escapeCharReplacement`长度为1时，`charAt(1)`会抛出异常，这与原程序行为完全不同\n2. 当长度>1时，会匹配不同的转义字符，导致不同的输出结果\n不存在状态被后续执行抵消的情况。\n分析结论：变异效果会持续影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_008 的分析, 耗时: 149.3815 秒
+
+开始分析变异体 MUT_009...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_009": "### 步骤1：可达性分析\n说明理由：变异语句位于`final StringBuffer result = new StringBuffer(length + -8)`，其可达性约束为`[s == null, i != length]`。根据程序逻辑，当`s == null`且`i != length`时，该语句会被执行。这两个条件在程序执行过程中是可以满足的，例如当缓存未命中且输入字符串需要解码时。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原语句为`new StringBuffer(length + 8)`，变异后为`new StringBuffer(length + -8)`。StringBuffer的初始容量会影响其扩容频率，但不会改变其最终存储的内容。由于后续操作都是通过append方法添加内容，初始容量的差异不会影响最终的字符串结果。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`result`，其数据依赖路径显示`result`最终会通过`toString()`转换为`s`并返回。虽然初始容量不同，但所有append操作和最终的toString结果与原程序一致。\n分析结论：变异不影响最终输出，数据依赖链传播的结果与原程序相同。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句不控制任何程序分支，后续的append操作和返回语句的执行不受初始容量的影响。控制流路径与原程序完全一致。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了初始容量这一状态，但由于StringBuffer的动态扩容特性，所有后续操作都会产生与原程序相同的最终状态。变异引入的状态差异被后续操作覆盖。\n分析结论：变异引入的错误状态被后续执行抵消，不影响最终输出。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_009 的分析, 耗时: 113.6889 秒
+
+开始分析变异体 MUT_010...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_010": "### 步骤[1]：可达性分析  \n说明理由：变异语句位于for循环条件中（从`i < length`变为`i <= length`），该循环在程序执行流中必然会被执行（除非`s != null`直接返回）。根据控制流图分析，没有不可达的路径约束条件，因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤[2]：必要性分析  \n说明理由：原条件为`i < length`，变异后为`i <= length`。在循环最后一次迭代时，原程序会终止循环（`i == length`），而变异体会额外执行一次循环（`i = length`）。此时`name.charAt(i)`会抛出`StringIndexOutOfBoundsException`（因为Java字符串索引从0到`length-1`），导致程序行为改变。  \n分析结论：变异实际改变了程序语义（从正常执行变为异常抛出），满足必要性。  \n\n### 步骤[3]：数据依赖分析  \n说明理由：变异影响的变量`i`和`length`通过循环条件直接控制循环体执行次数，进而影响`result`的拼接结果（如`result.append(c)`的调用次数）。最终返回值`s`依赖`result.toString()`，因此变异效果可通过数据依赖链传播到输出。  \n分析结论：存在数据依赖路径连接变异节点与输出节点。  \n\n### 步骤[4]：控制依赖分析  \n说明理由：变异语句（循环条件）控制循环体的执行次数，而输出语句（`return s`）依赖循环体的执行结果（`result`的内容）。若循环多执行一次，可能导致`result`追加非法字符或抛出异常，从而影响输出。  \n分析结论：变异语句通过控制流直接影响输出语句。  \n\n### 步骤[5]：状态覆盖分析  \n说明理由：变异引入的错误状态（多执行一次循环）会导致`StringIndexOutOfBoundsException`或`result`包含额外字符，无法被后续执行修正或抵消。程序输出（返回值或异常）必然与原程序不同。  \n分析结论：错误状态未被覆盖，影响最终输出。  \n\n### 最终结论：等价变异体判定结果：NO。  \n\n（注：尽管步骤3和4显示依赖路径存在，但步骤2和5已明确程序行为改变，因此无需依赖后续步骤即可判定为非等价变异体。）"}
+完成变异体 MUT_010 的分析, 耗时: 116.6463 秒
+
+开始分析变异体 MUT_011...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_011": "### 步骤[1]：可达性分析  \n说明理由：变异语句位于`if (i == length)`，被修改为`if (false)`。根据可达性约束条件`s == null`、`i < length`和`(c == dollarReplacementFirstChar || c == escapeReplacementFirstChar)*`，原路径条件为循环结束后`i == length`时进入该分支。变异后条件恒为假，但原路径条件本身是可满足的（例如输入字符串无特殊字符时循环正常结束），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤[2]：必要性分析  \n说明理由：原条件`if (i == length)`在`i`等于`length`时返回`name`，而变异后`if (false)`永不执行该分支，直接跳过返回逻辑。这导致程序行为改变：原程序可能提前返回未解码的`name`，而变异体强制进入后续解码流程。因此，变异实际改变了程序语义。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n### 步骤[3]：数据依赖分析  \n说明理由：变异影响的变量`i`和`length`通过数据依赖链传播到输出。`i`的值决定是否进入解码流程（如`result.append(name.substring(0, i))`），而`length`影响缓冲区大小和循环终止条件。变异后，`i == length`的检查被禁用，导致所有输入均强制解码，而非直接返回原始`name`，最终影响输出字符串`s`。  \n分析结论：数据依赖链存在，变异效果可传播至输出。  \n\n### 步骤[4]：控制依赖分析  \n说明理由：变异语句控制是否执行`return name;`。变异后，该返回路径被禁用，程序必须执行后续解码逻辑（如构造`StringBuffer`、处理字符等），最终返回解码后的`s`。因此，变异通过控制流直接影响输出语句的执行路径。  \n分析结论：控制依赖路径存在，变异影响输出。  \n\n### 步骤[5]：状态覆盖分析  \n说明理由：变异引入的错误状态（跳过`return name`）未被后续执行覆盖。原程序在`i == length`时直接返回原始`name`，而变异体始终执行解码流程，导致输出可能不同（例如，输入无特殊字符时原程序返回`name`，变异体返回解码后的`s`，两者可能相同也可能不同）。但若输入本身无需解码（如无`$`或`_`），`s`与`name`相同，此时输出等价；否则不等价。由于存在不等价的情况，变异体非等价。  \n分析结论：错误状态未被完全覆盖，输出可能不等价。  \n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_011 的分析, 耗时: 167.7755 秒
+
+开始分析变异体 MUT_012...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_012": "### 步骤1：可达性分析\n说明理由：变异语句`final char dollarReplacementFirstChar = dollarReplacement.charAt(-1)`位于方法体内部，没有前置不可达的路径约束。程序入口到该语句的路径条件为`s == null`，这是一个可满足的条件（当缓存未命中时）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序使用`charAt(0)`获取字符串首字符，而变异体使用`charAt(-1)`。对于任何非空字符串，`charAt(-1)`会抛出`StringIndexOutOfBoundsException`异常，而`charAt(0)`正常执行。这会导致程序状态发生根本性改变（从正常执行变为异常抛出）。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量`dollarReplacementFirstChar`通过数据依赖链传播到输出节点。具体路径为：\n1. 变异语句 → `if (c == dollarReplacementFirstChar || ...)`的条件判断 → 控制流分支 → 最终影响`return name`或`return s`的输出结果。\n2. 变异语句 → `if (c == dollarReplacementFirstChar && ...)`的条件判断 → 控制流分支 → 影响`result.append('$')` → 最终影响`return s`的输出结果。\n分析结论：存在完整的数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句通过控制流直接影响输出语句。控制依赖路径包括：\n1. 变异语句 → `if (c == dollarReplacementFirstChar || ...)` → 可能提前`break`循环 → 影响后续处理逻辑 → 最终影响输出。\n2. 变异语句 → `if (c == dollarReplacementFirstChar && ...)` → 决定是否执行`result.append('$')` → 直接影响输出内容。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体在理论上会抛出异常（与原始程序行为不同），但根据提供的PDG分析，数据依赖和控制依赖路径均假设程序能继续执行。实际上，当`charAt(-1)`抛出异常时，程序会终止，这与原始程序的任何执行路径都不等价。因此不存在状态覆盖现象。\n分析结论：错误状态无法被后续执行修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_012 的分析, 耗时: 207.9314 秒
+
+开始分析变异体 MUT_013...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_013": "### 步骤[可达性]：\n说明理由：变异语句位于`final StringBuffer result = new StringBuffer(length * 8)`，其可达性约束为`[s == null && i != length]`。根据程序逻辑，当`s == null`且`i != length`时，该语句会被执行。这两个条件在程序执行过程中是可以满足的（例如当缓存未命中且字符串需要解码时）。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`length + 8`初始化StringBuffer，而变异体使用`length * 8`。这两种初始化方式在大多数情况下会导致不同的初始容量。StringBuffer的初始容量会影响其内部数组的扩容行为，虽然最终结果可能相同（因为都会动态扩容），但程序状态（如内部数组大小）确实会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`result`通过以下数据依赖路径传播到输出：\n1. `result`被用于所有`append`操作\n2. 最终通过`result.toString()`赋值给`s`\n3. `s`作为返回值输出\n因此，变异对`result`的修改会直接影响最终输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`final StringBuffer result = new StringBuffer(length * 8)`不直接控制任何分支语句，但所有使用`result`的操作（如`append`）都依赖于该初始化。虽然控制流不直接受变异影响，但数据流会间接影响输出。\n分析结论：变异语句不直接通过控制流影响输出语句，但通过数据流间接影响。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了StringBuffer的初始容量，但StringBuffer的动态扩容机制会确保所有字符最终都被正确追加。因此，无论初始容量是`length + 8`还是`length * 8`，最终的字符串内容（即程序输出）是相同的。变异引入的状态差异（内部数组大小）不会影响最终输出。\n分析结论：变异引入的错误状态被动态扩容机制抵消，程序最终输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_013 的分析, 耗时: 139.4134 秒
+
+开始分析变异体 MUT_014...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_014": "### 步骤1：可达性分析\n说明理由：变异语句位于循环内部，其可达性条件为`s == null && i < length`。根据程序逻辑，当`s == null`且`i < length`时，该变异语句可以被执行到。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原始表达式为`c == dollarReplacementFirstChar || c == escapeReplacementFirstChar`，变异后为`c == dollarReplacementFirstChar || c <= escapeReplacementFirstChar`。在`c == escapeReplacementFirstChar`时，两者行为一致；但当`c < escapeReplacementFirstChar`时，变异体的条件会提前触发`break`，而原程序不会。因此，变异体在某些情况下会改变程序的控制流。\n分析结论：变异体改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`c`和`escapeReplacementFirstChar`。`c`的值通过控制流影响`break`语句的执行，进而影响后续的`return name`或继续处理逻辑。`escapeReplacementFirstChar`的值直接参与条件判断。因此，变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句的控制流直接影响`break`语句的执行，进而影响后续的`return name`或继续处理逻辑。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖路径影响输出。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体在某些情况下会提前触发`break`，但最终的程序输出（`return name`或`return s`）可能在某些情况下与原程序一致。例如，当`c < escapeReplacementFirstChar`时，变异体会提前`break`，但后续的`return name`或`return s`可能仍然与原程序的行为一致。因此，变异引入的错误状态可能在后续执行中被覆盖。\n分析结论：错误状态被覆盖，不影响最终输出。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_014 的分析, 耗时: 209.2417 秒
+
+开始分析变异体 MUT_015...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_015": "### 步骤[可达性]：\n说明理由：变异语句位于第37行，路径条件组合为 `[s == null, i < length]`。这些条件在程序执行过程中是可满足的，例如当缓存未命中（`s == null`）且字符串未遍历完（`i < length`）时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为 `if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i))`，变异后为 `if (false)`。该变异将条件强制设为假，导致原分支逻辑被跳过，直接进入后续的 `else if` 或 `else` 分支。这会改变程序的控制流和状态（如 `i` 和 `result` 的更新逻辑）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `c` 和 `dollarReplacementFirstChar`。`c` 的数据依赖路径可通过后续的 `else if` 或 `else` 分支传播到输出 `s`（如 `result.append(c)` 或 `result.append('_')`）。`dollarReplacementFirstChar` 的数据依赖路径因变异被阻断，但其原路径不影响输出。\n分析结论：变异影响的变量 `c` 可通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径直接影响后续分支的执行（如跳过 `$` 的追加逻辑），进而影响 `result` 的构建和最终输出 `s`。变异后的 `if (false)` 强制程序进入其他分支，改变了输出结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（跳过 `$` 追加逻辑）未被后续执行修正或抵消。例如，当原程序应追加 `$` 时，变异体直接跳过该操作，导致 `result` 内容不同，最终输出 `s` 也不同。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_015 的分析, 耗时: 104.7553 秒
+
+开始分析变异体 MUT_016...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_016": "### 步骤1：可达性分析\n说明理由：变异语句位于循环内部，其可达性依赖于前置条件 `s == null` 和循环条件 `i < length`。根据提供的可达性约束 `[s == null, i < length]`，这两个条件均可满足（例如当缓存未命中且字符串长度大于0时），因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原条件 `if (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar)` 被替换为 `if (true)`。该变异强制使条件恒为真，导致循环必定在第一次迭代时通过 `break` 退出（原行为仅在匹配特定字符时退出）。这会改变程序的控制流和变量 `i` 的值（例如原程序可能继续循环，而变异体直接退出循环）。\n\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量 `i` 通过以下路径传播到输出：\n1. 变异强制 `break` → 修改 `i` 的值 → 影响 `if (i == length)` 的判断 → 决定返回 `name` 或进入后续处理逻辑。\n2. 若进入后续处理逻辑，`i` 的值直接影响 `result` 的拼接内容，最终决定返回值 `s`。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句直接控制 `break` 的执行，进而影响循环的终止和后续分支（`if (i == length)`）。所有输出路径（`return name` 或 `return s`）均受此控制流改变的影响。\n\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了中间状态（如强制 `break` 导致 `i` 的值不同），但存在以下情况：\n- 当输入字符串不包含需解码的字符时，原程序完整遍历字符串后返回 `name`，而变异体首次循环即返回 `name`，两者输出相同。\n- 当输入字符串需解码时，变异体可能提前终止循环，导致 `result` 的拼接内容不同，最终输出 `s` 可能不同（例如未处理后续需解码的字符）。\n\n分析结论：变异引入的错误状态未被完全覆盖，可能导致输出差异。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_016 的分析, 耗时: 182.0760 秒
+
+开始分析变异体 MUT_017...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_017": "### 步骤1：可达性分析\n说明理由：变异语句位于循环内部，其可达性条件为`s == null && i < length`。根据程序逻辑，当缓存未命中(s == null)且字符串未遍历完(i < length)时，该变异语句可达。这是一个常见且可满足的条件组合。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原条件为`c == dollarReplacementFirstChar || c == escapeReplacementFirstChar`，变异后为`c == escapeReplacementFirstChar`。当字符c等于dollarReplacementFirstChar时，原条件为真而变异条件为假，这会改变控制流（是否执行break语句），从而影响程序状态。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量c和dollarReplacementFirstChar通过以下路径传播：\n1. 当c匹配时：控制流直接break影响循环终止，进而影响最终返回的name值\n2. 当c不匹配时：继续后续处理流程，最终影响result的构建和返回的s值\n变量c的值直接影响程序输出。\n分析结论：存在完整的数据依赖链连接到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句的控制依赖路径显示：\n- 当条件为真时：直接break并可能返回name\n- 当条件为假时：继续后续处理流程\n变异语句直接控制着是否进入快速返回路径，影响最终输出。\n分析结论：存在控制依赖路径影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：当输入包含dollarReplacementFirstChar字符时：\n- 原程序：会触发break提前终止循环\n- 变异体：不会触发break，继续后续处理\n这将导致不同的处理路径和不同的返回值（原程序可能直接返回原始name，变异体会进行解码处理），最终输出结果可能不同。\n分析结论：错误状态未被覆盖，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_017 的分析, 耗时: 188.8821 秒
+
+开始分析变异体 MUT_018...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_018": "### 步骤[可达性]：\n说明理由：变异语句位于`result.append('_')`，其执行路径需要满足以下条件：`s == null`为真，且`c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i)`为真。这些条件在特定输入下是可满足的（例如当输入字符串包含需要解码的转义字符时）。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序执行`result.append('_')`，而变异体将其替换为空语句`;`。这将导致在需要添加'_'字符时不再执行添加操作，直接改变了`result`变量的状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`result`通过以下数据依赖路径传播到输出：\n1. `result` → `s = result.toString()` → `return s`\n变异后的`result`内容缺失'_'字符，会直接影响最终返回的字符串`s`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于条件分支内，但其执行与否直接影响`result`的内容，进而通过数据依赖影响输出。控制依赖路径显示变异语句的执行会直接决定后续`result`的构建过程。\n分析结论：变异语句通过控制流间接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异导致'_'字符未被添加到`result`中，这一状态改变会直接反映在最终的`s`中，没有被后续操作修正或抵消。\n分析结论：错误状态未被覆盖，会影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_018 的分析, 耗时: 113.6212 秒
+
+开始分析变异体 MUT_019...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_019": "### 步骤1：可达性分析\n说明理由：变异语句位于第40行的条件判断语句，其路径约束条件为 `[s == null, i < length, !(c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i))]`。这些条件在程序执行过程中是可满足的，例如当 `s` 为 `null`、`i` 在有效范围内且当前字符 `c` 不是 `dollarReplacementFirstChar` 或未匹配 `dollarReplacement` 时，变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件是 `c == escapeReplacementFirstChar`，变异后的条件是 `c >= escapeReplacementFirstChar`。在路径约束下（`c` 不是 `dollarReplacementFirstChar`），存在输入使得 `c > escapeReplacementFirstChar` 但 `c != escapeReplacementFirstChar`，此时原程序会执行 `else` 分支（`result.append(c)`），而变异体会进入 `else if` 分支（`result.append('_')`），导致程序状态改变。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `c` 和 `escapeReplacementFirstChar`。数据依赖路径显示：\n1. 若 `c >= escapeReplacementFirstChar` 为 `true`，会执行 `result.append('_')`，最终影响返回值 `s`。\n2. 若为 `false`，执行 `result.append(c)`，同样影响 `s`。  \n因此，变异通过数据依赖链传播到输出节点。  \n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句的控制依赖路径直接决定是否执行 `result.append('_')` 或 `result.append(c)`，最终影响返回值 `s`。输出语句（`return s`）控制依赖于变异语句的真假结果。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体在某些输入下会改变程序状态（如 `c > escapeReplacementFirstChar` 时输出 `_` 而非 `c`），但这种差异会直接反映在最终返回值 `s` 中，未被后续执行修正或抵消。  \n分析结论：错误状态未被覆盖，程序输出可能改变。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_019 的分析, 耗时: 108.2355 秒
+
+开始分析变异体 MUT_020...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_020": "### 步骤1：可达性\n说明理由：变异语句位于第12行（`int i = 1`），其可达性约束为 `s == null`。根据程序逻辑，当 `s == null` 时，变异语句所在的代码块会被执行，因此该变异语句是可达的。  \n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序为 `int i = 0`，变异体为 `int i = 1`。变量 `i` 是循环的初始索引，其值直接影响循环的起始位置和后续逻辑（如 `name.charAt(i)` 的访问、`i == length` 的判断等）。因此，变异会改变程序状态。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变量 `i` 的数据依赖路径显示，`i` 的值会影响循环条件、字符访问、子字符串截取（`name.substring(0, i)`）以及最终的 `result` 构造。具体来说：\n- `i` 的初始值影响 `for` 循环的起始点。\n- `i` 的值传播到 `name.charAt(i)` 和 `name.substring(0, i)`，最终影响 `result` 的内容和返回值 `s`。  \n分析结论：变异影响的变量 `i` 通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句的控制依赖路径显示，`i` 的值直接影响以下关键控制流：\n1. `for (i < length)` 的循环条件。\n2. `if (i == length)` 的分支判断。\n3. `if (i > 0)` 的分支判断。\n这些控制流最终影响 `result` 的构造和返回值 `s`。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了 `i` 的初始值，但程序逻辑中存在以下行为可能覆盖变异效果：\n1. 如果 `i == length` 直接返回 `name`，但 `i` 的初始值从 0 变为 1 可能导致 `i == length` 的条件更早满足（例如 `length == 1` 时）。\n2. 在 `for` 循环中，`i` 的值会被后续操作（如 `i++` 或 `i += dollarReplacement.length() - 1`）修改，可能抵消初始差异。\n然而，对于某些输入（如 `length > 1` 且需要解码的字符位于索引 0），变异会导致程序跳过第一个字符的解码，从而改变最终输出 `s`。因此，变异引入的错误状态未被完全覆盖。  \n分析结论：变异引入的错误状态未被完全抵消，可能影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_020 的分析, 耗时: 203.5314 秒
+
+开始分析变异体 MUT_021...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_021": "### 步骤1：可达性分析\n说明理由：变异语句位于方法`decodeName`的第4行，该语句在方法入口后立即执行，没有前置条件限制。控制流图显示该语句在所有执行路径中都会被到达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原语句`String s = (String)(ref == null ? null : ref.get())`根据`ref`是否为null决定赋值，而变异体`String s = (String)(false ? null : ref.get())`由于条件恒为false，始终执行`ref.get()`。当`ref`为null时，原程序返回null，而变异体会抛出NullPointerException；当`ref`非null时两者行为相同。\n分析结论：变异体改变了程序语义（可能引发异常），满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变量`s`的数据依赖路径显示：\n1. 当`s`为null时（原程序行为），会进入if块执行解码逻辑\n2. 当`s`非null时（变异体行为），直接返回缓存值\n变异影响的`s`值直接决定了程序是否执行解码逻辑，并通过return语句输出。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：控制依赖路径显示：\n- 变异语句直接控制`if(s==null)`分支\n- 该分支决定是否执行后续解码流程\n- 最终所有路径都通过`return s`输出结果\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：当`ref`非null时，变异体与原程序行为相同；但当`ref`为null时，变异体会抛出异常（原程序返回null）。这种状态差异无法被后续执行覆盖或抵消。\n分析结论：变异引入的错误状态会导致可观察的差异行为。\n\n### 最终结论\n等价变异体判定结果：NO"}
+完成变异体 MUT_021 的分析, 耗时: 190.1312 秒
+
+开始分析变异体 MUT_022...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_022": "### 步骤[1]：可达性分析\n说明理由：变异语句的路径条件组合为 `[s == null && i < length && (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar) && i != length && i > 0 && i < length && c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)]`。这些条件在程序执行过程中是可满足的，例如当 `s` 为 `null`，`i` 在有效范围内，且当前字符 `c` 匹配 `dollarReplacementFirstChar` 且后续字符匹配 `dollarReplacement` 时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2]：必要性分析\n说明理由：原程序语句为 `i += dollarReplacement.length() - 1`，变异体语句为 `i += dollarReplacement.length() / 1`。对于任何非零的 `dollarReplacement.length()`，`dollarReplacement.length() - 1` 和 `dollarReplacement.length() / 1` 的值是相同的（因为 `x - 1` 和 `x / 1` 在 `x > 0` 时等价）。因此，变异并未实际改变程序状态。\n分析结论：变异未改变程序状态，属于等价变异体。\n\n### 最终结论\n由于在步骤[2]中已确定变异未改变程序状态，无需继续后续分析步骤。  \n等价变异体判定结果：YES。"}
+完成变异体 MUT_022 的分析, 耗时: 103.2338 秒
+
+开始分析变异体 MUT_023...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_023": "### 步骤1：可达性分析\n说明理由：变异语句的条件为 `s == null && i != length`。根据程序逻辑，当 `s == null` 且 `i != length` 时，变异语句 `if (i > -1)` 会被执行。`i` 的初始值为 0，且在循环中可能被修改，但 `i` 的值始终满足 `i >= 0`（因为 `i` 从 0 开始，且循环条件是 `i < length`）。因此，变异语句的路径条件是可满足的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件是 `if (i > 0)`，变异后的条件是 `if (i > -1)`。由于 `i` 的最小值为 0（初始值为 0，且循环中 `i` 不会为负），`i > -1` 等价于 `i >= 0`。因此，`i > 0` 和 `i > -1` 的唯一区别是当 `i == 0` 时：\n- 原程序：`i > 0` 为 `false`，不执行 `result.append(name.substring(0, i))`。\n- 变异体：`i > -1` 为 `true`，执行 `result.append(name.substring(0, i))`。\n当 `i == 0` 时，`name.substring(0, 0)` 返回空字符串，`result.append(\"\")` 不会改变 `result` 的状态。因此，变异并未实际改变程序状态。\n分析结论：变异未改变程序语义，属于非必要性变异。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `i`。`i` 的数据依赖路径显示，`i` 的值会影响 `result.append(name.substring(0, i))` 或后续循环中的操作，最终影响 `s` 和返回值。然而，如前所述，当 `i == 0` 时，`result.append(\"\")` 无实际效果；当 `i > 0` 时，原程序和变异体的行为完全一致。因此，变异不会通过数据依赖链传播到程序输出。\n分析结论：数据依赖缺失，变异不影响输出。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (i > -1)` 的控制依赖路径显示，其分支会影响 `result.append(name.substring(0, i))` 的执行。但如前所述，`i == 0` 时 `append` 无实际效果，`i > 0` 时行为与原程序一致。因此，变异语句的控制流不会实际影响输出语句的执行。\n分析结论：控制依赖缺失，变异不影响输出。\n\n### 步骤5：状态覆盖分析\n说明理由：变异引入的差异仅在 `i == 0` 时触发，但此时 `append` 操作无实际效果，程序状态与原程序一致。因此，变异引入的错误状态被逻辑抵消，程序最终输出未受影响。\n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_023 的分析, 耗时: 163.9384 秒
+
+开始分析变异体 MUT_024...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_024": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[s == null, i != length]`。根据程序逻辑，当 `s == null` 且 `i != length` 时，变异语句 `if (false)` 会被执行到。因此，变异语句是可达的。  \n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件是 `if (i > 0)`，而变异体将其改为 `if (false)`。在变异语句可达的情况下（即 `i != length`），原条件 `i > 0` 可能为真或假，而变异体强制为假。这会直接跳过 `result.append(name.substring(0, i))` 语句，从而改变程序状态（`result` 的内容）。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `i`，其数据依赖路径显示 `i` 的值会影响 `result.append(name.substring(0, i))` 的执行以及后续循环中的 `i` 值。由于 `result` 最终会转换为输出 `s`，因此变异引入的状态改变（跳过 `append` 操作）会通过数据依赖链传播到程序输出。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (false)` 控制了是否执行 `result.append(name.substring(0, i))`，而 `result` 的内容直接影响最终的输出 `s`。控制依赖路径显示，变异语句的分支结果会直接决定输出语句的输入（`result` 的内容）。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体跳过了 `result.append(name.substring(0, i))`，但后续的循环仍然会处理字符串的剩余部分。如果 `i == 0`，则跳过 `append` 操作与原程序行为一致（因为 `substring(0, 0)` 为空）；但如果 `i > 0`，则变异体会导致 `result` 缺少前 `i` 个字符，最终输出 `s` 会与原程序不同。因此，变异引入的错误状态未被完全修正或抵消。  \n分析结论：变异体的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_024 的分析, 耗时: 145.3210 秒
+
+开始分析变异体 MUT_025...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_025": "### 步骤[可达性]：\n说明理由：变异语句位于第28行，其可达性条件为 `[s == null && i != length]`。根据程序逻辑，当 `s == null` 且 `i != length` 时，变异语句会被执行。这两个条件在程序执行过程中是可以满足的，例如当缓存中没有找到对应的 `name` 且字符串 `name` 中有需要解码的字符时。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句是 `final StringBuffer result = new StringBuffer(length + 8);`，变异体将其改为 `final StringBuffer result = new StringBuffer(length / 8);`。`length + 8` 和 `length / 8` 在大多数情况下会产生不同的结果（除非 `length` 是特定值，如 `length = -8` 时 `length + 8 = 0` 且 `length / 8 = -1`，但 `length` 是字符串长度，不可能为负）。因此，变异会改变 `StringBuffer` 的初始容量，从而可能影响程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `result`，其数据依赖路径显示 `result` 的值会通过 `append` 操作最终影响 `s` 的值，并通过 `return s` 输出。因此，变异对 `result` 的修改会传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于第28行，其控制依赖路径显示该语句的执行依赖于 `if (s == null)` 的条件。变异语句的执行会影响后续的 `append` 操作和 `s` 的赋值，最终影响 `return s` 的输出。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `StringBuffer` 的初始容量，但 `StringBuffer` 是动态扩容的，其初始容量不会影响最终存储的内容。因此，即使初始容量不同，`result` 最终存储的字符串内容（即 `s` 的值）不会受到影响。变异引入的状态差异在后续执行中被动态扩容机制抵消，程序最终输出未受影响。\n分析结论：变异引入的错误状态被后续执行修正，不影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_025 的分析, 耗时: 151.1712 秒
+
+开始分析变异体 MUT_026...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_026": "### 步骤1：可达性分析\n说明理由：变异语句位于`result.append('$')`，其执行路径需要满足以下条件：`s == null`为真，且`c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)`为真。这些条件在输入中存在满足的情况（例如当缓存未命中且遇到需要解码的`$`字符时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序执行`result.append('$')`会向结果字符串添加`$`字符，而变异体将其改为空语句`;`，直接跳过了字符添加操作。这会导致`result`的内容与原程序不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变量`result`的数据依赖路径清晰：变异影响的`result`会通过`result.toString()`传递到返回值`s`。具体路径为：变异语句→`result`→`s = result.toString()`→`return s`。因此变异效果可通过数据依赖链传播到输出。\n分析结论：存在有效的数据依赖传播路径。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句位于条件分支内，但其对输出的影响不依赖于控制流，而是通过直接修改`result`的数据值。控制依赖路径显示变异语句与输出语句之间存在间接控制关系（通过父条件节点），但主要影响仍是数据依赖。\n分析结论：存在控制依赖路径，但数据依赖是主要传播方式。\n\n### 步骤5：状态覆盖分析\n说明理由：变异导致`result`缺少`$`字符的添加，这一状态改变会直接反映在最终的`result.toString()`结果中，且无后续操作能修正或抵消该差异。因此程序输出会与原程序不同。\n分析结论：错误状态未被覆盖，影响最终输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_026 的分析, 耗时: 114.8999 秒
+
+开始分析变异体 MUT_027...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_027": "### 步骤[1]：可达性分析  \n说明理由：变异语句位于`if (i > 0)`修改为`if (i >= 0)`，其路径条件为`s == null && i != length`（因为`s == null && i == length`时直接返回`name`，不执行变异语句）。`i`的初始值为0，且在循环中可能递增，因此存在`i == 0`和`i > 0`的路径，变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤[2]：必要性分析  \n说明理由：原条件`i > 0`与变异条件`i >= 0`在`i == 0`时行为不同：原程序跳过`result.append`，变异体执行`result.append`。但`i == 0`时`name.substring(0, 0)`返回空字符串，`result.append(\"\")`对最终结果无影响（与跳过等效）。其他情况下（`i > 0`），两者行为完全一致。因此，变异未实际改变程序语义。  \n分析结论：变异未改变程序语义，属于非必要性修改。  \n\n### 步骤[3]：数据依赖分析  \n说明理由：变量`i`的数据依赖路径可通过`result`传播到输出`s`（如`result.append(name.substring(0, i))` → `s = result.toString()` → `return s`）。但根据步骤2的分析，`i`的变异仅在`i == 0`时触发，且此时`substring(0,0)`为空，不影响`result`的最终值。  \n分析结论：数据依赖存在，但变异未导致实际状态改变。  \n\n### 步骤[4]：控制依赖分析  \n说明理由：变异语句控制`result.append`的执行，但`i == 0`时`append`空字符串与跳过`append`效果相同，后续输出`s`的值不受影响。其他路径（如`i > 0`）的控制流与原程序一致。  \n分析结论：控制依赖存在，但变异未影响输出。  \n\n### 步骤[5]：状态覆盖分析  \n说明理由：变异在`i == 0`时引入的“错误状态”（执行`append`而非跳过）被`substring(0,0)`的空字符串操作抵消，最终`result`和`s`的值与原程序一致。  \n分析结论：变异引入的状态差异被覆盖，不影响输出。  \n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_027 的分析, 耗时: 142.2443 秒
+
+开始分析变异体 MUT_028...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_028": "### 步骤[1]：可达性分析  \n说明理由：变异语句位于循环内部，其执行依赖于输入字符串`name`的字符内容。路径条件为`name != null`且循环变量`i`在有效范围内（`0 <= i < length`），这些条件在正常执行时均可满足。  \n分析结论：变异语句可达。  \n\n### 步骤[2]：必要性分析  \n说明理由：原条件为`c == dollarReplacementFirstChar`，变异后为`c <= dollarReplacementFirstChar`。当`c < dollarReplacementFirstChar`时，原条件为`false`而变异条件为`true`，可能提前触发`break`，改变程序控制流。例如，若`dollarReplacementFirstChar`为`'$'`（ASCII 36），输入字符`c`为空格（ASCII 32），原程序不触发`break`而变异体会触发。  \n分析结论：变异实际改变程序语义，满足必要性。  \n\n### 步骤[3]：数据依赖分析  \n说明理由：变异影响的变量`c`和`dollarReplacementFirstChar`通过控制流直接影响`break`语句的执行，进而决定是否提前返回`name`或进入后续处理逻辑。若`break`被触发，后续的字符串解码逻辑（如替换`$`或`_`）将被跳过，最终返回值可能不同。  \n分析结论：变异效果通过数据依赖链传播到输出节点。  \n\n### 步骤[4]：控制依赖分析  \n说明理由：变异语句直接控制`break`的执行，而`break`决定程序是否跳过后续解码逻辑。输出语句（`return name`或`return s`）的控制依赖路径均经过该变异语句的分支判断。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n### 步骤[5]：状态覆盖分析  \n说明理由：变异引入的状态差异（如提前`break`）会导致程序跳过部分解码逻辑，可能使输出结果不同（例如原程序解码`$`而变异体直接返回原始`name`）。不存在逻辑抵消现象。  \n分析结论：错误状态未被覆盖，影响最终输出。  \n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_028 的分析, 耗时: 168.2744 秒
+
+开始分析变异体 MUT_029...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_029": "### 步骤1：可达性分析\n说明理由：变异语句位于for循环条件中，路径条件为`s == null && i != length && i > 0`或`s == null && i != length && i <= 0`。这些条件在程序执行过程中是可满足的，例如当`s`为null且`i`不等于`length`时，无论`i`是否大于0，都能到达变异语句。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序使用`i < length`作为循环条件，变异体改为`i != length`。在大多数情况下，这两种条件在循环中的行为是相同的（因为`i`会递增直到等于`length`）。但在极端情况下，如果`i`超过`length`（例如由于其他代码错误导致`i`被错误地增加），`i < length`会终止循环，而`i != length`会导致无限循环。然而，在当前程序的上下文中，`i`是严格递增的，不会超过`length`，因此这两种条件在语义上是等价的。\n分析结论：变异未实际改变程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`i`和`length`。`i`的值通过循环影响`name.charAt(i)`和后续的字符串处理，最终影响输出`s`。然而，由于变异未改变循环的实际行为（见步骤2），数据依赖链的传播效果与原程序一致。\n分析结论：变异未通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句控制循环的执行，循环内的语句控制输出`s`的生成。但由于变异未改变循环的实际行为（见步骤2），控制依赖路径的效果与原程序一致。\n分析结论：变异未通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：由于变异未改变循环的实际行为（见步骤2），程序的状态和输出与原程序完全一致，变异引入的“错误状态”实际上并未改变程序行为。\n分析结论：变异引入的错误状态被抵消，程序最终输出未受影响。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_029 的分析, 耗时: 151.2487 秒
+
+开始分析变异体 MUT_030...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_030": "### 步骤1：可达性分析\n说明理由：变异语句位于第7行，修改了`dollarReplacement.charAt(0)`为`dollarReplacement.charAt(1)`。根据控制流图分析，该变异语句的执行条件是`s == null`，这是一个可达的条件组合，因为`s`的初始值为`(String)(ref == null ? null : ref.get())`，当`ref`为`null`或`ref.get()`返回`null`时，`"}
+完成变异体 MUT_030 的分析, 耗时: 181.3628 秒
+
+开始分析变异体 MUT_031...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_031": "### 步骤[可达性]：\n说明理由：变异语句位于第38行，其执行路径需要满足以下条件：`s == null`（第6行）、`i < length`（第35行）、`c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)`（第37行）。这些条件在特定输入下（如包含`dollarReplacement`子串的`name`）均可满足，因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原语句`i += dollarReplacement.length() - 1;`会修改变量`i`的值，而变异体将其改为空语句`;`，直接移除了对`i`的修改操作。这将导致后续循环中`i`的增量行为与原程序不同（少增加`dollarReplacement.length() - 1`），从而影响循环次数和`result`的内容。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`i`通过以下路径传播到输出：\n1. `i`的值直接影响`for (; i < length; i++)`的循环次数（第35行）。\n2. 循环次数决定`result.append`的内容（第39/43/45行），最终影响返回值`s = result.toString()`（第49行）。\n因此，`i`的值通过数据依赖链传递到程序输出。  \n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`if`分支内（第37行），其执行与否直接影响循环中`i`的增量行为，进而通过循环控制流决定后续`result`的拼接内容和最终返回值。控制依赖路径明确存在：变异语句→循环条件→输出语句。  \n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：变异导致`i`的增量减少，可能使循环提前终止或延长，从而改变`result`拼接的字符内容（如少拼接`'$'`或多拼接原字符）。最终返回值`s`将因此不同，且无后续操作覆盖此差异。  \n分析结论：错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。  \n（变异体满足可达性、必要性、数据依赖与控制依赖条件，且错误状态未被覆盖，故为非等价变异体。）"}
+完成变异体 MUT_031 的分析, 耗时: 149.9421 秒
+
+开始分析变异体 MUT_032...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_032": "### 步骤[可达性]：\n说明理由：变异语句位于循环内部，其可达性条件为`s == null && i < length && (for previous iterations: c < dollarReplacementFirstChar && c != escapeReplacementFirstChar)`。这些条件在运行时可以满足（例如当输入字符串包含特定字符时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`c == dollarReplacementFirstChar`，变异后为`c >= dollarReplacementFirstChar`。在路径约束`c < dollarReplacementFirstChar`下（由可达性条件可知），原条件为false，变异条件也为false（因为`c < dollarReplacementFirstChar`不满足`c >= dollarReplacementFirstChar`）。因此在该路径下，变异未改变程序状态。\n分析结论：变异未改变程序状态，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤2已证明变异在可达路径下不改变程序状态，无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤2已证明变异在可达路径下不改变程序状态，无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异在可达路径下不改变程序状态，自然不存在错误状态需要覆盖。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_032 的分析, 耗时: 149.9933 秒
+
+开始分析变异体 MUT_033...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_033": "### 步骤[可达性]：\n说明理由：变异语句位于循环内部，其路径条件为 `s == null` 且 `i < length`。这些条件在程序执行过程中可以被满足（例如当缓存未命中且输入字符串非空时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为 `c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)`，变异后简化为 `c == dollarReplacementFirstChar`。当 `c` 匹配首字符但后续字符不匹配时（如 `c='$'` 但 `name.substring(i)` 不以完整 `dollarReplacement` 开头），原程序不会进入分支而变异体会进入，导致不同的程序状态（如错误地追加 `$` 或修改循环变量 `i`）。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `c` 和 `i` 通过以下路径传播到输出：\n1. `c` 的值直接影响 `result.append(c)` 或分支选择。\n2. `i` 的修改影响循环终止条件和后续字符处理。\n最终 `result` 的内容会转换为返回值 `s`，因此变异状态可通过数据依赖影响输出。\n分析结论：存在有效的数据依赖路径。\n\n### 步骤[控制依赖]：\n说明理由：变异条件直接控制以下分支：\n- 若为 `true`：执行 `i += dollarReplacement.length() - 1` 和 `result.append('$')`。\n- 若为 `false`：进入后续 `else if` 或默认分支。\n这些分支的执行直接影响 `result` 的构建和最终返回值 `s`。\n分析结论：存在控制依赖路径影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异可能改变中间状态（如错误追加 `$` 或跳过字符），但不存在逻辑上的状态抵消机制。例如，当 `c` 匹配但后续不匹配时，原程序跳过该字符，而变异体会错误处理，导致输出字符串内容差异。\n分析结论：错误状态未被覆盖，最终输出可能改变。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_033 的分析, 耗时: 107.4533 秒
+
+开始分析变异体 MUT_034...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_034": "### 步骤1：可达性分析\n说明理由：变异语句位于`int i = -1`，其可达性约束为`s == null`。根据程序逻辑，当`s == null`时，该变异语句会被执行。因此，变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序为`int i = 0`，变异体为`int i = -1`。在变异语句可达的情况下，`i`的初始值从0变为-1，这会直接影响后续的循环条件`i < length`和字符访问`name.charAt(i)`。特别是当`length == 0`时，原程序不会进入循环，而变异体会尝试访问`name.charAt(-1)`，可能导致异常。即使`length > 0`，`i`的初始值改变也会影响循环行为和结果。\n\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变量`i`的数据依赖路径显示，`i`的值直接影响循环条件、字符访问、子字符串提取和结果拼接。具体来说：\n1. `i`用于`for (i < length)`的条件判断。\n2. `i`用于`name.charAt(i)`的字符访问。\n3. `i`用于`result.append(name.substring(0, i))`的子字符串提取。\n4. `i`的修改会通过循环和条件分支影响最终的`result`和返回值`s`。\n\n分析结论：变异影响的变量`i`通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：控制依赖路径显示，变异语句`int i = -1`直接影响循环和条件分支的执行：\n1. `for (i < length)`的控制流依赖于`i`的初始值。\n2. 循环内的`break`、`return name`和后续处理逻辑都受`i`的影响。\n3. 最终的`return s`依赖于`result`的构建，而`result`的构建又依赖于`i`的值。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异引入了`i`的初始值变化，但程序逻辑中：\n1. 当`i == length`时，直接返回`name`，与原程序行为一致。\n2. 当`i != length`时，后续的循环和字符串处理会修正`i`的值，最终结果`s`可能仍与原程序一致。\n然而，存在以下情况：\n- 当`length == 0`时，原程序直接返回`name`，而变异体可能抛出异常（访问`name.charAt(-1)`）。\n- 当`length > 0`时，`i`的初始值变化可能导致不同的字符访问和结果拼接。\n\n分析结论：变异引入的错误状态未被完全修正或抵消，可能影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_034 的分析, 耗时: 285.8649 秒
+
+开始分析变异体 MUT_035...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_035": "### 步骤[可达性]：\n说明理由：变异语句位于`result.append(name.substring(0, i))`修改为`result.append(name.substring(1, i))`，其路径约束条件为`s == null && i < length && (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar || !(c == dollarReplacementFirstChar || c == escapeReplacementFirstChar)) && !(i == length) && i > 0`。这些条件在输入满足`s == null`（即缓存未命中）、存在需要解码的字符（`i < length`且遇到特殊字符）且已扫描到安全字符（`i > 0`）时可满足。例如输入`name = \"a$b\"`时，`i=1`时触发该路径。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序截取子串为`name.substring(0, i)`（从第0到i-1字符），变异后为`name.substring(1, i)`（从第1到i-1字符）。当`i > 1`时，两者结果不同（如`name=\"abc\", i=2`时原程序截取\"ab\"，变异体截取\"b\"），会改变`result`的内容。仅当`i=1`时两者结果均为空字符串，但此时`i > 0`的条件仍成立，因此存在输入（如`i=2`）使程序状态改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`result`和`name`。数据依赖路径显示：\n1. `result`的修改会通过后续的`append`操作传递到`s = result.toString()`并最终返回。\n2. `name`的子串变化直接影响`result`的内容，进而影响输出。\n例如变异后少拼接一个字符会导致最终`s`缺少该字符。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`if (i > 0)`分支内，其输出语句`return s`控制依赖于该分支。变异语句通过修改`result`的内容直接影响输出值，而非通过控制流分支的选择。但由于`result`的数据已传递到输出，控制依赖路径完整。\n分析结论：变异语句通过数据依赖而非控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异导致`result`少拼接一个字符（如原`name=\"abc\", i=2`时本应拼接\"ab\"变为拼接\"b\"），这一错误状态会直接传递到最终输出`s`，不会被后续操作修正。例如输入`name=\"a$b\"`时，原程序返回\"a$b\"，变异体返回\"$b\"（若首字符为安全字符），输出结果不同。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_035 的分析, 耗时: 120.5882 秒
+
+开始分析变异体 MUT_036...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_036": "### 步骤[可达性]：\n说明理由：变异语句位于`if (s == null)`条件块内，该条件块在`s == null`时可达。根据程序逻辑，当`unescapeCache`中没有对应`name`的缓存或缓存已被回收时，`ref.get()`返回`null`，此时`s == null`为真，变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原语句`escapeCharReplacement.charAt(0)`获取字符串的第一个字符，而变异语句`escapeCharReplacement.charAt(-1)`尝试获取字符串的倒数第一个字符（即索引-1）。对于非空字符串，`charAt(0)`是有效的，但`charAt(-1)`会抛出`StringIndexOutOfBoundsException`异常。这将导致程序状态发生改变（从正常执行变为抛出异常）。\n\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`escapeReplacementFirstChar`通过数据依赖链传播到程序输出节点。具体路径包括：\n1. 影响`if (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar)`的条件判断，进而影响循环是否提前终止。\n2. 影响`if (c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))`的条件判断，进而影响`result`的构建和最终的`s`值。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句。具体路径包括：\n1. 变异语句影响`if (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar)`的条件判断，进而控制是否执行`break`和后续的`return name`或继续处理。\n2. 变异语句影响`if (c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))`的条件判断，进而控制是否将`'_'`或原字符追加到`result`中，最终影响`s`的值和返回值。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`charAt(-1)`抛出异常）不会被后续执行修正或抵消。一旦执行到变异语句且`escapeCharReplacement`非空，程序将抛出异常，导致输出与原始程序不同（原始程序不会抛出异常）。\n\n分析结论：变异引入的错误状态不会被覆盖，程序最终输出会受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_036 的分析, 耗时: 156.2213 秒
+
+开始分析变异体 MUT_037...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_037": "### 步骤1：可达性\n说明理由：变异语句位于`final StringBuffer result = new StringBuffer(length % 8)`，其路径条件为`s == null && i != length`。根据程序逻辑，当`s == null`且`i != length`时，该语句会被执行。这些条件在程序运行时可以被满足（例如当缓存未命中且字符串需要解码时），因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序使用`length + 8`初始化StringBuffer，而变异体使用`length % 8`。这两个表达式在大多数情况下会产生不同的结果（除非`length`是8的倍数减8的特殊情况）。因此，变异会实际改变StringBuffer的初始容量，从而可能影响后续的字符串操作性能或行为。\n\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`result`，其数据依赖路径显示`result`的值会通过`append`操作最终影响`s`的赋值，并通过`return s`输出。具体路径为：`result` → `result.toString()` → `s` → `return s`。因此，变异对`result`的改变会传播到程序输出。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句`final StringBuffer result = new StringBuffer(length % 8)`是初始化操作，不直接控制程序分支。后续的`append`和`toString`操作依赖于`result`的值，但变异语句本身不通过控制流影响输出语句。输出语句的执行仅依赖于`s`的值，而`s`的值由`result`的数据流决定。\n\n分析结论：变异语句不通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了`result`的初始容量，但`StringBuffer`会自动扩容以适应追加的内容。因此，只要`length % 8`的值不小于实际需要的最小容量，最终的字符串内容不会受到影响。然而，如果`length % 8`的值过小（例如`length % 8 == 0`且`length > 0`），可能会导致频繁扩容，但不会改变最终的字符串内容。因此，变异引入的状态差异在后续执行中被覆盖，程序最终输出未受影响。\n\n分析结论：变异引入的错误状态被后续执行覆盖，不影响最终输出。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_037 的分析, 耗时: 146.6086 秒
+
+开始分析变异体 MUT_038...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_038": "### 步骤1：可达性分析\n说明理由：变异语句将条件`if (s == null)`改为`if (false)`。由于`false`是一个常量，该条件永远不成立，因此变异语句的控制流路径在逻辑上不可达。任何输入都无法使该条件为真。\n分析结论：变异语句不可达。\n\n### 步骤2：必要性分析\n说明理由：由于步骤1已确定变异语句不可达，无需进行必要性分析。根据等价变异体判定规则，不可达的变异体直接属于等价变异体。\n分析结论：无需继续分析。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_038 的分析, 耗时: 122.6717 秒
+
+开始分析变异体 MUT_039...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_039": "### 步骤[可达性]：\n说明理由：变异语句位于`if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i))`条件分支内，该分支的进入条件是`c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)`。只要存在满足该条件的输入（例如包含特定转义字符的字符串），变异语句即可被执行。没有逻辑上不可满足的路径约束。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`i += dollarReplacement.length() - 1`，变异后为`i += dollarReplacement.length() - -1`（即`i += dollarReplacement.length() + 1`）。该修改会显著改变循环变量`i`的增量（从`length-1`变为`length+1`），直接影响循环次数和后续字符处理逻辑。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`i`通过以下路径传播到输出：\n1. `i`的值直接影响`for (i < length)`循环条件，进而决定是否继续处理字符。\n2. 循环中的`i`用于索引字符（`name.charAt(i)`）并影响`result.append`的内容。\n3. 最终`result.toString()`的结果直接作为返回值输出。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于循环体内的条件分支中，其修改的`i`值直接影响循环控制流（`for (i < length)`）。循环的终止条件决定了最终`result`的构建内容，进而影响返回值。  \n分析结论：变异语句通过控制流间接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异导致`i`的增量从`length-1`变为`length+1`，这会使得：\n1. 循环提前终止或跳过字符处理（若`i`超过`length`）。\n2. 后续字符未被正确处理，导致`result`内容与原始程序不同。\n3. 最终返回的字符串`s`必然与原始程序不同。  \n分析结论：变异引入的错误状态未被修正或抵消，程序输出会改变。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_039 的分析, 耗时: 129.0284 秒
+
+开始分析变异体 MUT_040...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_040": "### 步骤[1]：可达性分析  \n说明理由：变异语句位于第40行的条件判断`c <= escapeReplacementFirstChar`，其执行路径依赖以下条件：  \n1. `s == null`（触发完整处理逻辑）  \n2. 存在字符`c`使得`c == dollarReplacementFirstChar`或`c == escapeReplacementFirstChar`（否则直接返回`name`）  \n3. 当前字符`c`未匹配`dollarReplacementFirstChar`（进入`else if`分支）  \n这些条件可通过输入字符串包含`escapeReplacementFirstChar`字符且不匹配`dollarReplacementFirstChar`来满足，例如输入`\"_x\"`（假设`escapeReplacementFirstChar`为`'_'`）。  \n\n分析结论：变异语句可达。  \n\n---  \n### 步骤[2]：必要性分析  \n说明理由：原条件为`c == escapeReplacementFirstChar`，变异为`c <= escapeReplacementFirstChar`。  \n- 当`c < escapeReplacementFirstChar`时，原条件为`false`，变异条件为`true`，可能导致分支行为不同（如跳过`result.append('_')`）。  \n- 例如，若`escapeReplacementFirstChar`为`'z'`且`c`为`'a'`，原程序不进入分支，而变异体会进入分支，修改`i`和`result`的值。  \n\n分析结论：变异实际改变了程序状态，满足必要性。  \n\n---  \n### 步骤[3]：数据依赖分析  \n说明理由：  \n- 变异影响的变量`c`和`escapeReplacementFirstChar`通过以下路径传播到输出：  \n  1. 若条件为`true`：修改`i`和`result`（追加`'_'`），最终影响返回值`s`。  \n  2. 若条件为`false`：直接追加`c`到`result`，仍影响`s`。  \n- 数据依赖链完整：变量通过`result.toString()`传递到输出`s`。  \n\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。  \n\n---  \n### 步骤[4]：控制依赖分析  \n说明理由：  \n- 变异语句直接控制是否执行`i += escapeCharReplacement.length() - 1`和`result.append('_')`，进而影响后续循环次数和`result`内容。  \n- 控制依赖路径明确：变异条件的结果决定是否跳转至输出语句前的不同分支。  \n\n分析结论：变异语句通过控制流影响输出语句。  \n\n---  \n### 步骤[5]：状态覆盖分析  \n说明理由：  \n- 变异引入的状态差异（如`i`的增量或`result`的内容）未被后续执行修正。例如：  \n  - 若变异条件为`true`但原条件为`false`，会错误追加`'_'`而非原字符，导致`s`不同。  \n  - 循环次数可能因`i`的修改而变化，进一步影响输出。  \n- 无逻辑抵消机制，最终输出`s`可能因变异而改变。  \n\n分析结论：错误状态未被覆盖，程序输出可能受影响。  \n\n---  \n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_040 的分析, 耗时: 119.8566 秒
+
+开始分析变异体 MUT_041...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_041": "### 步骤[可达性]：\n说明理由：变异语句位于第37行，路径条件组合为[s == null && i < length && i != length && i < length]。这些条件在程序执行过程中是可满足的，例如当缓存未命中(s == null)且字符串未遍历完(i < length)时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i))`，变异后为`if (name.startsWith(dollarReplacement, i))`。移除对字符c的检查后，当`name.startsWith(dollarReplacement, i)`为真但`c != dollarReplacementFirstChar`时（如字符串中存在与dollarReplacement相同前缀但首字符不同的情况），原程序不会进入该分支而变异体会进入，导致程序状态改变。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量c和dollarReplacementFirstChar通过以下路径传播到输出：\n1. 变量c：通过result.append(c)影响最终字符串结果\n2. dollarReplacementFirstChar：虽然被移除检查，但若进入错误分支会影响i的递增和字符追加逻辑\n数据依赖路径明确连接到输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制三个分支：\n1. True分支：追加'$'并修改i\n2. False分支进入后续条件判断\n3. 最终所有路径都流向return s\n控制依赖路径完整连接到输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体可能进入不同分支，但在以下情况会导致输出差异：\n当`name.startsWith(dollarReplacement, i)`为真但`c != dollarReplacementFirstChar`时，原程序不会追加'$'而变异体会，导致最终字符串s不同。这种差异不会被后续执行覆盖。\n分析结论：变异引入的错误状态不会被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_041 的分析, 耗时: 118.1759 秒
+
+开始分析变异体 MUT_042...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_042": "### 步骤1：可达性分析\n说明理由：变异语句位于`final StringBuffer result = new StringBuffer(length + 0)`，其可达性条件为`s == null && i != length`。根据程序逻辑，当`s == null`且`i < length`时（即存在需要解码的字符），该语句会被执行。因此，变异语句是可达的。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序使用`length + 8`初始化StringBuffer，而变异体使用`length + 0`。StringBuffer的初始容量仅影响性能（减少扩容次数），不影响最终存储的内容。由于后续所有操作都是通过append方法添加内容，最终结果与初始容量无关。因此，变异未改变程序语义。\n\n分析结论：变异未实际改变程序状态，属于非必要性变异。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量`result`通过多次append操作最终生成字符串`s`并返回。虽然变异改变了`result`的初始化容量，但所有数据依赖路径（如`result.append()`→`result.toString()`→`return s`）均完整保留，变异效果可传播到输出。\n\n分析结论：存在数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句位于控制流的主路径中，不直接控制任何分支。其后续的append操作和toString调用均无条件执行，因此变异语句不通过控制流影响输出语句。\n\n分析结论：不存在控制依赖影响输出的路径。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了`result`的初始容量，但StringBuffer的动态扩容机制保证了最终内容的一致性。无论初始容量如何，所有append操作的结果相同，因此变异引入的状态差异被完全覆盖，不影响最终输出。\n\n分析结论：变异状态被后续操作覆盖，输出未受影响。\n\n### 最终结论\n等价变异体判定结果：YES。  \n（尽管变异体满足可达性和数据依赖条件，但由于初始容量的改变被StringBuffer的动态扩容机制完全抵消，程序输出始终与原程序一致，因此属于等价变异体。）"}
+完成变异体 MUT_042 的分析, 耗时: 155.5416 秒
+
+开始分析变异体 MUT_043...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_043": "### 步骤1：可达性分析\n说明理由：变异语句位于循环内部，其可达性条件为 `s == null ∧ i < length ∧ ¬(c == dollarReplacementFirstChar ∨ c == escapeReplacementFirstChar) ∧ ¬(i == length) ∧ i < length`。这些条件在程序执行过程中可以被满足，例如当输入字符串包含非特殊字符且未被缓存时。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原条件为 `c == dollarReplacementFirstChar`，变异后为 `c <= dollarReplacementFirstChar`。在路径约束下（`c` 是当前字符，`dollarReplacementFirstChar` 是固定字符），存在 `c < dollarReplacementFirstChar` 的输入会使原条件为假而变异条件为真，从而改变程序的控制流。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量 `c` 和 `dollarReplacementFirstChar` 通过数据依赖链传播到输出。具体路径包括：\n1. `c` 通过条件判断影响 `result.append('$')` 或 `result.append(c)`，最终影响返回值 `s`。\n2. `dollarReplacementFirstChar` 通过条件判断间接影响 `result` 的构建和返回值 `s`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句通过控制流直接影响输出语句。具体路径包括：\n1. 变异条件为真时，执行 `result.append('$')` 并更新 `i`。\n2. 变异条件为假时，进入后续条件判断或直接执行 `result.append(c)`。\n所有路径最终都会影响 `result` 的构建和返回值 `s`。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了程序的控制流和中间状态，但在某些情况下（如 `c == dollarReplacementFirstChar`），原程序和变异体的行为一致。然而，存在其他情况（如 `c < dollarReplacementFirstChar`）会导致不同的行为，从而影响最终输出。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_043 的分析, 耗时: 139.9291 秒
+
+开始分析变异体 MUT_044...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_044": "### 步骤1：可达性分析  \n说明理由：变异语句的路径条件组合为 `[s == null && i >= length]`。根据程序逻辑，当 `s == null` 且循环结束后 `i` 的值等于 `length` 时，变异语句 `if (i <= length)` 会被执行。因此，该路径条件可满足，变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性分析  \n说明理由：原条件为 `if (i == length)`，变异后为 `if (i <= length)`。在路径约束 `i >= length` 下（由循环终止条件 `i < length` 不满足时退出循环），`i == length` 和 `i <= length` 的取值完全相同（均为 `true`）。因此，变异未改变程序状态。  \n分析结论：变异未改变程序状态，属于非必要性变异。  \n\n### 步骤3：数据依赖分析  \n说明理由：由于步骤2已确定变异未改变程序状态，无需进一步分析数据依赖。但根据提供的数据依赖路径，变量 `i` 和 `length` 的值会传播到输出语句 `return name` 或 `return s`，但变异未改变其值。  \n分析结论：数据依赖存在，但变异未实际影响变量值。  \n\n### 步骤4：控制依赖分析  \n说明理由：变异语句控制分支的走向（返回 `name` 或继续处理），但根据步骤2，变异未改变分支条件的结果（始终为 `true`），因此控制依赖路径的执行逻辑与原程序一致。  \n分析结论：控制依赖存在，但变异未改变控制流行为。  \n\n### 步骤5：状态覆盖分析  \n说明理由：虽然变异语句可达且存在数据和控制依赖，但由于变异条件 `i <= length` 在路径约束 `i >= length` 下与原条件 `i == length` 等价，程序输出（`return name` 或 `return s`）未被影响。  \n分析结论：变异引入的状态差异被逻辑等价性覆盖，不影响最终输出。  \n\n### 最终结论  \n等价变异体判定结果：YES。"}
+完成变异体 MUT_044 的分析, 耗时: 167.5217 秒
+
+开始分析变异体 MUT_045...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_045": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为 `[s == null && i != length]`。根据程序逻辑，当 `s == null` 且 `i != length` 时，程序会执行到变异语句 `unescapeCache.put(name, new WeakReference(s))`。这两个条件可以同时满足（例如当输入 `name` 未被缓存且未提前退出循环时），因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序与变异体的区别在于将 `unescapeCache.put(name, new WeakReference(s))` 替换为空语句 `;`。该变异移除了对 `unescapeCache` 的更新操作，但 `s` 的值仍然通过 `s = result.toString()` 赋值并返回。因此，变异并未改变 `s` 的值或程序的主要逻辑，仅移除了缓存更新这一副作用操作。\n\n分析结论：变异未改变程序语义（非必要性），属于等价变异体。\n\n### 最终结论：\n由于步骤2已判定该变异体为等价变异体（非必要性），无需继续后续分析步骤。  \n等价变异体判定结果：YES。"}
+完成变异体 MUT_045 的分析, 耗时: 85.7782 秒
+
+开始分析变异体 MUT_046...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_046": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[s == null ∧ (∃i: i < length) ∧ c == dollarReplacementFirstChar ∧ name.startsWith(dollarReplacement, i)]`。这些条件在程序执行过程中是可以满足的，例如当缓存未命中（`s == null`）、存在未处理的字符（`i < length`）、当前字符匹配 `dollarReplacementFirstChar` 且后续字符匹配 `dollarReplacement` 时，变异语句会被执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `i += dollarReplacement.length() - 1`，变异体为 `i += dollarReplacement.length() * 1`。对于任何 `dollarReplacement.length() > 1` 的情况（例如 `dollarReplacement` 为多字符字符串），`-1` 和 `*1` 会导致 `i` 的增量不同。例如，若 `dollarReplacement.length() = 2`，原程序 `i += 1`，变异体 `i += 2`，这会改变 `i` 的值，从而影响后续循环和字符处理逻辑。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `i`。`i` 的数据依赖路径显示其值直接影响循环条件 `i < length` 和后续字符处理（如 `name.charAt(i)` 和 `result.append`）。最终，`i` 的值通过循环和字符串构建影响 `result.toString()` 和返回值 `s`。因此，变异对 `i` 的修改会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i))` 分支内，其执行直接影响 `i` 的更新和 `result.append('$')` 的调用。这些操作通过循环控制流和字符串构建最终影响返回值 `s`。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `i` 的增量，但关键在于这种改变是否会被后续逻辑覆盖或抵消。由于 `i` 的增量差异会直接影响后续字符处理的起始位置（例如跳过更多或更少的字符），这可能导致 `result` 中拼接的字符序列不同，从而影响最终的 `s`。例如，原程序可能正确跳过替换字符串的剩余部分，而变异体可能跳过过多或过少字符，导致 `result` 包含错误字符。因此，变异引入的错误状态不会被后续执行完全修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_046 的分析, 耗时: 113.6047 秒
+
+开始分析变异体 MUT_047...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_047": "### 步骤[可达性]：\n说明理由：变异语句位于for循环条件处，路径条件为`s == null && i == length && i > 0`或`s == null && i == length && i <= 0`。这些条件在程序执行过程中是可满足的，例如当输入字符串name不为空且未被缓存时，s为null，i初始化为0，length为name的长度，因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`i < length`作为循环条件，变异体改为`i != length`。在正常情况下，当i从0递增到length时，两种条件都会终止循环。但当i超过length时（例如由于循环体内的i++操作），`i < length`会终止循环，而`i != length`可能导致无限循环。但在当前程序逻辑中，i的递增是可控的，不会出现i超过length的情况，因此两种条件在语义上是等价的。\n\n分析结论：变异未实际改变程序语义，属于等价变异体。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i和length通过数据依赖链传播到程序输出节点。例如，i的值影响循环是否执行，进而影响最终的result和返回值s。但由于在必要性分析中已确定变异未改变程序语义，数据依赖的存在不影响等价性判定。\n\n分析结论：数据依赖存在，但已在必要性步骤中判定为等价变异体。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句。例如，循环条件的改变会影响循环体的执行次数，进而影响result的构建和最终的s。但由于在必要性分析中已确定变异未改变程序语义，控制依赖的存在不影响等价性判定。\n\n分析结论：控制依赖存在，但已在必要性步骤中判定为等价变异体。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异未改变程序语义，不存在错误状态需要被修正或抵消的情况。程序在变异前后的行为完全一致。\n\n分析结论：无状态覆盖问题，程序行为一致。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_047 的分析, 耗时: 180.8987 秒
+
+开始分析变异体 MUT_048...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_048": "### 步骤[可达性]：\n说明理由：变异语句位于第31行的条件判断语句`if (i != 0)`，其路径条件为`i == length`为假（即`i < length`）。由于`i`初始化为0且在循环中递增，存在`i == 0`的输入情况（例如空字符串或第一个字符即匹配的情况），因此该变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`if (i > 0)`，变异为`if (i != 0)`。对于整数`i`，`i > 0`和`i != 0`在`i >= 0`时语义等价（因为`i`不会为负）。由于`i`的取值始终为非负整数（初始为0且通过循环递增），两者判断结果完全一致，未改变程序状态。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于必要性分析已确认变异未改变程序语义，数据依赖分析可跳过。但补充说明：变量`i`的数据依赖路径确实能传播到输出（通过`result`和`s`），但因其语义未改变，不影响最终输出。\n分析结论：数据依赖存在但无实际影响。\n\n### 步骤[控制依赖]：\n说明理由：必要性分析已确认变异未改变程序语义，控制依赖分析可跳过。但补充说明：变异语句的控制依赖路径确实能影响输出分支（如`result.append`的调用），但因语义未改变，控制流结果不变。\n分析结论：控制依赖存在但无实际影响。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异未改变程序语义（`i > 0`与`i != 0`在非负整数下等价），不存在需要覆盖的错误状态。\n分析结论：无状态覆盖需求。\n\n### 最终结论：\n等价变异体判定结果：YES。  \n（核心依据为必要性分析中`i > 0`与`i != 0`在非负整数下的语义等价性，其他步骤为补充验证。）"}
+完成变异体 MUT_048 的分析, 耗时: 153.9674 秒
+
+开始分析变异体 MUT_049...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_049": "### 步骤[可达性]：\n说明理由：变异语句位于`if (i > 1)`，其路径条件为`s == null`且`i != length`。根据程序逻辑，`i`初始为0，在循环中可能增加或保持不变。存在输入（如`name`长度大于1且不包含特殊字符）可使`i`递增到满足`i > 1`的条件，因此路径可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`i > 0`，变异为`i > 1`。当`i=1`时，原程序会执行`result.append(name.substring(0, 1))`，而变异体不会执行该语句，导致`result`内容不同。因此程序状态会被改变。\n分析结论：变异实际改变程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`i`通过以下路径传播到输出：\n1. `i > 1`为真时：`result.append(name.substring(0, i))` → `s = result.toString()` → `return s`\n2. `i > 1`为假时：`i`直接影响后续循环和字符处理逻辑，最终影响`result`和`s`。\n分析结论：变异效果可通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制`result.append`的执行，而`result`直接影响返回值`s`。控制依赖路径明确存在：`if (i > 1)` → `append`分支 → `s = result.toString()` → `return s`。\n分析结论：变异通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：当`i=1`时，原程序会追加第一个字符到`result`，而变异体不会。这一差异会直接导致最终`result.toString()`结果不同，且无后续操作覆盖此差异。例如输入`name=\"a\"`时，原程序返回`\"a\"`，变异体返回`\"\"`。\n分析结论：变异引入的状态差异未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO"}
+完成变异体 MUT_049 的分析, 耗时: 147.6136 秒
+
+开始分析变异体 MUT_050...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_050": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[s == null && i < length && c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i)]`。这些条件在程序执行过程中是可以满足的，例如当缓存未命中（s == null）、循环未结束（i < length）且当前字符匹配转义字符替换条件时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序语句为 `i += escapeCharReplacement.length() - 1`，变异体为 `i += escapeCharReplacement.length() + 1`。在变异语句可达的情况下，变异操作将 `i` 的增量从 `length - 1` 改为 `length + 1`，这会显著改变 `i` 的值（增加2），从而影响后续循环的执行次数和字符处理逻辑。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `i`。根据数据依赖路径，`i` 的值直接影响循环条件 `i < length` 和后续字符处理（如 `name.charAt(i)` 和 `result.append`）。最终，`i` 的变化会通过 `result.toString()` 传递到返回值 `s`。因此，变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于条件分支 `if (c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))` 中，其执行直接影响循环的迭代次数和后续字符处理逻辑。控制依赖路径显示，变异语句的执行结果会通过循环条件和返回值 `s` 传递到程序输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了 `i` 的值，但这种改变会直接影响循环的迭代次数和字符处理逻辑，进而影响 `result` 的内容和最终的返回值 `s`。没有证据表明这种状态改变会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_050 的分析, 耗时: 102.0982 秒
+
+开始分析变异体 MUT_051...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_051": "### 步骤1：可达性分析\n说明理由：变异语句位于循环内部，其可达性条件为 `s == null && i < length`。根据程序逻辑，当 `s == null` 且循环未结束时（`i < length`），该变异语句可达。该条件在程序执行过程中可以被满足（例如首次调用时 `s == null` 且输入字符串非空）。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原条件为 `c == dollarReplacementFirstChar || c == escapeReplacementFirstChar`，变异后为 `c == dollarReplacementFirstChar || c >= escapeReplacementFirstChar`。当 `c > escapeReplacementFirstChar` 时，原条件为假而变异条件为真，可能导致程序提前退出循环（执行 `break`），从而改变程序状态（如 `i` 的值和后续处理的子串范围）。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量 `c` 和 `escapeReplacementFirstChar` 通过以下路径传播到输出：\n1. 若变异条件为真，执行 `break` 后可能跳过部分字符处理，影响 `result` 的拼接结果，最终影响返回值 `s`。\n2. 若变异条件为假，继续循环，但后续处理中 `c` 的值仍可能影响 `result` 的拼接（如是否追加 `$` 或 `_`）。\n数据依赖链完整，变异状态可传播到输出。\n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句直接控制循环是否提前终止（`break`），进而影响：\n1. 循环结束后 `i` 的值，决定是否进入完整处理逻辑（`if (i == length)` 分支）。\n2. 后续字符处理流程（如 `result` 的拼接内容）。\n控制依赖路径明确影响输出语句（`return s`）。\n分析结论：存在控制依赖路径。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异可能改变中间状态（如循环提前终止或处理不同字符），但存在以下情况：\n- 当 `c == escapeReplacementFirstChar` 时，原条件和变异条件均为真，行为一致。\n- 当 `c > escapeReplacementFirstChar` 时，变异条件为真而原条件为假，导致提前终止循环。此时若后续未处理的字符中不包含需解码的特殊字符（`$` 或 `_`），则最终输出 `s` 可能与原程序一致（例如输入为 `\"aX\"` 且 `X > escapeReplacementFirstChar`，原程序处理全部字符，变异体提前终止，但若 `X` 无需解码，结果均为 `\"aX\"`）。\n但若后续字符需要解码，则输出会不同（如输入为 `\"a_X\"`）。因此，并非所有情况下错误状态会被抵消。\n分析结论：不存在完全的状态覆盖。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_051 的分析, 耗时: 134.2206 秒
+
+开始分析变异体 MUT_052...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_052": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[s == null && i != length && i > 0]`。这些条件可以同时满足（例如当缓存未命中且字符串需要解码且已处理部分字符时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序执行 `result.append(name.substring(0, i))`，而变异体将其替换为空语句 `;`。这会直接导致 `result` 中缺失 `name.substring(0, i)` 的内容，从而改变程序状态（`result` 的值）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `result`，其数据依赖路径为：\n1. `result` 的初始化 → 后续的 `result.append` 操作 → `s = result.toString()` → `return s`。\n由于变异导致 `result` 缺失部分内容，这种改变会通过数据依赖链传播到最终输出 `s`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于 `if (i > 0)` 分支内，其控制依赖路径为：\n1. `if (i > 0)` → 变异语句 → 后续循环 → `s = result.toString()` → `return s`。\n变异语句的执行与否会影响 `result` 的内容，进而通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异导致 `result` 缺失 `name.substring(0, i)` 的内容，且后续操作无法修正或抵消这一缺失。因此，最终的 `s` 和返回值会与原始程序不同。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_052 的分析, 耗时: 82.7091 秒
+
+开始分析变异体 MUT_053...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_053": "### 步骤[可达性]：\n说明理由：根据提供的可达性约束条件 `[s == null && i < length && !(c == dollarReplacementFirstChar || c == escapeReplacementFirstChar) && i != length && i < length && !(c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)) && !(c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))]`，变异语句位于循环内的else分支中，且路径条件表明该分支可以被执行（即字符`c`不满足任何替换条件）。因此，变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序在else分支中执行`result.append(c)`，而变异体将其替换为空语句`;`。这会直接导致`result`变量的内容缺失字符`c`的追加操作。在路径约束条件下（即字符`c`不需要被替换），原程序会将`c`追加到`result`中，而变异体不会。这会改变`result`的状态，进而影响最终的输出字符串`s`。\n\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`result`，其数据依赖路径明确显示`result`的值会通过`result.toString()`传递给`s`，并最终作为返回值输出。移除`result.append(c)`会直接导致`result`的内容缺失字符`c`，从而影响输出`s`的值。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于循环内的else分支中，其控制依赖路径表明变异语句的执行会影响循环的继续或退出，但无论循环是否继续，最终都会执行`s = result.toString()`和`return s`。由于变异语句直接修改了`result`的值，控制依赖路径的存在确保了这种修改会传递到输出。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（缺失字符`c`的追加）不会被后续执行修正或抵消。`result`的最终值会直接反映到输出`s`中，导致与原程序不同的返回值。\n\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_053 的分析, 耗时: 103.7245 秒
+
+开始分析变异体 MUT_054...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_054": "### 步骤1：可达性分析\n说明理由：变异语句位于循环内部，其可达性依赖于输入字符串name的长度和变量s是否为null。根据REACHABILITY_CONSTRAINT [s == null, i < length]，只要s为null且i小于字符串长度，变异语句就可被执行。这些条件在程序执行过程中是可以满足的，因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件是`if (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar)`，变异后变为`if (false || c == escapeReplacementFirstChar)`。变异将前半部分条件强制设为false，仅保留对escapeReplacementFirstChar的检查。这意味着只有当c等于escapeReplacementFirstChar时条件才为真，而原程序在c等于dollarReplacementFirstChar时也为真。因此，变异确实改变了程序的行为。\n\n分析结论：变异改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是c和escapeReplacementFirstChar。根据DATA_DEPENDENCY，变量c和escapeReplacementFirstChar的值会影响循环的终止条件（break语句）以及后续的字符串处理逻辑。具体来说，如果条件为真，会提前退出循环，影响最终的返回值（name或处理后的result.toString()）。因此，变异影响的变量会通过数据依赖链传播到程序输出节点。\n\n分析结论：数据依赖链存在，变异效果可传播到输出。\n\n### 步骤4：控制依赖分析\n说明理由：根据CTRL_DEPENDENCY，变异语句的控制流直接影响循环是否提前终止（break）以及后续的处理逻辑。例如，如果条件为真，程序会提前返回name；否则会继续处理字符串并返回处理后的结果。因此，变异语句通过控制流影响输出语句的执行路径。\n\n分析结论：控制依赖路径存在，变异效果可通过控制流传递到输出。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了程序的行为（忽略dollarReplacementFirstChar的检查），但只有在c等于escapeReplacementFirstChar时才会触发提前退出循环。如果c不等于escapeReplacementFirstChar，程序会继续执行后续处理逻辑。然而，由于变异移除了对dollarReplacementFirstChar的检查，可能导致某些情况下程序行为与原程序不同（例如，原程序会在c等于dollarReplacementFirstChar时提前退出，而变异体不会）。因此，变异引入的错误状态不会被完全抵消或修正，程序输出可能受到影响。\n\n分析结论：错误状态未被完全覆盖，程序输出可能受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_054 的分析, 耗时: 267.6016 秒
+
+开始分析变异体 MUT_055...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_055": "### 步骤[可达性]：\n说明理由：变异语句位于第42行，其路径条件组合为 `if (s == null)` 和 `if (c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))`。这两个条件均可满足（例如当 `s == null` 且当前字符 `c` 是转义字符且匹配转义替换字符串时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `i += escapeCharReplacement.length() - 1`，变异体为 `i += escapeCharReplacement.length() - -1`（即 `i += escapeCharReplacement.length() + 1`）。该变异改变了 `i` 的增量（从 `length - 1` 变为 `length + 1`），导致 `i` 的值增加更多，从而可能跳过更多字符。这会直接影响循环的迭代次数和后续字符处理，因此程序状态被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `i`，其数据依赖路径如下：\n1. 变异语句修改 `i` → `i` 用于循环条件 `i < length` → 影响循环是否继续 → 影响后续字符处理 → 影响 `result` 的构建 → 最终影响返回值 `s`。\n2. 变异语句修改 `i` → `i` 用于 `name.charAt(i)` 和 `name.startsWith(...)` → 直接影响后续字符处理逻辑 → 影响 `result` 的构建 → 最终影响返回值 `s`。\n分析结论：变异影响的变量 `i` 通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `if (c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))` 分支内，其控制依赖路径为：\n1. 变异语句 → 后续语句 `result.append('_')` → `s = result.toString()` → `return s`。\n2. 变异语句 → 循环条件 `i < length` → 影响后续循环迭代 → 影响 `result` 的构建 → 影响返回值 `s`。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`i` 的增量增加）会直接导致循环跳过更多字符，从而影响 `result` 的构建和最终返回值 `s`。没有逻辑表明这种错误状态会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_055 的分析, 耗时: 94.7364 秒
+
+开始分析变异体 MUT_056...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_056": "### 步骤[1. 可达性]：\n说明理由：根据提供的可达性约束条件 `[s == null && i < length(1) && !(c == dollarReplacementFirstChar || c == escapeReplacementFirstChar) && i != length && i < length(2) && !(c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)) && c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i)]`，可以构造输入满足这些条件，例如当 `s == null` 且 `i` 在循环中满足 `c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i)` 时，变异语句会被执行。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序语句为 `i += escapeCharReplacement.length() - 1`，变异体为 `i += escapeCharReplacement.length() / 1`。由于 `escapeCharReplacement.length()` 是一个正整数，`x - 1` 和 `x / 1` 在数学上是等价的（例如 `5 - 1 = 4` 和 `5 / 1 = 5` 不相等，但这里 `i` 的增量是 `escapeCharReplacement.length() - 1` 和 `escapeCharReplacement.length() / 1`，即 `x - 1` 和 `x`，显然不等价）。然而，进一步分析上下文，`i` 的增量用于跳过已处理的字符，`escapeCharReplacement.length() - 1` 和 `escapeCharReplacement.length()` 会导致 `i` 的增量不同，从而可能影响后续循环的执行和结果。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量是 `i`，其数据依赖路径为 `i` 的修改会影响循环条件 `i < length` 和后续字符处理逻辑，最终影响 `result` 的构建和返回值 `s`。具体路径为：`i` 的修改 → 循环条件 → 字符处理 → `result` → `s` → 返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句位于 `if (c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))` 分支内，其控制依赖路径为：该分支的执行会影响 `i` 的增量，进而影响循环的后续迭代和 `result` 的构建，最终影响返回值 `s`。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异改变了 `i` 的增量（`x - 1` vs `x`），但由于 `i` 的增量用于跳过已处理的转义字符，`i += escapeCharReplacement.length() - 1` 和 `i += escapeCharReplacement.length()` 会导致下一次循环处理的字符位置不同，从而可能使 `result` 中追加的字符不同（例如少追加一个字符或多跳过一个字符），最终导致 `s` 的值不同。因此，变异引入的错误状态未被修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_056 的分析, 耗时: 103.5457 秒
+
+开始分析变异体 MUT_057...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.475892 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.856314 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_057": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的条件部分，原条件为`i < length`，变异后为`false`。根据可达性约束`s == null`，该变异语句位于`s == null`的分支内，因此变异语句在满足`s == null`时可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原循环条件`i < length`变异为`false`，这将导致循环体永远不会执行。虽然循环体不执行会影响程序状态（如变量`i`和`result`的值），但需要进一步分析是否会影响最终输出。  \n分析结论：变异改变了程序状态（循环不执行），需进一步分析数据依赖和控制依赖。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`i`和`length`。根据数据依赖分析：\n1. 变量`i`的路径显示其值会传递到`if (i == length)`和后续的`result.append`或`return`语句。\n2. 变量`length`的路径显示其值会传递到`if (i == length)`和后续的循环条件判断。\n由于循环体不执行，`i`的值保持为初始值0，而`length`的值不变。最终输出`s`的值可能因循环体未执行而受到影响。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（循环条件`false`）直接控制循环体是否执行。根据控制依赖路径：\n1. 如果`i == length`为`true`，则直接返回`name`。\n2. 如果`i == length`为`false`，则进入后续处理逻辑，但循环体不执行会影响`result`的生成。\n变异语句通过控制流影响输出语句的执行路径。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异导致循环体不执行，但程序在`s == null`时有两种情况：\n1. 如果`i == length`为`true`，直接返回`name`，与原程序行为一致。\n2. 如果`i == length`为`false`，循环体不执行会导致`result`未被修改，最终返回的`s`可能与原程序不同（原程序可能通过循环修改`result`）。\n因此，存在输入（如`i != length`）会导致输出不同。  \n分析结论：变异引入的错误状态未被完全覆盖，可能影响输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_057 的分析, 耗时: 151.4048 秒
+
+开始分析变异体 MUT_058...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.481165 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.439657 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_058": "### 步骤1：可达性分析\n说明理由：变异语句位于循环后的条件判断，其可达性取决于循环条件。循环条件为`i < length`，当循环结束时`i`的值必然等于`length`（因为循环每次迭代`i`递增1）。因此，变异语句`if (i >= length)`在循环结束后必然可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原条件为`i == length`，变异后为`i >= length`。在循环结束后，`i`的值只能是`length`（因为循环条件是`i < length`且每次递增1），因此`i >= length`在循环结束后等价于`i == length`。没有输入能使这两个条件产生不同的结果。\n分析结论：变异未实际改变程序语义，属于等价变异体。\n\n### 最终结论\n由于在步骤2已确定该变异体为等价变异体，无需继续后续分析步骤。\n\n等价变异体判定结果：YES。"}
+完成变异体 MUT_058 的分析, 耗时: 123.1054 秒
+
+开始分析变异体 MUT_059...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_059": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，其路径条件为s == null且i < length。这些条件在程序执行过程中可以被满足（例如当缓存未命中且输入字符串非空时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`if (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar)`，变异后为`if (c == dollarReplacementFirstChar || false)`。当c等于escapeReplacementFirstChar时，原条件为true而变异后为false，这会改变程序的控制流（是否执行break语句），从而影响程序状态。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量c和dollarReplacementFirstChar通过控制流影响break语句的执行，进而影响循环变量i的值。i的值最终决定是直接返回name（当i==length）还是进入后续处理逻辑。因此变异效果可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖路径传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制是否执行break语句，而break语句影响循环的提前终止，进而控制程序是直接返回name还是继续后续处理。因此变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖路径影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了控制流，但当c等于escapeReplacementFirstChar时，原程序会break而变异体不会。这会导致：\n1. 原程序可能提前终止循环（当c匹配时）\n2. 变异体会继续循环直到结束\n这将导致不同的i值，可能产生不同的最终输出（直接返回name或处理后的result）。因此错误状态未被覆盖。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_059 的分析, 耗时: 88.4837 秒
+
+开始分析变异体 MUT_060...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_060": "### 步骤[1]：可达性分析\n说明理由：变异语句位于一个循环内部，其执行依赖于循环条件`i < length`和字符`c`的取值。从程序入口到该变异语句的路径没有不可达的逻辑约束，只要输入字符串`name`不为空且循环条件满足，变异语句就能被执行。\n分析结论：变异语句可达。\n\n### 步骤[2]：必要性分析\n说明理由：原条件为`c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)`，变异后为`c == dollarReplacementFirstChar == name.startsWith(dollarReplacement, i)`。这两个表达式在逻辑上不等价：原表达式是逻辑与操作，而变异后是比较两个布尔值是否相等。例如当`c == dollarReplacementFirstChar`为`true`而`name.startsWith(...)`为`false`时，原表达式结果为`false`，变异后结果为`false == true`即`false`；但当`c == dollarReplacementFirstChar`为`false`而`name.startsWith(...)`为`true`时，原表达式结果为`false`，变异后结果为`false == true`即`false`。虽然部分情况下结果相同，但语义不同且存在输入使行为不一致。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[3]：数据依赖分析\n说明理由：变异影响的变量`c`和`dollarReplacementFirstChar`通过控制流直接影响`result.append('$')`或后续其他分支的执行，最终影响返回值`s`。数据依赖路径完整存在：变异条件→分支选择→结果字符串构造→返回值。\n分析结论：变异效果可通过数据依赖链传播到输出。\n\n### 步骤[4]：控制依赖分析\n说明理由：变异语句直接控制三个分支的走向（True分支追加'$'，False分支进入后续条件判断），这些分支均通过循环最终影响`result`的构建和返回值`s`。控制依赖路径明确存在。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5]：状态覆盖分析\n说明理由：虽然变异改变了条件逻辑，但通过分析发现，对于所有可能的输入，变异前后的条件在布尔结果上完全一致（因为`a == b == c`等价于`a == b && b == c`）。因此，尽管语法形式不同，实际执行路径和输出结果不受影响。\n分析结论：变异引入的状态差异被逻辑等价性覆盖，不影响最终输出。\n\n### 最终结论：等价变异体判定结果：YES"}
+完成变异体 MUT_060 的分析, 耗时: 127.2573 秒
+
+开始分析变异体 MUT_061...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_061": "### 步骤1：可达性分析\n说明理由：变异语句位于一个循环内部，其可达性条件为`s == null`和`i < length`。这两个条件在程序执行过程中是可以满足的，特别是当缓存未命中时`s == null`为真，且循环条件`i < length`在循环开始时也为真。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原始表达式为`if (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar)`，变异后为`if (c == dollarReplacementFirstChar != (c == escapeReplacementFirstChar))`。这两个表达式在逻辑上是等价的，因为`A != B`等价于`A XOR B`，而`A || B`在逻辑上等同于`A XOR B`当且仅当`A`和`B`不能同时为真。但在实际程序中，`dollarReplacementFirstChar`和`escapeReplacementFirstChar`是不同的字符，因此`c`不可能同时等于两者，所以两个表达式在所有情况下行为一致。\n分析结论：变异未改变程序语义，属于等价变异体。\n\n### 最终结论\n由于在步骤2中已经确定变异体与原程序语义等价，无需继续后续分析步骤。\n等价变异体判定结果：YES。"}
+完成变异体 MUT_061 的分析, 耗时: 180.1732 秒
+
+开始分析变异体 MUT_062...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_062": "### 步骤1：可达性\n说明理由：变异语句位于`if (c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))`条件分支内。该分支的路径条件为`s == null`（触发主处理逻辑）且字符匹配转义替换字符的条件成立。这些条件在正常输入下均可满足（如包含转义字符的输入字符串），因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原表达式为`i += escapeCharReplacement.length() - 1`，变异为`i += escapeCharReplacement.length() * 1`。由于`escapeCharReplacement.length()`是固定值（假设为常量字符串长度），设其长度为L：\n- 原表达式效果：i = i + (L - 1)\n- 变异表达式效果：i = i + (L * 1) = i + L\n两者计算结果始终相差1（变异体比原程序多+1），这会改变循环控制变量i的值，进而影响后续字符处理位置。\n\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量i通过以下路径传播到输出：\n1. 直接影响循环条件`i < length`的终止时机\n2. 控制`name.charAt(i)`的读取位置\n3. 决定`result.append()`的内容拼接顺序\n4. 最终影响返回值`s = result.toString()`\n\n数据依赖链完整连接变异点到输出节点。\n\n分析结论：存在有效数据依赖路径。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于条件分支内，其修改的i值直接影响：\n1. 循环次数（通过`i++`和`i < length`）\n2. 其他字符处理分支（如`$`替换）的执行\n最终通过控制流影响`result`的拼接内容和返回结果。\n\n分析结论：存在控制依赖路径。\n\n### 步骤5：状态覆盖\n说明理由：变异导致的i值差异（始终+1）会引发以下行为变化：\n1. 可能提前或延后终止循环\n2. 使字符处理位置偏移\n3. 导致`result`拼接不同的字符序列\n这些差异会直接反映在最终输出的字符串内容中，不存在状态抵消现象。\n\n分析结论：错误状态未被覆盖。\n\n### 最终结论\n等价变异体判定结果：NO"}
+完成变异体 MUT_062 的分析, 耗时: 90.2485 秒
+
+开始分析变异体 MUT_063...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.492022 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.462699 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_063": "### 步骤1：可达性\n说明理由：根据提供的可达性约束条件 `[s == null == True && i == length == False && c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i) == True]`，可以确定变异语句 `i += dollarReplacement.length() - 0` 的执行路径是可满足的。具体来说，当 `s` 为 `null`、`i` 不等于 `length`、当前字符 `c` 是 `dollarReplacementFirstChar` 且 `name` 从位置 `i` 开始匹配 `dollarReplacement` 时，变异语句会被执行。  \n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序中的语句是 `i += dollarReplacement.length() - 1`，变异体将其改为 `i += dollarReplacement.length() - 0`。这意味着 `i` 的增量从 `dollarReplacement.length() - 1` 变为 `dollarReplacement.length()`，即 `i` 的值会比原程序多增加 1。这种改变会导致循环变量 `i` 的更新行为不同，从而可能影响后续字符的处理逻辑。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `i`，其数据依赖路径显示 `i` 的值会直接影响循环条件 `i < length` 和后续字符的处理（如 `name.charAt(i)` 和 `result.append`）。具体来说，`i` 的增加会影响循环的终止条件和后续字符的读取，最终可能改变 `result` 的内容和返回值 `s`。  \n分析结论：变异影响的变量 `i` 通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于 `if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i))` 分支内，该分支的执行会直接影响 `i` 的更新和后续循环的执行。由于 `i` 的值影响循环条件和输出 `s` 的生成，变异语句通过控制流间接影响输出语句。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了 `i` 的值，但这种改变不会被后续执行修正或抵消。`i` 的增加会影响循环的迭代次数和字符处理逻辑，最终可能导致 `result` 的内容与原始程序不同，从而影响返回值 `s`。因此，变异引入的错误状态不会被覆盖。  \n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_063 的分析, 耗时: 112.3881 秒
+
+开始分析变异体 MUT_064...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.427722 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_064": "### 步骤[1]：可达性分析  \n说明理由：变异语句位于`if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i))`条件分支内，其路径条件为`c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)`。该条件在输入字符串包含`dollarReplacement`子串时可达，无逻辑矛盾。  \n分析结论：变异语句可达。  \n\n### 步骤[2]：必要性分析  \n说明理由：原操作为`i += dollarReplacement.length() - 1`，变异为`i += dollarReplacement.length() % 1`。由于`x % 1`恒等于0（任何整数模1结果为0），而`x - 1`与0仅在`x == 1`时相等。因此，当`dollarReplacement.length() != 1`时，变异会改变`i`的增量值（原增量非0，变异后恒为0），导致程序状态差异。  \n分析结论：变异实际改变了程序状态，满足必要性。  \n\n### 步骤[3]：数据依赖分析  \n说明理由：变异影响的变量`i`通过循环更新（`i++`）和条件分支直接影响后续字符处理位置。数据依赖路径显示：`i`的值影响`name.charAt(i)`的读取、`result.append`的内容，最终决定返回值`s`（`result.toString()`）。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。  \n\n### 步骤[4]：控制依赖分析  \n说明理由：变异语句位于条件分支内，其修改的`i`值直接影响循环次数和后续分支执行（如是否触发其他字符替换逻辑）。控制依赖路径显示：变异语句通过循环和条件分支控制输出语句的执行路径。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n### 步骤[5]：状态覆盖分析  \n说明理由：虽然变异改变了`i`的增量逻辑，但仅在`dollarReplacement.length() == 1`时与原行为一致（此时`-1`和`%1`均使增量为0）。其他情况下，`i`的增量差异会导致后续字符处理偏移，可能错误拼接`result`的内容（如漏掉字符或重复处理），最终影响输出字符串`s`。无证据表明错误状态会被后续执行修正。  \n分析结论：变异引入的错误状态未被覆盖，影响程序输出。  \n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_064 的分析, 耗时: 94.0314 秒
+
+开始分析变异体 MUT_065...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.402886 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.754502 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_065": "### 步骤[1. 可达性]：\n说明理由：变异语句位于一个条件分支中，该分支的条件是`(c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))`。这个条件在特定输入下是可满足的，例如当输入字符串中包含`escapeReplacementFirstChar`且从当前位置`i`开始匹配`escapeCharReplacement`时。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序中的语句是`i += escapeCharReplacement.length() - 1;`，变异体将其改为`i += escapeCharReplacement.length() - 0;`。这意味着`i`的值会比原程序多增加1。这会直接改变`i`的值，从而可能影响后续循环的执行次数和字符处理逻辑。因此，变异确实改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量是`i`，`i`的值会直接影响循环的终止条件`i < length`和后续字符的处理位置。`i`的变化会通过循环影响`result`的构建，最终影响返回值`s`。数据依赖路径显示`i`的变化会传递到输出语句`return s`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句位于一个条件分支中，该分支的控制流直接影响`result.append('_')`的执行和后续循环的迭代。控制依赖路径显示变异语句通过控制流影响输出语句`return s`。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异改变了`i`的值，但`i`的变化会直接影响循环的终止条件和字符处理逻辑，从而可能改变`result`的内容和最终的返回值`s`。没有证据表明这种改变会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_065 的分析, 耗时: 79.1270 秒
+
+开始分析变异体 MUT_066...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_066": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[s == null, i != length, i < length, c == dollarReplacementFirstChar, name.startsWith(dollarReplacement, i)]`。这些条件在程序执行过程中是可以满足的，例如当 `s` 为 `null`，`i` 未达到 `length`，且当前字符 `c` 匹配 `dollarReplacementFirstChar` 且后续字符匹配 `dollarReplacement` 时，变异语句会被执行。因此，变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序语句为 `i += dollarReplacement.length() - 1`，变异体语句为 `i += dollarReplacement.length() + 1`。两者的区别在于对 `i` 的增量不同（`-1` 和 `+1`）。在变异语句可达的情况下，这种改变会导致 `i` 的值增加更多，从而可能影响后续循环的执行次数和结果字符串的生成。因此，变异实际改变了程序状态。\n\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `i`。`i` 的数据依赖路径显示，`i` 的值会影响循环条件 `i < length` 的判断，进而影响 `result` 的生成和最终的 `s` 值。具体来说，`i` 的改变会影响循环的终止条件和后续字符的处理，最终影响 `result.toString()` 的结果。因此，变异影响的变量 `i` 通过数据依赖链传播到程序输出节点。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句位于条件 `if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i))` 的分支中。该分支的执行会影响 `i` 的值，进而影响循环的终止条件和后续字符的处理。控制依赖路径显示，变异语句的执行会通过循环条件影响 `result` 的生成和最终的 `s` 值。因此，变异语句通过控制流影响输出语句。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了 `i` 的值，但这种改变会直接影响循环的执行次数和 `result` 的生成，进而影响最终的 `s` 值。没有证据表明变异引入的错误状态会在后续执行中被修正或抵消。因此，变异的效果会传递到程序输出，导致输出可能发生变化。\n\n分析结论：变异引入的错误状态未被修正或抵消，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_066 的分析, 耗时: 85.8129 秒
+
+开始分析变异体 MUT_067...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_067": "### 步骤[可达性]：\n说明理由：变异语句位于`else if (c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))`的条件判断中。根据程序逻辑，该分支的执行需要满足`s == null`且`i < length`的条件。这些条件在程序执行过程中是可以满足的，例如当缓存未命中且输入字符串包含需要解码的字符时。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件判断是`c == escapeReplacementFirstChar`，而变异体将其修改为`false`。这意味着在原始程序中，当`c == escapeReplacementFirstChar`时，会执行相应的解码逻辑（替换为'_'），而在变异体中，这部分逻辑永远不会执行，直接进入`else`分支（追加原字符）。这会显著改变程序的行为，因为解码逻辑被完全跳过。\n分析结论：变异实际改变了程序语义，不满足必要性条件。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`escapeReplacementFirstChar`，但该变量在变异语句中仅用于条件判断，并不直接影响输出。输出的`result`字符串是通过`result.append()`方法构建的，而变异体的修改会导致`result.append('_')`被跳过，转而执行`result.append(c)`。因此，变异确实会通过改变`result`的内容来影响最终输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径显示，变异语句的条件判断结果直接影响是否执行`result.append('_')`或`result.append(c)`，进而影响最终的`s = result.toString()`和`return s`。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（跳过`result.append('_')`）不会被后续执行修正或抵消。变异体的行为是直接跳过解码逻辑，导致输出字符串中原本应该被替换的字符保持不变。这与原始程序的语义不同，且无法通过后续执行覆盖。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_067 的分析, 耗时: 69.1650 秒
+
+开始分析变异体 MUT_068...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.452412 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_068": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `s == null && i < length && !(c == dollarReplacementFirstChar || c == escapeReplacementFirstChar) && i != length && i > 0 && i < length`。这些条件在程序执行过程中是可以满足的，例如当 `s` 为 `null`，`i` 在有效范围内，且当前字符 `c` 不是 `dollarReplacementFirstChar` 或 `escapeReplacementFirstChar` 时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件是 `c == dollarReplacementFirstChar`，变异后的条件是 `c >= dollarReplacementFirstChar`。在路径约束下（`c` 不是 `dollarReplacementFirstChar` 或 `escapeReplacementFirstChar`），存在 `c > dollarReplacementFirstChar` 的输入，使得原条件为 `false` 而变异条件为 `true`，从而改变程序的控制流和状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `c` 和 `dollarReplacementFirstChar`。`c` 的值通过数据依赖链传播到 `result.append('$')` 或 `result.append(c)`，最终影响 `s` 和返回值。`dollarReplacementFirstChar` 的值也通过条件判断影响控制流和数据流。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `if (c >= dollarReplacementFirstChar && name.startsWith(dollarReplacement, i))` 控制后续的 `result.append('$')` 或 `result.append(c)` 的执行，进而影响 `s` 和返回值。控制依赖路径明确存在。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异改变了程序的控制流和中间状态，但在所有可能的执行路径中，变异引入的状态差异会传递到输出 `s`，且没有逻辑上的抵消或修正机制。因此，程序的最终输出可能因变异而改变。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_068 的分析, 耗时: 103.9652 秒
+
+开始分析变异体 MUT_069...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_069": "### 步骤1：可达性分析\n说明理由：变异语句位于第42行，原代码为`i += escapeCharReplacement.length() - 1;`，变异后为`;`。该语句位于条件分支`if (c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i))`内。根据控制流图，该分支的路径条件为`c == escapeReplacementFirstChar && name.startsWith(escapeCharReplacement, i)`，这是一个可满足的条件组合（例如当输入字符串包含转义字符时）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序中的语句`i += escapeCharReplacement.length() - 1;`会修改变量`i`的值，而变异后的语句`;`不会修改`i`的值。因此，在变异语句可达的情况下，变异会实际改变程序状态（`i`的值不同）。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`i`。根据数据依赖路径，`i`的值会直接影响后续的循环条件`i < length`和字符读取`name.charAt(i)`，最终影响`result`的内容和返回值`s`。因此，变异影响的变量`i`通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句位于条件分支内，其执行与否会影响后续的循环迭代和字符处理逻辑。根据控制依赖路径，变异语句的控制流会直接影响输出语句`return s;`的执行路径（例如是否跳过某些字符的处理）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异会改变`i`的值，但后续的循环迭代和字符处理逻辑会基于新的`i`值继续执行。由于`i`的值未被修正或抵消，变异引入的状态差异会传递到输出，导致`result`的内容和返回值`s`可能不同（例如处理字符的偏移量错误）。\n分析结论：变异引入的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_069 的分析, 耗时: 123.8255 秒
+
