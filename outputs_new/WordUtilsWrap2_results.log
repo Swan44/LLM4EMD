@@ -1,0 +1,9 @@
+开始处理程序: D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantjavadiv\WordUtilsWrap2.java
+开始分析变异体 MUT_106...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_106": "### 步骤[可达性]：\n说明理由：变异语句位于程序的直接返回语句中，没有前置条件或路径约束限制其执行。程序入口到变异语句的路径无条件限制，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回语句为`return wrap(str, wrapLength, null, false)`，变异体改为`return wrap(str, wrapLength, null, true)`。变异将最后一个参数从`false`改为`true`，这会改变传递给`wrap`方法的实际参数值。在`wrap`方法的实现中，这个布尔参数可能会影响其行为（例如控制是否强制换行），因此变异实际改变了程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`str`和`wrapLength`通过数据依赖链直接传播到输出语句（即变异语句本身）。虽然变异未直接修改这两个变量，但它们作为参数被传递，且变异修改的布尔参数会影响`wrap`方法对这些参数的处理方式。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是程序的最终返回语句，没有后续控制流。因此，变异语句不通过控制流影响其他输出语句（因为不存在其他输出语句）。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了传递给`wrap`方法的参数，但由于我们无法看到`wrap`方法的具体实现，无法确定这种改变是否会被后续执行抵消。然而，根据通常的语义，布尔参数的改变（如从`false`改为`true`）很可能会影响`wrap`方法的输出结果（例如换行行为）。因此，不能确定错误状态会被覆盖。\n分析结论：变异引入的错误状态未被明确覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_106 的分析, 耗时: 34.2309 秒
+

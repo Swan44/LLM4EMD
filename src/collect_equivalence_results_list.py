@@ -82,15 +82,9 @@ def main(program_paths, mutants_json_paths):
 if __name__ == "__main__":
     # 示例调用方式
     program_paths = [
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Insert.java",
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Mid.java"
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Min.java",
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\Prime_num.java"
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\StringTokenizerSetMax.java"
     ]
     mutants_json_paths = [
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Insertmutants.json",
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Midmutants.json",
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Minmutants.json",
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsDelJson\\Prime_nummutants.json"
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\StringTokenizerSetMaxmutants.json"
     ]
     main(program_paths, mutants_json_paths)

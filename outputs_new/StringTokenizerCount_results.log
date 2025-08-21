@@ -1,0 +1,515 @@
+开始处理程序: D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantjavadiv\StringTokenizerCount.java
+开始分析变异体 MUT_003...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_003": "步骤[可达性]：\n说明理由：根据提供的REACHABILITY_CONSTRAINT '[currpos < maxPosition && currpos < maxPosition]'，该条件简化为currpos < maxPosition，这是一个可满足的条件。变异语句位于while循环内部，当currpos < maxPosition时，该语句会被执行。因此，变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句为\"count++;\"，变异体将其替换为空语句\";\"。在变异语句可达的情况下，原语句会递增count变量的值，而变异体不会改变count的值。这明显改变了程序状态，因为count的值会不同。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是count，数据依赖分析显示存在从count的定义到return count的数据依赖路径。变异体不递增count，而原程序会递增count，这会导致count的最终值不同，并且这个差异会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句位于while循环内部，控制依赖分析显示该语句的控制依赖路径连接到输出语句return count。变异语句的执行会影响count的值，进而影响最终的返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异体满足可达性、必要性、数据依赖和控制依赖条件，但需要检查是否存在状态覆盖。在这种情况下，变异体不递增count，而原程序会递增count，这会导致count的最终值减少1（对于每次循环迭代）。由于count是返回值，这种差异会直接反映在输出中，不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态不会被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_003 的分析, 耗时: 46.5088 秒
+
+开始分析变异体 MUT_013...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_013": "步骤[可达性]：\n说明理由：变异语句位于第5行，是方法体的初始化部分，没有任何前置条件约束。程序入口到该语句的路径无条件，因此该变异语句总是可达的。REACHABILITY_CONSTRAINT为'NULL'也证实了这一点。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句为\"int currpos = currentPosition;\"，变异体语句为\"int currpos = currentPosition++;\"。变异操作将直接赋值改为后置自增赋值。这会导致两个差异：(1) currpos的初始值不同：原程序currpos等于currentPosition，变异体currpos等于currentPosition的原始值；(2) currentPosition的值不同：原程序currentPosition不变，变异体currentPosition会自增1。因此，变异确实改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是currpos，数据依赖分析显示currpos通过多条路径传播到程序输出：1) 影响while循环条件判断；2) 影响skipDelimiters和scanToken方法的参数；3) 影响if条件判断。虽然count是最终返回值，但currpos的值直接影响循环次数和count的递增，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖路径，变异效果可以传播到输出。\n\n步骤[控制依赖]：\n说明理由：变异语句位于方法开始处，后续的while循环、if条件判断等都控制依赖于currpos的初始值。控制依赖分析显示，变异语句通过控制流影响后续的所有语句执行，包括循环的进入、break语句的执行、以及最终的return语句。\n分析结论：存在控制依赖路径，变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了currpos的初始值（比原程序小1）和currentPosition的值（比原程序大1），但在后续执行中：1) skipDelimiters和scanToken方法会重新计算currpos的值，覆盖初始差异；2) 循环的终止条件currpos < maxPosition和currpos >= maxPosition最终会收敛到相同状态；3) count的递增次数由实际的token数量决定，不受currpos初始值差异的影响。因此，变异引入的错误状态在后续执行中被修正，程序最终输出count的值保持不变。\n分析结论：变异引入的错误状态被后续执行覆盖，不影响最终输出。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_013 的分析, 耗时: 73.9974 秒
+
+开始分析变异体 MUT_046...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_046": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[currpos < maxPosition && currpos >= maxPosition]，这是一个逻辑上不可满足的条件组合。因为currpos不可能同时小于maxPosition且大于等于maxPosition。这意味着没有任何输入能够同时满足这两个条件，因此变异语句所在的路径是不可达的。\n分析结论：变异语句不可达，满足等价变异体的第一个条件。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_046 的分析, 耗时: 31.3141 秒
+
+开始分析变异体 MUT_055...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_055": "步骤[可达性]：\n说明理由：变异语句位于程序第5行，是一条初始化语句\"int currpos = ~currentPosition;\"。该语句位于方法入口处，无任何前置条件约束。REACHABILITY_CONSTRAINT为NULL，表示没有不可达的路径条件。程序控制流从方法入口直接执行到该语句，因此该变异语句是可达的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句为\"int currpos = currentPosition;\"，变异体为\"int currpos = ~currentPosition;\"。按位取反操作符~会改变currentPosition的值，例如如果currentPosition为0，则~0为-1；如果currentPosition为正数，则~currentPosition会变为负数。这会导致currpos的初始值与原程序不同，从而改变程序状态。在循环条件\"while (currpos < maxPosition)\"中，currpos的初始值改变会影响循环是否执行以及执行次数。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量currpos通过数据依赖链传播到程序输出。从数据依赖路径可以看出：currpos的值影响while循环条件判断，影响skipDelimiters和scanToken方法的参数传递，影响if条件判断，最终影响count变量的递增和返回值。currpos的值变化会通过循环执行次数直接影响count的值，而count是最终的返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：从控制依赖路径可以看出，变异语句\"int currpos = ~currentPosition;\"控制着后续while循环的执行。currpos的初始值决定了循环是否执行（路径3：直接跳过循环返回count=0）以及循环的执行次数（路径1和2）。循环的执行次数直接影响count的值，而count是最终的返回值。因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了currpos的初始值，但这种改变会直接影响程序的执行流程和最终结果。例如，如果currentPosition为0，原程序currpos=0，可能进入循环；变异体currpos=-1，可能不满足循环条件直接返回count=0。如果currentPosition为正数，~currentPosition会变为负数，同样会影响循环执行。没有证据表明这种状态改变会在后续执行中被修正或抵消，变异引入的错误状态会一直传播到最终输出。\n分析结论：变异引入的错误状态没有被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_055 的分析, 耗时: 71.5130 秒
+
+开始分析变异体 MUT_108...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_108": "步骤1：可达性分析  \n说明理由：变异语句位于while循环内部，其可达性条件为循环条件(currpos < maxPosition)满足。根据提供的REACHABILITY_CONSTRAINT '[currpos < maxPosition]'，该条件在程序执行过程中可能为真（例如当currpos初始值小于maxPosition时），因此变异语句可达。  \n分析结论：变异语句可达，不满足等价变异体的不可达条件。  \n\n步骤2：必要性分析  \n说明理由：原语句为`currpos = skipDelimiters( currpos );`，变异后为`currpos = skipDelimiters( currpos++ );`。变异操作符AOIS（算术操作符插入）将currpos作为参数传递给skipDelimiters时使用了后自增操作。这会导致在调用skipDelimiters时传入的是currpos的当前值，但调用结束后currpos的值会增加1。然而，注意该赋值语句的左边也是currpos，skipDelimiters的返回值会覆盖currpos的值。因此，实际效果是：原程序使用currpos当前值调用函数，然后将返回值赋给currpos；变异体使用currpos当前值调用函数，然后将返回值赋给currpos，但同时currpos在函数调用后自增1（但立即被返回值覆盖）。具体语义：  \n- 原程序：currpos = skipDelimiters(currpos);  \n- 变异体：等效于：  \n  int temp = currpos;  \n  currpos = currpos + 1;  // 自增效果  \n  currpos = skipDelimiters(temp); // 但返回值覆盖了自增后的值  \n\n因此，变异实际上引入了额外的自增操作，但该自增结果被函数返回值覆盖，所以最终currpos的值与原始程序相同（都是skipDelimiters(temp)的返回值）。因此，变异没有改变程序状态。  \n分析结论：变异未实际改变程序状态，满足等价变异体的非必要性条件。  \n\n由于步骤2已确定变异未改变程序状态（非必要性），可直接判定为等价变异体，无需继续后续步骤。  \n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_108 的分析, 耗时: 56.0763 秒
+
+开始分析变异体 MUT_114...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_114": "步骤[可达性]：\n说明理由： 变异语句位于while循环体内，其可达性条件为currpos < maxPosition。根据提供的REACHABILITY_CONSTRAINT [currpos < maxPosition && currpos < maxPosition]，该条件简化为currpos < maxPosition，这是一个可满足的条件。只要currpos小于maxPosition，循环就会执行，变异语句就会被执行到。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原语句为currpos = scanToken(currpos)，变异语句为currpos = scanToken(~currpos)。按位取反操作~currpos会改变currpos的值（例如，如果currpos为0，~currpos为-1；如果currpos为正数，~currpos为负数），这会导致scanToken函数接收到不同的参数，从而可能返回不同的结果并赋值给currpos。因此，变异确实改变了程序状态。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos。根据DATA_DEPENDENCY提供的信息，currpos的值通过数据流传播到多个关键节点：\n1.  它直接影响while循环的条件判断 (currpos < maxPosition)。\n2.  它被用作skipDelimiters函数的参数，其结果又影响if条件 (currpos >= maxPosition) 的判断。\n3.  它最终决定了循环是否继续，从而影响count++的执行次数和最终的返回值count。\n具体路径显示，变异后的currpos值通过数据依赖链（Flows关系）最终影响了决定程序输出的关键节点（while条件、if条件、break语句、return语句）。\n分析结论： 变异影响的变量currpos通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 根据CTRL_DEPENDENCY提供的信息，变异语句（第11行）本身不受其他语句的直接控制依赖（它位于循环体内，顺序执行）。然而，它的执行受控于第8行的if条件（currpos >= maxPosition）为False的分支。更重要的是，由变异语句计算出的新currpos值，通过数据流影响了第6行的while循环条件和第8行的if条件。这些条件语句（第6行和第8行）控制着程序是否执行break（第9行）或者继续循环（影响count++，第12行），并最终控制程序流程是否到达return count（第14行）。因此，变异语句通过其产生的数据，间接但关键地影响了控制程序输出的控制流节点。\n分析结论： 变异语句通过其产生的数据间接影响了控制程序输出的控制流，存在控制依赖。\n\n步骤[状态覆盖]：\n说明理由： 基于前述分析，变异体是可达的，并且变异操作（按位取反）确实改变了程序状态（currpos的值）。这个被改变的状态通过数据依赖和控制依赖路径传播，最终影响了循环的终止条件和计数器count。例如，假设某次循环中原程序的currpos值为5（二进制00000101），则~currpos的值为-6（二进制11111010）。scanToken(5)和scanToken(-6)的返回值极大概率是不同的，这将导致后续的循环次数和count值发生变化。没有证据表明这种由按位取反引入的状态错误会在后续执行中被修正或抵消以使其最终效果与原程序相同。countTokens函数的目的是准确计数，任何对currpos的非预期修改都可能导致计数错误。\n分析结论： 变异引入的错误状态会传播并影响最终输出，不存在状态覆盖。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_114 的分析, 耗时: 73.7718 秒
+
+开始分析变异体 MUT_123...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_123": "步骤[可达性]：\n说明理由： 变异语句位于while循环条件处，路径条件为[currpos < maxPosition]。该条件在初始状态下（currpos = currentPosition）可能为真（例如当currentPosition < maxPosition时），因此变异语句可达。没有逻辑矛盾使得该路径不可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序使用\"currpos < maxPosition\"作为循环条件，变异体使用\"--currpos < maxPosition\"。在循环开始时，--currpos会先将currpos减1再比较，而原程序直接比较currpos。这会导致：\n1. 第一次循环时，变异体的currpos比原程序少1\n2. 后续循环中，currpos的值也会不同\n3. 循环次数可能发生变化（可能多循环一次或少循环一次）\n这种差异会直接影响循环的执行次数和count的最终值。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过数据依赖链传播到输出：\n1. currpos影响循环条件判断（--currpos < maxPosition）\n2. 循环条件影响循环体内的currpos赋值（skipDelimiters和scanToken）\n3. currpos的值影响count++的执行次数\n4. count作为返回值输出\n存在完整的数据依赖路径：变异点→currpos→循环条件→循环体→count→返回值。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句（循环条件）通过控制流直接影响输出语句：\n1. 循环条件控制整个循环体的执行\n2. 循环体的执行控制count++的次数\n3. count的值直接影响最终的返回值\n变异语句通过控制依赖路径影响输出语句的执行。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异引入了错误状态（currpos值的变化），但这种错误状态会直接传播到输出：\n1. currpos的初始减1操作会影响后续所有currpos相关计算\n2. 不同的currpos值会导致不同的循环次数\n3. 不同的循环次数会导致不同的count值\n4. 最终返回值count会反映这种差异\n没有证据表明错误状态在后续执行中被修正或抵消。\n分析结论： 变异引入的错误状态没有被修正或抵消，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_123 的分析, 耗时: 54.6836 秒
+
+开始分析变异体 MUT_125...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_125": "步骤[可达性]：\n说明理由：变异语句是while循环的条件判断，位于程序入口后直接可达的位置。程序没有前置条件约束（REACHABILITY_CONSTRAINT为NULL），且while循环的条件判断在每次循环迭代时都会执行，因此该变异语句是可达的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序的条件是\"while (currpos < maxPosition)\"，变异后为\"while (currpos >= maxPosition)\"。这两个条件在逻辑上是互斥的：当currpos < maxPosition时，原条件为真，变异条件为假；当currpos >= maxPosition时，原条件为假，变异条件为真。这种改变会显著影响循环的执行行为，从而改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量currpos通过数据依赖链传播到程序输出。从数据依赖路径可以看出，currpos的值直接影响while循环的条件判断，进而影响skipDelimiters和scanToken函数的调用，最终影响count变量的递增和返回值。具体路径显示currpos的值会流向输出语句return count。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句（while条件）通过控制流直接影响输出语句。控制依赖路径显示，while条件的真假结果决定了是否执行循环体内的语句（包括count++），以及是否执行break语句直接跳出循环返回count。变异改变了循环条件，从而改变了程序的控制流路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了循环的执行逻辑，但这种改变会直接影响程序的最终输出。原程序在currpos < maxPosition时执行循环体计数，而变异后在currpos >= maxPosition时执行循环体计数，这会导致完全不同的计数结果。没有证据表明变异引入的错误状态会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态不会被覆盖，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_125 的分析, 耗时: 58.4670 秒
+
+开始分析变异体 MUT_130...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_130": "步骤[可达性]：\n说明理由： 变异语句位于while循环体内，路径条件为[currpos < maxPosition && currpos < maxPosition]，这简化为[currpos < maxPosition]。这是一个可满足的条件，只要currpos小于maxPosition，变异语句就能被执行到。在程序执行过程中，当进入while循环且不满足break条件时，变异语句就会被执行。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原语句为\"currpos = scanToken( currpos );\"，变异语句为\"currpos = scanToken( currpos-- );\"。关键区别在于参数传递：原语句传递currpos的当前值，而变异语句传递currpos的当前值后立即将其减1。这会导致scanToken函数接收到的参数值不同，从而可能影响其执行结果和返回值。即使scanToken函数内部逻辑相同，由于输入参数不同，输出结果也可能不同，这会改变程序状态。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过数据依赖链传播到程序输出。具体路径包括：(1) 变异语句影响while循环条件(currpos < maxPosition)，这决定了是否继续循环；(2) 变异语句影响if条件(currpos >= maxPosition)，这决定了是否执行break；(3) 变异语句影响后续的skipDelimiters调用参数；(4) 循环次数直接影响count的值，而count是最终的返回值。数据依赖分析显示存在从变异节点到输出节点的完整数据依赖路径。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句位于while循环体内，其执行受循环条件控制，同时也通过改变currpos的值影响循环控制流。变异语句的执行会影响：(1) 是否满足break条件；(2) 是否继续下一次循环；(3) 循环的总次数。这些控制流的变化直接影响count的最终值，而count是程序的输出。控制依赖分析显示变异语句通过控制流影响输出语句。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异引入了程序状态改变（currpos的值变化），但这种改变会直接影响程序的执行流程。变异语句中currpos--的操作会导致：(1) scanToken接收不同的参数，可能返回不同的结果；(2) 后续的currpos值比原程序小1，这可能改变循环次数；(3) 可能提前或延迟满足break条件。这些变化都会影响count的最终值，而count是程序的唯一输出。没有证据表明这些状态变化会在后续执行中被修正或抵消。\n分析结论： 变异引入的错误状态没有被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_130 的分析, 耗时: 57.2204 秒
+
+开始分析变异体 MUT_143...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_143": "步骤[可达性]：  \n说明理由：变异语句位于while循环条件中（第6行），该循环的进入条件为currpos < maxPosition。由于REACHABILITY_CONSTRAINT为NULL，表明没有不可达的路径约束（如恒假条件）。程序入口到该变异语句的路径只需满足currpos初始值小于maxPosition初始值（由currentPosition和maxPosition的初始值决定），这是可满足的。例如，当currentPosition=0且maxPosition=1时，循环条件成立，变异语句可达。  \n分析结论：变异语句可达。  \n\n步骤[必要性]：  \n说明理由：原表达式为“currpos < maxPosition”，变异后为“currpos < ++maxPosition”。变异操作（AOIS）将maxPosition替换为++maxPosition（先递增再使用）。在循环条件中，每次判断时变异体都会先递增maxPosition再比较。这改变了程序状态：原程序maxPosition不变，而变异体中maxPosition每次循环递增。例如，初始currpos=0, maxPosition=2：原程序循环2次（0<2,1<2,2<2假），变异体循环次数可能改变（第一次：0<3（递增后为3），第二次：1<4，第三次：2<5，...无限循环直到currpos>=maxPosition？）。但注意，循环体内有“if (currpos >= maxPosition) break”，但maxPosition被变异不断递增，可能导致循环次数差异。因此，变异实际改变了程序状态（maxPosition的值和循环次数）。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n步骤[数据依赖]：  \n说明理由：变异影响的变量是maxPosition。数据依赖路径显示：第6行的maxPosition通过流依赖（Flows）影响自身（循环条件），但最终通过控制假边（循环退出）影响返回语句（第14行）。具体地，maxPosition的值决定循环何时退出（当currpos>=maxPosition时退出），从而影响count的值（循环次数决定count的增量）。因此，maxPosition的变化通过循环退出条件间接影响返回值count，存在数据依赖链到输出节点。  \n分析结论：变异影响的变量（maxPosition）通过数据依赖链传播到程序输出节点（count）。  \n\n步骤[控制依赖]：  \n说明理由：控制依赖路径显示：第6行的while语句控制其循环体内的所有语句（第7-12行）以及循环退出后的返回语句（第14行）。具体地，循环条件为真时执行体内语句（可能增加count或break），为假时直接退出到返回语句。变异改变了循环条件（通过改变maxPosition），从而影响循环的执行次数（控制循环体内的count++执行次数）和退出时机（控制是否执行break或直接退出）。因此，变异语句通过控制流直接影响输出语句（返回count的值）。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n步骤[状态覆盖]：  \n说明理由：基于以上分析，变异体满足可达性、必要性，且数据依赖和控制依赖路径均存在。变异导致maxPosition不断递增（而原程序maxPosition不变），这会改变循环行为：例如，原程序可能循环n次后退出（当currpos达到初始maxPosition），而变异体可能循环更多次（因为maxPosition递增，退出条件currpos>=maxPosition更难满足）或更少次（但体内有break条件？）。注意，循环体内有“if (currpos >= maxPosition) break”，但maxPosition在变异体中是动态递增的，因此break条件可能延迟满足（导致更多次循环和count增加）。例如，初始currpos=0, maxPosition=1：原程序循环1次（count=1）后退出（0<1真，执行后currpos可能>=1？假设skipDelimiters和scanToken增加currpos）；变异体：第一次循环：条件0<2（maxPosition先递增为2），执行后currpos可能为1，但1<2？继续循环？最终count值可能不同。因此，变异引入的错误状态（maxPosition改变和循环次数变化）会直接传递到输出（count值改变），不存在状态覆盖或抵消。  \n分析结论：变异引入的错误状态未被修正或抵消，程序输出可能改变。  \n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_143 的分析, 耗时: 65.0454 秒
+
+开始分析变异体 MUT_187...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_187": "步骤[可达性]：\n说明理由：变异语句位于while循环条件中，路径条件为[currpos < maxPosition]。该条件在程序执行过程中可能被满足（例如当currpos初始值小于maxPosition时），因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序条件为\"currpos < maxPosition\"，变异体为\"currpos < maxPosition++\"。变异操作将maxPosition改为maxPosition++，这会改变maxPosition的值（递增1），并且改变了循环条件的判断逻辑。在循环执行过程中，maxPosition的递增会影响循环的终止条件和后续比较，从而改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量maxPosition通过数据依赖链传播到程序输出。maxPosition在循环条件中被使用，影响循环的执行次数，进而影响count的值。具体路径：变异语句(line 6) → 循环条件判断 → 影响循环体执行 → 影响count++执行次数 → 最终影响返回值count。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句。while循环条件控制着整个循环体的执行，包括count++语句的执行次数，而count的值直接决定了最终的返回值。控制依赖路径明确：变异语句(line 6) → 控制循环体执行 → 影响count值 → 影响返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了maxPosition的值（递增1），但这种改变会持续影响后续的循环条件判断。maxPosition的递增会导致循环提前终止（因为maxPosition变大，currpos更容易达到或超过maxPosition），从而减少count++的执行次数，最终导致返回值count变小。这种状态改变不会被后续执行修正或抵消，而是会直接影响最终的输出结果。\n分析结论：变异引入的错误状态不会被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_187 的分析, 耗时: 56.5657 秒
+
+开始分析变异体 MUT_195...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_195": "步骤1：可达性\n说明理由：变异语句位于while循环体内，循环条件为currpos < maxPosition。该条件在初始时currpos = currentPosition，且currentPosition和maxPosition是类字段，其值取决于具体对象状态。没有提供REACHABILITY_CONSTRAINT信息，表明没有逻辑上不可满足的路径条件。因此，存在输入使得currpos < maxPosition为真，从而执行循环体内的变异语句。\n分析结论：变异语句可达。\n\n步骤2：必要性\n说明理由：原程序执行\"currpos = skipDelimiters(currpos);\"，该语句会更新currpos的值（跳过分隔符）。变异体删除了这条语句，意味着currpos不会被skipDelimiters函数更新。在循环执行过程中，这会显著改变程序状态：原程序会跳过分隔符后扫描token，而变异体直接在当前位置扫描token，可能导致扫描到分隔符或错误位置。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤3：数据依赖\n说明理由：变异影响的变量currpos通过数据依赖链传播到输出：1) currpos用于while循环条件判断(currpos < maxPosition)；2) currpos用于if条件判断(currpos >= maxPosition)；3) currpos作为scanToken的参数；4) 循环条件直接影响count++的执行次数，而count是最终的返回值。因此，currpos的值变化会直接影响循环次数和最终的count值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤4：控制依赖\n说明理由：变异语句位于while循环体内，该循环控制着整个token计数过程。删除skipDelimiters调用会改变currpos的值，进而影响：1) while循环的继续或退出；2) if (currpos >= maxPosition)条件的判断结果；3) 后续scanToken的调用位置。这些控制流变化会直接影响break语句的执行和循环次数，最终影响count的值和程序输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤5：状态覆盖\n说明理由：基于前述分析，变异体删除了skipDelimiters调用，这会导致：1) 可能扫描到本应跳过的分隔符作为token；2) 扫描token的起始位置错误；3) 循环终止条件判断基于错误的位置。这些状态改变不会被后续执行修正或抵消，而是会累积影响最终的token计数结果count。没有机制能够补偿缺失的skipDelimiters功能。\n分析结论：变异引入的错误状态不会被修正或抵消，会直接影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_195 的分析, 耗时: 61.5302 秒
+
+开始分析变异体 MUT_204...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_204": "步骤[可达性]：\n说明理由：根据提供的REACHABILITY_CONSTRAINT '[currpos < maxPosition && currpos < maxPosition]'，该约束条件表示需要同时满足currpos < maxPosition和currpos < maxPosition，这实际上就是currpos < maxPosition。这是一个可满足的条件，因为只要当前指针位置小于最大位置，变异语句所在的循环体就会被执行。因此，变异语句\"count--;\"是可达的。\n分析结论：变异语句可达\n\n步骤[必要性]：\n说明理由：原程序语句为\"count++;\"，变异体语句为\"count--;\"。在变异语句可达的情况下，这两个操作对变量count的影响是完全相反的：一个增加1，一个减少1。无论在任何路径约束下，这两个操作都会产生不同的程序状态。即使循环只执行一次，原程序会使count从0变为1，而变异体会使count从0变为-1，程序状态明显改变。\n分析结论：变异实际改变了程序状态，满足必要性\n\n步骤[数据依赖]：\n说明理由：根据DATA_DEPENDENCY信息，变异影响的变量count有明确的数据依赖路径：\"(line 12: count--) --[Flows count]--> (line 14: return count)\"。这意味着变异语句修改的count值直接流向返回语句，变异引入的状态改变可以通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖，变异效果可以传播到输出\n\n步骤[控制依赖]：\n说明理由：根据CTRL_DEPENDENCY信息，变异语句\"count--;\"位于while循环体内，控制依赖路径显示它依赖于\"(6: while (currpos < maxPosition)) --True--> (8: if (currpos >= maxPosition)) --False-->\"的条件。虽然变异语句本身不直接控制输出语句，但输出语句返回的count值直接受到变异语句的影响，且变异语句的执行受到控制流的约束。\n分析结论：变异语句通过控制流影响程序执行，进而影响输出\n\n步骤[状态覆盖]：\n说明理由：基于以上分析，变异体满足可达性、必要性、数据依赖和控制依赖条件。变异语句\"count--;\"与原程序\"count++;\"对count变量的影响是相反的，且这种影响直接传递到最终的返回值。在循环执行n次的情况下，原程序返回n，变异体返回-n，两者的输出完全不同。没有发现任何执行路径或条件能够抵消或修正这种差异。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消，程序最终输出会受到影响\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_204 的分析, 耗时: 41.3295 秒
+
+开始分析变异体 MUT_205...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_205": "步骤[可达性]：\n说明理由：变异语句位于第5行\"int currpos = -currentPosition;\"，该语句是初始化赋值语句，位于方法入口处，无条件执行。程序控制流从方法入口开始顺序执行，必然经过该语句。REACHABILITY_CONSTRAINT为'NULL'，表示没有不可达的路径约束条件。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句为\"int currpos = currentPosition;\"，变异体为\"int currpos = -currentPosition;\"。该变异将currpos的初始值从currentPosition改为其负值。除非currentPosition恒为0（此时两者等价），否则当currentPosition ≠ 0时，currpos的初始值会发生改变，从而影响后续程序状态。由于currentPosition是实例变量，其值取决于对象状态，不能假设恒为0。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量currpos通过数据依赖链传播到程序输出。从数据依赖路径可以看出：1) currpos用于while循环条件判断(currpos < maxPosition)；2) currpos作为参数传递给skipDelimiters和scanToken方法；3) 循环条件直接影响count++的执行次数；4) 最终返回值count的值完全取决于循环执行的次数。因此，currpos的初始值改变会通过数据依赖影响最终的count返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句到输出语句存在控制依赖路径。变异语句\"int currpos = -currentPosition;\"控制着while循环的条件(currpos < maxPosition)，而while循环控制着整个计数逻辑的执行。具体来说：1) 如果currpos初始值使得循环条件为假，则直接返回count=0；2) 如果循环条件为真，则进入循环体，currpos的值会影响skipDelimiters和scanToken的调用结果，进而影响循环的继续执行和count的递增。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了currpos的初始值，但这种改变不会被后续执行\"修正或抵消\"。skipDelimiters和scanToken方法的行为取决于传入的currpos值，不同的初始currpos值会导致：1) 循环执行次数可能不同；2) count的最终值可能不同。例如，如果currentPosition为正数，变异后currpos为负数，可能直接导致循环条件不满足而提前退出，返回count=0；而原程序可能进入循环进行计数。没有证据表明这种状态改变会在后续执行中被抵消。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_205 的分析, 耗时: 69.5541 秒
+
+开始分析变异体 MUT_236...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_236": "步骤[可达性]：\n说明理由：变异语句位于while循环条件处，路径条件为[currpos < maxPosition]。该条件在程序执行过程中可能为真（进入循环体）或假（跳过循环），但两种情况下路径条件都是可满足的。例如，当currpos初始值小于maxPosition时，条件为真，循环体被执行；否则条件为假，直接返回count=0。因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原表达式为\"currpos < maxPosition\"，变异表达式为\"~currpos < maxPosition\"。按位取反操作符\"~\"会改变currpos的二进制表示，从而可能改变比较结果。例如，当currpos=0（二进制000...0）时，~currpos=-1（二进制111...1），此时原表达式0<maxPosition可能为真，而变异表达式-1<maxPosition也为真；但当currpos=-1时，原表达式-1<maxPosition可能为真，而变异表达式~(-1)=0<maxPosition也为真。然而，存在边界情况：当currpos=Integer.MIN_VALUE时，~currpos=Integer.MAX_VALUE，如果maxPosition>Integer.MAX_VALUE（实际上不可能，因为maxPosition是int类型），但更实际的情况是，对于某些currpos值，取反操作会改变比较结果。例如，假设currpos=1，maxPosition=2：原表达式1<2为true，变异表达式~1=-2<2也为true；但假设currpos=-3，maxPosition=-2：原表达式-3<-2为true，变异表达式~(-3)=2<-2为false。因此，变异确实可能改变循环条件的结果，从而改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是currpos。数据依赖路径显示，currpos的值通过以下路径影响输出：1) 循环条件判断直接影响是否进入循环；2) 在循环体内，currpos被赋值并用于后续判断；3) 最终返回值count依赖于循环执行次数，而循环执行次数受currpos值影响。具体来说，变异改变了循环条件判断，可能改变循环执行次数，从而改变count值，而count是最终的返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：控制依赖路径显示，while循环条件（变异点）直接控制循环体的执行：条件为真时执行循环体（包括count++），条件为假时跳过循环直接返回。因此，变异语句通过控制流直接影响输出语句（return count）的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异可能改变循环条件的结果，但分析表明这种改变会直接影响循环执行次数，从而改变count的最终值。例如，当变异使循环条件从真变为假时，循环提前结束，count值减小；当变异使循环条件从假变为真时，循环额外执行，count值增加。不存在后续执行修正或抵消这种改变的情况，因为count是累积值，其变化是永久的。\n分析结论：变异引入的错误状态不会被修正或抵消，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_236 的分析, 耗时: 67.7943 秒
+
+开始分析变异体 MUT_246...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_246": "步骤[可达性]：\n说明理由： 变异语句位于while循环条件中，路径条件为currpos < maxPosition。该条件在初始状态下currpos = currentPosition，只要currentPosition < maxPosition（即存在未处理的token），该条件即可满足。REACHABILITY_CONSTRAINT为NULL，表示没有不可达的约束条件。因此，变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"while (currpos < maxPosition)\"，变异体为\"while (++currpos < maxPosition)\"。变异在每次循环开始时先对currpos进行自增操作，然后比较。这改变了currpos的值和循环条件判断的语义。例如，当currpos初始值为0，maxPosition为1时：原程序会进入循环体，而变异体先自增currpos为1，然后判断1<1为false，直接跳过循环。这会导致程序状态（count值）不同。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过数据依赖链传播到输出。数据依赖路径显示：变异后的currpos值会影响skipDelimiters和scanToken的调用参数，进而影响后续的currpos值，最终影响循环条件和count++的执行次数。count作为返回值直接输出，因此变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论： 存在数据依赖条件，变异效果可以传播到输出。\n\n步骤[控制依赖]：\n说明理由： 变异语句位于循环条件位置，控制着整个循环体的执行。控制依赖路径显示：循环条件控制着第7-12行语句的执行，包括count++语句。count值直接影响最终的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论： 存在控制依赖条件，变异效果可以传递到输出。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了循环的执行行为，但这种改变没有被后续执行修正或抵消。变异导致循环次数可能减少（因为提前自增currpos），从而count值可能不同。例如当currentPosition = 0，maxPosition = 1时：原程序count=1，变异体count=0。这种差异会直接反映在最终返回值上，不会被覆盖。\n分析结论： 变异引入的错误状态没有被修正或抵消，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_246 的分析, 耗时: 53.3202 秒
+
+开始分析变异体 MUT_256...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_256": "步骤[可达性]：\n说明理由： 变异语句是return ~count;，位于方法末尾的返回语句。该语句位于while循环之后，只要程序正常执行到方法结束，该语句必然会被执行。没有提供任何路径约束（REACHABILITY_CONSTRAINT为NULL），表明没有逻辑上不可达的条件限制。程序的控制流简单直接，从方法入口到return语句的路径总是可达的。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序返回的是变量count的值，而变异体返回的是~count（按位取反）。对于任意整数count，~count与count的值只有在count为-1时相等（~(-1) = 0，但-1 != 0，实际上对于所有整数n，~n != n）。数学上可以证明：假设~n = n，则~~n = ~n ⇒ n = ~n，这要求n的所有二进制位取反后等于自身，这是不可能的。因此，对于所有可能的count值（包括0、正整数和循环中递增后的值），return count;和return ~count;的返回值绝对不同。\n分析结论： 变异实际改变了程序语义，程序状态必然改变，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 数据依赖分析显示，变量count有明确的数据流路径到达返回语句：count在初始化（int count = 0）和自增（count++）后，其值直接用于return ~count;。变异影响的变量count通过数据依赖链直接传播到程序输出节点（返回语句）。虽然返回的是~count而不是count本身，但这正是变异引入的改变，数据依赖链完整存在。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点，数据依赖存在。\n\n步骤[控制依赖]：\n说明理由： 控制依赖分析显示，返回语句(13: return ~count;)本身是变异点。这是一个简单的返回语句，不依赖于其他控制条件（它不在任何if、while等控制结构内）。变异直接修改了这条语句的返回值表达式。因此，变异语句（即修改后的返回语句）本身就是输出节点，它不需要通过控制流影响其他语句来改变输出。\n分析结论： 变异语句直接就是输出语句，控制依赖关系直接且明确。\n\n步骤[状态覆盖]：\n说明理由： 基于前述分析，变异体满足可达性、必要性，并且数据依赖与控制依赖路径均存在。变异将返回值从count改为~count，这是一个根本性的改变，对于所有可能的输入和程序执行路径，只要count的值被确定，~count就是一个不同的值（如前所述，~count != count 恒成立）。没有任何执行路径能修正或抵消这个改变，程序的最终输出（返回值）必然与原程序不同。\n分析结论： 变异引入的错误状态无法被修正或抵消，始终影响输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_256 的分析, 耗时: 48.1775 秒
+
+开始分析变异体 MUT_263...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_263": "步骤[可达性]：\n说明理由：变异语句位于while循环体内，其可达性条件为循环条件currpos < maxPosition。根据提供的REACHABILITY_CONSTRAINT '[currpos < maxPosition]'，这是一个可满足的条件，意味着存在输入使得currpos < maxPosition为真，从而执行到变异语句。没有证据表明该路径条件组合逻辑上不可满足。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句为\"currpos = skipDelimiters( currpos );\"，变异体为\"currpos = skipDelimiters( currpos-- );\"。在变异体中，currpos--使用了后置递减操作符，这意味着在调用skipDelimiters函数时传入的是currpos的当前值，但调用完成后currpos的值会减1。这与原程序直接传入currpos值有明显不同，会改变程序状态（currpos的值会额外减1）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量currpos通过多条数据依赖路径传播到输出节点。具体来说：1) 变异后的currpos值直接影响第8行的条件判断if (currpos >= maxPosition)，进而影响是否执行break语句；2) currpos值传递到第11行的scanToken调用，影响后续的循环条件判断；3) 在循环迭代中，currpos的值通过数据依赖链影响后续的skipDelimiters调用。所有这些路径最终都会影响count变量的值和最终的return count语句。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句。变异后的currpos值直接影响第8行的条件判断if (currpos >= maxPosition)，这个条件判断控制着是否执行break语句（直接退出循环返回count）还是继续执行后续的scanToken和count++操作。因此，变异语句通过控制依赖路径影响程序的输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异引入了程序状态改变（currpos额外减1），但这种改变会直接影响后续的程序执行路径：1) 可能导致提前满足currpos >= maxPosition条件而退出循环；2) 可能改变scanToken函数的处理位置；3) 可能影响循环的迭代次数。所有这些都会直接影响count的最终值，从而影响程序输出。没有证据表明这种状态改变会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_263 的分析, 耗时: 61.8125 秒
+
+开始分析变异体 MUT_318...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_318": "步骤[可达性]：\n说明理由： 变异语句是while循环的条件判断，从程序入口到该语句的路径没有前置条件约束（REACHABILITY_CONSTRAINT为NULL）。初始时currpos被赋值为currentPosition，这是一个有效的整数值，因此变异语句while (!(currpos < maxPosition))是可执行的。没有逻辑上不可满足的条件阻止该语句的执行。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序条件为while (currpos < maxPosition)，变异体条件为while (!(currpos < maxPosition))，即while (currpos >= maxPosition)。这两个条件在逻辑上是互斥的：原条件为真时变异条件为假，原条件为假时变异条件为真。这种改变会显著影响程序的控制流，导致循环执行行为完全不同。原程序在currpos < maxPosition时执行循环体，而变异体在currpos >= maxPosition时执行循环体。\n分析结论： 变异实际改变了程序语义，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos。数据依赖分析显示，currpos的值通过以下路径传播：在循环条件判断中使用，在skipDelimiters和scanToken函数调用中作为参数和返回值，这些操作都会影响currpos的值。最终，循环的执行直接影响count变量的值（通过count++语句），而count作为返回值输出。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论： 存在数据依赖条件，变异效果可以传播到输出。\n\n步骤[控制依赖]：\n说明理由： 变异语句（循环条件）控制着整个循环体的执行。控制依赖分析显示：当变异条件为真时，执行循环体内的语句（包括skipDelimiters、条件判断、break、scanToken和count++）；当变异条件为假时，跳过循环体直接执行return count。循环体的执行直接影响count的值，而count是最终的输出。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论： 存在控制依赖，变异效果可以通过控制流影响输出。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异体改变了循环的执行条件，但这种改变不会被后续执行修正或抵消。原程序在currpos < maxPosition时执行循环计数，而变异体在currpos >= maxPosition时执行循环计数，这两种情况下的循环执行行为完全相反，会导致count的最终值完全不同。例如，当currpos初始值小于maxPosition时，原程序会执行循环进行计数，而变异体会直接跳过循环返回0；当currpos初始值大于等于maxPosition时，原程序直接返回0，而变异体会执行循环（可能多次）进行计数。\n分析结论： 变异引入的错误状态不会被覆盖或抵消，会直接影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_318 的分析, 耗时: 59.4445 秒
+
+开始分析变异体 MUT_338...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_338": "步骤[可达性]：\n说明理由：原程序中的while循环条件为\"currpos < maxPosition\"，变异体将其改为\"currpos > maxPosition\"。从程序入口到该变异语句的路径条件组合为：currpos = currentPosition（初始值），没有额外的约束条件。由于REACHABILITY_CONSTRAINT为'NULL'，表示没有逻辑上不可满足的路径条件。因此，该变异语句是可达的，存在输入使得currpos > maxPosition为真（例如当currentPosition > maxPosition时）。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序的条件是\"currpos < maxPosition\"，变异体改为\"currpos > maxPosition\"。这两个条件在不同的输入情况下会产生不同的结果：当currpos < maxPosition时，原条件为真，变异条件为假；当currpos > maxPosition时，原条件为假，变异条件为真；当currpos == maxPosition时，原条件为假，变异条件也为假。因此，在currpos != maxPosition的情况下，变异确实改变了程序的控制流，影响了循环是否执行。\n分析结论：变异实际改变了程序状态。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是currpos。从提供的数据依赖路径可以看出，currpos的值通过以下方式影响输出：1) 在循环条件中决定是否进入循环；2) 在skipDelimiters和scanToken操作中被使用和修改；3) 通过count++影响最终的返回值count。具体来说，currpos的值变化会影响循环执行的次数，从而影响count的值，而count是最终的返回值。因此，变异影响的变量通过数据依赖链传播到了程序输出节点。\n分析结论：存在数据依赖链连接到输出节点。\n\n步骤[控制依赖]：\n说明理由：从控制依赖路径信息可以看出，while循环条件（变异点）直接控制着整个循环体的执行：当条件为真时，执行循环体内的语句（包括可能修改count的语句）；当条件为假时，跳过循环直接返回count。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了循环条件，但分析显示这种改变会直接影响程序的执行路径和最终输出。当currpos < maxPosition时，原程序会进入循环执行计数操作，而变异体不会进入循环，直接返回count=0；当currpos > maxPosition时，原程序不会进入循环，直接返回count=0，而变异体会进入循环执行计数操作。因此，对于相同的输入，原程序和变异体可能产生不同的输出结果（count值不同），不存在状态被修正或抵消的情况。\n分析结论：变异引入的错误状态没有被修正或抵消，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_338 的分析, 耗时: 60.9334 秒
+
+开始分析变异体 MUT_349...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_349": "步骤[可达性]：\n说明理由：变异语句是while循环的条件判断，其路径条件组合为[currpos <= maxPosition]。该条件在程序执行过程中可能被满足，例如当currpos初始值小于或等于maxPosition时，循环条件成立，变异语句可达。没有逻辑矛盾表明该条件恒为假。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序条件为\"currpos < maxPosition\"，变异体条件为\"currpos <= maxPosition\"。当currpos等于maxPosition时，原条件为false，变异条件为true，这会改变循环的执行次数。具体来说，当currpos == maxPosition时，变异体会多执行一次循环体，这会改变程序状态（count值和currpos值）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量currpos通过数据依赖链传播到程序输出。在循环体中，currpos的值被用于条件判断（第8行）和赋值操作（第7、11行），而count变量的值直接依赖于循环次数，最终return count返回count值。变异改变了循环条件，直接影响循环次数，从而影响count值，最终影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句（while条件）控制着整个循环体的执行。循环体中的语句（包括count++和return语句）都控制依赖于这个while条件。变异改变了循环条件，直接控制了循环体的执行次数，从而影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了循环执行次数，但在某些情况下，额外的循环执行可能不会改变最终输出。例如，当currpos == maxPosition时，变异体会多执行一次循环，但在这次循环中，skipDelimiters可能不会改变currpos的值，或者scanToken可能不会产生有意义的token，导致count不会增加。然而，这种覆盖不是绝对的，取决于skipDelimiters和scanToken的具体实现。在没有这些方法的具体信息的情况下，不能确定错误状态一定会被覆盖。\n分析结论：不能确定变异引入的错误状态一定被覆盖。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_349 的分析, 耗时: 68.4405 秒
+
+开始分析变异体 MUT_357...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_357": "步骤[可达性]：\n说明理由： 变异语句位于while循环内部，其可达性条件为循环条件(currpos < maxPosition)为真。根据提供的REACHABILITY_CONSTRAINT [currpos < maxPosition]，该条件是可满足的，因为只要currpos小于maxPosition，循环就会执行，变异语句就会被执行到。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原表达式为\"if (currpos >= maxPosition)\"，变异表达式为\"if (currpos >= --maxPosition)\"。变异操作(--maxPosition)会先递减maxPosition的值，然后使用递减后的值进行比较。在循环执行过程中，maxPosition的值会因变异而改变，这会影响条件判断的结果。例如，当currpos == maxPosition-1时，原条件为false，但变异后由于maxPosition被递减，条件可能变为true，从而改变程序的控制流。\n分析结论： 变异确实改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量maxPosition通过数据依赖链传播到程序输出。具体路径包括：1) 变异语句影响while循环条件(currpos < maxPosition)，进而影响循环是否继续执行；2) 变异语句直接影响break语句的执行，从而影响最终的count值；3) maxPosition的值变化会影响scanToken和skipDelimiters等函数的执行（虽然这些函数的具体实现未知，但它们的参数currpos和maxPosition的值变化会影响其行为）。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句通过控制流直接影响输出语句。变异语句的条件判断结果决定是否执行break语句：如果条件为真，则执行break跳出循环，直接返回当前的count值；如果条件为假，则继续执行后续的scanToken和count++操作，最终返回的count值会增加。因此，变异语句的控制流变化会直接影响最终的输出值count。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异引入了状态改变（递减maxPosition），并且这种改变通过数据依赖和控制依赖传播到了输出，但在某些情况下，这种状态改变可能被后续操作\"覆盖\"或\"抵消\"。例如，如果maxPosition的递减导致循环提前终止，那么返回的count值会减少；但同时，由于maxPosition被递减，后续的循环条件判断和条件检查都会基于新的maxPosition值，这种变化是累积的，不会被后续操作简单地\"修正\"。实际上，变异会改变整个循环的执行次数，从而直接影响最终的count返回值。\n分析结论： 变异引入的错误状态不会被后续执行修正或抵消，会直接影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_357 的分析, 耗时: 56.2727 秒
+
+开始分析变异体 MUT_358...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_358": "步骤[可达性]：\n说明理由： 变异语句位于while循环内部，其可达性条件为currpos < maxPosition。该条件在程序执行过程中可能为真（例如当currentPosition初始值小于maxPosition时），因此路径条件是可满足的。没有逻辑矛盾（如a>0 && a<0）使得该路径不可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序使用currpos作为参数调用skipDelimiters，而变异体使用~currpos（按位取反）作为参数。对于大多数整数值，currpos和~currpos的值是不同的（除非currpos是全1或全0的特殊值）。skipDelimiters函数的行为可能依赖于其输入参数，因此不同的参数值可能导致不同的返回值，从而改变程序状态。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过多条数据依赖路径传播到输出：\n1. 变异后的currpos值直接影响if (currpos >= maxPosition)的判断，可能导致提前break退出循环\n2. currpos值直接影响scanToken函数的调用参数，影响其返回值\n3. currpos值直接影响while循环条件的判断，影响循环次数\n4. 循环次数直接影响count++的执行次数，而count是最终的返回值\n因此，变异引入的状态改变可以通过数据依赖链传播到程序输出节点。\n分析结论： 存在数据依赖，变异效果可能传播到输出。\n\n步骤[控制依赖]：\n说明理由： 变异语句位于while循环体内，其执行受循环条件控制。变异通过改变currpos的值，间接影响：\n1. if (currpos >= maxPosition)的条件判断，可能导致提前break\n2. while (currpos < maxPosition)的循环条件判断\n这些控制流改变直接影响count++的执行次数，从而影响最终的返回值count。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异引入了状态改变（使用~currpos而不是currpos），但skipDelimiters和scanToken函数的具体行为未知。如果这些函数对输入参数的处理方式使得~currpos和currpos产生相同的效果（例如，函数内部有某种规范化处理，或者函数行为与参数值的特定模式无关），那么变异可能不会影响最终结果。然而，在没有函数具体实现信息的情况下，不能假设这种覆盖会发生。一般来说，按位取反操作会显著改变数值，因此可能影响函数行为。\n分析结论： 没有证据表明变异引入的错误状态会被后续执行修正或抵消。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_358 的分析, 耗时: 62.7492 秒
+
+开始分析变异体 MUT_362...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_362": "步骤[可达性]：\n说明理由： 变异语句是return 0;，位于方法末尾。该语句在每次方法调用时都会被执行，因为它是方法的返回语句，没有前置条件约束。REACHABILITY_CONSTRAINT为'NULL'，表示没有不可达的路径条件。因此，变异语句总是可达的。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序返回变量count的值，而变异体返回常量0。count的值在循环中被递增（count++），其最终值取决于循环执行的次数（即token的数量）。对于任何输入，只要循环至少执行一次（count > 0），原程序返回count（一个正数），而变异体返回0。这两个返回值在数值上不同，因此程序状态（返回值）被改变。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是count。数据依赖路径显示，count的定义（int count = 0）和修改（count++）确实流向变异点（return 0;）。然而，变异体直接返回0，而不是count的值。这意味着变异体切断了count到返回值的数据依赖链。虽然数据依赖路径在源代码级别存在，但变异操作（返回0）使得count的最终值不再影响输出。从语义上看，变异体忽略了count的所有计算，直接返回固定值0。\n分析结论： 变异影响的变量count虽然理论上存在数据依赖路径，但变异操作使其无法传播到程序输出（因为返回的是常量0而不是count），因此存在数据依赖缺失。根据规则，这属于等价变异体。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_362 的分析, 耗时: 38.4949 秒
+
+开始分析变异体 MUT_372...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_372": "步骤[可达性]：\n说明理由： 变异体信息显示REACHABILITY_CONSTRAINT为'NULL'，表示没有特定的可达性约束条件。原程序中的while循环条件为\"currpos < maxPosition\"，这是一个常见的循环条件，没有逻辑矛盾。只要currentPosition和maxPosition是有效的整数值，且currentPosition小于maxPosition，循环体就可以被执行。因此，变异语句（整个while循环体）是可达的。\n分析结论： 变异语句可达\n\n步骤[必要性]：\n说明理由： 原程序中的while循环体包含多个语句：跳过分隔符、检查是否超出边界、扫描token并增加计数。变异体使用WLDL（While Loop Deletion）操作符删除了整个while循环体。这意味着在变异体中，当currpos < maxPosition时，原本应该执行的循环体代码（包括count++操作）完全不会执行。这与原程序的行为有本质区别：原程序会遍历所有token并计数，而变异体直接跳过循环，导致count保持初始值0。这种变异明显改变了程序语义。\n分析结论： 变异实际改变了程序状态\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是count和currpos。count的数据依赖路径显示从第4行的初始化到第6行的返回语句存在数据流。由于变异删除了整个while循环，count变量永远不会被递增（count++语句被删除），因此返回的count值始终为0，而不是实际的token数量。这种改变通过数据依赖链直接传播到程序输出。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点\n\n步骤[控制依赖]：\n说明理由： 控制依赖信息显示方法入口到返回语句存在控制依赖路径。虽然具体的控制依赖细节不够详细，但可以确定的是，while循环体的执行与否直接影响最终的count值。删除循环体会改变程序的控制流，导致不同的执行路径和输出结果。\n分析结论： 变异语句通过控制流影响输出语句\n\n步骤[状态覆盖]：\n说明理由： 基于以上分析，变异引入了明显的错误状态（count始终为0而不是实际token数量），且这种错误状态没有被后续执行修正或抵消。没有任何机制能够恢复被删除的循环体功能，因此程序最终输出肯定会受到影响。\n分析结论： 变异引入的错误状态没有被修正或抵消\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_372 的分析, 耗时: 40.7646 秒
+
+开始分析变异体 MUT_407...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_407": "步骤[可达性]：\n说明理由： 原程序中的while循环条件为\"currpos < maxPosition\"，变异体将其改为\"while (true)\"。该变异语句位于循环条件位置，是程序执行流的关键控制点。从程序入口到该变异语句的路径条件组合为空（REACHABILITY_CONSTRAINT为NULL），意味着没有任何前置条件限制该语句的可达性。实际上，程序执行必然会进入循环，因此该变异语句是可达的。\n分析结论： 变异语句可达\n\n步骤[必要性]：\n说明理由： 原程序使用\"currpos < maxPosition\"作为循环条件，当currpos达到或超过maxPosition时循环终止。变异体改为\"while (true)\"，这是一个无限循环条件。在程序执行过程中，这种改变会显著影响程序的控制流行为：原程序会在特定条件下正常终止循环，而变异体则创建了一个潜在的无限循环，除非通过break语句退出。这种改变确实会改变程序的状态和行为。\n分析结论： 变异实际改变了程序语义，满足必要性\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos。数据依赖分析显示，currpos的值通过skipDelimiters和scanToken方法的调用被修改，并用于条件判断\"if (currpos >= maxPosition)\"。当条件满足时，会执行break语句退出循环，最终返回count值。虽然count是返回值，但循环的终止条件直接依赖于currpos的值，而currpos的值又受到循环条件变异的影响。变异创建的无限循环条件会改变currpos的更新频率和最终值，从而影响count的最终结果。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点\n\n步骤[控制依赖]：\n说明理由： 变异语句\"while (true)\"是循环的控制条件，它直接控制了循环体的执行。控制依赖分析显示，循环体内的所有语句（包括currpos的赋值、条件判断、break语句、count++等）都控制依赖于这个循环条件。由于变异将有限循环改为无限循环，这会改变程序的控制流路径：原程序会在currpos >= maxPosition时正常退出循环，而变异体只能通过break语句强制退出。这种控制流的改变会直接影响程序输出的count值。\n分析结论： 变异语句通过控制流影响输出语句\n\n步骤[状态覆盖]：\n说明理由： 虽然变异体中的break语句仍然存在，可以在currpos >= maxPosition时退出循环，但变异创建的无限循环条件改变了程序的语义。在原程序中，循环会在条件不满足时自然终止，而在变异体中，循环必须通过break语句强制退出。这种改变可能导致不同的执行路径：例如，如果skipDelimiters或scanToken方法有副作用，或者如果存在异常情况，无限循环可能导致程序无法正常终止。没有证据表明变异引入的错误状态会在后续执行中被修正或抵消。\n分析结论： 变异引入的错误状态不会被覆盖，会影响程序输出\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_407 的分析, 耗时: 63.2152 秒
+
+开始分析变异体 MUT_418...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_418": "步骤[可达性]：\n说明理由： 变异语句位于while循环体内，其可达性条件为currpos < maxPosition。根据提供的REACHABILITY_CONSTRAINT [currpos < maxPosition && currpos < maxPosition]，该条件简化为currpos < maxPosition，这是一个可满足的条件。只要currpos小于maxPosition，循环就会执行，变异语句就会被执行到。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原语句为`currpos = scanToken( currpos );`，变异语句为`currpos = scanToken( ++currpos );`。在变异语句中，`++currpos`是前缀自增操作，它会先将currpos的值加1，然后将这个新值作为参数传递给scanToken函数。这与原语句直接将currpos的值传递给scanToken函数有本质区别。在可达路径上（currpos < maxPosition），这个自增操作会改变currpos的值（使其增加1），从而改变程序状态。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos。根据提供的数据依赖路径，currpos的值通过多条路径流向程序输出：\n1. 它直接影响while循环的条件`currpos < maxPosition`，从而控制循环是否继续执行。\n2. 它被传递给`skipDelimiters`函数，其结果用于判断`if (currpos >= maxPosition)`，这个条件控制着是否执行break语句提前退出循环。\n3. 它被传递给`scanToken`函数，其返回值被赋回给currpos，形成循环。\n4. 循环的迭代次数直接决定了count++的执行次数，而count是最终的返回值。\n因此，currpos的值通过数据依赖链（定义-使用链）直接影响最终的输出count。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句`currpos = scanToken( ++currpos );`本身不是一个控制语句（如if、while），而是一个赋值语句。它并不直接控制其他语句的执行。程序的输出语句`return count;`的控制依赖于while循环的条件`currpos < maxPosition`和if条件`currpos >= maxPosition`。虽然变异语句通过改变currpos的值间接影响了这些控制条件，但根据控制依赖的定义（一个语句的执行与否依赖于另一个语句的判定结果），变异语句本身并不控制输出语句的执行。输出语句的控制依赖父节点是while语句和if语句。\n分析结论： 从变异语句到输出语句没有直接的控制依赖边。变异效果是通过数据依赖（改变变量值）间接影响程序输出，而不是通过控制流直接影响输出语句的执行。\n\n步骤[状态覆盖]：\n说明理由： 基于前述分析，变异体是可达的，并且确实改变了程序状态（currpos的值）。这个改变的状态（currpos增加了1）通过数据依赖链传播，影响了循环的终止条件和count的最终值。例如，假设某次循环原程序执行`currpos = scanToken( currpos );`后currpos变为X，而变异体执行`currpos = scanToken( ++currpos );`后currpos变为Y（Y很可能不等于X+1，因为scanToken函数的行为未知，但肯定不等于原程序执行后的X）。这个不同的currpos值会导致后续的`skipDelimiters`调用、循环条件判断、以及下一次`scanToken`调用都可能产生不同的结果，最终可能导致循环次数count发生变化。没有证据表明这种状态改变会在后续执行中被修正或抵消以使其最终输出与原程序相同。scanToken和skipDelimiters函数的具体实现未知，无法假设它们会“修复”这个变异引入的改变。\n分析结论： 变异引入的错误状态没有被修正或抵消，它会影响程序的最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_418 的分析, 耗时: 77.5522 秒
+
+开始分析变异体 MUT_424...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_424": "步骤[可达性]：\n说明理由： 变异语句位于while循环内部，其可达性约束为[currpos < maxPosition]。该条件表示当前currpos小于maxPosition时循环继续执行，因此变异语句可达。路径条件组合是可满足的，因为只要currpos小于maxPosition，循环就会执行到第8行的条件判断语句。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原条件为\"currpos >= maxPosition\"，变异后为\"currpos != maxPosition\"。在循环条件currpos < maxPosition的约束下，这两个条件并不等价。具体来说，当currpos < maxPosition时，原条件(currpos >= maxPosition)为假，而变异条件(currpos != maxPosition)为真（因为currpos < maxPosition意味着currpos ≠ maxPosition）。这会导致程序行为的不同：原程序只有在currpos ≥ maxPosition时才执行break，而变异体在currpos ≠ maxPosition时就执行break。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过数据依赖链传播到程序输出。具体路径包括：1) 当条件为真时，执行break语句，直接影响循环退出和最终的count返回值；2) 当条件为假时，currpos的值会影响后续的scanToken调用和循环条件判断，最终影响count的递增和返回值。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句通过控制流直接影响输出语句。变异条件判断的结果决定了是否执行break语句（直接影响循环退出），或者是否继续执行count++语句（影响最终的count值）。输出语句return count的控制依赖于这个条件判断的结果。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异引入了不同的程序行为，但这种差异会直接影响到最终的输出结果count。当currpos < maxPosition时，原程序不会执行break（因为currpos >= maxPosition为假），而变异体会执行break（因为currpos != maxPosition为真），这会导致循环提前终止，count值减少，从而改变最终的输出结果。没有证据表明这种状态改变会在后续执行中被修正或抵消。\n分析结论： 变异引入的错误状态不会被后续执行修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_424 的分析, 耗时: 67.3027 秒
+
+开始分析变异体 MUT_426...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_426": "步骤[可达性]：  \n说明理由：变异语句位于while循环条件处（第6行），其执行依赖于程序输入（currentPosition和maxPosition）。REACHABILITY_CONSTRAINT为'NULL'，表示没有逻辑上不可满足的路径条件阻止该语句执行。只要程序进入countTokens方法，该循环条件必然会被执行（至少一次），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n步骤[必要性]：  \n说明理由：原表达式为`currpos < maxPosition`，变异体为`currpos-- < maxPosition`。变异操作在比较前对currpos进行了自减，这会改变currpos的值（副作用）并影响比较结果。例如，假设初始currpos=1, maxPosition=2：原表达式先比较1<2为true，然后执行循环体；变异体先执行currpos--（currpos变为0），然后比较0<2为true。此时循环体内使用的currpos值已改变（0而非1），这可能导致skipDelimiters和后续操作的行为差异，从而改变程序状态（如count值）。因此，该变异实际改变了程序语义。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n步骤[数据依赖]：  \n说明理由：变异影响的变量currpos通过数据依赖链传播到输出。具体路径：变异点（第6行）-> skipDelimiters（第7行）-> if条件（第8行）-> 可能break（第9行）或 scanToken（第11行）-> 再次循环条件（第6行）或最终返回count（第14行）。count的值直接依赖于循环次数，而循环次数受currpos值影响（因为currpos决定循环条件结果和循环体内操作）。因此，currpos的变化可通过数据依赖影响count的输出。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。  \n\n步骤[控制依赖]：  \n说明理由：变异语句（循环条件）直接控制循环体的执行（第7-12行），而循环体中的count++（第12行）和break（第9行）语句控制依赖于该条件。最终输出return count（第14行）控制依赖于整个循环的结束（即循环条件为false）。因此，变异语句通过控制流影响输出语句。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n步骤[状态覆盖]：  \n说明理由：虽然变异改变了currpos的值（自减副作用）并可能影响循环行为，但分析数据依赖和控制依赖路径可知，这种改变会传递到输出（count）。例如，初始currpos=1, maxPosition=2：原程序执行1次循环（count=1），而变异体可能因currpos提前减少导致不同循环次数（如currpos--后为0，可能执行更多或更少次循环）。不存在逻辑上的抵消机制（如后续操作修正currpos的减少或count的误差），因此错误状态不会被覆盖，最终输出可能改变。  \n分析结论：变异引入的错误状态不会被覆盖，会影响程序输出。  \n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_426 的分析, 耗时: 80.6441 秒
+
+开始分析变异体 MUT_430...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_430": "步骤[可达性]：  \n说明理由：变异语句位于while循环体内，其可达性条件为循环条件(currpos < maxPosition)。该条件在程序执行过程中可能为真（例如当currentPosition初始值小于maxPosition时），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n步骤[必要性]：  \n说明理由：原程序调用skipDelimiters(currpos)，参数为currpos的当前值；变异体调用skipDelimiters(++currpos)，参数为currpos自增后的值。这会导致传入skipDelimiters的参数值不同，从而可能改变skipDelimiters函数的执行结果（例如处理的分隔符位置不同），进而影响currpos的赋值结果。因此，变异实际改变了程序状态。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n步骤[数据依赖]：  \n说明理由：变异影响的变量currpos通过数据依赖链传播到输出：  \n- currpos的值直接用于条件判断(if (currpos >= maxPosition))，影响是否执行break  \n- currpos的值用于后续scanToken调用，影响循环次数  \n- 循环次数决定count++的执行次数，最终影响返回值count  \n具体依赖路径如DATA_DEPENDENCY中所述，存在从变异语句到输出语句return count的数据流路径。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。  \n\n步骤[控制依赖]：  \n说明理由：变异语句通过控制流影响输出：  \n- 变异语句产生的currpos值直接影响条件语句(if (currpos >= maxPosition))的控制流  \n- 该条件语句控制是否执行break，从而影响循环的提前终止  \n- 循环的终止情况直接影响count的最终值和返回值  \n控制依赖路径如CTRL_DEPENDENCY中所示，存在从变异语句到输出语句的控制依赖。  \n分析结论：变异语句通过控制流影响输出语句。  \n\n步骤[状态覆盖]：  \n说明理由：虽然变异改变了程序状态（currpos的值不同），且这种改变通过数据和控制依赖传播到输出，但在某些执行路径下，变异引入的状态改变可能被后续操作\"覆盖\"或\"抵消\"：  \n1. skipDelimiters函数的具体行为未知，但通常用于跳过分隔符，返回下一个token的起始位置  \n2. 变异使用++currpos（先自增）而非currpos，相当于检查下一个字符开始的分隔符  \n3. 然而，scanToken函数会扫描完整的token，并返回下一个位置  \n4. 在多次迭代中，这种差异可能导致：  \n   - 跳过更多或更少的分隔符  \n   - 识别更多或更少的token  \n   - 但最终count值可能相同（例如当没有分隔符或特定分隔符模式时）  \n\n关键点：由于skipDelimiters和scanToken的内部实现未知，无法确定变异是否总是改变最终的token计数。可能存在输入使得：  \n- 原程序：currpos = skipDelimiters(currpos) 和  \n- 变异体：currpos = skipDelimiters(++currpos)  \n产生相同的最终currpos序列和count值。  \n\n例如，如果当前字符不是分隔符，skipDelimiters(currpos)可能返回currpos，而skipDelimiters(++currpos)可能跳过下一个字符（如果是分隔符），但后续scanToken可能调整位置，最终收敛到相同状态。  \n\n因此，变异引入的错误状态可能在后续执行中被修正，导致最终输出count不变。  \n分析结论：变异引入的状态改变可能被后续操作抵消，导致输出未受影响。  \n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_430 的分析, 耗时: 78.7198 秒
+
+开始分析变异体 MUT_438...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_438": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[currpos < maxPosition && currpos < maxPosition (循环条件为真) && currpos >= maxPosition (if条件为真)]，该路径条件表示当currpos < maxPosition且currpos >= maxPosition时，变异语句\"count++\"可达。然而，currpos < maxPosition和currpos >= maxPosition这两个条件在逻辑上是互斥的，无法同时满足。因此，该路径条件在逻辑上不可满足。\n分析结论：变异语句不可达，属于等价变异体。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_438 的分析, 耗时: 33.0894 秒
+
+开始分析变异体 MUT_449...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_449": "步骤[可达性]：\n说明理由： 根据提供的可达性约束条件[currpos < maxPosition]，该条件表示在进入while循环时currpos必须小于maxPosition。变异语句位于循环体内的if条件判断处，由于循环条件本身确保currpos < maxPosition，且没有其他路径约束阻止该语句执行，因此变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原语句为\"if (currpos >= maxPosition)\"，变异后为\"if (++currpos >= maxPosition)\"。变异在条件判断前对currpos进行了前置自增操作，这改变了currpos的值。在可达路径上，currpos的值会影响条件判断的结果，进而可能改变程序的控制流（是否执行break语句）。因此，该变异确实改变了程序状态。\n分析结论： 变异改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过数据依赖链传播到输出节点。具体路径为：变异语句修改currpos → currpos用于scanToken调用 → scanToken结果影响循环条件 → 循环条件影响count++执行次数 → count作为返回值输出。此外，变异语句本身的条件判断结果直接影响是否执行break语句，而break语句直接影响循环次数和最终的count值。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句通过控制流直接影响输出语句。变异语句的条件判断结果控制两个分支：如果条件为真，执行break语句直接退出循环，影响最终的count值；如果条件为假，继续执行后续的scanToken和count++操作。这两种情况都会影响最终的返回值count。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了程序状态并通过依赖路径传播到输出，但在某些特定情况下，变异可能不会导致最终输出改变。例如，当currpos == maxPosition - 1时：原程序判断currpos >= maxPosition为false，继续执行后续操作；变异体先执行++currpos使currpos变为maxPosition，然后判断条件为true，执行break退出循环。这种情况下，变异体会比原程序少执行一次count++，导致返回值不同。因此，存在输入能够区分原程序和变异体的行为。\n分析结论： 变异引入的错误状态没有被完全修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_449 的分析, 耗时: 55.7980 秒
+
+开始分析变异体 MUT_465...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_465": "步骤[可达性]：\n说明理由： 变异语句位于while循环条件中，原条件为\"currpos < maxPosition\"，变异后为\"currpos < ~maxPosition\"。由于maxPosition是一个整型变量，~maxPosition表示对maxPosition进行按位取反操作。从程序入口到该变异语句的路径条件为：currpos = currentPosition（初始值），没有其他约束条件。该路径条件逻辑上可满足，因为currentPosition和maxPosition都是程序运行时的变量值，存在多种可能的取值组合使得该条件可满足。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原表达式为\"currpos < maxPosition\"，变异表达式为\"currpos < ~maxPosition\"。这两个表达式在语义上完全不同：原表达式比较currpos是否小于maxPosition，而变异表达式比较currpos是否小于maxPosition的按位取反值。由于按位取反操作会完全改变数值（例如，如果maxPosition为正数，~maxPosition将变为负数），这两个条件在绝大多数情况下会产生不同的布尔结果，从而改变程序的控制流。\n分析结论： 变异实际改变了程序语义，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos，它通过数据依赖链传播到程序输出。从数据依赖路径可以看出：1) currpos的值影响while循环条件的判断；2) currpos的值影响if (currpos >= maxPosition)条件的判断；3) currpos的值被传递给skipDelimiters和scanToken方法，这些方法的返回值又赋值给currpos；4) 循环次数直接影响count的值，而count是最终的返回值。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论： 存在数据依赖条件，变异效果可以传播到输出。\n\n步骤[控制依赖]：\n说明理由： 变异语句\"while (currpos < ~maxPosition)\"控制着整个循环体的执行。从控制依赖路径可以看出：1) 如果条件为真，执行循环体内的语句；2) 如果条件为假，跳过循环体直接返回count。循环体内的语句包括currpos的更新和count的递增，这些都直接影响最终的输出值。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论： 存在控制依赖条件，变异效果可以传递到输出。\n\n步骤[状态覆盖]：\n说明理由： 基于前述分析，变异体满足可达性、必要性，数据依赖与控制依赖路径均存在。变异将循环条件从\"currpos < maxPosition\"改为\"currpos < ~maxPosition\"，这会显著改变循环的执行行为：1) 如果maxPosition为正数，~maxPosition将为负数，导致循环条件几乎总是为假（因为currpos初始值为currentPosition，通常为非负数），循环可能根本不执行；2) 如果maxPosition为负数，~maxPosition将为正数，可能导致循环执行次数与原程序完全不同。这种改变会直接影响count的最终值，从而影响程序输出，不存在状态覆盖现象。\n分析结论： 变异引入的错误状态不会被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_465 的分析, 耗时: 69.0126 秒
+
+开始分析变异体 MUT_477...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_477": "步骤[可达性]：\n说明理由： 变异语句位于while循环条件处，循环条件为currpos < maxPosition。根据REACHABILITY_CONSTRAINT为NULL，说明没有不可达的路径约束条件。程序入口到该变异语句的路径条件为currpos初始值currentPosition和maxPosition的关系，这些条件都是可满足的（例如currentPosition < maxPosition时循环可进入）。因此变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序语句为\"while (currpos < maxPosition)\"，变异体为\"while (currpos++ < maxPosition)\"。变异在循环条件中增加了currpos的后置自增操作。在循环执行过程中，currpos++会在比较前先使用currpos的当前值进行比较，然后currpos自增1。这改变了currpos的值，会影响后续的skipDelimiters和scanToken调用，从而改变程序状态。即使第一次循环时currpos的值相同，但后续循环中currpos的值会因自增操作而不同。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过数据依赖链传播到程序输出。从数据依赖路径可以看出：变异后的currpos值会流向skipDelimiters调用，影响其返回值；然后流向if条件判断，影响是否break；在非break情况下流向scanToken调用，影响其返回值；最后在循环条件中再次使用。count变量的值依赖于循环次数，而循环次数受currpos值的影响，最终return count的输出依赖于count的值。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句通过控制流影响输出语句。从控制依赖路径可以看出：while循环条件控制着整个循环体的执行（包括第7、8、9、11、12行），而循环体的执行直接影响count的值（count++在循环体内）。当循环条件为false时，程序直接执行return count。因此变异语句通过控制循环执行与否和循环次数，间接影响最终的输出值count。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了程序状态（currpos的值和自增时机），但这种改变会直接影响循环的执行次数，从而影响count的最终值。没有证据表明这种状态改变会在后续执行中被修正或抵消。实际上，currpos的自增操作会改变循环的终止条件，可能导致循环提前结束或额外执行，从而产生不同的count返回值。\n分析结论： 变异引入的错误状态不会被后续执行修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_477 的分析, 耗时: 59.3278 秒
+
+开始分析变异体 MUT_483...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_483": "步骤1：可达性\n说明理由：变异语句位于while循环体内，其可达性条件为循环条件currpos < maxPosition为真。根据提供的REACHABILITY_CONSTRAINT '[currpos < maxPosition]'，这是一个可满足的条件（例如，当currpos初始值小于maxPosition时），因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤2：必要性\n说明理由：原程序语句为`currpos = skipDelimiters( currpos )`，变异体语句为`currpos = skipDelimiters( -currpos )`。变异将参数从currpos改为-currpos，这明显改变了传递给skipDelimiters方法的参数值。除非skipDelimiters方法对正负输入有相同的处理逻辑（例如，总是返回相同的值），否则这会导致不同的程序状态。由于我们不知道skipDelimiters的具体实现，不能假设其行为，因此应认为变异改变了程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤3：数据依赖\n说明理由：变异影响的变量是currpos。根据DATA_DEPENDENCY提供的信息，currpos的值通过多条数据依赖路径传播到输出语句return count：\n1. 影响循环条件currpos < maxPosition的判断，进而影响是否执行break或继续循环\n2. 影响scanToken方法的调用参数\n3. 在循环中形成数据流，最终影响循环退出条件和count的值\n由于count是返回值，而currpos的值直接影响count的递增次数（通过控制循环迭代次数），因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖，变异效果可通过数据依赖传播到输出。\n\n步骤4：控制依赖\n说明理由：根据CTRL_DEPENDENCY提供的信息，变异语句通过控制流影响输出语句：\n1. 变异语句执行后，currpos的值影响if (currpos >= maxPosition)的判断\n2. 这个判断结果决定是执行break（直接退出循环返回count）还是继续执行scanToken和count++\n3. 循环的继续与否直接决定最终的count值\n因此，变异语句通过控制流影响输出语句的执行路径和最终结果。\n分析结论：存在控制依赖，变异语句通过控制流影响输出语句。\n\n步骤5：状态覆盖\n说明理由：虽然变异改变了传递给skipDelimiters的参数（从currpos变为-currpos），但这并不保证错误状态会被修正或抵消。skipDelimiters(-currpos)的返回值可能与skipDelimiters(currpos)完全不同，导致：\n1. 不同的循环迭代次数\n2. 不同的count最终值\n3. 不同的程序输出\n除非skipDelimiters函数具有特定数学性质（如skipDelimiters(-x) = skipDelimiters(x)），否则变异引入的错误状态不会被自动修正。由于我们不知道skipDelimiters的具体实现，不能假设这种抵消行为存在。\n分析结论：不存在状态覆盖现象，变异引入的错误状态会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_483 的分析, 耗时: 373.5509 秒
+
+开始分析变异体 MUT_500...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_500": "步骤[可达性]：\n说明理由：变异语句位于while循环内部，其路径约束为[currpos < maxPosition]。该约束表示在进入循环时currpos必须小于maxPosition，因此变异语句所在的循环体是可执行的。没有逻辑矛盾或不可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原条件为\"currpos >= maxPosition\"，变异后为\"currpos > maxPosition\"。在路径约束[currpos < maxPosition]下，currpos可能等于maxPosition-1或小于maxPosition-1。当currpos等于maxPosition-1时，原条件为false（因为currpos < maxPosition），变异条件也为false。当currpos小于maxPosition-1时，两个条件都为false。在循环执行过程中，currpos通过skipDelimiters和scanToken函数可能增加，但根据约束currpos < maxPosition，currpos永远不会等于或超过maxPosition，因此两个条件在所有情况下都等价（都为false）。\n分析结论：变异没有实际改变程序状态，属于非必要性变异。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_500 的分析, 耗时: 44.7108 秒
+
+开始分析变异体 MUT_502...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_502": "步骤[可达性]：\n说明理由：变异语句位于while循环内部，其路径条件为[currpos < maxPosition]。该条件表示当前currpos小于maxPosition时进入循环，这是可满足的（例如currpos=0, maxPosition=1）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原表达式为\"if (currpos >= maxPosition)\"，变异表达式为\"if (currpos >= maxPosition++)\"。变异操作符AOIS（算术运算符插入）将maxPosition替换为maxPosition++，这会先使用maxPosition的当前值进行比较，然后将maxPosition的值加1。在可达路径上，当currpos >= maxPosition时，变异会改变maxPosition的值（增加1），这确实改变了程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量maxPosition通过数据依赖链传播到输出。具体路径有两条：1) 当条件为真时，通过break语句控制返回到return count；2) 当条件为假时，通过影响后续的currpos赋值和循环条件，最终影响count的值和返回结果。maxPosition的值变化会影响循环的执行次数和条件判断，从而影响最终的count返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句通过控制流直接影响输出语句。当\"if (currpos >= maxPosition++)\"为真时，执行break语句，直接跳出循环并返回count；当为假时，继续执行后续的scanToken和count++操作。变异语句的控制决策直接影响程序是否继续循环和计数，从而影响最终的输出值count。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了maxPosition的值（增加1），但这种改变会影响后续的循环执行：1) 如果条件为真，maxPosition增加1，但程序立即break，这个增加的效果不会被后续代码使用；2) 如果条件为假，maxPosition增加1，这会改变后续循环条件\"currpos < maxPosition\"的判断，可能导致循环提前结束或额外执行，从而改变count的最终值。没有证据表明这种状态改变会被后续执行修正或抵消。\n分析结论：变异引入的错误状态不会被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_502 的分析, 耗时: 62.9219 秒
+
+开始分析变异体 MUT_535...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_535": "步骤[可达性]：\n说明理由：根据提供的REACHABILITY_CONSTRAINT [currpos < maxPosition]，变异语句位于while循环内部，且循环条件为currpos < maxPosition。这意味着在进入循环时，currpos严格小于maxPosition。变异语句是条件判断\"if (currpos == maxPosition)\"，在currpos < maxPosition的约束下，currpos == maxPosition这个条件永远为假，因为currpos不可能等于maxPosition（它严格小于maxPosition）。因此，该变异语句的路径条件组合[currpos < maxPosition && currpos == maxPosition]是逻辑上不可满足的。\n分析结论：变异语句不可达，属于等价变异体。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_535 的分析, 耗时: 43.8486 秒
+
+开始分析变异体 MUT_560...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_560": "步骤[可达性]：\n说明理由： 变异语句位于while循环体内，路径条件为[currpos < maxPosition && currpos < maxPosition]，这简化为currpos < maxPosition。该条件在循环执行期间是可满足的，因为只要currpos < maxPosition，循环就会继续执行，变异语句就会被执行到。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序执行currpos = scanToken(currpos)，该语句会更新currpos的值。变异体删除了这条语句，意味着在变异体中，执行完currpos = skipDelimiters(currpos)后，currpos的值不会被scanToken函数更新。这直接改变了程序的状态（currpos变量的值），影响了后续的条件判断（currpos >= maxPosition）和循环的迭代。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos。根据提供的数据依赖路径，currpos的值直接用于：\n1.  while循环的条件判断 (currpos < maxPosition)\n2.  if语句的条件判断 (currpos >= maxPosition)\n这些条件判断的结果控制着是否执行break语句（直接影响循环退出）和是否进入下一次循环迭代。循环的退出直接决定了最终的返回值count。因此，currpos的值通过控制流（其值影响条件分支）间接地传播到了输出节点（return count;）。数据依赖链存在。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句（原第10行，被删除）本身是一条赋值语句，它不直接产生控制流。但是，它所修改的变量currpos用于第6行（while条件）和第7行（if条件）的控制判断。因此，变异的效果（currpos的值不同）会传递到这些控制语句，进而影响：\n-   第8行 break; 语句的执行（控制依赖於第7行的if条件）\n-   整个循环的继续或终止（控制依赖於第6行的while条件）\n循环的终止控制着程序流程最终到达第13行的return count;。因此，变异语句通过其修改的变量，间接地通过控制流影响了输出语句。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 基于以上分析，变异体删除了对currpos的更新（currpos = scanToken(currpos);）。这将导致：\n1.  在执行完currpos = skipDelimiters(currpos);后，currpos的值可能仍然小于maxPosition（否则会break），但因为没有调用scanToken来移动到下一个token的起始位置，下一次循环迭代中调用skipDelimiters可能会跳过相同的字符（或没有字符可跳），或者无法正确推进currpos。\n2.  这很可能导致循环无法正常终止（因为currpos无法达到或超过maxPosition），或者导致count的计数错误（可能多计数或少计数token）。\n不存在任何机制可以“修正”或“抵消”因缺少scanToken调用而导致的currpos值错误以及由此产生的循环逻辑错误。最终的count返回值几乎肯定会与原程序不同。\n分析结论： 变异引入的错误状态不会被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_560 的分析, 耗时: 66.4983 秒
+
+开始分析变异体 MUT_574...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_574": "步骤[可达性]：\n说明理由： 变异语句位于while循环内部，其可达性约束条件为[currpos < maxPosition]。该条件表示只有当currpos小于maxPosition时，循环才会执行，变异语句才能被到达。由于currpos和maxPosition是程序变量，存在满足currpos < maxPosition的输入（例如currpos=0, maxPosition=1），因此该路径条件是可满足的。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原语句为\"if (currpos >= maxPosition)\"，变异语句为\"if (--currpos >= maxPosition)\"。变异操作符AOIS表示前置自减运算。在变异语句可达的情况下，当currpos >= maxPosition时，原语句条件为真，变异语句先执行currpos自减1，然后判断自减后的值是否>= maxPosition，这会导致条件判断结果可能不同。例如，当currpos = maxPosition时，原条件为真，变异条件(--currpos >= maxPosition)为假（因为maxPosition-1 < maxPosition）。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过多条数据依赖路径传播到输出节点：1) 直接影响条件判断结果，控制是否执行break语句；2) 影响后续的scanToken调用和循环条件判断；3) 在循环中形成数据依赖链。currpos的值变化会影响循环次数和count的最终值，而count是函数的返回值。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句通过控制流直接影响输出：1) 如果条件为真，执行break语句，直接跳出循环，影响最终的count值；2) 如果条件为假，继续执行scanToken和count++，影响循环的后续执行。变异语句的控制依赖路径明确连接到输出语句return count。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了程序状态（currpos的值减少1），但这种改变会持续影响后续执行：1) currpos减少会影响后续的scanToken调用；2) 可能改变循环条件判断结果；3) 直接影响循环次数和最终的count值。没有证据表明这种状态改变会在后续执行中被修正或抵消。\n分析结论： 变异引入的错误状态不会被后续执行修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_574 的分析, 耗时: 64.0382 秒
+
+开始分析变异体 MUT_575...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_575": "步骤[可达性]：\n说明理由： 变异语句是while循环条件，从程序入口到该语句的路径条件为[currpos != maxPosition]。该条件逻辑上可满足（例如currpos=0, maxPosition=1），因此变异语句可达。\n分析结论： 变异语句可达，不满足等价变异体的不可达条件。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"currpos < maxPosition\"，变异体条件为\"currpos != maxPosition\"。在循环执行过程中，当currpos < maxPosition时，两个条件等价；但当currpos > maxPosition时，原条件为false而变异条件为true，这会改变循环行为。虽然currpos初始值currentPosition应小于maxPosition，但在循环执行过程中，skipDelimiters和scanToken可能使currpos超过maxPosition，导致行为差异。\n分析结论： 变异可能实际改变程序状态，不满足等价变异体的非必要性条件。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过数据依赖链传播到输出：currpos的值影响while条件判断，进而影响count的递增和最终的return count。具体路径显示currpos的值流向skipDelimiters、scanToken和条件判断，最终影响循环次数和count值。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点，存在数据依赖。\n\n步骤[控制依赖]：\n说明理由： 变异语句（while条件）通过控制流直接影响输出语句：它控制着整个循环体的执行，包括count++语句的执行次数，而count的值直接作为最终返回值。控制依赖路径显示while条件控制着break语句和执行count++的路径。\n分析结论： 变异语句通过控制流影响输出语句，存在控制依赖。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异可能改变循环行为（当currpos > maxPosition时，原程序会退出循环而变异体会继续执行），但这种改变会直接影响count的最终值：如果循环多执行一次，count就会多递增一次，导致不同的输出结果。没有证据表明这种状态改变会在后续执行中被修正或抵消。\n分析结论： 变异引入的错误状态不会被覆盖，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_575 的分析, 耗时: 56.7375 秒
+
+开始分析变异体 MUT_581...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_581": "步骤[可达性]：\n说明理由： 变异语句位于while循环内部，其可达性条件为循环条件(currpos < maxPosition)为真。根据提供的REACHABILITY_CONSTRAINT [currpos < maxPosition]，该条件是可满足的，因为currpos和maxPosition都是变量，存在输入使得currpos < maxPosition成立。因此，变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原表达式为\"if (currpos >= maxPosition)\"，变异后为\"if (currpos >= maxPosition--)\"。变异操作符AOIS表示后置自减，即先使用maxPosition的当前值进行比较，然后将其值减1。在变异语句可达的情况下，当currpos >= maxPosition时，原程序执行break退出循环，而变异体也会执行break退出循环，但会额外将maxPosition减1。当currpos < maxPosition时，原程序继续执行循环体，变异体也会继续执行循环体，但会额外将maxPosition减1。因此，变异确实改变了程序状态（maxPosition的值被修改）。\n分析结论： 变异改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是maxPosition。根据DATA_DEPENDENCY信息，maxPosition的数据依赖路径有两条：1) 通过控制依赖影响break语句，进而影响循环退出和最终返回值count；2) 通过数据流影响循环条件(currpos < maxPosition)和后续的if条件判断。具体来说，maxPosition--会改变maxPosition的值，这个改变会影响：a) 当前if条件的下一次判断（在循环中）；b) 循环条件的下一次判断；c) 后续所有使用maxPosition的地方。由于count的返回值直接依赖于循环次数，而循环次数受maxPosition值的影响（通过循环条件），因此变异引入的状态改变可以通过数据依赖链传播到程序输出节点。\n分析结论： 存在数据依赖，变异效果可以传播到输出。\n\n步骤[控制依赖]：\n说明理由： 根据CTRL_DEPENDENCY信息，变异语句(if条件)的控制依赖路径明确：当条件为真时，控制执行break语句，直接影响循环退出和最终返回；当条件为假时，控制执行后续的scanToken和count++操作。因此，变异语句通过控制流直接影响程序的分支选择，进而影响循环的执行次数和最终的count返回值。\n分析结论： 存在控制依赖，变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了maxPosition的值，但这个改变会直接影响循环的执行行为。考虑以下情况：假设初始maxPosition = N，变异体会在每次执行到if语句时都将maxPosition减1（无论条件真假）。这会导致：1) 循环条件(currpos < maxPosition)可能会提前变为假；2) if条件(currpos >= maxPosition--)的判断基准也在不断变化。这些改变会直接影响循环的迭代次数，从而改变最终的count返回值。没有证据表明这种状态改变会在后续执行中被修正或抵消——实际上，maxPosition的递减是累积性的，会持续影响程序行为。因此，变异引入的错误状态会影响程序最终输出。\n分析结论： 不存在状态覆盖，变异效果会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_581 的分析, 耗时: 61.1506 秒
+
+开始分析变异体 MUT_594...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_594": "步骤[可达性]：\n说明理由： 变异语句位于return count--;，该语句是函数countTokens的最终返回语句。根据程序控制流，只要函数被调用，该语句必然会被执行（除非在循环中遇到break提前退出，但break后也会直接执行return）。REACHABILITY_CONSTRAINT为'NULL'，表明没有特殊的路径条件阻止该语句的执行。因此，变异语句是可达的。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原语句为 `return count;`，变异语句为 `return count--;`。`count--` 是后置自减操作符，其语义是：先返回count的当前值，然后再将count的值减1。因此，对于函数返回值而言，`return count--;` 和 `return count;` 的效果是完全相同的：它们都返回了count在自减操作之前的值。虽然变异语句执行后count变量的值会发生变化（减少1），但这个状态改变发生在返回值之后，且函数已经返回，这个改变对程序的输出（即返回值）没有任何影响。因此，该变异没有改变程序的语义。\n分析结论： 变异没有实际改变程序状态（对于输出而言），属于非必要性变异。\n\n由于在第二步（必要性分析）中已经确定该变异体没有改变程序的语义，满足等价变异体的条件（非必要性），因此无需进行后续的数据依赖、控制依赖和状态覆盖分析。该变异体为等价变异体。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_594 的分析, 耗时: 35.0670 秒
+
+开始分析变异体 MUT_598...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_598": "步骤[可达性]：\n说明理由： 变异语句位于return语句处，是函数结束前的最后一条语句。根据程序控制流，只要函数被调用，该return语句必然会被执行（除非程序异常终止）。REACHABILITY_CONSTRAINT为'NULL'，表示没有特殊的路径约束阻止该语句的执行。因此，变异语句是可达的。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序返回count，变异体返回-count。在变异语句可达的情况下，对于任何输入，只要count的值不为0，原程序和变异体的返回值就会不同（正负号相反）。即使count为0，返回0和-0在数值上是等价的，但Java中整数0和-0在二进制表示上是相同的（都是0），所以返回值相同。然而，当count不为0时，返回值明显不同，说明变异确实改变了程序语义。\n分析结论： 变异实际改变了程序状态。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是count，数据依赖路径显示count的值直接流向return语句。变异将return count改为return -count，这直接改变了输出值。count的值通过数据依赖链传播到程序输出节点，变异的效果能够直接影响输出。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 控制依赖路径信息显示return -count语句本身是变异点。这不是一个条件语句，而是一个返回语句的修改。变异语句直接就是输出语句，因此它不需要通过控制流来影响输出——它本身就是输出。\n分析结论： 变异语句直接就是输出语句，不需要通过控制流影响输出。\n\n步骤[状态覆盖]：\n说明理由： 基于以上分析，变异语句可达，确实改变了程序语义（将正数变为负数），且这种改变直接通过数据依赖影响到输出。没有后续执行步骤来修正或抵消这种改变，因为return语句是函数的结束。对于count > 0的情况，原程序返回正数，变异体返回负数；对于count < 0的情况，原程序返回负数，变异体返回正数；只有count = 0时两者返回值相同。因此，在大多数情况下（count ≠ 0），程序的输出会受到影响。\n分析结论： 变异引入的错误状态不会被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_598 的分析, 耗时: 45.9597 秒
+
+开始分析变异体 MUT_599...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_599": "步骤[可达性]：\n说明理由： 变异语句位于while循环内部，其可达性约束条件为[currpos < maxPosition]。该条件表示只有当currpos小于maxPosition时才能进入循环执行变异语句。由于currpos和maxPosition都是整数变量，存在无数满足currpos < maxPosition的输入值（例如currpos=0, maxPosition=1），因此该路径条件是可满足的，变异语句可达。\n分析结论： 变异语句可达，继续下一步分析。\n\n步骤[必要性]：\n说明理由： 原表达式为\"currpos >= maxPosition\"，变异表达式为\"currpos >= ~maxPosition\"。按位取反操作符~会将maxPosition的所有二进制位取反，对于整数来说，~maxPosition = -(maxPosition + 1)。在currpos < maxPosition的约束条件下（currpos和maxPosition都是非负整数），currpos >= ~maxPosition 几乎总是为真（因为~maxPosition是负数，而currpos是非负数），这与原表达式currpos >= maxPosition（在currpos < maxPosition条件下为假）的语义完全不同。因此该变异确实改变了程序的状态。\n分析结论： 变异改变了程序语义，满足必要性，继续下一步分析。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos。数据依赖路径显示：1）如果变异条件为真，执行break语句，直接跳转到return count；2）如果变异条件为假，继续执行scanToken操作并更新currpos，然后通过循环影响后续执行。currpos的值通过控制流直接影响是否执行break语句，而break语句直接影响循环的提前终止，从而影响最终的count值（返回值）。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点，存在数据依赖，继续下一步分析。\n\n步骤[控制依赖]：\n说明理由： 控制依赖路径显示：变异语句(if条件判断)直接控制两个分支：1）True分支执行break，直接跳转到return语句；2）False分支继续执行token扫描和计数操作。变异语句的控制决策直接影响程序是否提前终止循环，从而影响最终的count返回值。\n分析结论： 变异语句通过控制流影响输出语句，存在控制依赖，继续下一步分析。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了条件判断的语义，但在currpos < maxPosition的约束条件下，原表达式currpos >= maxPosition为假，而变异表达式currpos >= ~maxPosition几乎总是为真（因为~maxPosition是负数）。这意味着：原程序会继续执行token扫描和计数，而变异体会执行break语句提前终止循环。这将导致count值的不同：原程序会统计所有token，而变异体可能提前终止导致统计的token数量减少。没有任何机制可以修正或抵消这种差异。\n分析结论： 变异引入的错误状态无法被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_599 的分析, 耗时: 93.2474 秒
+
+开始分析变异体 MUT_604...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_604": "步骤[可达性]：\n说明理由： 变异语句位于while循环内部，其可达性约束为[currpos < maxPosition]。该条件表示只有当currpos小于maxPosition时才能进入循环体执行变异语句。由于currpos和maxPosition是程序变量，存在满足currpos < maxPosition的输入（例如currpos=0, maxPosition=1），因此该路径条件可满足，变异语句可达。\n分析结论： 变异语句可达，继续下一步分析。\n\n步骤[必要性]：\n说明理由： 原条件为\"if (currpos >= maxPosition)\"，变异后为\"if (!(currpos >= maxPosition))\"，即逻辑取反。在变异语句可达的情况下（currpos < maxPosition），原条件(currpos >= maxPosition)为false，而变异条件(!(currpos >= maxPosition))为true。这将导致程序执行不同的分支：原程序执行break语句退出循环，而变异体继续执行后续的scanToken和count++操作。这种差异明显改变了程序的控制流状态。\n分析结论： 变异实际改变了程序状态，满足必要性，继续下一步分析。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过数据依赖链传播到输出：1）变异条件控制break语句的执行，break直接影响循环终止和最终的count值；2）当不执行break时，currpos被scanToken修改后影响下一次循环条件判断，进而影响count++的执行次数；3）最终的返回值count直接依赖于循环过程中count++的执行次数。\n分析结论： 变异影响的变量currpos通过数据依赖链传播到程序输出节点，存在数据依赖，继续下一步分析。\n\n步骤[控制依赖]：\n说明理由： 变异语句通过控制流直接影响输出：1）当变异条件为true时，执行break语句，直接控制循环终止和最终的count返回值；2）当变异条件为false时，控制程序继续执行scanToken和count++操作，影响循环迭代次数和最终的count值。输出语句return count的控制依赖于变异语句的判断结果。\n分析结论： 变异语句通过控制流影响输出语句，存在控制依赖，继续下一步分析。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了程序的控制流，但在所有可能的执行路径中，变异引入的状态改变都会直接影响最终的输出结果count。当currpos >= maxPosition时，原程序执行break退出循环，而变异体继续执行count++，导致count值不同；当currpos < maxPosition时，原程序继续执行count++，而变异体执行break退出循环，也导致count值不同。不存在任何输入情况下变异的效果被后续执行修正或抵消。\n分析结论： 变异引入的错误状态不会被覆盖，总是会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_604 的分析, 耗时: 55.6219 秒
+
+开始分析变异体 MUT_609...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_609": "步骤[可达性]：\n说明理由： 变异语句位于while循环内部的条件判断if (currpos >= maxPosition)。根据提供的可达性约束[currpos < maxPosition]，该约束表示进入循环的条件，即currpos < maxPosition为真。在循环内部，变异语句是可达的，因为只要进入循环，就会执行到第8行的if语句。路径条件currpos < maxPosition是可满足的（例如，currpos=0, maxPosition=10），因此变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原表达式为if (currpos >= maxPosition)，变异表达式为if (currpos-- >= maxPosition)。在变异语句可达的情况下（即currpos < maxPosition为真进入循环），分析变异是否改变程序状态。原表达式先比较currpos和maxPosition，然后根据结果执行分支。变异表达式先使用currpos的值进行比较（与原表达式相同），但随后执行currpos--（后减减操作），这会改变currpos的值（将其减1）。因此，变异确实引入了程序状态的改变（currpos的值减少了1）。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos。根据提供的数据依赖路径，currpos在多个地方被使用：\n1. 在循环条件while (currpos < maxPosition)中：变异后currpos的值改变会影响循环是否继续执行。\n2. 在currpos = skipDelimiters(currpos)中：作为参数传入，但该函数可能返回新的值覆盖它。\n3. 在currpos = scanToken(currpos)中：作为参数传入，但该函数可能返回新的值覆盖它。\n4. 在if (currpos-- >= maxPosition)自身中：用于比较和自减。\n关键点是，虽然currpos的值被改变，但程序的最终输出是count（返回count），而count的值只通过count++语句增加，其增加与否取决于是否执行到第11行（currpos = scanToken(currpos)）和第12行（count++）。currpos本身并不直接作为输出。从数据依赖路径看，currpos的改变会通过循环条件影响循环次数，从而间接影响count的值（因为每次循环可能增加count）。具体来说，变异后currpos减少1，可能使得后续的currpos = scanToken(currpos)等操作基于不同的初始值，最终可能影响循环次数和count的最终值。\n分析结论： 变异影响的变量currpos通过数据依赖链（循环条件）间接传播到输出count，存在数据依赖。\n\n步骤[控制依赖]：\n说明理由： 变异语句if (currpos-- >= maxPosition)是一个条件判断，它直接控制两个分支：\n- 如果条件为真，执行break语句，立即退出循环，从而影响最终的count值（提前终止循环，count可能较小）。\n- 如果条件为假，继续执行currpos = scanToken(currpos)和count++，然后进行下一次循环。\n因此，变异语句通过控制流（是否执行break）直接影响输出语句（return count）的执行路径（循环次数）。\n分析结论： 变异语句通过控制流影响输出语句，存在控制依赖。\n\n步骤[状态覆盖]：\n说明理由： 基于以上分析，变异体满足可达性、必要性、数据依赖和控制依赖。现在需要判断变异引入的错误状态（currpos减少1）是否在后续执行中被修正或抵消，导致最终输出count不变。\n变异发生在条件判断中，它改变currpos的值（减1）。这个改变会影响到后续所有使用currpos的语句：\n- 在条件判断之后，如果执行了break，循环终止，count不变。但与原程序相比，变异后条件可能更容易为真（因为currpos减少1后更可能>=maxPosition），导致提前break。\n- 如果没有执行break，则执行currpos = scanToken(currpos)，这个函数调用可能基于变异后的currpos值（减1后的值）进行处理，返回一个新的值覆盖currpos，然后count增加1。接下来循环继续，基于新的currpos值进行。\n由于scanToken和skipDelimiters函数的具体行为未知，我们无法确定变异引入的currpos减少1是否会被完全覆盖或修正。例如，如果scanToken总是返回一个固定值，那么变异的影响可能被覆盖；但如果其行为依赖于输入参数，则变异的影响可能持续。\n然而，关键点是，变异改变了currpos的值，而currpos直接影响循环条件（循环次数）和条件判断（是否break），从而直接影响count的最终值。存在输入（例如特定的currpos和maxPosition值）使得变异后的程序执行不同的循环次数，导致不同的count输出。例如，假设currpos=1, maxPosition=1，原程序：比较1>=1为真，执行break，count=0；变异程序：比较1>=1为真（但之后currpos变为0），执行break，count=0——输出相同。但再例如，currpos=2, maxPosition=2，原程序：比较2>=2为真，执行break，count=0；变异程序：比较2>=2为真（之后currpos变为1），执行break，count=0——输出相同。但考虑currpos=2, maxPosition=1：原程序比较2>=1为真，执行break，count=0；变异程序比较2>=1为真（之后currpos变为1），执行break，count=0——输出相同。似乎在这个特定条件（currpos >= maxPosition）下，变异不影响分支选择（因为都是真），只影响后续的currpos值（但后续因为break不再使用）。但考虑currpos=1, maxPosition=2：原程序比较1>=2为假，不break，继续执行；变异程序比较1>=2为假（之后currpos变为0），继续执行。这里currpos的改变（0 vs 原程序1）会影响后续scanToken的处理，可能导致不同的行为。\n实际上，由于外部函数（skipDelimiters和scanToken）的行为不确定，我们无法保证变异的影响总是被覆盖。因此，存在测试输入可以杀死该变异体（显示输出不同）。\n分析结论： 变异引入的错误状态不一定被修正或抵消，可能影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_609 的分析, 耗时: 85.7007 秒
+
+开始分析变异体 MUT_611...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_611": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[currpos < maxPosition && currpos < maxPosition]，这实际上简化为[currpos < maxPosition]。这个条件在循环开始时已经满足（因为进入循环的条件就是currpos < maxPosition），所以变异语句所在的循环体是可执行的。变异语句位于while循环内部，当currpos < maxPosition时，循环体会被执行，因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句是\"currpos = scanToken( currpos );\"，变异体语句是\"currpos = scanToken( currpos++ );\"。关键区别在于参数传递：原程序传递currpos的当前值，而变异体传递currpos的当前值后执行currpos++。虽然scanToken函数的返回值会覆盖currpos，但变异体中的currpos++操作会在函数调用前先执行自增，这会影响scanToken函数内部对currpos参数的使用。在可达路径上，这种变异确实改变了程序状态，因为currpos++操作会先增加currpos的值，然后才传递给scanToken函数。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是currpos。从提供的数据依赖路径可以看出，currpos的值通过多条路径传播：1）影响循环条件(currpos < maxPosition)的判断；2）影响if条件(currpos >= maxPosition)的判断；3）在循环中不断被更新。最终，循环的终止条件依赖于currpos的值，而循环次数决定了count的值，count作为返回值输出。因此，currpos的变化通过控制循环次数间接影响了最终的输出count。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：从控制依赖路径信息可以看出，变异语句(第11行)的执行依赖于while循环条件(第6行)和if条件(第8行)的判断结果。变异语句的执行会影响后续的count++语句(第12行)的执行，而count的值直接决定最终的返回值。变异语句通过改变currpos的值，影响了循环的继续或终止，从而控制了count++语句的执行次数，最终影响输出结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异引入了错误状态（currpos的异常自增），但这种错误状态不会被后续执行修正或抵消。变异体中的currpos++操作会导致：1）传递给scanToken的参数值比原程序大1；2）scanToken的返回值会覆盖currpos，但基于错误参数的计算结果很可能与原程序不同。这种差异会累积影响循环次数，从而导致最终的count值与原程序不同。没有证据表明这种状态差异会在后续执行中被抵消。\n分析结论：变异引入的错误状态不会被修正或抵消，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_611 的分析, 耗时: 65.9750 秒
+
+开始分析变异体 MUT_626...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_626": "步骤[可达性]：\n说明理由： 变异语句位于while循环体内，其可达性条件为进入循环的条件(currpos < maxPosition)。根据提供的可达性约束[currpos < maxPosition && currpos < maxPosition]，这是一个可满足的条件，因为只要currpos小于maxPosition，循环就会执行，变异语句就会被执行到。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原语句为\"currpos = scanToken( currpos );\"，变异语句为\"currpos = scanToken( --currpos );\"。变异操作是在将currpos传递给scanToken函数之前先对其进行递减操作(--currpos)。这确实改变了程序状态，因为--currpos会先递减currpos的值，然后将递减后的值传递给scanToken函数，而原语句是直接传递currpos的当前值。这种改变会影响scanToken函数的输入参数，从而可能影响其返回值。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos。从数据依赖路径分析可以看出，currpos的值通过多条路径传播到程序输出：1) 影响循环条件(currpos < maxPosition)的判断；2) 影响if条件(currpos >= maxPosition)的判断；3) 影响break语句的执行；4) 影响count++的执行次数。最终，count的值作为返回值输出，而count的值直接依赖于循环执行的次数，循环执行的次数又依赖于currpos的值变化。\n分析结论： 变异影响的变量currpos通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 从控制依赖路径分析可以看出，变异语句位于循环体内，其执行受循环条件和if条件的控制，同时也通过改变currpos的值影响后续的控制流决策。变异语句的执行会影响循环的继续执行或终止，从而影响count++的执行次数，最终影响返回的count值。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了程序状态（递减了currpos的值），但这种改变可能被后续操作\"修正\"。具体来说，scanToken函数的功能是扫描并返回下一个token的位置。如果scanToken函数的实现能够正确处理递减后的位置，并返回适当的下一个位置，那么最终currpos的值可能与原程序执行后的值相同。更重要的是，count的值只依赖于循环执行的次数，而不依赖于currpos的具体值。只要循环执行的次数相同，count的最终值就相同。变异可能改变了单次循环中currpos的具体变化路径，但只要每次循环仍然正确地找到一个token，循环的总次数（即count的值）可能保持不变。\n分析结论： 变异引入的状态改变可能被后续操作抵消，导致程序最终输出未受影响。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_626 的分析, 耗时: 65.4299 秒
+
+开始分析变异体 MUT_651...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_651": "步骤[可达性]：  \n说明理由：根据提供的可达性约束条件[currpos < maxPosition && currpos < maxPosition]，该条件简化为currpos < maxPosition。由于currpos是整数变量，maxPosition是固定值，存在无数满足currpos < maxPosition的输入（例如currpos=0, maxPosition=1），因此该路径条件可满足。变异语句位于while循环体内，当循环条件满足时即可执行到。  \n分析结论：变异语句可达。  \n\n步骤[必要性]：  \n说明理由：原程序语句为`currpos = scanToken( currpos );`，变异体为`currpos = scanToken( -currpos );`。变异将参数从正数currpos改为负数-currpos。假设scanToken函数的行为依赖于输入参数的正负（例如，处理负数时可能返回不同值），则变异会改变scanToken函数的输出，从而改变currpos的赋值值。例如，当currpos>0时，-currpos<0，scanToken可能返回错误值导致currpos被赋予错误状态。因此，该变异实际改变了程序状态。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n步骤[数据依赖]：  \n说明理由：变异影响的变量是currpos。数据依赖路径显示，currpos被用于：  \n1. 循环条件判断（while (currpos < maxPosition)）  \n2. 调用skipDelimiters(currpos)的参数  \n3. 条件判断（if (currpos >= maxPosition)）  \n4. 最终返回值count虽不直接依赖currpos，但循环次数（即count值）间接依赖于currpos的值（因为currpos的变化影响循环条件）。具体地，currpos的值决定循环是否继续，从而影响count的最终值。因此，变异引入的错误状态（currpos的错误值）会通过数据依赖链传播到输出count。  \n分析结论：存在数据依赖链连接变异节点与输出节点。  \n\n步骤[控制依赖]：  \n说明理由：控制依赖路径显示，变异语句（11行）受循环条件（6行）和条件判断（8行）的控制。变异语句的执行会影响currpos的值，而currpos的值直接控制循环的继续或终止（6行）以及break语句的执行（8行），从而影响输出语句（14行）是否执行以及何时执行。因此，变异语句通过控制流影响输出语句。  \n分析结论：存在控制依赖路径，变异语句影响输出语句。  \n\n步骤[状态覆盖]：  \n说明理由：虽然变异引入了错误状态（currpos被赋错误值），但错误状态并未被后续执行修正或抵消。因为：  \n- currpos的错误值会直接导致循环条件判断错误（可能过早或过晚终止循环），从而改变count的最终值。  \n- 例如，假设原程序在正常输入下循环3次后退出，count=3；变异后可能因currpos错误导致循环2次或4次退出，count变为2或4。  \n- 没有证据表明scanToken函数或后续处理会“抵消”这种错误（例如，没有修正操作）。  \n因此，变异体的错误状态会传播到输出，导致输出count值改变。  \n分析结论：错误状态未被覆盖，影响最终输出。  \n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_651 的分析, 耗时: 66.2180 秒
+
+开始分析变异体 MUT_653...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_653": "步骤[可达性]：\n说明理由：变异语句位于while循环内部，其可达性约束为[currpos < maxPosition]。该条件表示进入循环时currpos必须小于maxPosition，这是一个可满足的条件（例如currpos=0, maxPosition=1）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原条件为\"currpos >= maxPosition\"，变异后为\"currpos <= maxPosition\"。在循环条件currpos < maxPosition的约束下（即currpos严格小于maxPosition），原条件currpos >= maxPosition恒为false（因为currpos < maxPosition），而变异条件currpos <= maxPosition恒为true（因为currpos < maxPosition蕴含currpos <= maxPosition）。因此，变异将条件从恒假变为恒真，这改变了程序的控制流行为。\n分析结论：变异实际改变了程序状态。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量currpos通过数据依赖链传播到输出：1) 当条件为真时，执行break语句，直接退出循环并返回count；2) 当条件为假时，继续执行scanToken和count++，currpos的值会影响后续的循环条件判断。currpos的变化会影响循环次数，从而影响最终的count值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句控制两个关键分支：1) 条件为真时执行break，直接退出循环；2) 条件为假时继续处理token。这直接影响程序是否继续处理更多的token，从而影响最终的count返回值。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的控制流（从原程序的恒假条件变为恒真条件），但在currpos < maxPosition的条件下，原程序永远不会执行break语句（因为条件恒假），而变异体会总是执行break语句（因为条件恒真）。这会导致变异体在第一次循环时就退出，返回count=0，而原程序会继续处理所有token。因此，变异引入的错误状态不会被修正或抵消，会导致不同的输出结果。\n分析结论：变异引入的错误状态不会被覆盖，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_653 的分析, 耗时: 46.6789 秒
+
+开始分析变异体 MUT_663...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_663": "步骤1：可达性分析  \n说明理由：变异语句位于while循环内部，其路径条件为[currpos < maxPosition]。该条件在循环执行期间可能为真（例如当currpos初始值小于maxPosition时），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n步骤2：必要性分析  \n说明理由：原语句为`currpos = skipDelimiters( currpos );`，变异后为`currpos = skipDelimiters( --currpos );`。变异将参数从currpos改为--currpos（先减1再使用）。在变异语句可达的情况下，参数值的改变会导致skipDelimiters函数的输入不同（原输入为currpos，变异后输入为currpos-1），从而可能影响其输出和后续程序状态。因此，该变异实际改变了程序语义。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n步骤3：数据依赖分析  \n说明理由：变异影响的变量是currpos。数据依赖路径显示，currpos的值用于：  \n- 条件判断if (currpos >= maxPosition)，直接影响是否break（从而影响循环终止和最终count值）  \n- 作为scanToken的参数，影响下一次循环的currpos值  \n- 循环条件while (currpos < maxPosition)，影响循环是否继续  \n最终，count的值通过return count输出。因此，currpos的变化通过数据依赖链传播到输出节点count。  \n分析结论：存在数据依赖路径传播到输出。  \n\n步骤4：控制依赖分析  \n说明理由：变异语句位于循环体内，其执行受循环条件控制。变异语句本身不直接控制输出语句，但通过改变currpos的值，间接影响：  \n- 条件语句if (currpos >= maxPosition)的控制流（可能导致提前break）  \n- 循环条件while (currpos < maxPosition)的控制流（可能改变循环次数）  \n由于循环次数直接影响count的值（每次循环count++），而count是最终输出，因此变异语句通过控制流间接影响输出语句。  \n分析结论：存在控制依赖路径影响输出。  \n\n步骤5：状态覆盖分析  \n说明理由：虽然变异改变了currpos的值（减1操作），但skipDelimiters函数的具体行为未知。如果skipDelimiters函数对输入值有特定处理（例如忽略小于0的值，或进行边界调整），可能会抵消变异的效应。然而，在没有函数内部信息的情况下，无法保证变异引入的错误状态会被修正。实际上，由于currpos的变化会影响后续所有依赖它的操作（循环条件、条件判断、scanToken调用），这种变化很可能传播到输出count，导致不同结果。例如，如果变异使currpos减小，可能导致循环次数增加（从而count增加），或提前满足currpos >= maxPosition条件（导致循环提前终止，count减少）。因此，变异的效果可能不会被覆盖。  \n分析结论：错误状态不太可能被覆盖，可能影响输出。  \n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_663 的分析, 耗时: 56.2373 秒
+
+开始分析变异体 MUT_668...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+Retrying request to /chat/completions in 0.412453 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_668": "步骤[可达性]：\n说明理由：变异语句是while循环的条件判断，其路径条件组合为[currpos == maxPosition]。该条件表示当前currpos等于maxPosition，这是一个可满足的条件，因为currpos和maxPosition都是整数变量，存在相等的情况。例如，当程序初始化时currentPosition等于maxPosition（即没有token需要处理），或者循环执行过程中currpos通过skipDelimiters或scanToken操作后等于maxPosition。因此，变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序的条件是while (currpos < maxPosition)，变异后为while (currpos == maxPosition)。这两个条件在语义上有显著差异：原条件表示只要currpos小于maxPosition就继续循环，而变异条件表示只有当currpos等于maxPosition时才进入循环。在变异语句可达的情况下（即currpos == maxPosition），原程序不会进入循环体（因为currpos < maxPosition为false），而变异体会进入循环体。这会导致程序执行不同的控制流路径，从而改变程序状态（如count的值和currpos的值）。\n分析结论：变异实际改变了程序状态。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是currpos。从数据依赖路径分析可以看出，currpos的值通过以下路径传播到输出：\n1. 在循环条件中影响是否进入循环\n2. 在skipDelimiters和scanToken操作中被使用和修改\n3. 在if条件判断中影响是否执行break\n4. 循环次数直接影响count的值，而count是最终的返回值\n因此，currpos的变化通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句while (currpos == maxPosition)控制着整个循环体的执行。从控制依赖路径可以看出：\n1. 如果条件为true，则执行循环体内的语句（skipDelimiters、if判断、可能的break、scanToken、count++）\n2. 如果条件为false，则跳过循环体直接返回count\n变异语句通过控制循环体的执行与否，直接影响count的值（循环次数），进而影响最终的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在。在currpos == maxPosition的情况下，原程序直接返回count=0，而变异体会进入循环体。在循环体内，currpos = skipDelimiters(currpos)可能会改变currpos的值，但随后的if (currpos >= maxPosition)判断很可能为true（因为初始currpos == maxPosition，且skipDelimiters通常不会减少位置），从而导致break退出循环。这种情况下，count仍然为0，与原始行为相同。但是，如果skipDelimiters的处理逻辑在某些情况下会使currpos小于maxPosition，那么程序行为可能会不同。由于无法保证在所有情况下变异引入的状态改变都会被完全抵消，因此不能认为存在状态覆盖现象。\n分析结论：不存在确定的状态覆盖现象。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_668 的分析, 耗时: 67.0972 秒
+
+开始分析变异体 MUT_672...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_672": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[currpos < maxPosition]，该条件表示在进入while循环时currpos必须小于maxPosition。变异语句位于循环体内，且该路径条件是可满足的（例如，当currpos=0且maxPosition=1时）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序在循环体内有一个条件判断\"if (currpos >= maxPosition) { break; }\"，该语句用于在currpos超过或等于maxPosition时提前退出循环。变异体删除了这个条件判断和break语句，这意味着在循环过程中即使currpos >= maxPosition，也不会提前退出循环，而是继续执行currpos = scanToken(currpos)和count++。这改变了程序的控制流和行为状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是currpos和count。根据数据依赖分析，count变量通过数据依赖链传播到程序输出节点（return count）。变异体删除了提前退出循环的条件，这会导致在原本应该退出的情况下继续执行count++，从而增加count的值。这种改变会通过count的数据依赖路径传播到输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句（被删除的条件判断）原本控制着循环的提前退出。删除这个条件判断后，循环的控制流发生了变化：原本在某些条件下会提前退出循环，现在必须等到while条件(currpos < maxPosition)不满足时才退出。这种控制流的改变会影响count++语句的执行次数，从而影响最终的输出值count。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：基于以上分析，变异体改变了程序的控制流和行为，会导致在某些输入情况下（当skipDelimiters使得currpos >= maxPosition时）count的值比原程序多增加。这种状态改变没有被后续执行修正或抵消，而是直接影响了最终的输出值。\n分析结论：变异引入的错误状态没有被修正或抵消，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_672 的分析, 耗时: 48.5673 秒
+
+开始分析变异体 MUT_693...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_693": "步骤[可达性]：  \n说明理由：根据提供的可达性约束条件[currpos < maxPosition]，该条件表示在进入while循环时currpos必须小于maxPosition。变异语句位于while循环内部（第8行），因此只要循环条件满足，该语句就可达。由于约束条件currpos < maxPosition是可满足的（例如，当currpos=0且maxPosition=1时），所以变异语句可达。  \n分析结论：变异语句可达。  \n\n步骤[必要性]：  \n说明理由：原程序条件为\"if (currpos >= maxPosition)\"，变异体将其改为\"if (false)\"。在可达路径（即currpos < maxPosition）下，原条件\"currpos >= maxPosition\"恒为假（因为currpos < maxPosition），而变异条件\"false\"也恒为假。因此，在可达路径上，原条件和变异条件的布尔值相同（均为false），程序执行流不会改变（均执行false分支，即跳过break，继续执行scanToken和count++）。变异没有实际改变程序状态（控制流和变量状态均未改变）。  \n分析结论：变异未改变程序状态，满足非必要性条件。  \n\n由于在步骤2（必要性）已确定该变异体为等价变异体（非必要性条件满足），无需继续后续分析步骤。  \n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_693 的分析, 耗时: 39.7630 秒
+
+开始分析变异体 MUT_695...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_695": "步骤[可达性]：\n说明理由： 原程序中的return count;语句位于方法末尾，是必然可达的。变异体将其改为return count++;，该语句同样位于方法末尾，执行路径与原程序完全相同。REACHABILITY_CONSTRAINT为NULL，表示没有额外的路径约束限制该语句的可达性。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原语句return count;直接返回count的当前值。变异语句return count++;使用了后置自增运算符，其语义是：先返回count的当前值，然后将count的值加1。虽然count的值在返回后被修改了，但由于这是方法的返回语句，方法已经返回，count值的改变不会影响本次调用的返回值。从程序语义上看，两者都返回count的当前值，返回值完全相同。\n分析结论： 变异未实际改变程序状态（返回值），属于非必要性变异。\n\n由于在必要性分析步骤已确定该变异体为等价变异体，不再进行后续分析步骤。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_695 的分析, 耗时: 27.7378 秒
+
+开始分析变异体 MUT_703...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_703": "步骤[可达性]：\n说明理由：变异语句位于第5行，即\"int currpos = currentPosition--;\"。该语句是方法体的局部变量初始化部分，没有任何前置条件约束（REACHABILITY_CONSTRAINT为NULL）。从程序入口到该语句的路径是直接的，没有条件分支阻挡。因此，该变异语句总是可达的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句为\"int currpos = currentPosition;\"，变异体为\"int currpos = currentPosition--;\"。原语句直接将currentPosition的值赋给currpos，而变异体使用后置递减操作符，先将currentPosition的值赋给currpos，然后将currentPosition的值减1。这会导致两个差异：1) currpos的初始值相同；2) currentPosition的值被修改（减1）。在变异语句可达的情况下，这种变异确实改变了程序状态：currpos的值虽然相同，但currentPosition的值发生了变化。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量包括currpos和currentPosition。从提供的数据依赖路径可以看出，currpos的值通过数据流传播到while循环条件、skipDelimiters调用、条件判断等，最终影响循环行为和程序输出。虽然currentPosition的值被修改，但查看数据依赖路径，currentPosition在变异后没有被再次使用（除了在变异语句自身中）。原程序中的currentPosition只在初始化时使用一次，变异后虽然修改了currentPosition，但这个修改没有传播到任何输出相关的语句。count变量的值依赖于循环次数，而循环次数受currpos值影响，但currpos的初始值与原程序相同（都是currentPosition的原始值）。\n分析结论：变异引入的状态改变（currentPosition的修改）没有通过数据依赖链传播到程序输出节点，存在数据依赖缺失。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_703 的分析, 耗时: 61.6203 秒
+
+开始分析变异体 MUT_710...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_710": "步骤[可达性]：\n说明理由： 变异语句位于while循环内部，其路径条件为[currpos < maxPosition]。该条件表示currpos必须小于maxPosition才能进入循环并执行到变异语句。由于currpos和maxPosition是整数变量，存在无数满足currpos < maxPosition的输入值（例如currpos=0, maxPosition=1），因此该路径条件是可满足的。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原表达式为\"currpos >= maxPosition\"，变异表达式为\"~currpos >= maxPosition\"。按位取反操作符~会改变currpos的二进制表示，从而可能改变比较结果。例如，当currpos=0且maxPosition=1时：原表达式0>=1为false，变异表达式~0（即-1）>=1也为false，结果相同；但当currpos=-1且maxPosition=0时：原表达式-1>=0为false，变异表达式~(-1)（即0）>=0为true，结果不同。因此存在输入使得变异改变了程序状态。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currpos通过数据依赖链传播到输出：变异语句中的currpos值会影响if条件判断结果，进而影响循环控制（line 6）和count++语句（line 12）的执行。count变量最终作为返回值输出，而count的值直接依赖于循环次数，循环次数又受currpos值的影响。具体路径：变异语句 → if条件 → 控制流 → count++ → return count。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句通过控制流影响输出语句：if (~currpos >= maxPosition) 语句控制两个分支：1) 如果为true，执行break语句，直接退出循环并返回count；2) 如果为false，继续执行currpos = scanToken(currpos)和count++，然后继续循环。这两个分支都最终影响return count语句的执行路径和结果。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异可能改变程序中间状态，但需要分析是否所有可能的输入下，最终输出都能保持与原程序一致。考虑边界情况：当currpos的值经过按位取反后，其与maxPosition的比较结果可能与原比较结果不同，这会导致：1) 提前退出循环（当~currpos >= maxPosition为true而原条件为false时），减少count值；2) 继续循环（当~currpos >= maxPosition为false而原条件为true时），增加count值。这两种情况都会改变最终的count返回值。例如，当currpos=0, maxPosition=0时：原条件0>=0为true（退出循环），变异条件~0(-1)>=0为false（继续循环），导致不同结果。\n分析结论： 变异引入的错误状态没有被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_710 的分析, 耗时: 58.1778 秒
+
+开始分析变异体 MUT_715...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_715": "步骤[可达性]：\n说明理由： 变异语句位于while循环内部，其可达性约束为[currpos < maxPosition]。该条件表示进入循环的条件，是程序执行到变异语句的前提。由于currpos和maxPosition是程序变量，该条件在运行时可能为真（例如当currpos初始值小于maxPosition时），因此路径条件可满足，变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"if (currpos >= maxPosition)\"，变异体改为\"if (true)\"。在变异语句可达的情况下（即currpos < maxPosition成立），原条件\"currpos >= maxPosition\"的值为false，而变异体条件\"true\"的值始终为true。这种改变会导致程序行为发生显著变化：原程序只有在currpos >= maxPosition时才执行break退出循环，而变异体则会在每次循环中都执行break语句，立即退出循环。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos。从数据依赖路径分析可以看出，currpos的值通过多条路径传播到输出语句return count：1) 通过break语句直接影响循环退出和最终count值；2) 通过scanToken()调用影响后续循环条件判断；3) 通过count++语句间接影响最终返回值。变异体将条件改为true后，会导致程序立即执行break，这会直接影响currpos的状态传播路径，进而影响最终的count返回值。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 从控制依赖路径分析可以看出，变异语句\"if (true)\"直接控制两个分支：True分支执行break语句立即退出循环，False分支继续执行scanToken和count++。由于变异体条件始终为true，程序总是执行break分支，这会显著改变控制流，直接影响循环的执行次数和最终的count返回值。输出语句return count的控制依赖于循环的执行情况，而循环的执行又受到变异语句的直接影响。\n分析结论： 变异语句通过控制流直接影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 基于以上分析，变异体将条件判断改为始终为true，导致程序在第一次进入循环时就立即执行break退出，返回count=0。而原程序会根据currpos与maxPosition的实际关系决定是否继续循环计数。这种改变无法在任何执行条件下被修正或抵消，因为变异体强制改变了循环的控制逻辑，使得程序无法正常进行token计数。\n分析结论： 变异引入的错误状态无法被后续执行修正或抵消，会直接影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_715 的分析, 耗时: 58.3395 秒
+
+开始分析变异体 MUT_719...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_719": "步骤[可达性]：\n说明理由： 变异语句位于while循环内的条件判断处。根据提供的可达性约束条件[currpos < maxPosition]，该条件在循环开始时必须为真才能进入循环体执行变异语句。由于该约束条件是可满足的（例如当currpos初始值小于maxPosition时），因此变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原条件判断为\"if (currpos >= maxPosition)\"，变异体改为\"if (currpos >= ++maxPosition)\"。变异操作符AOIS（算术运算符插入）将maxPosition替换为++maxPosition，这会在比较前先对maxPosition进行自增操作。在可达路径上，当currpos < maxPosition时，变异会改变maxPosition的值，从而可能影响后续的条件判断和循环行为。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量maxPosition通过数据依赖链传播到程序输出。具体路径包括：1) 变异语句影响while循环条件(currpos < maxPosition)，进而影响循环是否继续执行；2) 变异语句影响break语句的执行，从而影响最终的count值；3) maxPosition的值通过数据流传播到return count语句。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句通过控制流直接影响输出语句。变异语句的真假结果控制着是否执行break语句：如果条件为真，则执行break跳出循环，直接返回当前count值；如果条件为假，则继续执行后续的scanToken和count++操作，最终返回不同的count值。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了maxPosition的值，但这种改变会持续影响后续的循环执行。具体来说：1) 变异语句中的++maxPosition会提前增加maxPosition的值；2) 这可能导致循环提前终止（如果增加后的maxPosition使得currpos >= maxPosition成立）；3) 或者改变后续循环迭代的次数；4) 最终影响count的累加结果。没有证据表明这种状态改变会在后续执行中被修正或抵消。\n分析结论： 变异引入的错误状态不会被后续执行修正或抵消，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_719 的分析, 耗时: 48.0815 秒
+
+开始分析变异体 MUT_741...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_741": "步骤[可达性]：\n说明理由：变异语句位于while循环条件中，路径条件为[currpos < --maxPosition]。该条件在程序执行过程中可能被满足，例如当currpos初始值小于maxPosition时，循环条件为真，变异语句可达。没有逻辑矛盾表明该条件恒假。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序条件为\"currpos < maxPosition\"，变异体为\"currpos < --maxPosition\"。变异操作\"--maxPosition\"会先递减maxPosition的值，然后使用递减后的值进行比较。这改变了maxPosition的状态（递减操作）和比较的值（使用递减后的值），因此确实改变了程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量maxPosition通过数据依赖链传播到输出：1) 在while条件中，maxPosition的值影响循环是否继续；2) 在if条件\"if (currpos >= maxPosition)\"中，maxPosition的值影响是否执行break；3) 循环次数直接影响count的值，而count是最终的返回值。因此，maxPosition的变化会通过影响循环次数和break条件，最终影响返回值count。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句\"while (currpos < --maxPosition)\"控制着整个循环体的执行。循环体内的所有语句（包括currpos的赋值、if条件判断、count++等）都控制依赖于该while语句。由于返回值count的值完全由循环执行次数决定，而循环执行又受该while语句控制，因此变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了maxPosition的值和循环条件，但这种改变会直接影响循环的执行次数：1) --maxPosition会递减maxPosition，可能导致循环提前结束；2) 递减操作改变了maxPosition的值，会影响后续\"if (currpos >= maxPosition)\"条件的判断。这些改变都会影响最终的count值，不存在状态被修正或抵消的情况。例如，如果初始maxPosition=3，currpos=0，原程序会执行3次循环（count=3），而变异体可能只执行2次循环（count=2）。\n分析结论：变异引入的错误状态不会被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_741 的分析, 耗时: 53.4797 秒
+
+开始分析变异体 MUT_749...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_749": "步骤[可达性]：\n说明理由： 根据提供的REACHABILITY_CONSTRAINT '[currpos < maxPosition]'，该约束表示在进入变异语句前必须满足currpos < maxPosition的条件。由于程序执行到该变异语句时已经处于while循环内部（while (currpos < maxPosition)），这意味着currpos < maxPosition条件已经为真，因此变异语句的路径条件是可满足的。变异语句位于循环体内，当currpos < maxPosition时，该语句会被执行。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"if (currpos >= maxPosition)\"，变异后为\"if (currpos < maxPosition)\"。这两个条件在逻辑上是互斥的：当currpos >= maxPosition时，原条件为真，变异条件为假；当currpos < maxPosition时，原条件为假，变异条件为真。在相同的程序状态下，这两个条件永远不会同时为真或同时为假，因此变异确实改变了程序的语义和控制流。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是currpos。根据DATA_DEPENDENCY信息，currpos的数据依赖路径显示：当变异条件为真时，会执行break语句，直接退出循环并返回count；当变异条件为假时，会继续执行scanToken操作并增加count。count作为返回值，其值直接受到变异条件判断结果的影响。变异通过控制是否执行count++来影响最终的输出值。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 根据CTRL_DEPENDENCY信息，变异语句\"if (currpos < maxPosition)\"的控制依赖路径清晰：当条件为真时，控制流向break语句，然后直接到return count；当条件为假时，控制流向scanToken和count++语句，然后继续循环。变异语句直接控制了程序是否继续处理token并计数，从而影响最终的count返回值。\n分析结论： 变异语句通过控制流直接影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 基于前述分析，变异改变了条件判断的逻辑，导致程序在不同的currpos值下会采取不同的执行路径。当currpos < maxPosition时，原程序不会执行break（继续处理token），而变异体会执行break（提前退出循环）；当currpos >= maxPosition时，情况相反。这种差异会导致count值的不同，从而影响最终的返回值。没有证据表明变异引入的错误状态会在后续执行中被修正或抵消。\n分析结论： 变异引入的状态差异会直接影响程序输出，不存在状态覆盖。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_749 的分析, 耗时: 54.4598 秒
+
+开始分析变异体 MUT_750...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_750": "步骤[可达性]：\n说明理由：变异语句位于while循环内部，其可达性约束为[currpos < maxPosition]。该条件表示在进入循环时currpos必须小于maxPosition，这是一个可满足的条件（例如，当currpos=0且maxPosition=1时）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原语句为\"if (currpos >= maxPosition)\"，变异体改为\"if (currpos++ >= maxPosition)\"。变异操作在比较前对currpos进行了自增操作，这会改变currpos的值。在可达路径上（currpos < maxPosition），这种改变是实际发生的：原语句只是比较currpos和maxPosition，而变异体不仅比较，还会增加currpos的值。这确实改变了程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量currpos通过数据依赖链传播到输出：变异语句修改currpos → 影响scanToken调用 → 影响while循环条件判断 → 影响count++的执行次数 → 最终影响返回值count。具体路径为：line 8变异 → line 11使用currpos → line 6判断循环条件 → line 12 count++ → line 14 return count。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句通过控制流直接影响输出：变异语句的真假分支分别导致break（直接退出循环返回count）或继续执行count++（增加计数值）。具体控制依赖路径为：变异语句为真 → break → 直接返回当前count；变异语句为假 → 执行scanToken和count++ → 继续循环或最终返回count。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了程序状态（增加了currpos的值），但这种改变在后续执行中不会被修正或抵消。currpos的增加会影响后续的token扫描过程，可能导致：1) 提前满足循环退出条件；2) 跳过某些token；3) 改变count的最终值。这些影响都会直接传递到最终的返回值count。\n分析结论：变异引入的状态改变不会被后续执行修正或抵消，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_750 的分析, 耗时: 55.6986 秒
+
+开始分析变异体 MUT_754...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_754": "步骤[可达性]：  \n说明理由：变异语句位于while循环条件中，循环条件本身没有不可达的路径约束（REACHABILITY_CONSTRAINT为NULL）。程序入口到该语句的路径条件为：无特殊约束（即currpos和maxPosition的初始值满足循环条件即可）。例如，当currpos < maxPosition时，循环条件为真，变异语句可达。因此，该变异语句是可达的。  \n分析结论：变异语句可达。  \n\n步骤[必要性]：  \n说明理由：原程序语句为`while (currpos < maxPosition)`，变异体为`while (currpos < maxPosition--)`。变异操作是后置自减（AOIS），它改变了maxPosition的值（每次循环条件判断时，maxPosition会减1）。在可达路径上（即循环执行时），原程序的条件判断使用maxPosition的原始值，而变异体使用递减后的值。这会导致循环条件判断结果不同（例如，第一次循环时，原条件为currpos < maxPosition，变异条件为currpos < (maxPosition-1)），从而改变循环次数和程序状态（如count值）。因此，该变异实际改变了程序语义。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n步骤[数据依赖]：  \n说明理由：变异影响的变量是maxPosition。数据依赖路径显示，maxPosition的值通过循环条件（控制依赖）影响后续语句的执行（如break、count++等），并最终传播到输出count。具体路径：变异点（line6）->循环条件控制line7（skipDelimiters）->line8（条件判断）->line9（break）或line11（scanToken）和line12（count++）->最终返回count。因此，maxPosition的变化通过数据依赖链传播到输出节点。  \n分析结论：存在数据依赖，变异效果可传播到输出。  \n\n步骤[控制依赖]：  \n说明理由：控制依赖路径显示，变异语句（循环条件）直接控制循环体内的语句（line7、line8、line11、line12）的执行，进而影响输出count。例如，循环条件为真时，执行循环体；为假时，退出循环并返回count。因此，变异语句通过控制流影响输出语句。  \n分析结论：存在控制依赖，变异效果可传递到输出。  \n\n步骤[状态覆盖]：  \n说明理由：虽然变异改变了maxPosition的值（递减），但该改变是累积的（每次循环都递减），会导致循环次数减少（例如，原程序循环n次，变异体可能循环n-1次），从而减少count的增量。最终count值会不同（例如，原程序返回k，变异体返回k-1）。没有证据表明错误状态被修正或抵消；相反，变异引入的错误状态（maxPosition递减）会直接导致输出count减少。  \n分析结论：错误状态未被覆盖，影响最终输出。  \n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_754 的分析, 耗时: 57.6616 秒
+
