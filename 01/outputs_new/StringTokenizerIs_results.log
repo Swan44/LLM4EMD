@@ -1,0 +1,173 @@
+开始处理程序: D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantjavadiv\StringTokenizerIs.java
+开始分析变异体 MUT_006...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_006": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `i <= delimiterCodePoints.length`。原程序中的循环条件是 `i < delimiterCodePoints.length`，而变异体将其改为 `i > delimiterCodePoints.length`。初始时 `i = 0`，且 `delimiterCodePoints.length` 至少为 0（假设数组长度非负），因此初始条件 `0 > delimiterCodePoints.length` 在大多数情况下为假（除非 `delimiterCodePoints.length` 为 0，此时 `i` 初始值为 0，条件仍为假）。因此，变异语句的循环条件在初始时即为假，循环体不会被执行。\n分析结论：变异语句不可达。\n\n### 步骤[必要性]：\n说明理由：由于变异语句不可达，无需进一步分析必要性。\n分析结论：跳过。\n\n### 步骤[数据依赖]：\n说明理由：由于变异语句不可达，无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于变异语句不可达，无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异语句不可达，无需进一步分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_006 的分析, 耗时: 46.2670 秒
+
+开始分析变异体 MUT_012...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_012": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的条件部分，原条件为`i < delimiterCodePoints.length`，变异后为`!(i < delimiterCodePoints.length)`。初始条件`i = 0`，若`delimiterCodePoints.length > 0`，则原条件为真，变异条件为假；若`delimiterCodePoints.length == 0`，则原条件和变异条件均为假。因此，变异语句的可达性取决于`delimiterCodePoints.length`的值。由于`delimiterCodePoints`是一个数组，其长度可能为0或大于0，因此变异语句在某些输入下是可达的。\n\n分析结论：变异语句在某些输入下可达。\n\n### 步骤[必要性]：\n说明理由：原条件`i < delimiterCodePoints.length`和变异条件`!(i < delimiterCodePoints.length)`在语义上是完全相反的。原程序在`i < delimiterCodePoints.length`为真时执行循环体，而变异体在`!(i < delimiterCodePoints.length)`为真时执行循环体。这意味着变异体在`i >= delimiterCodePoints.length`时会执行循环体，而原程序不会。因此，变异确实改变了程序的行为。\n\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`i`。`i`的值在循环条件中被使用，并且通过循环体内的`if`语句影响返回值。具体来说，`i`的值决定了是否进入循环体，以及在循环体中是否执行`return true`。因此，`i`的值通过数据依赖链传播到程序输出节点。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是for循环的条件部分，它直接控制循环体的执行。循环体内的`if`语句和`return`语句依赖于循环条件的真假。因此，变异语句通过控制流影响输出语句。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（即循环条件的反转）会导致循环体的执行逻辑完全相反。原程序在`i < delimiterCodePoints.length`时执行循环体，而变异体在`i >= delimiterCodePoints.length`时执行循环体。这种反转会导致程序的行为完全不同，例如原程序可能在第一次循环时返回`true`，而变异体可能直接跳过循环返回`false`。因此，变异引入的错误状态不会被后续执行修正或抵消。\n\n分析结论：变异引入的错误状态不会被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_012 的分析, 耗时: 57.7526 秒
+
+开始分析变异体 MUT_017...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_017": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，其可达性依赖于循环条件`i < delimiterCodePoints.length`。该条件在循环执行期间是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的条件是`delimiterCodePoints[i] == codePoint`，变异后变为`delimiterCodePoints[i] == --codePoint`。`--codePoint`会先递减`codePoint`的值再进行比较，这会改变`codePoint`的状态，从而可能影响比较结果。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`codePoint`。数据依赖路径显示，`codePoint`的值直接影响条件判断的结果，进而通过控制流影响`return true`或`return false`的输出。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (delimiterCodePoints[i] == --codePoint)`直接控制两个分支：`return true`和继续循环（最终可能`return false`）。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`codePoint`的值并可能影响条件判断结果，但最终输出`return true`或`return false`完全依赖于变异后的条件判断。没有证据表明变异引入的错误状态在后续执行中被修正或抵消。因此，变异的效果会直接反映在程序输出中。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_017 的分析, 耗时: 44.2468 秒
+
+开始分析变异体 MUT_027...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_027": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[i <= delimiterCodePoints.length]`，这是一个常见的循环条件，可以被满足。例如，当`delimiterCodePoints.length > 0`时，存在`i`的值使得条件成立。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`i < delimiterCodePoints.length`，变异后的条件是`i <= delimiterCodePoints.length`。在大多数情况下，这两个条件的语义是不同的。特别是当`i == delimiterCodePoints.length`时，原条件为假，而变异条件为真。这将导致循环多执行一次，可能引发数组越界异常（`delimiterCodePoints[i]`访问越界）。因此，变异确实改变了程序的行为。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`i`，其数据依赖路径显示`i`的值直接用于`delimiterCodePoints[i]`的比较，并影响`return true`或`return false`的输出。因此，`i`的值通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（循环条件）控制循环体的执行，而循环体中的`return true`和循环结束后的`return false`直接依赖于循环条件的结果。因此，变异语句通过控制流影响输出语句。\n分析结论：控制依赖存在。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（循环多执行一次）会导致数组越界异常，从而可能提前终止程序或引发错误。这种状态不会被后续执行修正或抵消，而是会导致程序行为与原始程序不同。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_027 的分析, 耗时: 61.0218 秒
+
+开始分析变异体 MUT_029...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_029": "### 步骤1：可达性\n说明理由：变异语句位于for循环内部，其可达性条件为`i < delimiterCodePoints.length`。该条件在循环执行过程中是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是`delimiterCodePoints[i] == codePoint`，变异后的条件是`delimiterCodePoints[i] >= codePoint`。在`delimiterCodePoints[i] > codePoint`的情况下，原条件为false，变异条件为true，会导致程序状态改变（返回true而非继续循环或返回false）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`codePoint`和`i`。`codePoint`的值直接影响变异条件的结果，进而通过控制流影响输出（return true或false）。`i`的值通过循环控制影响是否执行到变异语句。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句直接控制两个输出分支：条件为true时返回true，为false时继续循环或返回false。因此变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异引入了不同的中间状态（条件判断结果变化），但这些状态变化会直接导致不同的输出（如`delimiterCodePoints[i] > codePoint`时原程序返回false而变异体返回true），不存在状态被后续执行修正或抵消的情况。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_029 的分析, 耗时: 52.3314 秒
+
+开始分析变异体 MUT_072...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_072": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，其可达性条件为`i < delimiterCodePoints.length`。该条件在循环执行过程中是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`delimiterCodePoints[i] == codePoint`，变异表达式为`delimiterCodePoints[i] <= codePoint`。当`delimiterCodePoints[i] < codePoint`时，原始表达式返回false，而变异表达式返回true，程序状态会改变（返回true而非继续循环或返回false）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`codePoint`和`i`通过数据依赖链传播到输出节点。`codePoint`的值直接影响条件判断结果，进而影响返回的布尔值（输出）。`i`的值影响循环迭代和数组访问，间接影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (delimiterCodePoints[i] <= codePoint)`直接控制两个输出路径：返回true或继续循环/返回false。因此变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些情况下会提前返回true（当`delimiterCodePoints[i] < codePoint`时），但这种情况会导致程序行为与原始程序不同（原始程序会继续循环或返回false）。不存在后续执行能修正或抵消这种差异的情况。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_072 的分析, 耗时: 62.6686 秒
+
+开始分析变异体 MUT_076...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_076": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，路径条件为`i < delimiterCodePoints.length`。该条件在循环执行期间是可满足的（只要数组非空），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件`delimiterCodePoints[i] == codePoint`被替换为`false`。这将导致循环体内的条件判断永远为假，直接跳过`return true`语句，改变程序的控制流。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是i，但i的值仅用于循环控制和数组索引访问。由于变异导致条件判断永远为假，i的变化不会影响程序输出（因为不会执行`return true`）。\n分析结论：变异影响的变量未通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制了是否执行`return true`。由于变异导致永远不会执行`return true`，程序总是执行循环结束后的`return false`。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了控制流（跳过所有`return true`），但最终结果是程序总是返回false（除非原程序本就会返回false）。这与原程序在某些情况下返回true的行为不同。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。\n\n（注：虽然数据依赖分析显示变量i的影响未传播到输出，但由于控制依赖的存在且变异显著改变了程序行为（将所有可能的true返回变为false返回），因此判定为非等价变异体。）"}
+完成变异体 MUT_076 的分析, 耗时: 47.9258 秒
+
+开始分析变异体 MUT_093...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_093": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，且循环条件为`i < delimiterCodePoints.length`。只要`delimiterCodePoints.length > 0`，该变异语句就是可达的。给定的`REACHABILITY_CONSTRAINT`为`[i < delimiterCodePoints.length]`，表明该路径条件是可满足的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`delimiterCodePoints[i]`进行比较，而变异体使用`delimiterCodePoints[i--]`。`i--`会先使用`i`的当前值进行比较，然后将`i`减1。这会导致`i`的值在后续循环迭代中发生变化，从而可能影响循环的执行次数和比较结果。因此，该变异确实改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`i`。`i`的数据依赖路径显示，`i`的值会影响循环条件`i < delimiterCodePoints.length`的判断结果，进而影响程序的输出（`return true`或`return false`）。具体来说：\n1. 如果`delimiterCodePoints[i--] == codePoint`为`true`，程序会直接返回`true`。\n2. 如果为`false`，`i`的值会减1，影响下一次循环的条件判断，最终可能影响`return false`的执行。\n因此，变异影响的变量`i`通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (delimiterCodePoints[i--] == codePoint)`的控制依赖路径直接影响程序的输出：\n1. 如果条件为`true`，程序直接返回`true`。\n2. 如果条件为`false`，程序继续循环或最终返回`false`。\n因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`i`的值，但这种改变会直接影响循环的执行次数和条件判断结果，进而影响程序的输出（`true`或`false`）。没有证据表明这种改变会在后续执行中被修正或抵消。因此，变异引入的错误状态会传递到程序输出。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_093 的分析, 耗时: 53.0509 秒
+
+开始分析变异体 MUT_154...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_154": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[i < delimiterCodePoints.length && delimiterCodePoints[i] == codePoint]`，这是一个可满足的条件。例如，当`i`在有效范围内且`delimiterCodePoints[i]`等于`codePoint`时，该条件为真，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回`true`，变异体返回`false`。在变异语句可达的情况下（即`delimiterCodePoints[i] == codePoint`为真），原程序返回`true`，而变异体返回`false`，程序状态发生改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异体直接修改了返回值（从`true`改为`false`），不涉及具体变量的数据流变化。因此，没有变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖缺失。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（`return false;`）直接控制程序的输出，输出语句（`return false;`）完全依赖于变异语句的执行。因此，变异语句通过控制流直接影响输出语句。\n分析结论：控制依赖存在。\n\n### 步骤[状态覆盖]：\n说明理由：变异体在可达路径上直接修改了返回值，且没有后续执行修正或抵消这一改变。程序输出从`true`变为`false`，可观察的输出发生改变。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_154 的分析, 耗时: 40.1010 秒
+
+开始分析变异体 MUT_157...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_157": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，其路径条件组合为`i < delimiterCodePoints.length`。该条件在循环执行过程中是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的条件判断为`delimiterCodePoints[i] == codePoint`，变异后为`delimiterCodePoints[i] == ~codePoint`。对于任意整数`codePoint`，`codePoint`和`~codePoint`的值不同（除非`codePoint`为特定值如`-1`或`0`，但一般情况下不成立），因此该变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`codePoint`，其数据依赖路径显示`codePoint`的值直接影响条件判断的结果，进而影响`return true`或`return false`的输出。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (delimiterCodePoints[i] == ~codePoint)`直接控制两个分支：`return true`或继续循环。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的中间状态（`codePoint`与`~codePoint`的比较），但该状态差异会直接导致不同的输出（`true`或`false`），且未被后续执行修正或抵消。因此，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_157 的分析, 耗时: 40.3241 秒
+
+开始分析变异体 MUT_184...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_184": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，路径条件为`i < delimiterCodePoints.length`。该条件在循环执行期间是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`delimiterCodePoints[i] == codePoint`，变异后为`delimiterCodePoints[i] == codePoint++`。变异引入了`codePoint`的自增操作，会改变`codePoint`的值，从而可能影响后续比较结果。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`codePoint`通过数据依赖链传播到输出节点。具体路径为：\n1. `(line 5: if (delimiterCodePoints[i] == codePoint++)) --[Flows codePoint]--> (line 6: return true)`\n2. `(line 5: if (delimiterCodePoints[i] == codePoint++)) --[Control False]--> (line 0: endif) --[Control]--> (line 4: i++) --[Control]--> (line 4: for (i < delimiterCodePoints.length)) --[Control False]--> (line 9: return false)`\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句。具体路径为：\n1. `(5: if (delimiterCodePoints[i] == codePoint++)) --True--> (6: return true;)`\n2. `(5: if (delimiterCodePoints[i] == codePoint++)) --False--> (4: i++) -- --> (4: for (i < delimiterCodePoints.length)) --False--> (9: return false;)`\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`codePoint`的自增）会影响后续循环中的比较结果，从而可能改变程序的输出行为。例如，如果`codePoint`自增后与后续的`delimiterCodePoints[i]`匹配，可能导致不同的返回值。\n分析结论：变异引入的错误状态未被修正或抵消，会影响程序最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_184 的分析, 耗时: 43.8178 秒
+
+开始分析变异体 MUT_212...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_212": "### 步骤1：可达性\n说明理由：变异语句位于for循环内部，循环条件为`i < delimiterCodePoints.length`，这是一个常见的可达条件，只要数组长度大于0且循环变量i在合理范围内，该语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是`delimiterCodePoints[i] == codePoint`，变异后为`delimiterCodePoints[i] > codePoint`。这两个条件在不同情况下会产生不同的结果，例如当`delimiterCodePoints[i] == codePoint`时，原程序返回true，变异体返回false。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`codePoint`和`i`。`codePoint`的值直接影响条件判断的结果，进而影响返回值。`i`的值影响数组访问和循环控制。两者的数据依赖路径都直接连接到输出语句（return true或return false）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句`if (delimiterCodePoints[i] > codePoint)`直接控制两个输出分支：返回true或继续循环/返回false。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（条件判断结果改变）会直接导致不同的返回值，没有在后续执行中被修正或抵消。例如，当`delimiterCodePoints[i] == codePoint`时，原程序返回true，变异体返回false，这种差异会直接反映在最终输出。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_212 的分析, 耗时: 55.4235 秒
+
+开始分析变异体 MUT_249...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_249": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的初始化部分，路径条件组合为[i < delimiterCodePoints.length]。该条件在循环开始时可以被满足（例如当delimiterCodePoints.length > 0时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的for循环包含i++语句，而变异体移除了i++。这将导致循环变量i不再递增，从而可能使循环无法正常终止或跳过某些迭代。在可达路径下（即delimiterCodePoints.length > 0时），这将显著改变程序的控制流和行为。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i通过数据依赖链传播到程序输出节点。变量i用于访问数组delimiterCodePoints[i]和循环条件判断，直接影响return true和return false的输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流直接影响输出语句。循环变量i的改变会影响循环的执行次数和条件判断，从而影响最终的返回结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了错误状态（i不再递增），但这种错误状态不会被后续执行修正或抵消，而是会导致程序行为发生根本性改变（如无限循环或跳过某些检查）。\n分析结论：变异引入的错误状态不会被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_249 的分析, 耗时: 40.8300 秒
+
+开始分析变异体 MUT_278...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_278": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[i != delimiterCodePoints.length]`。在循环开始时，`i` 被初始化为 `0`，只要 `i` 不等于数组长度，循环就会继续执行。这个条件在循环执行过程中是可满足的，因为 `i` 会从 `0` 递增到 `delimiterCodePoints.length - 1`，然后变为 `delimiterCodePoints.length` 时退出循环。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `i < delimiterCodePoints.length`，变异后的条件是 `i != delimiterCodePoints.length`。在循环执行过程中，`i` 从 `0` 递增到 `delimiterCodePoints.length - 1` 时，两个条件的值相同（都为 `true`）；当 `i` 递增到 `delimiterCodePoints.length` 时，原条件为 `false`，变异条件为 `false`（因为 `i == delimiterCodePoints.length`）。因此，变异并未改变程序的语义或状态。\n分析结论：变异未改变程序状态，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `i`。`i` 的数据依赖路径显示它用于数组访问和循环控制，最终影响返回值。然而，由于变异未改变 `i` 的实际值或循环行为（见必要性分析），因此数据依赖链的传播并未导致程序输出的改变。\n分析结论：数据依赖链存在，但变异未实际改变程序状态。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制循环的执行，而循环的执行影响返回值。然而，由于变异未改变循环的实际行为（见必要性分析），因此控制依赖路径的存在并未导致程序输出的改变。\n分析结论：控制依赖路径存在，但变异未实际改变程序行为。\n\n### 步骤[状态覆盖]：\n说明理由：变异未改变循环的实际行为（见必要性分析），因此变异引入的“错误状态”实际上并未改变程序的任何状态或输出。程序的行为和输出与原程序完全一致。\n分析结论：变异引入的状态差异被完全抵消，不影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_278 的分析, 耗时: 44.6582 秒
+
+开始分析变异体 MUT_284...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_284": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，其路径条件为`i < delimiterCodePoints.length`。该条件在循环执行期间是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`delimiterCodePoints[i]`，变异体使用`delimiterCodePoints[~i]`。`~i`是i的按位取反，当i在合法范围内时（0 <= i < delimiterCodePoints.length），`~i`会产生一个完全不同的索引值（通常是一个很大的负数）。这将导致访问不同的数组元素，从而可能改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i和codePoint通过数据依赖链传播到输出节点。具体来说，i的值影响数组访问的结果，而codePoint的值直接影响比较结果。这两个变量的变化都会通过return语句影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（if条件判断）直接控制两个输出路径：返回true或继续循环。因此变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序状态（使用不同的数组索引），但这种改变不会被后续执行修正或抵消。因为数组访问的结果直接决定了返回值，没有其他操作会覆盖这个改变。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_284 的分析, 耗时: 56.7035 秒
+
+开始分析变异体 MUT_294...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_294": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，其可达性条件为`i < delimiterCodePoints.length`。该条件在循环执行过程中是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的条件为`delimiterCodePoints[i] == codePoint`，变异后为`delimiterCodePoints[i] != codePoint`。这两个条件逻辑相反，会直接改变程序的控制流（返回`true`或继续循环）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`codePoint`和`i`。`codePoint`的值直接影响条件判断结果，进而影响是否返回`true`或继续循环。`i`的值影响循环的执行和条件判断的索引。两者的数据依赖路径均连接到输出语句（`return true`或`return false`）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (delimiterCodePoints[i] != codePoint)`直接控制两个分支：返回`true`或继续循环。这两个分支最终都会影响程序的输出（`return true`或`return false`）。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的状态改变（条件判断结果相反）会直接导致程序返回不同的结果（`true`或`false`），且没有后续逻辑覆盖或修正这种改变。因此，变异的效果会直接反映在程序输出中。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_294 的分析, 耗时: 56.5518 秒
+
+开始分析变异体 MUT_339...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_339": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `i < ~delimiterCodePoints.length`。由于 `delimiterCodePoints.length` 是一个非负整数，`~delimiterCodePoints.length` 是一个负数（按位取反），因此 `i < ~delimiterCodePoints.length` 恒为假（因为 `i` 初始化为 0 且为非负整数）。因此，变异语句的路径条件逻辑上不可满足。\n分析结论：变异语句不可达。\n\n### 最终结论：等价变异体判定结果：YES"}
+完成变异体 MUT_339 的分析, 耗时: 38.5851 秒
+
+开始分析变异体 MUT_388...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_388": "### 步骤[可达性]：\n说明理由：变异体删除了整个for循环及其内部逻辑，包括if条件和return true语句。当前控制依赖图显示只有方法入口节点、return false节点和exit节点。由于变异语句已被删除，控制依赖路径从方法入口直接到终止节点。因此，变异语句本身不可达。\n分析结论：变异语句不可达。\n\n### 步骤[必要性]：\n说明理由：由于变异语句已被删除，无需分析必要性。\n分析结论：跳过。\n\n### 步骤[数据依赖]：\n说明理由：变异体移除了整个for循环和条件判断逻辑，原始代码中对codePoint的使用已被删除。当前仅剩的参数声明和return false语句之间存在控制依赖关系，没有实际的数据使用过程。变量codePoint的数据依赖路径从参数声明开始，直接流向最终的返回语句，没有实际的数据使用过程。\n分析结论：数据依赖缺失。\n\n### 步骤[控制依赖]：\n说明理由：由于变异语句已被删除，控制依赖路径从方法入口直接到终止节点。变异语句无法通过控制流影响输出语句。\n分析结论：控制依赖缺失。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异语句已被删除，程序的行为简化为直接返回false，与原程序的行为在功能上等价。变异引入的错误状态被完全覆盖，不影响最终输出。\n分析结论：错误状态被覆盖。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_388 的分析, 耗时: 39.0022 秒
+
+开始分析变异体 MUT_397...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_397": "### 步骤1：可达性\n说明理由：变异语句位于for循环内部，其可达性依赖于循环条件`i < delimiterCodePoints.length`。该条件在输入满足`delimiterCodePoints.length > 0`时即可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是`delimiterCodePoints[i] == codePoint`，变异后的条件是`!(delimiterCodePoints[i] == codePoint)`。这两个条件在逻辑上是完全相反的，因此变异会改变程序的控制流和状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`codePoint`和`i`。`codePoint`的值直接影响条件判断的结果，进而影响程序的返回值（`return true`或继续循环）。`i`的值通过循环影响条件判断的执行次数。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句`if (!(delimiterCodePoints[i] == codePoint))`直接控制两个分支：如果条件为真，则执行`return true`；如果为假，则继续循环或最终执行`return false`。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（即条件判断的反转）会直接导致程序的控制流改变，从而可能改变最终的返回值。例如，原程序在`delimiterCodePoints[i] == codePoint`时返回`true`，变异后会在相同条件下返回`false`。因此，错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_397 的分析, 耗时: 52.3601 秒
+
+开始分析变异体 MUT_399...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_399": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `i == delimiterCodePoints.length`。初始时 `i = 0`，而 `delimiterCodePoints.length` 是一个数组长度，通常大于等于0。只有当 `i` 初始值等于 `delimiterCodePoints.length` 时，条件才为真。对于大多数情况（尤其是 `delimiterCodePoints.length > 0`），初始条件 `i == delimiterCodePoints.length` 为假，因此循环体不会执行。然而，如果 `delimiterCodePoints.length == 0`，则初始条件为真，循环体可能执行一次。因此，变异语句在某些情况下可达。\n分析结论：变异语句在某些情况下可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的循环条件是 `i < delimiterCodePoints.length`，而变异后的条件是 `i == delimiterCodePoints.length`。原循环会在 `i` 从 `0` 到 `delimiterCodePoints.length - 1` 时执行，而变异后的循环仅在 `i == delimiterCodePoints.length` 时执行一次（如果 `i` 初始值为 `delimiterCodePoints.length`）。这显著改变了循环的执行次数和程序的行为。因此，变异实际改变了程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `i`。`i` 的值在循环条件中直接影响到是否进入循环体，进而影响 `delimiterCodePoints[i] == codePoint` 的判断和最终的返回值。如果 `i` 的值被改变，可能导致循环体不执行或执行一次，从而影响程序输出。因此，变异影响的变量 `i` 通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `for (int i = 0; i == delimiterCodePoints.length; i++)` 控制了循环体的执行。如果循环条件不满足，程序会直接跳过循环体，执行 `return false`。如果循环条件满足，程序会进入循环体，执行 `if (delimiterCodePoints[i] == codePoint)` 的判断，可能返回 `true` 或继续循环。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（循环条件改变）会导致循环体的执行次数和逻辑完全不同于原程序。如果 `delimiterCodePoints.length == 0`，原程序不会进入循环，直接返回 `false`；变异后的程序也不会进入循环，直接返回 `false`。如果 `delimiterCodePoints.length > 0`，原程序会进入循环多次，而变异后的程序不会进入循环（除非 `i` 初始值等于 `delimiterCodePoints.length`，但这是不可能的）。因此，变异体的行为与原程序在大多数情况下不同，且错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_399 的分析, 耗时: 60.3794 秒
+
+开始分析变异体 MUT_413...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_413": "### 步骤[可达性]：\n说明理由：变异语句位于循环体内，路径条件为`i < delimiterCodePoints.length`，这是一个可满足的条件，因为循环会在`i`小于数组长度时执行。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`delimiterCodePoints[i] == codePoint`进行判断，而变异体使用`delimiterCodePoints[++i] == codePoint`。`++i`会先递增`i`再进行比较，这会改变`i`的值，从而可能跳过某些数组元素的检查或导致数组越界。因此，变异实际改变了程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`i`。`i`的数据依赖路径显示其值会影响循环条件和后续的数组访问。具体来说，`i`的修改会影响`delimiterCodePoints[++i]`的访问，从而可能影响`return true`或`return false`的结果。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (delimiterCodePoints[++i] == codePoint)`的控制依赖路径直接影响`return true`或`return false`的执行。变异语句的真假结果决定了程序的分支走向，进而影响最终的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`i`的递增和可能的数组访问偏移）会直接影响程序的输出行为（如跳过某些元素的检查或导致越界错误），且这种错误状态不会被后续执行修正或抵消。因此，变异的效果会传递到输出，导致程序的可观察输出可能发生变化。\n分析结论：变异引入的错误状态未被修正或抵消，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_413 的分析, 耗时: 46.4791 秒
+
+开始分析变异体 MUT_433...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"

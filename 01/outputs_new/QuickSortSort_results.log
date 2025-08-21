@@ -1,0 +1,593 @@
+开始处理程序: D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantjavadiv\QuickSortSort.java
+开始分析变异体 MUT_004...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_004": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[data.length >= 2, i < data.length, data[max] < data[i]]`。这些条件在程序执行过程中是可以满足的，例如当 `data.length >= 2` 且存在 `i` 使得 `data[max] < data[i]` 时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `max = i;`，变异体为 `max = --i;`。变异体不仅将 `i` 赋值给 `max`，还递减了 `i` 的值。这会改变 `i` 和 `max` 的值，从而影响后续的循环条件和数组访问。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `max` 和 `i`。`max` 的值直接用于 `swap` 操作，而 `i` 的值影响循环的迭代。`max` 的数据依赖路径为 `max = --i` → `swap(data, data.length - 1, max)` → `quicksort(data, 0, data.length - 2)`，`i` 的数据依赖路径为 `max = --i` → `i++` → `for (i < data.length)` → `if (data[max] < data[i])` → `max = --i`（循环依赖）。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `max = --i;` 位于 `if (data[max] < data[i])` 条件为真时的分支中。该条件控制循环的迭代和后续的 `swap` 操作。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖条件。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`i` 和 `max` 的值改变）会直接影响循环的迭代和 `swap` 操作，进而影响最终的排序结果。没有证据表明这些错误状态会在后续执行中被修正或抵消。\n分析结论：错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_004 的分析, 耗时: 47.5822 秒
+
+开始分析变异体 MUT_008...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_008": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`data.length >= 2`，这是一个可满足的条件，因为只要输入数组的长度大于等于2，变异语句`quicksort( data, 0, data.length )`就可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序调用`quicksort( data, 0, data.length - 2 )`，而变异体调用`quicksort( data, 0, data.length )`。两者的区别在于排序的右边界不同。对于`data.length >= 2`的情况，`data.length - 2`和`data.length`会导致不同的排序范围，从而可能影响排序结果。例如，对于长度为3的数组，原程序排序索引0到1，而变异体排序索引0到3，这将导致不同的排序行为。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`，其数据依赖路径显示`data`的值会直接传递给`quicksort`方法。`quicksort`方法会修改`data`数组的内容，而`data`是程序的输出（通过排序后的数组状态体现）。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`quicksort( data, 0, data.length )`是方法的最后一条语句，其执行结果直接影响程序的输出（排序后的数组）。虽然变异语句本身不直接控制分支走向，但它直接修改了输出数据的状态。\n分析结论：变异语句通过数据修改影响输出，控制依赖路径存在。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，且变异体造成的程序状态改变会直接传递至输出，不存在状态覆盖现象。变异体与原程序在排序范围上的差异会导致不同的排序结果，从而影响最终输出。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_008 的分析, 耗时: 41.6845 秒
+
+开始分析变异体 MUT_009...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_009": "### 步骤1：可达性\n说明理由：变异语句的条件为`if (!(data.length < 2))`，即`data.length >= 2`。该条件在输入`data.length >= 2`时可达，且`data.length`的取值范围为自然数，因此存在满足条件的输入（如`data.length = 2`）。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件为`if (data.length < 2)`，变异后的条件为`if (!(data.length < 2))`，即逻辑取反。当`data.length < 2`时，原程序执行`return`，变异体跳过`return`；当`data.length >= 2`时，原程序跳过`return`，变异体执行`return`。因此，变异体改变了程序的控制流和状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`data`。数据依赖路径显示：\n1. 当`!(data.length < 2)`为真时，直接`return`，无后续数据依赖。\n2. 当`!(data.length < 2)`为假时，程序继续执行后续逻辑（如`max`赋值、`swap`、`quicksort`等），且`data`的值通过`swap`和`quicksort`传递到输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径显示：\n1. 当`!(data.length < 2)`为真时，直接`return`，控制流终止。\n2. 当`!(data.length < 2)`为假时，程序执行后续逻辑（如循环、交换、排序等）。\n变异语句通过控制流直接影响输出语句的执行（如是否执行`quicksort`）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异体在`data.length < 2`和`data.length >= 2`时与原程序的行为完全相反：\n- 原程序在`data.length < 2`时直接返回，变异体继续执行；\n- 原程序在`data.length >= 2`时继续执行，变异体直接返回。\n这种差异无法通过后续执行修正或抵消，会导致程序输出不同（如是否调用`quicksort`）。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_009 的分析, 耗时: 49.0973 秒
+
+开始分析变异体 MUT_011...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_011": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的条件判断部分，路径条件组合为`data.length >= 2`。该条件在程序入口处已通过`if (data.length < 2)`的检查，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`for (int i = 1; i < data.length; i++)`和`for (int i = 1; --i < data.length; i++)`。在第一次循环时，原程序i=1，变异体i=0（因为--i先减后比较），这将导致循环行为完全不同。例如，当data.length=2时，原程序会执行循环体，而变异体可能不会执行或行为异常。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i通过数据依赖链传播到max和swap操作。具体路径为：i → max → swap → quicksort。因此，变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制了循环的执行，而循环内的操作（如max的更新和swap）直接依赖于循环的执行。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖条件。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的循环行为，但其效果会直接影响到max的赋值和swap操作，进而影响最终的排序结果。没有证据表明这些影响会在后续执行中被修正或抵消。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_011 的分析, 耗时: 41.5884 秒
+
+开始分析变异体 MUT_023...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_023": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的条件判断部分，路径条件组合为`data.length >= 2`。该条件可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`for (int i = 1; i < data.length; i++)`和`for (int i = 1; i++ < data.length; i++)`。变异体在每次循环时先执行`i++`再比较，这会改变循环次数和`i`的值，从而影响后续的`data[i]`访问和`max`的赋值。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`i`通过数据依赖链传播到程序输出节点。具体路径为：`i`影响`data[i]`的访问，进而影响`max`的赋值，最终影响`swap`和`quicksort`的参数。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句。变异改变了循环次数和`i`的值，从而影响了`if (data[max] < data[i])`的判断和`max`的赋值，最终影响`swap`和`quicksort`的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`i`的值和循环次数的改变）未被后续执行修正或抵消，会直接影响`max`的赋值和最终的排序结果。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_023 的分析, 耗时: 37.8734 秒
+
+开始分析变异体 MUT_026...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_026": "### 步骤[可达性]：\n说明理由：变异语句位于循环内部，路径条件组合为`data.length >= 2`和`i < data.length`。这些条件在输入数组长度≥2时均可满足，且循环变量`i`的初始化（`i=1`）和递增（`i++`）逻辑保证循环可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式`data[max] < data[i]`与变异体`data[--max] < data[i]`存在本质差异。变异体在比较前会先对`max`执行递减操作，这会改变`max`的值和后续数组访问位置。例如：初始`max=0`时，原行为比较`data[0]`，而变异体先执行`max=-1`后比较`data[-1]`（越界错误），或后续迭代中因`max`被修改导致比较对象完全改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`max`通过以下路径传播到输出：\n1. 直接影响`swap(data, data.length-1, max)`的参数值\n2. 通过`max = i`的赋值影响后续循环比较\n数据依赖链完整连接变异节点与输出节点（`swap`操作直接影响排序结果）。\n分析结论：存在有效数据依赖路径。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流直接影响：\n1. `if`条件结果决定是否执行`max = i`\n2. 修改后的`max`值影响循环后续迭代和最终的`swap`调用\n控制依赖路径明确传递到输出节点（`quicksort`的调用依赖`swap`结果）。\n分析结论：存在有效控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体可能因`max`值改变导致：\n1. 数组越界异常（立即暴露差异）\n2. 完全不同的元素比较序列\n3. 最终`swap`位置与原始程序不同\n但这些差异均会导致程序行为或输出结果的可观测变化，不存在状态被后续操作覆盖的情况。\n分析结论：无状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO"}
+完成变异体 MUT_026 的分析, 耗时: 52.1822 秒
+
+开始分析变异体 MUT_028...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_028": "### 步骤[可达性]：\n说明理由：变异语句位于循环内部，路径条件组合为`data.length >= 2`和`i < data.length`。这些条件在输入数组长度≥2时均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件`data[max] < data[i]`与变异条件`data[max] != data[i]`在语义上存在差异。当`data[max] == data[i]`时，原条件为false而变异条件为true，会改变程序状态（影响max的赋值）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量max通过以下路径传播到输出：\n1. 变异语句 → max赋值 → swap调用 → quicksort调用\n2. 变异语句 → max赋值 → 直接影响数组排序结果\n分析结论：变异效果可通过数据依赖链传播到程序输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制着max的赋值行为，而max直接影响swap和quicksort的调用参数，进而控制着整个排序流程。\n分析结论：变异语句通过控制流影响程序输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然在某些情况下（如`data[max] > data[i]`）变异体和原程序行为一致，但当`data[max] == data[i]`时会导致不同的max赋值，进而影响swap和quicksort的参数，最终导致不同的排序结果。没有证据表明这种差异会被后续操作抵消。\n分析结论：变异引入的状态差异未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_028 的分析, 耗时: 51.4765 秒
+
+开始分析变异体 MUT_030...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_030": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`data.length >= 2 && i < data.length && data[max] < data[i]`。这些条件在输入数组长度大于等于2且存在元素大于当前`max`指向的元素时是可满足的。例如，对于输入`[1, 2]`，当`i=1`时满足所有条件。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序在满足`data[max] < data[i]`时会执行`max = i`，而变异体移除了该赋值语句。这将导致`max`始终为初始值0，而不会更新为更大元素的索引。例如，对于输入`[1, 2]`，原程序会将`max`更新为1，而变异体保持`max=0`，这会影响后续的`swap`操作。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`max`通过以下路径传播到输出：\n1. `max`用于`swap(data, data.length - 1, max)`操作，直接影响数组的最终状态。\n2. `max`还通过`quicksort(data, 0, data.length - 2)`间接影响排序结果。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于循环体内，其执行与否会影响循环的迭代过程。虽然移除`max = i`不会改变循环的控制流（因为循环条件仅依赖`i`），但会通过改变`max`的值影响后续的`swap`和`quicksort`操作。\n分析结论：变异语句通过数据依赖而非直接控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`max`未正确更新）不会被后续操作修正或抵消。`swap`和`quicksort`操作将基于错误的`max`值执行，导致最终的数组排序结果与原程序不同。例如，输入`[1, 2]`在原程序中会正确排序，而在变异体中会错误地交换元素。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_030 的分析, 耗时: 51.7245 秒
+
+开始分析变异体 MUT_043...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_043": "### 步骤1：可达性\n说明理由：变异语句位于for循环的条件部分，路径条件组合为`data.length >= 2`。该条件可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句分别为`for (int i = 1; i < data.length; i++)`和`for (int i = 1; i-- < data.length; i++)`。变异体在循环条件中引入了`i--`操作，这会改变`i`的值，从而影响循环的执行次数和`max`的赋值。因此，该变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`i`通过数据依赖链传播到程序输出节点。具体路径为：`i`影响`max`的赋值，`max`影响`swap`操作，进而影响最终的排序结果。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖\n说明理由：变异语句通过控制流影响输出语句。变异语句控制了循环的执行次数和`max`的赋值，进而影响`swap`和`quicksort`的执行。因此，变异语句与输出语句存在控制依赖路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`i`的值改变）会直接影响循环的执行和`max`的赋值，进而影响最终的排序结果。没有证据表明这些错误状态会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_043 的分析, 耗时: 37.2080 秒
+
+开始分析变异体 MUT_055...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_055": "### 步骤[1. 可达性]：\n说明理由：变异语句位于for循环的条件部分，原条件为`i < data.length`，变异后为`!(i < data.length)`。根据可达性约束`data.length >= 2`，当`i = 1`且`data.length >= 2`时，原条件为真，变异条件为假。因此，变异语句在初始条件下可达。\n\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原条件`i < data.length`控制循环是否继续执行，变异后条件`!(i < data.length)`将导致循环条件取反。在初始条件下（`i = 1`, `data.length >= 2`），原条件为真（循环继续），变异条件为假（循环不继续）。这将导致循环体不被执行，从而跳过`max`的更新和后续的`swap`操作，显著改变程序状态。\n\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量`i`和`max`通过数据依赖链传播到输出节点。`max`的值直接影响`swap`操作的参数，而`swap`操作直接影响程序的输出（排序结果）。由于变异导致循环不执行，`max`不会被更新，`swap`将使用初始值`max = 0`，从而改变程序输出。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句（循环条件）直接控制循环体的执行，而循环体中的`max`更新和后续的`swap`操作直接影响程序输出。因此，变异语句通过控制流影响输出语句。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：变异导致循环不执行，`max`保持初始值`0`，`swap`操作将`data[data.length - 1]`与`data[0]`交换，而原程序会根据实际数据更新`max`。这种差异不会被后续操作修正或抵消，程序输出将显著不同。\n\n分析结论：变异引入的错误状态未被修正或抵消，程序输出受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_055 的分析, 耗时: 57.8754 秒
+
+开始分析变异体 MUT_065...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_065": "### 步骤[可达性]：\n说明理由：变异语句的条件是`if (data.length <= 2)`，路径条件组合为`[data.length <= 2]/NULL`。这意味着只要`data.length`的值小于或等于2，变异语句就可以被执行到。这个条件是可以满足的，例如当`data.length`为1或2时。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`if (data.length < 2)`，变异后的条件是`if (data.length <= 2)`。当`data.length`为2时，原程序的条件为`false`，而变异后的条件为`true`。这会改变程序的控制流，导致程序状态改变（例如是否执行`return`语句）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`和`max`。`data`的数据依赖路径显示，变异语句的控制流会影响后续的`swap`和`quicksort`操作。`max`的数据依赖路径也显示，变异语句的控制流会影响`max`的赋值和后续的`swap`操作。因此，变异影响的变量可以通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (data.length <= 2)`直接控制程序是否执行`return`语句。如果变异语句为`true`，程序直接返回；如果为`false`，程序继续执行后续的`for`循环、`swap`和`quicksort`操作。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了程序的控制流和状态，但在`data.length`为2时，原程序会继续执行后续操作，而变异程序会直接返回。这会导致程序的行为不同（例如是否执行`swap`和`quicksort`），从而影响程序的最终输出。因此，变异引入的错误状态没有被修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_065 的分析, 耗时: 43.3104 秒
+
+开始分析变异体 MUT_066...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_066": "### 步骤1：可达性\n说明理由：变异语句`quicksort( data, 0, -data.length - 2 )`的路径条件为`data.length >= 2`，这是一个可满足的条件（例如`data.length = 2`时成立）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序语句为`quicksort( data, 0, data.length - 2 )`，变异体为`quicksort( data, 0, -data.length - 2 )`。对于`data.length >= 2`，`data.length - 2`和`-data.length - 2`的值完全不同（例如`data.length = 2`时，前者为0，后者为-4）。这会显著改变`quicksort`的递归范围，从而影响程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`data`，其数据依赖路径显示`data`的值会直接传递到`quicksort`调用中。`quicksort`的排序范围改变会影响`data`的最终状态，而`data`是程序的输出（通过排序结果体现）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句`quicksort( data, 0, -data.length - 2 )`是程序的最后一条可执行语句，其执行结果直接影响程序的输出（排序后的`data`）。控制依赖路径显示变异语句直接连接到程序退出点。\n分析结论：变异语句通过控制流影响程序输出。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（错误的`quicksort`范围）不会被后续执行修正或抵消。`quicksort`的递归范围错误会导致排序结果完全不同于原程序。\n分析结论：变异引入的错误状态未被覆盖，程序最终输出受影响。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_066 的分析, 耗时: 34.6981 秒
+
+开始分析变异体 MUT_068...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_068": "### 步骤[可达性]：\n说明理由：变异语句位于循环体内，路径条件组合为`[data.length >= 2, i < data.length]`。这些条件在输入数组长度≥2时均可满足，且循环条件`i < data.length`在每次迭代时都会被重新评估。因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式`data[max] < data[i]`与变异表达式`data[max] < data[--i]`存在本质差异。变异体通过`--i`修改了循环变量i的值，这会直接影响：(1)当前数组元素的访问位置，(2)后续循环迭代的i值，(3)可能影响max的赋值。在路径约束`i < data.length`下，这种修改会实际改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i通过以下路径传播到输出：\n1. `i → max赋值 → swap参数 → quicksort输入`\n2. `i → 循环条件判断 → 控制流`\n变量i的修改会直接影响max的最终值，进而影响swap操作和quicksort的输入参数，最终改变程序输出。\n分析结论：存在完整的数据依赖链传播到程序输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于循环条件控制流中，其执行结果直接影响：\n1. `max = i`语句的执行\n2. 循环的后续迭代次数\n3. 最终swap和quicksort的调用\n控制依赖路径清晰存在且影响最终输出。\n分析结论：变异通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了循环变量的修改，但这种修改会持续影响后续所有迭代，不会被后续操作修正或抵消。最终max的值、swap操作和quicksort输入都会因此产生差异。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_068 的分析, 耗时: 38.7929 秒
+
+开始分析变异体 MUT_071...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_071": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`data.length >= 2`，这是一个可满足的条件，因为存在许多输入数组满足长度大于等于2。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`quicksort( data, 0, data.length - 2 )`和`quicksort( data, 0, data.length % 2 )`。在`data.length >= 2`的条件下，`data.length - 2`和`data.length % 2`的语义不同。例如，当`data.length = 3`时，`data.length - 2 = 1`，而`data.length % 2 = 1`；但当`data.length = 4`时，`data.length - 2 = 2`，而`data.length % 2 = 0`。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`，其数据依赖路径显示`data`被传递到`quicksort`调用。由于`quicksort`是程序的最后一步，且`data`是排序的直接操作对象，变异后的参数会直接影响排序结果。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`quicksort( data, 0, data.length % 2 )`是程序的最后一步，直接控制程序的输出（排序后的数组）。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，且变异体造成的程序状态改变会直接影响排序结果，不存在状态覆盖现象。例如，`data.length = 4`时，原程序排序范围为`[0, 2]`，而变异体排序范围为`[0, 0]`，排序结果必然不同。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_071 的分析, 耗时: 33.5759 秒
+
+开始分析变异体 MUT_074...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_074": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的条件判断部分，路径条件组合为`data.length >= 2`。该条件可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序条件为`i < data.length`，变异后为`~i < data.length`。对于`i >= 0`（Java中循环变量i从1开始递增），`~i`为负数，因此`~i < data.length`在`data.length >= 2`时恒为真。这与原条件`i < data.length`在语义上不同，可能改变循环行为。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`i`通过数据依赖链传播到输出节点。`i`用于计算`max`，`max`用于`swap`和`quicksort`操作，直接影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制循环的执行，循环内的语句（包括`swap`和`quicksort`）控制依赖于循环条件。变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异导致循环条件恒为真，可能使循环无法终止或行为异常，从而影响程序输出。不存在状态覆盖现象。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_074 的分析, 耗时: 35.6277 秒
+
+开始分析变异体 MUT_081...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_081": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `data.length >= 2`，这是一个可满足的条件，因为只要输入的数组长度大于等于2，变异语句就可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句是 `swap( data, data.length - 1, max )`，变异后的语句是 `swap( data, data.length / 1, max )`。由于 `data.length / 1` 等价于 `data.length`，而 `data.length - 1` 和 `data.length` 是不同的索引（除非 `data.length` 为1，但根据可达性分析，`data.length >= 2`），因此变异语句会实际改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `data` 和 `max`。`data` 的数据依赖路径显示，变异后的 `swap` 操作会影响后续的 `quicksort` 调用。`max` 的数据依赖路径也显示其值会直接影响 `swap` 操作。因此，变异影响的变量会通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在，变异效果可以传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `swap( data, data.length / 1, max )` 的控制依赖路径显示，其后续的 `quicksort` 调用和程序退出依赖于该语句的执行。因此，变异语句通过控制流影响输出语句。\n分析结论：控制依赖路径存在，变异效果可以传递到输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了程序状态（`swap` 的索引不同），但由于 `data.length / 1` 和 `data.length - 1` 是不同的索引，且 `data` 的修改会直接影响后续的 `quicksort` 操作，因此变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：错误状态未被覆盖，程序输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_081 的分析, 耗时: 43.0300 秒
+
+开始分析变异体 MUT_082...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_082": "### 步骤1：可达性\n说明理由：变异语句是第4行的条件语句从`if (data.length < 2)`改为`if (true)`。该语句位于程序入口处，没有前置条件限制，因此变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件`if (data.length < 2)`用于检查数组长度是否小于2，如果是则直接返回。变异后的条件`if (true)`使得该条件始终为真，因此无论数组长度如何，程序都会执行`return`语句，跳过后续的排序逻辑。这显著改变了程序的行为。\n分析结论：变异实际改变了程序语义，不满足必要性条件。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`data`。在变异后的程序中，由于条件始终为真，程序会直接返回，不会执行后续对`data`的操作。因此，变异影响的变量`data`不会通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖缺失。\n\n### 步骤4：控制依赖\n说明理由：变异语句`if (true)`直接控制了程序的返回行为。如果条件为真（始终为真），程序会执行`return`语句，跳过后续的所有操作。因此，变异语句通过控制流直接影响输出语句。\n分析结论：控制依赖存在。\n\n### 步骤5：状态覆盖\n说明理由：由于变异导致程序始终执行`return`语句，后续的排序逻辑完全被跳过。这意味着程序的输出（即数组的排序结果）将不会被改变，因为根本没有执行排序。然而，这种行为改变是显著的，因为原程序会根据数组长度决定是否排序，而变异后的程序始终不排序。\n分析结论：错误状态未被修正或抵消，程序输出受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_082 的分析, 耗时: 42.1058 秒
+
+开始分析变异体 MUT_084...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_084": "### 步骤1：可达性\n说明理由：变异语句的条件是`if (data.length >= 2)`，其路径条件组合为`[data.length >= 2]`。该条件在逻辑上可满足（例如`data.length = 2`时条件为真，`data.length = 1`时条件为假），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是`if (data.length < 2)`，变异后为`if (data.length >= 2)`。这两个条件的逻辑完全相反（`<` vs `>=`），因此变异会实际改变程序的控制流。例如：\n- 当`data.length = 1`时，原程序执行`return`，变异体执行后续逻辑。\n- 当`data.length = 2`时，原程序执行后续逻辑，变异体执行`return`。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`data`（通过`data.length`访问）。数据依赖路径显示：\n1. 当条件为真时，直接返回（`return`），此时无数据传播到输出。\n2. 当条件为假时，`data`通过后续操作（`swap`和`quicksort`）传播到输出。\n由于变异会改变控制流（决定是否执行后续操作），因此变异影响的变量会通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径显示：\n1. 变异语句`if (data.length >= 2)`直接控制`return`或后续逻辑（`swap`和`quicksort`）。\n2. 输出语句（`quicksort`或`return`）的控制依赖于变异语句的真假结果。\n因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：存在控制依赖条件。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了控制流和数据依赖路径，但不存在以下情况：\n1. 变异引入的错误状态被后续执行修正（例如变量被重新赋值覆盖）。\n2. 变异的效果被逻辑抵消（例如分支不同但输出相同）。\n变异体的控制流改变会直接导致程序行为不同（提前返回或执行排序），因此程序最终输出会受到影响。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_084 的分析, 耗时: 51.2713 秒
+
+开始分析变异体 MUT_085...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_085": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `data.length >= 2`，这是一个可满足的条件，因为只要输入数组的长度大于等于2，变异语句就可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的循环条件是 `i < data.length`，变异后变为 `i <= data.length`。这意味着在变异体中，循环会多执行一次（当 `i == data.length` 时）。这会影响到 `max` 的赋值和最终的 `swap` 操作，因为 `data[max]` 可能会访问越界（当 `i == data.length` 时）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `i` 通过数据依赖链传播到程序输出节点。具体路径为：`i` 的变化会影响 `max` 的赋值，而 `max` 会直接影响到 `swap` 操作的参数，从而影响程序的最终输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句。循环条件的改变会直接影响到 `max` 的赋值和 `swap` 操作的执行，进而影响程序的最终输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（循环多执行一次）会导致 `max` 可能越界访问，从而影响 `swap` 操作的参数和最终输出。这种错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_085 的分析, 耗时: 45.5562 秒
+
+开始分析变异体 MUT_100...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_100": "### 步骤1：可达性分析\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `data.length >= 2`。该条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序与变异体语句分别为 `swap(data, data.length - 1, max)` 和 `swap(data, data.length - 1, ~max)`。变异操作是将 `max` 替换为 `~max`（按位取反）。在 `max` 为任意整数值时，`max` 和 `~max` 的值不同（除非 `max` 为 `-1`，但 `max` 是数组索引，最小为 `0`），因此程序状态会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `max`，其数据依赖路径显示 `max` 的值直接传递到 `swap` 操作，而 `swap` 操作会影响 `data` 数组的状态。`data` 数组的状态会进一步影响 `quicksort` 的执行结果，最终影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `swap(data, data.length - 1, ~max)` 的控制依赖路径直接连接到程序出口。变异语句的执行会影响后续 `quicksort` 的执行，进而影响程序输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：变异引入的错误状态（`~max` 替换 `max`）会直接影响 `swap` 操作的结果，进而影响 `data` 数组的排序结果。这种状态改变不会被后续执行修正或抵消，因此程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_100 的分析, 耗时: 32.3556 秒
+
+开始分析变异体 MUT_103...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_103": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件`data.length >= 2`。该条件在程序执行时是可满足的，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`quicksort( data, 0, data.length - 2 )`和`quicksort( data, 0, data.length + 2 )`。变异将`data.length - 2`改为`data.length + 2`，这会显著改变`quicksort`的排序范围。例如，当`data.length = 3`时，原程序排序范围为`[0,1]`，而变异体排序范围为`[0,5]`，这将导致程序状态发生实质性改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`，其数据依赖路径为`(line 14: quicksort( data, 0, data.length + 2 ))`。`quicksort`操作直接影响`data`数组的内容，而`data`是程序的输出（通过后续操作或调用者使用），因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径信息为`(15: quicksort( data, 0, data.length + 2 )) -- --> (16: exit)`。变异语句直接控制程序的执行流程（`quicksort`的范围变化会影响排序结果），进而影响程序的最终输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，且变异体造成的程序状态改变（`quicksort`范围扩大）会直接传递至输出，不存在状态被修正或抵消的现象。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_103 的分析, 耗时: 26.9731 秒
+
+开始分析变异体 MUT_118...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_118": "### 步骤[可达性]：\n说明理由：变异语句位于循环内部，路径条件组合为 `[data.length >= 2, i < data.length, data[max] < data[i]]`。这些条件在输入数组长度≥2时均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原语句为 `max = i`，变异为 `max = ++i`。在循环执行过程中，`i`的值会被递增，且`max`的赋值会影响后续的`swap`操作。变异改变了`i`的递增时机和`max`的赋值值，会实际改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`max`和`i`均通过数据依赖链传播到程序输出节点。`max`直接影响`swap`操作的参数，`i`的递增会影响循环条件和后续的`max`赋值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于循环内部，其执行会影响循环的迭代次数和`max`的赋值，进而影响`swap`操作和`quicksort`的调用。变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`max`和`i`的值改变）会直接影响`swap`操作的参数和`quicksort`的调用，且不会被后续执行修正或抵消。因此，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_118 的分析, 耗时: 40.5072 秒
+
+开始分析变异体 MUT_122...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_122": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `data.length >= 2`，这是一个可满足的条件，因为存在许多输入数组满足长度大于等于2的条件。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别在于 `quicksort( data, 0, data.length - 2 )` 被替换为 `quicksort( data, 0, data.length / 2 )`。在 `data.length >= 2` 的条件下，`data.length - 2` 和 `data.length / 2` 的值通常不同（除非 `data.length` 为4，此时两者均为2）。因此，变异会改变 `quicksort` 的调用范围，从而可能影响程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `data`，其数据依赖路径为 `(line 14: quicksort( data, 0, data.length / 2 ))`。`quicksort` 操作直接影响 `data` 的内容，而 `data` 是程序的输出（通过排序后的数组）。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `quicksort( data, 0, data.length / 2 )` 是程序的控制流的一部分，但其执行结果直接影响 `data` 的内容，进而影响程序的输出。控制依赖路径显示变异语句的执行会影响后续的输出行为。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `quicksort` 的调用范围，但排序算法的部分执行可能导致最终输出与原始程序不同。例如，如果 `data.length / 2` 不等于 `data.length - 2`，则排序的范围不同，可能导致部分元素未被正确排序，从而影响最终输出。因此，变异引入的错误状态未被完全修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_122 的分析, 耗时: 51.6486 秒
+
+开始分析变异体 MUT_126...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_126": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为`data.length >= 2`，这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序中的循环条件为`i < data.length`，变异后为`i >= data.length`。在初始条件下`i = 1`且`data.length >= 2`，原循环条件为真，变异后的循环条件为假。这将导致循环体不被执行，从而跳过循环内的所有语句，包括`max`的更新和后续的`swap`和`quicksort`调用。这显著改变了程序的行为。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`i`通过数据依赖链传播到程序输出节点。具体来说，`i`的值影响`max`的更新，进而影响`swap`和`quicksort`的调用。由于循环体不被执行，`max`不会被更新，导致`swap`和`quicksort`使用的`max`值始终为初始值0，从而影响最终的排序结果。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句控制了循环体的执行，而循环体的执行与否直接影响`max`的更新和后续的`swap`和`quicksort`调用。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（循环体不被执行）直接导致`max`不被更新，从而影响最终的排序结果。这种错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_126 的分析, 耗时: 48.4152 秒
+
+开始分析变异体 MUT_129...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_129": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`data.length >= 2`，这是一个可满足的条件，意味着存在输入使得变异语句被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的区别在于将`swap(data, data.length - 1, max)`改为`swap(data, 1, max)`。在`data.length >= 2`的条件下，这两个语句的行为不同：原程序交换最后一个元素与最大值，而变异体交换第二个元素与最大值。这会改变`data`数组的状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`和`max`。`data`的修改会直接影响后续的`quicksort`操作，而`max`的值也会影响`swap`的行为。`data`和`max`的数据依赖路径均连接到输出（通过`quicksort`影响最终排序结果）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`swap(data, 1, max)`直接控制后续的`quicksort(data, 0, data.length - 2)`的执行，因为`quicksort`的输入依赖于`swap`后的`data`状态。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`data`的状态（交换第二个元素与最大值），但这种改变会直接影响后续的`quicksort`操作，导致最终的排序结果可能与原程序不同。没有证据表明这种状态改变会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出可能受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_129 的分析, 耗时: 35.7453 秒
+
+开始分析变异体 MUT_130...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_130": "### 步骤[可达性]：\n说明理由：变异语句位于`swap( data, data.length * 1, max )`，其路径条件为`data.length >= 2`。这是一个可满足的条件，因为只要输入数组长度大于等于2，该语句就会被执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原语句为`swap( data, data.length - 1, max )`，变异为`swap( data, data.length * 1, max )`。在`data.length >= 2`的条件下，`data.length - 1`和`data.length * 1`的值不同（除非`data.length == 1`，但路径条件排除了这种情况）。因此，变异会改变交换的索引位置，从而影响程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`和`max`。`data`通过`swap`操作被修改后，会传递给`quicksort`函数，直接影响排序结果。`max`的值也通过`swap`操作影响`data`的修改。因此，变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`swap( data, data.length * 1, max )`直接执行，不依赖于任何条件，也不控制其他语句的执行。其效果通过数据依赖传递，而非控制流。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了交换的索引位置，但`quicksort`函数会对整个数组进行排序，最终排序结果可能不受交换索引变化的影响。然而，由于`swap`操作的索引变化会影响中间排序过程，且`quicksort`的具体实现可能依赖于初始交换，因此不能保证变异的效果被完全抵消。\n分析结论：变异引入的错误状态未被完全修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_130 的分析, 耗时: 33.2021 秒
+
+开始分析变异体 MUT_133...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_133": "### 步骤[可达性]：\n说明理由：变异语句位于循环条件中，路径条件组合为 `data.length >= 2`。该条件可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的循环语句 `for (int i = 1; i < data.length; i++)` 被变异为 `for (int i = 1; i < data.length; )`，移除了 `i++`。这将导致循环无法正常递增 `i`，从而可能陷入无限循环或逻辑错误。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `i`。`i` 的数据依赖路径包括：\n1. 初始化 `i` 后用于循环条件判断，控制进入循环体。\n2. `i` 的值被赋给 `max`，影响 `if` 条件中的 `data[max]` 比较。\n3. `i` 通过 `max` 间接影响 `swap` 函数的参数。\n由于 `i` 的变异会直接影响循环的执行和 `max` 的赋值，进而影响 `swap` 和 `quicksort` 的调用，因此变异所引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `for (int i = 1; i < data.length; )` 控制了循环的执行，而循环的执行直接影响 `if` 语句和 `swap` 函数的调用。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异移除了 `i++`，导致循环无法正常递增 `i`，这将导致程序陷入无限循环或逻辑错误，无法正常执行后续的 `swap` 和 `quicksort` 调用。因此，变异引入的错误状态无法被修正或抵消，程序最终输出会受到影响。\n分析结论：变异引入的错误状态无法被修正或抵消，程序输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_133 的分析, 耗时: 48.2174 秒
+
+开始分析变异体 MUT_137...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_137": "### 步骤[可达性]：\n说明理由：变异语句位于循环体内，路径条件组合为`data.length >= 2`和`i < data.length`。这些条件在输入数组长度≥2时均可满足，且循环条件`i < data.length`在正常执行过程中会多次满足。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`data[max] < data[i]`，变异为`data[max] < data[~i]`（按位取反）。当`i=1`时，`~i=-2`（二进制补码表示），这将访问数组的非法索引。即使忽略越界问题，按位取反后的索引与原索引完全不同，必然导致访问不同的数组元素，从而可能改变比较结果。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`i`和`data`通过以下路径传播：\n1. `i`的修改会影响`max`的赋值（当条件为真时），进而影响`swap`操作的参数\n2. `data`数组的内容直接影响`quicksort`的输入\n数据依赖路径完整连接到程序输出（排序后的数组）。\n分析结论：变异效果可通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (data[max] < data[~i])`的控制流直接影响：\n1. `max = i`的赋值（条件为真时）\n2. 后续`swap`和`quicksort`的输入参数\n控制依赖路径完整连接到程序输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异会导致：\n1. 不同的数组元素比较\n2. 可能产生不同的`max`值\n3. 最终影响`swap`和`quicksort`的输入\n但这些差异会直接反映在排序结果中，不存在后续执行覆盖变异效果的情况。\n分析结论：变异效果未被覆盖，会影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_137 的分析, 耗时: 44.9586 秒
+
+开始分析变异体 MUT_138...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_138": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`data.length >= 2`，这是一个可满足的条件，因为只要输入的数组长度大于等于2，变异语句就可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别在于将`data.length - 1`替换为`~data.length - 1`。`~`是按位取反操作符，对于任何非负整数`data.length`，`~data.length - 1`的结果与`data.length - 1`完全不同（例如，`data.length = 2`时，原表达式为1，变异表达式为-4）。因此，变异会实际改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`和`max`。`data`和`max`的数据依赖路径显示它们会传递到`swap`和`quicksort`操作，最终影响程序的输出。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：数据依赖存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`swap( data, ~data.length - 1, max )`直接控制后续的`quicksort`操作，而`quicksort`操作会影响程序的最终输出。因此，变异语句通过控制流影响输出语句。\n分析结论：控制依赖存在。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（错误的索引值）会直接传递给`swap`和`quicksort`操作，导致数组访问越界或排序错误，从而影响程序的最终输出。没有证据表明错误状态会被后续执行修正或抵消。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_138 的分析, 耗时: 45.6879 秒
+
+开始分析变异体 MUT_140...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_140": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`data.length >= 2`, `i < data.length`, `data[max] < data[i]`。这些条件在程序执行过程中是可以满足的，例如当`data`数组长度大于等于2，且存在某个`i`使得`data[max] < data[i]`时，变异语句`max = -i`会被执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`max = i`，变异表达式为`max = -i`。在变异语句可达的情况下，`max`的值从`i`变为`-i`，这会直接改变程序的状态。例如，当`i`为正数时，`max`的值从正变为负，这会显著影响后续的`if (data[max] < data[i])`判断和`swap`操作。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`max`。`max`的数据依赖路径如下：\n1. `max = -i` → `if (data[max] < data[i])` → `max = -i`（循环依赖）\n2. `max = -i` → `swap(data, data.length - 1, max)`\n`max`的值直接影响`swap`操作的参数，进而影响`data`数组的最终状态。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径如下：\n1. `if (data[max] < data[i])` → `max = -i` → `i++` → `for (i < data.length)` → `swap(data, data.length - 1, max)` → `quicksort(data, 0, data.length - 2)`\n变异语句`max = -i`的执行会影响`swap`和`quicksort`的操作，进而影响程序的最终输出。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体满足可达性、必要性、数据依赖和控制依赖条件。变异引入的错误状态（`max`的值从`i`变为`-i`）会直接影响`swap`和`quicksort`的操作，导致程序最终输出（排序后的数组）发生改变。没有证据表明错误状态会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_140 的分析, 耗时: 39.2754 秒
+
+开始分析变异体 MUT_154...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_154": "### 步骤[可达性]：\n说明理由：变异语句位于循环内部，路径条件为`data.length >= 2`和`i < data.length`。这些条件在程序执行过程中可以被满足，例如当输入数组长度大于等于2时，循环会被执行，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序条件为`if (data[max] < data[i])`，变异后为`if (data[max] >= data[i])`。在可达路径下，这两个条件的逻辑相反，会导致程序选择不同的分支执行。例如，当`data[max] == data[i]`时，原条件为false，变异条件为true，这将导致`max`的赋值行为不同。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`max`和`data`通过数据依赖链传播到输出。`max`的值直接影响`swap`和`quicksort`的调用，而`data`是排序的直接操作对象。变异后的条件会改变`max`的赋值，进而影响后续的`swap`和`quicksort`操作。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制循环内部的分支选择，直接影响`max`的赋值。`max`的值又直接影响`swap`和`quicksort`的调用，这些操作决定了程序的最终输出。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的中间状态（`max`的赋值可能不同），但这些差异会直接影响到`swap`和`quicksort`的操作，从而改变程序的最终输出。没有证据表明这些差异会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_154 的分析, 耗时: 46.3231 秒
+
+开始分析变异体 MUT_155...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_155": "### 步骤[可达性]：\n说明理由：变异语句的条件判断从`data.length < 2`改为`data.length != 2`。路径条件组合为`[data.length != 2]`，这是一个可满足的条件，例如当`data.length = 1`或`data.length = 3`时均可触发该变异语句。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件`data.length < 2`和变异条件`data.length != 2`在以下情况下表现不同：\n- 当`data.length = 1`时，两者均为真，行为一致。\n- 当`data.length = 2`时，原条件为假，变异条件为假，行为一致。\n- 当`data.length = 0`时，原条件为真，变异条件为真，行为一致。\n- 当`data.length > 2`时，原条件为假，变异条件为真，行为不同。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`。数据依赖路径显示：\n1. 如果条件为真（`data.length != 2`），直接返回，不影响后续操作。\n2. 如果条件为假（`data.length == 2`），继续执行后续操作，`data`通过`swap`和`quicksort`影响最终输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示：\n1. 变异语句（第4行）直接控制是否执行后续排序逻辑。\n2. 当`data.length != 2`时，直接返回，跳过排序。\n3. 当`data.length == 2`时，执行完整排序逻辑。\n分析结论：变异语句通过控制流直接影响输出语句的执行。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异在`data.length > 2`时改变了程序行为（原程序会执行排序，变异体会直接返回），但这种改变会导致程序输出不同（原程序会对数组排序，变异体直接返回未排序数组）。没有证据表明错误状态会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_155 的分析, 耗时: 42.2151 秒
+
+开始分析变异体 MUT_161...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_161": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的初始化部分，路径条件组合为`data.length >= 2`。该条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`for (int i = 1; i < data.length; i++)`和`for (int i = 1; ++i < data.length; i++)`。变异体在循环条件中先对i进行自增操作，这会改变循环的起始条件和迭代次数。例如，当`data.length = 2`时，原程序会执行一次循环体，而变异体可能不会执行循环体（取决于具体实现）。因此，该变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为i，其数据依赖路径显示i的值会影响max的赋值，进而影响swap操作的参数。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制了循环的执行次数，进而影响了if条件判断和max赋值的执行。程序的输出语句（swap和quicksort）依赖于循环的执行结果。因此，变异语句与输出语句存在控制依赖路径。\n分析结论：变异效果可以传递至输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了循环的执行次数和max的赋值，但最终swap和quicksort操作的参数可能因循环次数的变化而不同，导致程序输出不同。因此，变异引入的错误状态未被完全抵消。\n分析结论：变异影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_161 的分析, 耗时: 36.7984 秒
+
+开始分析变异体 MUT_167...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_167": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `data.length >= 2`。该条件在程序执行时是可满足的，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `for (int i = 1; i < data.length; i++)` 和 `for (int i = 1; i > data.length; i++)`。在 `data.length >= 2` 的路径约束下，原循环条件 `i < data.length` 在初始时 `i = 1` 为真，而变异后的条件 `i > data.length` 在初始时为假。因此，变异后的循环不会执行，而原循环会执行。这显著改变了程序的行为（原循环会遍历数组，变异后循环直接跳过）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `i` 和 `max`。根据数据依赖路径：\n1. 变量 `i` 的修改会影响 `max` 的赋值（通过 `if (data[max] < data[i])` 和 `max = i`）。\n2. `max` 的值会直接影响 `swap(data, data.length - 1, max)` 和后续的 `quicksort` 调用。\n因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `for (int i = 1; i > data.length; i++)` 控制了循环体的执行。原程序会执行循环体（影响 `max` 的赋值和后续操作），而变异后循环体不会执行（直接跳过）。因此，变异语句通过控制流直接影响输出语句（`swap` 和 `quicksort` 的行为）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（循环不执行）会导致 `max` 保持初始值 `0`，而原程序会更新 `max` 为数组中的最大值索引。这会直接影响 `swap` 和 `quicksort` 的行为，导致程序输出（排序结果）不同。因此，变异引入的错误状态未被修正或抵消。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_167 的分析, 耗时: 50.7388 秒
+
+开始分析变异体 MUT_172...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_172": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`data.length >= 2`，这是一个可满足的条件，意味着变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异在于`quicksort( data, 0, data.length - 2 )`被替换为`quicksort( data, 0, data.length * 2 )`。在`data.length >= 2`的条件下，`data.length - 2`和`data.length * 2`的值不同，会导致`quicksort`的调用范围不同，从而可能改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`，其数据依赖路径显示`data`的值会直接传递给`quicksort`函数，而`quicksort`函数会修改`data`的内容。由于`data`是程序的输入和输出，变异的效果会通过`data`传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`quicksort( data, 0, data.length * 2 )`是程序的最后一条语句，直接控制程序的退出。因此，变异语句通过控制流影响程序的执行流程。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`quicksort`的调用范围，但由于`quicksort`是一个排序函数，其内部逻辑可能会覆盖或修正变异引入的错误状态。然而，由于`data.length * 2`可能超出数组边界，导致未定义行为或程序崩溃，因此变异体的行为与原程序不完全一致。\n分析结论：变异引入的错误状态未被完全修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_172 的分析, 耗时: 34.0560 秒
+
+开始分析变异体 MUT_180...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_180": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `data.length >= 2`，这是一个可满足的条件，因为只要输入的数组长度大于等于2，变异语句就可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别是将 `swap( data, data.length - 1, max )` 改为 `swap( data, data.length + 1, max )`。在 `data.length >= 2` 的条件下，`data.length - 1` 和 `data.length + 1` 的值不同，因此会实际改变程序状态（例如，访问数组的不同索引）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `data` 和 `max`。`data` 的数据依赖路径显示其值会传递到 `quicksort` 方法中，而 `max` 的值也会传递到 `swap` 方法中。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：数据依赖条件满足。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `swap( data, data.length + 1, max )` 直接控制后续 `quicksort` 方法的调用，而 `quicksort` 方法的执行会影响程序的最终输出。因此，变异语句通过控制流影响输出语句。\n分析结论：控制依赖条件满足。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序状态（访问了不同的数组索引），但后续的 `quicksort` 方法可能会覆盖或修正这些状态改变。然而，由于 `data.length + 1` 可能越界（超出数组范围），这会导致程序行为与原始程序完全不同（例如抛出异常或访问非法内存），因此错误状态不会被完全抵消。\n分析结论：错误状态未被完全覆盖或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_180 的分析, 耗时: 34.9190 秒
+
+开始分析变异体 MUT_182...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_182": "### 步骤[可达性]：\n说明理由：变异语句位于循环体内，路径条件组合为`data.length >= 2`和`i < data.length`。这些条件在循环执行过程中是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`data[i]`进行比较，而变异体使用`data[++i]`。`++i`会先递增`i`再使用，这会改变循环的执行次数和比较的元素，从而影响`max`的赋值和后续的`swap`操作。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`i`通过以下路径传播到输出：\n1. `i`影响`max`的赋值（`max = i`）\n2. `max`影响`swap`操作（`swap(data, data.length - 1, max)`）\n3. `swap`影响`data`数组，进而影响`quicksort`的输入\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制`max`的赋值，间接控制了`swap`和`quicksort`的执行。虽然不直接影响控制流，但通过数据依赖影响了程序输出。\n分析结论：变异语句通过数据依赖影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的状态改变（`i`的递增和`max`的赋值）会直接影响`swap`和`quicksort`的输入，不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_182 的分析, 耗时: 38.7534 秒
+
+开始分析变异体 MUT_189...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_189": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[data.length >= 2, i < data.length, data[max] < data[i]]`。这些条件在程序执行时是可满足的，例如当 `data.length >= 2` 且存在 `i` 使得 `data[max] < data[i]` 时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `max = i`，变异体语句为 `max = ~i`。`~i` 是 `i` 的按位取反操作，与 `i` 的值完全不同（除非 `i` 为特定值如 `-1`，但在此上下文中 `i` 是数组索引，通常为非负整数）。因此，变异会显著改变 `max` 的值，从而影响程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `max`，其数据依赖路径为：\n1. `max = ~i` → `if (data[max] < data[i])`（影响下一次循环的条件判断）\n2. `max = ~i` → `swap(data, data.length - 1, max)`（直接影响 `swap` 的参数）\n`max` 的值会直接影响 `swap` 操作和后续 `quicksort` 的输入，从而影响程序的最终输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `max = ~i` 的控制依赖路径为：\n1. `if (data[max] < data[i])` → `max = ~i` → `swap(data, data.length - 1, max)` → `quicksort(...)`\n变异语句的执行会影响 `swap` 和 `quicksort` 的调用，从而通过控制流影响程序的输出行为。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`max` 被赋值为 `~i` 而非 `i`）会直接影响 `swap` 和 `quicksort` 的输入，且这种影响不会被后续执行修正或抵消。因此，程序的最终输出会因变异而改变。\n分析结论：变异引入的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_189 的分析, 耗时: 39.8023 秒
+
+开始分析变异体 MUT_193...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_193": "### 步骤1：可达性\n说明理由：变异语句位于循环内部，路径条件组合为 `data.length >= 2, i < data.length, data[max] < data[i]`。这些条件在输入数组长度大于等于2且存在元素大于当前最大值时均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序语句为 `max = i`，变异体为 `max = i++`。变异体不仅将 `i` 赋值给 `max`，还增加了 `i` 的自增操作。这会改变循环变量 `i` 的值，进而影响后续循环次数和比较条件，因此实际改变了程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量 `max` 和 `i` 均通过数据依赖链传播到程序输出节点。`max` 用于 `swap` 和 `quicksort` 调用，`i` 的值影响循环条件和后续迭代。因此变异效果可以通过数据依赖链传播到输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于循环内部，其执行直接影响循环条件和后续迭代。变异语句通过控制流影响循环的执行次数和 `swap` 及 `quicksort` 的调用，因此变异效果可以通过控制流传递到输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`i` 的自增操作）不会被后续执行修正或抵消。`i` 的自增操作会提前改变循环变量，导致后续循环次数和比较条件与原始程序不同，最终可能影响 `max` 的值和排序结果。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_193 的分析, 耗时: 38.4286 秒
+
+开始分析变异体 MUT_195...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_195": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[data.length >= 2, i < data.length, data[max] < data[i]]`。这些条件可以同时满足（例如当 `data.length >= 2` 且存在至少一个 `i` 使得 `data[max] < data[i]`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `max = i`，变异体为 `max = i--`。在可达路径下，`i--` 会先赋值 `i` 给 `max`，然后递减 `i`。这会改变 `i` 的值，从而可能影响后续循环的执行次数和条件判断（例如 `i < data.length` 和 `data[max] < data[i]`），因此程序状态被实际改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `max` 和 `i` 的数据依赖路径如下：\n- `max`：直接影响 `swap` 和 `quicksort` 的参数，最终影响程序输出。\n- `i`：影响循环条件和后续迭代，间接影响 `max` 的赋值和程序输出。\n因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于循环体内，其执行直接影响循环的迭代次数和后续 `swap` 和 `quicksort` 的调用。变异语句通过控制流影响输出语句的执行。\n分析结论：控制依赖路径存在。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了 `i` 的递减操作，但 `max` 的赋值仍然是 `i` 的原始值（因为 `i--` 是后置递减）。因此，`max` 的值与原程序一致，且 `i` 的递减不会影响最终的 `swap` 和 `quicksort` 调用（因为循环结束后 `i` 的值不再使用）。程序最终输出未受影响。\n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_195 的分析, 耗时: 48.2135 秒
+
+开始分析变异体 MUT_199...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_199": "### 步骤[可达性]：\n说明理由：变异语句的条件判断从`if (data.length < 2)`变为`if (data.length == 2)`。根据提供的可达性约束`[data.length != 2]`，变异语句的路径条件组合为`data.length == 2`，这与约束条件`data.length != 2`矛盾，因此该路径逻辑上不可满足。\n分析结论：变异语句不可达。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_199 的分析, 耗时: 32.9473 秒
+
+开始分析变异体 MUT_200...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_200": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合`data.length >= 2`。该条件在输入数组长度大于等于2时可满足，因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别在于删除了整个for循环及其内部逻辑。原程序通过for循环找到数组中的最大值索引并赋值给max，而变异体直接跳过了这一过程，max保持初始值0。这将导致swap操作始终交换数组最后一个元素与第一个元素（max=0），而非原程序中的最大值。这会显著改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量max和data均有明确的数据依赖路径到达输出节点（swap和quicksort操作）。max的值直接影响swap操作的参数，进而影响数组排序结果。由于变异导致max值错误，这种错误状态会通过数据依赖链传播到程序输出。\n分析结论：存在有效的数据依赖传播路径。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（被删除的for循环）与后续swap语句存在控制依赖关系。虽然变异体删除了控制逻辑，但swap操作仍依赖于max的值，而max的值本应由被删除的for循环决定。因此变异通过改变控制流间接影响了输出。\n分析结论：存在控制依赖影响。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（max保持初始值0）会直接导致错误的swap操作，且这种错误不会被后续操作修正。quicksort的输入数组已被错误交换，最终排序结果必然与原程序不同。\n分析结论：错误状态未被覆盖或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_200 的分析, 耗时: 30.7375 秒
+
+开始分析变异体 MUT_203...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_203": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `data.length >= 2`，这是一个可满足的条件，意味着变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句的区别在于 `max` 和 `max++`。`max++` 会改变 `max` 的值，但 `swap` 函数调用后 `max` 的值不再被使用，因此变异实际上没有改变程序的状态。\n分析结论：变异未实际改变程序状态，属于等价变异体。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量 `max` 的数据依赖路径显示，`max` 的值在 `swap` 调用后不再被使用，因此变异引入的状态差异无法通过数据依赖链传播到程序输出。\n分析结论：数据依赖缺失，属于等价变异体。\n\n### 步骤4：控制依赖\n说明理由：变异语句 `swap( data, data.length - 1, max++ )` 与控制流无关，无法通过控制流影响输出语句。\n分析结论：控制依赖缺失，属于等价变异体。\n\n### 步骤5：状态覆盖\n说明理由：由于变异引入的状态改变（`max` 的值增加）在后续执行中未被使用，因此变异的效果被抵消，程序最终输出未受影响。\n分析结论：状态覆盖存在，属于等价变异体。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_203 的分析, 耗时: 30.8114 秒
+
+开始分析变异体 MUT_204...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_204": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，路径条件组合为`data.length >= 2`和`i < data.length`。这些条件在输入数组长度大于等于2时均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`data[max] < data[i]`，变异表达式为`data[~max] < data[i]`。`~max`是按位取反操作，会显著改变索引值（例如max=0时~max=-1）。这将导致访问不同的数组元素，从而可能改变比较结果和后续程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量max和data通过以下路径传播到输出：\n1. max的修改会影响swap操作的索引参数\n2. data的修改会直接影响swap和quicksort的操作对象\n数据依赖路径完整连接到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制着max变量的赋值，而max直接影响swap操作的位置。从变异节点到输出节点存在完整的控制依赖路径：\n变异语句→max赋值→swap调用→quicksort调用\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了数组访问的索引和比较结果，但这种改变会直接影响到max的赋值，进而影响swap操作的位置，最终导致排序结果不同。没有证据表明这种改变会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_204 的分析, 耗时: 49.7581 秒
+
+开始分析变异体 MUT_206...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_206": "### 步骤[可达性]：\n说明理由：变异语句位于for循环中，路径条件组合为`data.length >= 2`。该条件可满足（例如当data.length=2时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`i++`使循环变量递增，变异体改为`i--`使循环变量递减。在`data.length >= 2`条件下，`i--`会导致循环变量i从1开始递减，第一次循环后i=0，第二次i=-1...这将导致循环条件`i < data.length`在第一次迭代后就可能不满足（取决于data.length的具体值），从而改变循环行为。例如当data.length=2时，原程序会执行循环体（i=1），而变异体可能不执行循环体（i=1递减后不满足i<2）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i通过数据依赖链传播到输出：\n1. i影响max的赋值（当data[max]<data[i]时max=i）\n2. max直接影响swap操作\n因此变异导致的i值变化会通过max影响程序输出。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（for循环条件）控制着循环体的执行，而循环体中的max赋值和后续的swap操作都依赖于该循环。因此变异语句通过控制流直接影响输出语句的执行。\n分析结论：存在控制依赖影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了循环行为，但这种改变会直接导致：\n1. 循环次数可能减少（i递减可能导致立即退出循环）\n2. max的赋值可能不同\n3. 最终swap操作使用的max值可能不同\n这些差异会直接反映在程序输出（排序结果）中，不会被后续执行覆盖或抵消。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_206 的分析, 耗时: 44.4862 秒
+
+开始分析变异体 MUT_207...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_207": "### 步骤1：可达性\n说明理由：变异语句位于for循环内部，路径条件为`data.length >= 2`和`i < data.length`。这些条件在程序执行时可以被满足（例如当输入数组长度≥2时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原条件`data[max] < data[i]`与变异条件`!(data[max] < data[i])`逻辑完全相反。当`data[max] < data[i]`为true时，原程序会执行`max = i`，而变异体不会执行；反之亦然。这会直接影响max的赋值结果。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变量max的赋值直接影响swap操作中的参数，进而影响quicksort的输入数据。数据依赖路径清晰存在：变异语句→max赋值→swap→quicksort。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句的控制流决定了是否执行`max = i`，而max的值直接影响后续swap和quicksort操作。控制依赖路径明确存在。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异导致的max赋值差异会直接传递到swap操作，进而影响最终的数组排序结果。没有证据表明错误状态会被后续操作修正或抵消。\n分析结论：变异引入的错误状态不会被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO"}
+完成变异体 MUT_207 的分析, 耗时: 45.0258 秒
+
+开始分析变异体 MUT_208...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_208": "### 步骤[可达性]：\n说明理由：变异语句位于循环体内，路径条件组合为 `data.length >= 2` 和 `i < data.length`。这些条件在输入数组长度大于等于2时均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `if (data[max] < data[i])` 和 `if (data[++max] < data[i])`。变异体在每次比较前会先递增 `max` 的值，这会改变 `max` 的当前值，从而可能影响比较结果和后续的 `max = i` 赋值。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `max`，其数据依赖路径显示 `max` 的值会流向 `swap` 语句和后续的 `quicksort` 调用。`max` 的变化会直接影响 `swap` 操作中使用的索引值，进而影响数组的排序结果。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (data[++max] < data[i])` 的控制依赖路径显示其直接影响 `max = i` 的赋值和循环的继续执行。这些控制流变化最终会影响 `swap` 和 `quicksort` 的执行，从而影响程序输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`max` 的异常递增）会直接影响 `swap` 操作的索引值，且这种影响会传递到最终的排序结果中，不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_208 的分析, 耗时: 38.6354 秒
+
+开始分析变异体 MUT_214...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_214": "### 步骤1：可达性\n说明理由：变异语句位于for循环内部，路径条件为`data.length >= 2`和`i < data.length`。这些条件在输入数组长度≥2时均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原表达式`data[max] < data[i]`与变异表达式`data[max] < data[i++]`的区别在于变异体对i进行了后置递增操作。这会改变循环变量i的值，进而影响后续迭代次数和max的赋值。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量i通过以下路径传播：\n1. i → max → swap操作\n2. i → 循环条件 → 控制流\n这些路径最终都会影响程序的排序结果。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于循环条件判断中，直接影响：\n1. max的赋值（控制依赖）\n2. 循环次数（控制依赖）\n这些都会最终影响swap和quicksort的调用。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异导致的i值改变会：\n1. 提前结束循环（少一次迭代）\n2. 导致max可能被错误赋值\n这些改变无法被后续执行修正，会直接影响排序结果。\n分析结论：错误状态未被覆盖。\n\n最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_214 的分析, 耗时: 39.0457 秒
+
+开始分析变异体 MUT_216...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_216": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，循环条件为`i < data.length`，且没有前置不可达的路径约束。因此，变异语句在循环执行时是可到达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的`if (data[max] < data[i]) { max = i; }`被变异删除。这意味着在变异体中，无论`data[max]`与`data[i]`的大小关系如何，`max`都不会被更新为`i`。这将导致`max`始终为初始值0，从而影响后续的`swap`操作。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`max`，其数据依赖路径为`max`的初始赋值（`int max = 0`）到`swap(data, data.length - 1, max)`。由于变异导致`max`不再被更新，`swap`操作将始终使用`max=0`，从而影响程序的输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句被删除后，循环体内的控制流直接跳过条件判断，但循环本身仍然控制着`swap`和`quicksort`的执行。变异语句的删除影响了循环体内的控制流，从而间接影响了程序的输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`max`不再被更新）在后续执行中未被修正或抵消，导致`swap`操作始终使用`max=0`，从而影响程序的最终输出。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_216 的分析, 耗时: 44.0305 秒
+
+开始分析变异体 MUT_217...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_217": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的条件判断部分，路径条件组合为`data.length >= 2`。该条件可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序条件为`i < data.length`，变异后为`i < ~data.length`。对于任何非负整数data.length，~data.length的结果为负（按位取反），因此循环条件`i < ~data.length`恒为假（因为i初始为1且递增）。这将导致循环体永远不会执行，与原程序行为不同。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i和data通过数据依赖链传播到输出节点。具体路径显示i的值会影响max的赋值，进而影响swap和quicksort的参数，最终影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制了循环体的执行，而循环体中的操作直接影响swap和quicksort的调用，进而影响程序输出。控制依赖路径显示变异语句与输出语句存在直接控制依赖关系。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异导致循环体完全不执行，max将保持初始值0，swap和quicksort的参数将固定为特定值，这与原程序在循环执行后的状态完全不同。没有后续执行能修正或抵消这种状态差异。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_217 的分析, 耗时: 53.4988 秒
+
+开始分析变异体 MUT_221...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_221": "### 步骤[可达性]：\n说明理由：变异语句位于循环内部，路径条件组合为`data.length >= 2`和`i < data.length`。这些条件在输入数组长度≥2时均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式`data[max] < data[i]`与变异表达式`data[max++] < data[i]`的区别在于后者会修改max的值。在循环执行过程中，max++会改变max的原始值，从而影响后续比较和swap操作，因此实际改变了程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量max通过数据依赖链传播到swap操作（line 12），而swap操作直接影响程序输出。具体路径包括：变异语句→max值变化→swap参数变化→输出变化。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流影响循环体内的max赋值（line 10）和后续的swap操作（line 12）。控制依赖路径显示变异语句的分支结果会直接影响swap的执行参数。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异导致max值被修改，但这种修改会持续影响后续循环比较和最终的swap操作，没有证据表明错误状态会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_221 的分析, 耗时: 42.2868 秒
+
+开始分析变异体 MUT_226...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_226": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，路径条件组合为[data.length >= 2, i < data.length]。这些条件在输入数组长度≥2时均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为if (data[max] < data[i])，变异后为if (false)。无论原条件如何，变异后条件恒为false，这将导致max永远不会被更新为i。这会改变程序状态（max的值）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变量max的数据依赖路径显示其值会直接影响swap操作。由于变异导致max不再更新，最终swap将使用初始值max=0而非正确的最大值索引。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制着max的赋值，而max直接影响swap操作。虽然变异语句不直接控制输出语句，但通过数据依赖影响输出。\n分析结论：变异通过数据依赖而非直接控制流影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：变异导致max保持初始值0，这会使得swap总是交换第一个元素和最后一个元素，而非将最大值放到末尾。这种错误状态不会被后续执行修正。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_226 的分析, 耗时: 37.7509 秒
+
+开始分析变异体 MUT_228...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_228": "### 步骤1：可达性\n说明理由：变异语句位于`swap( data, data.length % 1, max )`，其路径条件为`data.length >= 2`和`i < data.length`。由于`data.length % 1`恒等于0（因为任何整数对1取模结果为0），因此该语句的可达性与原语句`swap( data, data.length - 1, max )`相同，路径条件可满足。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原语句为`swap( data, data.length - 1, max )`，变异为`swap( data, data.length % 1, max )`。由于`data.length % 1`恒等于0，而`data.length - 1`在`data.length >= 2`时为`>=1`。因此，变异将交换的目标索引从最后一个元素变为第一个元素，这会改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量为`data`和`max`。`data`的数据依赖路径显示其值会传递到`quicksort`调用，而`max`的值会影响`swap`的参数。`quicksort`的输入依赖于`data`的交换结果，因此变异的影响会传播到输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句`swap( data, data.length % 1, max )`直接控制后续`quicksort`的输入数据，而`quicksort`的输出决定了程序的最终状态。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了交换的索引位置（从最后一个元素到第一个元素），但`quicksort`会对整个数组进行排序，最终排序结果与原程序相同。因此，变异引入的状态改变在后续执行中被修正。\n分析结论：变异引入的错误状态被后续执行修正，程序最终输出未受影响。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_228 的分析, 耗时: 40.0111 秒
+
+开始分析变异体 MUT_235...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_235": "### 步骤[可达性]：\n说明理由：变异语句是删除了`if (data.length < 2)`的条件判断及其`return`语句。由于变异语句已被删除，我们需要从变异语句所在的位置（原第4行）开始，向下追踪控制依赖路径。根据控制依赖路径信息，变异后的程序会直接执行后续的`int max = 0;`和`for`循环等语句，因此变异语句的路径是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的`if (data.length < 2)`条件判断用于在数组长度小于2时直接返回，避免不必要的排序操作。变异体删除了这一条件判断，导致无论数组长度如何都会执行后续的排序逻辑。对于`data.length < 2`的情况，原程序直接返回，而变异体会执行不必要的排序操作，这会改变程序的状态（例如`max`和`data`的值）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`data`和`max`。根据数据依赖路径，`data`和`max`的值会直接影响`swap`和`quicksort`操作的执行。对于`data.length < 2`的情况，原程序不会修改`data`和`max`的值，而变异体会执行`swap`和`quicksort`操作，从而改变`data`和`max`的值。这些改变会通过`swap`和`quicksort`操作传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异删除了`if (data.length < 2)`的条件判断，导致后续的`swap`和`quicksort`操作无条件执行。这些操作的控制依赖于变异后的程序流程，因此变异语句通过控制流影响了输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：对于`data.length >= 2`的情况，原程序和变异体的行为完全一致，因为原程序也会执行后续的排序逻辑。但对于`data.length < 2`的情况，原程序直接返回，而变异体会执行不必要的排序操作，这会改变程序的状态（例如`max`和`data`的值）。由于`data.length < 2`时原程序不修改`data`和`max`的值，而变异体会修改，因此变异引入的错误状态不会被修正或抵消。\n分析结论：变异引入的错误状态不会被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_235 的分析, 耗时: 54.3359 秒
+
+开始分析变异体 MUT_244...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_244": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件`data.length >= 2`。该条件在程序实际运行中是可满足的（只要输入数组长度≥2），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`swap(data, data.length - 1, max)`，变异体改为`swap(data, data.length - 1, -max)`。当`max`为非零值时（例如通过循环找到的`max = i > 0`），`max`和`-max`会导致交换不同的数组索引位置，从而实际改变程序状态。即使`max=0`时两者行为相同，但存在`max≠0`的输入情况使行为不同。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`max`通过数据依赖链直接传递到`swap`调用参数，而`swap`操作会修改`data`数组的内容。修改后的数组会通过后续`quicksort`调用影响最终排序结果（程序输出）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`swap`与输出语句`quicksort`之间存在直接的控制依赖关系（`quicksort`的执行依赖于`swap`的执行结果）。变异通过改变`swap`的参数会影响`quicksort`的输入数据。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体满足可达性、必要性、数据依赖和控制依赖条件，但在`max=0`的特殊情况下（即输入数组所有元素≤`data[0]`时），`max`和`-max`效果相同。然而这种情况不能覆盖所有输入（如存在`max>0`时行为不同），且后续`quicksort`会进一步暴露差异，因此不存在全局的状态覆盖。\n分析结论：变异引入的错误状态未被完全覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_244 的分析, 耗时: 35.1193 秒
+
+开始分析变异体 MUT_245...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_245": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到变异语句`quicksort( data, 0, data.length - 2 );`的路径条件为`data.length >= 2`。该条件可满足（例如输入数组长度≥2时），因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异在于完全删除了`quicksort( data, 0, data.length - 2 );`语句。该语句是排序算法的核心操作，删除后会导致程序无法对`data`数组的子范围进行排序。在路径条件`data.length >= 2`下，原程序会执行快速排序，而变异体直接跳过排序步骤，导致程序状态（数组顺序）发生根本性改变。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`。数据依赖路径显示`data`从输入参数流向`swap`和`quicksort`操作。删除`quicksort`会中断对`data`的完整处理，导致其最终状态（排序结果）无法通过数据依赖链正确传播到程序输出（排序后的数组）。\n分析结论：变异影响的变量`data`通过数据依赖链直接影响程序输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`quicksort`是独立的操作语句，其执行与否直接影响后续程序输出（排序结果）。控制依赖路径显示该语句直接连接到程序退出点，其删除会导致控制流跳过关键排序逻辑。\n分析结论：变异语句通过控制流直接影响程序输出。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异体删除了核心排序操作，且无其他逻辑能覆盖或修正该错误状态（如手动排序或其他补偿操作），程序输出的数组将保持未排序状态，与原程序的预期行为不一致。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_245 的分析, 耗时: 35.6891 秒
+
+开始分析变异体 MUT_248...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_248": "### 步骤[可达性]：\n说明理由：变异语句`swap( data, data.length - 1, max )`位于`for`循环之后，其可达性条件为`data.length >= 2`（由前置条件`if (data.length < 2)`的否定分支决定）且`i < data.length`（循环终止条件）。这些条件在输入`data.length >= 2`时可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序执行`swap( data, data.length - 1, max )`将最大值交换到数组末尾，而变异体删除了该语句。这将直接导致数组未经过最大值交换操作，影响后续`quicksort`的输入状态。因此，变异实际改变了程序语义。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`data`和`max`。`data`的数据依赖路径直接传递到`quicksort`调用，而`max`的值决定了交换的位置。删除交换操作后，`data`的最终状态与原始程序不同，且该差异通过`quicksort`调用传递到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`swap`的执行结果直接影响`quicksort`的输入数组顺序。虽然`swap`语句本身不直接控制分支，但其对`data`的修改会通过`quicksort`的内部逻辑间接影响程序输出。因此，变异效果可通过数据流传递到输出。\n分析结论：变异语句通过数据流间接影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异删除了关键的交换操作，导致`quicksort`的输入数组未经过最大值交换，其排序结果必然与原始程序不同。不存在后续操作能抵消或修正这一差异。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_248 的分析, 耗时: 60.3687 秒
+
+开始分析变异体 MUT_250...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_250": "### 步骤[可达性]：\n说明理由：变异语句的条件从`if (data.length < 2)`变为`if (false)`，这是一个恒假条件。根据REACHABILITY_CONSTRAINT提供的`[False]`，说明该变异语句的路径条件组合逻辑上不可满足，即没有任何输入可以触发该变异语句的执行。\n分析结论：变异语句不可达。\n\n### 最终结论：\n由于在第一步可达性分析中已经确定变异语句不可达，根据等价变异体判定规则，无需继续后续步骤分析。该变异体满足等价变异体的第一个条件（不可达性）。\n\n等价变异体判定结果：YES"}
+完成变异体 MUT_250 的分析, 耗时: 40.9843 秒
+
+开始分析变异体 MUT_257...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_257": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，其路径条件组合为`data.length >= 2`和`i < data.length`。这两个条件在程序执行过程中是可满足的，因为当`data.length >= 2`时，for循环会至少执行一次（i从1开始），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`if (data[max] < data[i])`，变异后的条件是`if (data[max] > data[i])`。这两个条件的逻辑完全相反（`<` vs `>`），因此在任何情况下都会导致程序状态的不同。例如，当`data[max] = 5`且`data[i] = 3`时，原条件为`false`，变异条件为`true`，会直接影响`max`的赋值。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`max`和`data`。`max`的值会通过`swap`和`quicksort`操作直接影响`data`的最终状态。具体路径如下：\n1. `max`的值通过`swap(data, data.length - 1, max)`直接修改`data`数组。\n2. 修改后的`data`会作为参数传递给`quicksort`，进一步影响排序结果。\n因此，变异的效果会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (data[max] > data[i])`控制`max = i`的执行，而`max`的值直接影响`swap`和`quicksort`的调用。因此，变异语句通过控制流间接影响了程序的输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的中间状态（`max`的赋值逻辑相反），但由于`swap`和`quicksort`的调用依赖于`max`的值，变异会导致`data`数组的最终状态与原程序不同。例如，原程序会选择较大的`data[i]`更新`max`，而变异体会选择较小的`data[i]`更新`max`，从而影响`swap`和`quicksort`的行为。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出会受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_257 的分析, 耗时: 59.9268 秒
+
+开始分析变异体 MUT_269...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_269": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`data.length >= 2`，这是一个可满足的条件（例如当`data.length = 2`时成立）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异在于`swap`函数的第二个参数从`data.length - 1`变为`data.length`。在`data.length >= 2`的条件下，`data.length - 1`和`data.length`是不同的值（例如`data.length = 2`时，前者为1，后者为2）。这将导致`swap`操作访问不同的数组索引，从而可能改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`和`max`。`data`的数据依赖路径显示其值会流向`quicksort`函数，而`max`的值会影响`swap`操作的具体位置。`quicksort`函数的输入直接依赖于`swap`操作后的`data`状态，因此变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`swap`的执行结果直接影响后续`quicksort`函数的输入数据。`quicksort`函数的输出（即程序的最终输出）依赖于其输入数据的状态，因此变异语句通过控制流间接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`swap`操作的索引，但`quicksort`函数的输出是否与原程序一致取决于具体的输入数据。例如，当`data.length = 2`且`max = 1`时，原程序交换`data[1]`和`data[1]`（无实际效果），而变异体交换`data[2]`和`data[1]`（可能导致数组越界或改变数据顺序）。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态不会被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_269 的分析, 耗时: 40.3040 秒
+
+开始分析变异体 MUT_270...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_270": "### 步骤[可达性]：\n说明理由：变异语句位于循环内部，路径条件组合为`data.length >= 2`和`i < data.length`。这些条件在程序执行过程中是可满足的，因为当`data.length >= 2`时，循环会执行至少一次，且`i`的初始值为1，满足`i < data.length`。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`if (data[max] < data[i])`，变异后的条件是`if (data[max] == data[i])`。在可达路径下，这两个条件的语义不同。例如，当`data[max] = 5`且`data[i] = 3`时，原条件为`false`，变异条件也为`false`；但当`data[max] = 5`且`data[i] = 5`时，原条件为`false`，变异条件为`true`。因此，变异会改变程序的状态（`max`的赋值）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`max`，其数据依赖路径如下：\n1. 如果`data[max] == data[i]`为`true`，则`max = i`，`max`的值会更新，并通过`swap`和`quicksort`传递到输出。\n2. 如果`data[max] == data[i]`为`false`，`max`的值保持不变，但仍会通过`swap`和`quicksort`传递到输出。\n因此，`max`的值会直接影响程序的输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (data[max] == data[i])`控制`max = i`的执行，而`max`的值直接影响`swap`和`quicksort`的调用。因此，变异语句通过控制流影响了输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异会改变`max`的值，但`swap`和`quicksort`的最终效果可能在某些情况下与原程序一致。例如，如果`data`数组中所有元素相等，变异体和原程序的`max`值可能不同，但`swap`和`quicksort`的结果相同。然而，这种情况是特例，一般情况下变异会改变程序的输出。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_270 的分析, 耗时: 52.6821 秒
+
+开始分析变异体 MUT_272...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_272": "### 步骤1：可达性\n说明理由：变异语句位于for循环内部，路径条件组合为`data.length >= 2`和`i < data.length`。这些条件在程序执行时可以被满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件判断为`if (data[max] < data[i])`，变异体将其改为`if (true)`。这意味着无论原条件如何，变异体都会执行`max = i`语句。这会改变程序状态，因为原程序仅在`data[max] < data[i]`时更新`max`，而变异体总是更新`max`。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`max`和`i`。`max`的值通过`swap`和`quicksort`操作传播到程序输出。`i`的值通过循环和`max`的赋值间接影响输出。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖。\n\n### 步骤4：控制依赖\n说明理由：变异语句`if (true)`控制了`max = i`的执行，而`max`的值直接影响`swap`和`quicksort`操作。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖。\n\n### 步骤5：状态覆盖\n说明理由：变异体总是执行`max = i`，导致`max`的值与原始程序不同。这种差异会传递到`swap`和`quicksort`操作，从而影响最终的排序结果。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_272 的分析, 耗时: 41.7651 秒
+
+开始分析变异体 MUT_274...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_274": "### 步骤1：可达性\n说明理由：变异语句位于循环体内，路径条件为`data.length >= 2 && i < data.length`。该条件在输入数组长度≥2时可满足，且循环条件`i < data.length`保证循环体内的语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原表达式`data[max] < data[i]`与变异表达式`data[max] < data[i--]`的区别在于后者会修改i的值。在循环迭代中，i的自减操作会影响后续迭代的索引值，从而可能改变max的赋值结果。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量i通过以下路径传播：\n1. `i--` → `max = i` → `swap(data, data.length-1, max)`（直接影响最终数组排序结果）\n2. `i--` → 循环控制变量i → 影响后续迭代条件\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于循环条件判断中，其执行结果直接影响：\n1. `max = i`的赋值（控制数据交换的索引）\n2. 循环控制流（通过修改i值影响后续迭代）\n最终通过`swap`操作影响程序输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的i值修改会持续影响：\n1. 当前迭代的max赋值\n2. 后续所有迭代的循环控制\n这种影响会直接传递到最终的swap操作，不会被后续执行覆盖或抵消。\n分析结论：变异效果会持续影响最终输出。\n\n### 最终结论\n等价变异体判定结果：NO"}
+完成变异体 MUT_274 的分析, 耗时: 41.3552 秒
+
+开始分析变异体 MUT_275...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_275": "### 步骤[1. 可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径条件组合为`[~data.length >= 2]`。这意味着只有当`~data.length`（即`data.length`的按位取反）大于等于2时，变异语句才会被执行。由于`data.length`是一个非负整数，其按位取反的结果通常为负数（例如，`data.length=0`时`~data.length=-1`，`data.length=1`时`~data.length=-2`），因此`~data.length >= 2`的条件在实际情况中不可能满足。因此，变异语句不可达。\n分析结论：变异语句不可达。\n\n### 最终结论：\n由于变异语句不可达，根据等价变异体的判定规则，该变异体属于等价变异体。  \n等价变异体判定结果：YES。"}
+完成变异体 MUT_275 的分析, 耗时: 45.3565 秒
+
+开始分析变异体 MUT_276...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_276": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件`data.length >= 2`。该条件可满足（例如当`data.length = 2`时），因此变异点可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`swap(data, data.length - 1, max)`和`swap(data, data.length - 1, max--)`。变异操作`max--`会修改`max`的值（后置递减），但`swap`函数调用时传递的是`max`的原始值（后置递减的特性）。因此，`swap`的行为在语义上未改变，但`max`的后续值会减1。由于`max`的值在`swap`后不再被使用（`quicksort`调用不依赖`max`的值），程序状态的实际影响被隔离。  \n分析结论：变异未实际改变程序语义（`swap`行为不变），但存在潜在的副作用（`max`值变化）。需进一步分析数据依赖。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`max`。数据依赖路径显示：\n1. `max`在`swap`调用后流向`quicksort`，但`quicksort`的参数是`data`、`0`和`data.length - 2`，与`max`无关。\n2. `max`的其他依赖路径仅影响自身赋值和`swap`调用，不传播到输出。  \n分析结论：`max`的变化未通过数据依赖链传播到程序输出节点，数据依赖缺失。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示，`swap`语句与后续`quicksort`调用存在控制依赖，但`quicksort`的行为不依赖于`max`的值（仅依赖`data`和固定索引）。因此，`max--`的变异无法通过控制流影响输出。  \n分析结论：变异语句无法通过控制流影响输出语句，控制依赖缺失。\n\n### 步骤[状态覆盖]：\n说明理由：虽然`max--`修改了`max`的值，但该修改：\n1. 不影响`swap`的即时行为（传递原始值）。\n2. 不影响后续`quicksort`的执行（不依赖`max`）。\n因此，变异引入的状态变化被完全隔离，程序输出（排序后的`data`）不受影响。  \n分析结论：变异状态被逻辑隔离，程序输出未改变。\n\n### 最终结论：\n等价变异体判定结果：YES。  \n（关键依据：数据依赖和控制依赖均缺失，变异状态被隔离，程序行为未改变。）"}
+完成变异体 MUT_276 的分析, 耗时: 43.9511 秒
+
+开始分析变异体 MUT_277...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_277": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `data.length >= 2`。该条件是可满足的，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `quicksort( data, 0, data.length - 2 )` 和 `quicksort( data, 0, ~data.length - 2 )`。`~` 是按位取反操作符，会显著改变 `data.length - 2` 的值（例如，`data.length = 2` 时，原值为 0，变异后为 -3）。这种改变会导致 `quicksort` 的调用参数完全不同，从而影响程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `data`，其数据依赖路径显示 `data` 的值会直接传递到 `quicksort` 调用中。`quicksort` 的排序结果会直接影响 `data` 的最终状态（即程序的输出）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `quicksort( data, 0, ~data.length - 2 )` 是程序的最后一条语句，其执行结果直接影响程序的输出（即排序后的 `data` 数组）。虽然控制依赖路径显示其直接退出程序，但变异语句的执行结果（排序行为）会直接决定程序输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（错误的 `quicksort` 参数）会导致排序范围完全错误，从而使得 `data` 的最终状态与原程序不同。没有后续执行会修正或抵消这种错误状态。\n分析结论：变异引入的错误状态未被修正或抵消，程序输出会受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_277 的分析, 耗时: 40.7494 秒
+
+开始分析变异体 MUT_281...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_281": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，路径条件组合为`data.length >= 2`和`i < data.length`。这些条件在程序执行时可以被满足（例如当输入数组长度≥2时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`data[max] < data[i]`，变异后为`data[max] <= data[i]`。当`data[max] == data[i]`时，原表达式结果为false而变异表达式结果为true，这会改变程序状态（影响max的赋值）。因此该变异实际改变了程序语义。\n分析结论：变异具有必要性，改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量max通过以下路径传播到输出：\n1. (line 9: if条件) → (line 10: max赋值) → (line 12: swap操作) → (line 14: quicksort输入)\n2. max的值直接影响swap和quicksort的操作对象\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制以下关键路径：\n1. True分支 → 更新max值 → 影响后续swap和quicksort\n2. False分支 → 跳过max更新 → 保持原max值\n这些控制流变化会直接影响程序输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了max的赋值逻辑，但在以下两种情况会表现出不同行为：\n1. 当存在多个相同最大值时，原程序会选择第一个出现的最大值位置，而变异体会选择最后一个出现的位置\n2. 这会改变swap操作的目标位置，进而影响最终的排序结果\n因此变异引入的状态改变会传播到最终输出。\n分析结论：变异效果未被覆盖，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_281 的分析, 耗时: 52.5094 秒
+
+开始分析变异体 MUT_284...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_284": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[data.length >= 2, i == data.length]`。初始时 `i = 1`，而 `data.length >= 2`，因此 `i == data.length` 只有在第一次循环迭代时 `i` 被递增到 `data.length` 时才可能满足。然而，由于 `i` 初始为1且 `data.length >= 2`，`i == data.length` 在第一次迭代时不可能满足（因为 `i` 从1开始递增，至少需要 `data.length - 1` 次迭代才能满足 `i == data.length`）。因此，该条件逻辑上不可满足。\n分析结论：变异语句不可达。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_284 的分析, 耗时: 34.6815 秒
+
+开始分析变异体 MUT_290...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_290": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `data.length <= 2`。原程序的条件是 `data.length < 2`，变异后的条件是 `data.length > 2`。在 `data.length <= 2` 的情况下，变异后的条件 `data.length > 2` 恒为假，因此变异语句不可达。\n分析结论：变异语句不可达。\n\n### 步骤[必要性]：\n说明理由：由于变异语句不可达，无需进行必要性分析。\n分析结论：跳过。\n\n### 步骤[数据依赖]：\n说明理由：由于变异语句不可达，无需进行数据依赖分析。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于变异语句不可达，无需进行控制依赖分析。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异语句不可达，无需进行状态覆盖分析。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_290 的分析, 耗时: 36.1835 秒
+
+开始分析变异体 MUT_291...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_291": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件`data.length >= 2`。该条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`quicksort( data, 0, data.length - 2 )`和`quicksort( data, 0, 2 )`。在`data.length > 4`的情况下，`data.length - 2`与`2`的值不同，会导致`quicksort`的排序范围不同，从而可能改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`data`，其数据依赖路径显示`data`的值会直接传递到`quicksort`调用中，而`quicksort`会修改`data`的内容。因此，变异所引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`quicksort( data, 0, 2 )`是程序的最后一条语句，直接控制程序的执行流程。虽然它没有显式的输出语句，但`quicksort`的操作会直接影响`data`的状态，而`data`是程序的输出（通过修改传入的数组）。\n分析结论：变异语句通过控制流影响程序输出。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，且变异体造成的程序状态改变会直接影响`data`的排序结果。不存在状态被修正或抵消的情况。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_291 的分析, 耗时: 36.3694 秒
+
+开始分析变异体 MUT_295...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_295": "### 步骤1：可达性\n说明理由：变异语句位于循环内部，路径条件组合为`data.length >= 2`和`i < data.length`。这些条件在输入数组长度大于等于2时均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序语句为`if (data[max] < data[i])`，变异体为`if (data[max--] < data[i])`。变异引入了`max--`操作，这会改变`max`的值。在循环中，`max`的值会影响后续的`swap`操作和`quicksort`调用，因此变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`max`通过数据依赖链传播到程序输出节点。具体路径为：\n1. `max`在`if (data[max--] < data[i])`中被修改。\n2. 修改后的`max`用于`swap(data, data.length - 1, max)`。\n3. `swap`操作影响`data`数组，进而影响`quicksort(data, 0, data.length - 2)`的输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句`if (data[max--] < data[i])`通过控制流影响输出语句。具体路径为：\n1. 变异语句的真假决定是否执行`max = i`。\n2. `max`的值影响`swap`操作和`quicksort`调用。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`max`的值被修改）会直接影响`swap`操作和`quicksort`调用的结果，且没有后续操作修正或抵消这种影响。因此，变异引入的错误状态会传递到程序输出。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_295 的分析, 耗时: 42.7118 秒
+
+开始分析变异体 MUT_298...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_298": "### 步骤1：可达性\n说明理由：变异语句位于for循环的条件判断部分，路径条件组合为`data.length >= 2`。该条件可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序中的for循环包含`i++`语句，变异体移除了`i++`。这将导致循环变量`i`不再递增，从而可能使循环无法正常终止或改变循环次数。这实际改变了程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`i`通过数据依赖链传播到程序输出节点。具体路径为：`i`用于比较`data[max] < data[i]`，影响`max`的赋值，最终影响`swap`和`quicksort`的调用。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句控制循环的执行次数，进而影响`max`的赋值和后续的`swap`、`quicksort`调用。变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（循环变量`i`不递增）会导致循环无法正常终止或改变循环次数，这将直接影响`max`的赋值和后续操作，且不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_298 的分析, 耗时: 44.2769 秒
+
+开始分析变异体 MUT_300...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_300": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `data.length >= 2`，这是一个可满足的条件，因为只要输入数组的长度大于等于2，变异语句就可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别在于 `swap( data, data.length - 1, max )` 被修改为 `swap( data, -data.length - 1, max )`。`data.length - 1` 是一个非负整数，而 `-data.length - 1` 是一个负整数。在数组访问中，负索引会导致 `ArrayIndexOutOfBoundsException`，因此变异语句会改变程序的行为。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `data` 和 `max`。`data` 的数据依赖路径显示，变异后的 `data` 会传递给 `quicksort` 方法。`max` 的数据依赖路径显示，`max` 的值会影响 `swap` 方法的调用。因此，变异影响的变量会通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `swap( data, -data.length - 1, max )` 会抛出异常，导致程序提前终止，因此不会执行后续的 `quicksort` 方法。这意味着变异语句通过控制流影响了程序的输出行为。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异语句会抛出异常，程序不会继续执行后续的 `quicksort` 方法，因此变异引入的错误状态不会被修正或抵消，程序最终输出会受到影响。\n分析结论：变异效果未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_300 的分析, 耗时: 36.4571 秒
+
+开始分析变异体 MUT_303...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_303": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的条件判断部分，路径条件组合为`data.length >= 2`。该条件在程序执行时可以被满足（只要输入数组长度≥2），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`i < data.length`作为循环条件，变异体改为`i != data.length`。在正常情况下（i从1开始递增），这两种条件在循环过程中会产生相同的行为。但当i超过data.length时（由于编程错误或其他原因），`i != data.length`会导致无限循环，而`i < data.length`会正常终止。但在当前程序的正确执行路径下（i从1递增到data.length-1），两者的行为完全一致。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n（由于上一步已确定是非必要性变异，可跳过此步骤）\n\n### 步骤[控制依赖]：\n（由于上一步已确定是非必要性变异，可跳过此步骤）\n\n### 步骤[状态覆盖]：\n（由于上一步已确定是非必要性变异，可跳过此步骤）\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_303 的分析, 耗时: 40.8443 秒
+

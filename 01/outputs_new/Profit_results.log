@@ -1,0 +1,368 @@
+开始分析变异体 MUT_001...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_001": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[i > 100000, i > 200000, i > 400000, i <= 600000]。这些条件可以同时满足，例如i=450000。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用i计算bonus，而变异体使用abs(i)。在路径条件i > 400000且i <= 600000下，i始终为正数，因此i和abs(i)的值相同。变异未改变程序状态。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于在步骤2中已确定变异未改变程序状态，因此无需进一步分析数据依赖。\n分析结论：跳过（因步骤2已确定等价性）\n\n### 步骤[控制依赖]：\n说明理由：由于在步骤2中已确定变异未改变程序状态，因此无需进一步分析控制依赖。\n分析结论：跳过（因步骤2已确定等价性）\n\n### 步骤[状态覆盖]：\n说明理由：由于在步骤2中已确定变异未改变程序状态，因此无需进一步分析状态覆盖。\n分析结论：跳过（因步骤2已确定等价性）\n\n### 最终结论：\n等价变异体判定结果：YES"}
+完成变异体 MUT_001 的分析, 耗时: 39.9639 秒
+
+开始分析变异体 MUT_002...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_002": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[i > 100000, i > 200000, i <= 400000]。这些条件可以同时满足（例如i=300000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用减法运算(i-200000)，而变异体使用取模运算(i%200000)。在路径约束下（200000 < i <= 400000），取模运算的结果与减法运算不同（例如i=300000时，(i-200000)=100000，而(i%200000)=100000；但当i=250000时，(i-200000)=50000，而(i%200000)=50000）。然而，在200000 < i <= 400000范围内，(i-200000)和(i%200000)的结果始终相同，因为i%200000等价于i-200000（当200000 < i <= 400000时）。\n分析结论：变异未实际改变程序状态，属于等价变异体。\n\n### 步骤[数据依赖]：\n说明理由：由于必要性分析已确认变异未改变程序状态，无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于必要性分析已确认变异未改变程序状态，无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于必要性分析已确认变异未改变程序状态，无需进一步分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_002 的分析, 耗时: 52.7096 秒
+
+开始分析变异体 MUT_003...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_003": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为[i > 100000, i > 200000, i <= 400000]，这些条件可以同时满足（例如i=300000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序语句为`bonus=bonus2+(i-200000)*0.05`，变异体为`bonus=bonus2+(i++-200000)*0.05`。变异引入了i的自增操作，这会改变i的值（增加1），从而影响后续对i的使用（如后续的if条件判断和bonus计算）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量i和bonus都有数据依赖路径传播到输出节点。变量i的变化会影响后续if条件判断和bonus计算，最终影响返回值。变量bonus直接被返回。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句所在的代码块控制依赖于if (i<=400000)条件，但变异语句本身并不直接控制输出语句的执行流程。输出语句的执行仅依赖于外部的if-else条件链。\n分析结论：变异语句不通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了i的值（增加1），但这一改变会影响到后续所有使用i的地方，包括后续的if条件判断和bonus计算。因此，变异引入的状态改变不会被后续执行修正或抵消，会直接影响到最终的bonus计算结果。\n分析结论：变异引入的错误状态不会被覆盖，会影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_003 的分析, 耗时: 41.2237 秒
+
+开始分析变异体 MUT_004...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_004": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为`[i>100000, i>200000, i>400000, i>600000]`，这些条件可以同时满足（例如`i=700000`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序条件为`i<=1000000`，变异后为`i<1000000`。当`i=1000000`时，原程序执行`bonus=bonus6+(i-600000)*0.015`，而变异体执行`bonus=bonus10+(i-1000000)*0.01`，计算结果不同（因为`bonus6`和`bonus10`不同），程序状态改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`i`通过数据依赖链直接传播到输出节点。变异语句的分支结果直接影响`bonus`的计算，最终影响返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句通过控制流直接影响输出语句。变异语句的分支决定执行`bonus=bonus6+(i-600000)*0.015`还是`bonus=bonus10+(i-1000000)*0.01`，最终影响返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`i=1000000`时的分支差异）未被后续执行修正或抵消，直接导致最终输出不同。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_004 的分析, 耗时: 34.8596 秒
+
+开始分析变异体 MUT_005...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_005": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[i > 100000, i > 200000, i > 400000, i <= 600000]`，即 `400000 < i <= 600000`。该条件是可满足的，例如 `i = 500000` 可以触发该路径。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `bonus=bonus4+(i-400000)*0.03` 和 `bonus=abs(bonus4)+(i-400000)*0.03`。由于 `bonus4` 的计算结果为 `100000*0.1 + 100000*0.075 + 200000*0.05 = 10000 + 7500 + 10000 = 27500`，是一个正数，因此 `abs(bonus4) == bonus4`。因此，变异前后的表达式在语义上是等价的。\n分析结论：变异未实际改变程序语义。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤[必要性]已证明变异未改变程序语义，因此无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤[必要性]已证明变异未改变程序语义，因此无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于步骤[必要性]已证明变异未改变程序语义，因此无需进一步分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_005 的分析, 耗时: 33.6462 秒
+
+开始分析变异体 MUT_006...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_006": "### 步骤[可达性]：\n说明理由：变异语句位于`if(i<=100000)`条件为真时的分支内，路径条件为`i<=100000`。该条件在输入满足`i<=100000`时可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序为`bonus=i*0.1`，变异体为`bonus=abs(i)*0.1`。在路径约束`i<=100000`下：\n- 当`i>=0`时，`i`和`abs(i)`等价\n- 当`i<0`时（虽然业务逻辑中`i`可能不会为负，但语法上允许），`i`和`abs(i)`不等价\n因此存在输入（如`i=-50000`）会使程序状态改变。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`bonus`通过数据依赖路径直接传播到`return(bonus)`输出节点。具体路径为：\n`(line 12: bonus=abs(i)*0.1) --[Flows bonus]--> (line 23: return(bonus);)`\n分析结论：存在完整的数据依赖链连接变异节点与输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`bonus=abs(i)*0.1`受`if(i<=100000)`控制，而输出语句`return(bonus)`控制依赖于该变异语句的执行结果。\n具体控制依赖路径为：\n`(11: if (i<=100000)) --True--> (12: bonus=abs(i)*0.1) -- --> (23: return(bonus);)`\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体满足前四个条件，但需要检查是否存在状态覆盖：\n- 当`i>=0`时，`abs(i)==i`，程序输出与原程序相同\n- 当`i<0`时，`abs(i)!=i`，会导致不同的`bonus`计算结果\n因此存在输入（如`i=-50000`）会使最终输出不同，没有完全的状态覆盖。\n分析结论：不存在完全的状态覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO"}
+完成变异体 MUT_006 的分析, 耗时: 61.7003 秒
+
+开始分析变异体 MUT_007...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_007": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[i > 100000, i > 200000]，即i > 200000。该条件可以满足（例如i=200001），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序条件为`i<=400000`，变异后为`i<400000`。在i=400000时，原程序会进入该分支（计算bonus=bonus2+(i-200000)*0.05），而变异体会跳过该分支进入下一个条件判断。这会改变程序状态（bonus的计算结果不同）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i通过数据依赖链传播到输出节点。具体路径：变异条件`i<400000`控制分支选择，分支中的bonus计算直接使用i的值，最终bonus作为返回值输出。因此变异效果可以通过数据依赖链传播到输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if(i<400000)`直接控制后续分支的执行，而分支中的bonus计算会直接影响最终的返回值。因此变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在i=400000时会进入不同分支，但通过分析可以发现：原程序在i=400000时计算bonus=bonus2+200000*0.05=bonus2+10000，而变异体会进入下一个分支`i<=600000`，计算bonus=bonus4+0*0.03=bonus4。由于bonus4=bonus2+200000*0.05=bonus2+10000，因此两种情况下bonus值相同。这种特定情况下变异引入的状态差异被后续计算抵消。\n分析结论：存在状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_007 的分析, 耗时: 54.5856 秒
+
+开始分析变异体 MUT_008...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_008": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`i > 100000, i > 200000, i > 400000, i <= 600000`。这些条件可以同时满足，例如`i = 500000`，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句为`bonus=bonus4+(i-400000)*0.03`和`bonus=bonus4+++(i-400000)*0.03`。变异体在`bonus4`后增加了自增操作`++`，这会改变`bonus4`的值。虽然`bonus4`在后续未被使用，但`bonus`的计算会受到影响，因为`bonus4++`会先使用`bonus4`的值再自增，而原程序直接使用`bonus4`的值。因此，程序状态会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`bonus`和`bonus4`。`bonus`的数据依赖路径为`(line 18: bonus=bonus4+++(i-400000)*0.03) --[Flows bonus]--> (line 23: return(bonus);)`，`bonus4`的数据依赖路径为`(line 8: bonus4=100000*0.1+100000*0.075+200000*0.05) --[Flows bonus4]--> (line 18: bonus=bonus4+++(i-400000)*0.03)`。变异后的`bonus`值会直接传递到输出语句`return(bonus)`，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为`(17: if (i<=600000)) --True--> (21: bonus=bonus4+++(i-400000)*0.03) -- --> (28: return(bonus);)`。变异语句`bonus=bonus4+++(i-400000)*0.03`的执行结果直接影响`return(bonus)`的值，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`bonus4`的自增操作）会直接影响`bonus`的计算结果，进而影响最终的返回值。由于`bonus4`的自增操作在计算`bonus`时已经生效，且`bonus`的值直接传递到输出，因此错误状态未被修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_008 的分析, 耗时: 41.3196 秒
+
+开始分析变异体 MUT_009...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_009": "### 步骤[可达性]：\n说明理由：变异语句位于`return(bonus--);`，其路径条件组合为`[i<=100000]`。该条件在输入`i=50000`时可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序为`return(bonus);`，变异体为`return(bonus--);`。`bonus--`会先返回`bonus`的值再递减，因此返回值与原程序相同，但程序状态（`bonus`的值）会改变。但由于`bonus`是局部变量且后续无使用，状态改变不影响程序语义。\n分析结论：变异未改变程序语义，属于等价变异体。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤2已判定为等价变异体，无需继续后续分析。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤2已判定为等价变异体，无需继续后续分析。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于步骤2已判定为等价变异体，无需继续后续分析。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_009 的分析, 耗时: 51.9451 秒
+
+开始分析变异体 MUT_010...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_010": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[i > 100000, i <= 200000]，这是一个可满足的条件范围（例如i=150000）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序表达式为(i-100000)*0.075，变异后为(i%100000)*0.075。在路径约束i ∈ (100000,200000]下：\n- 当i=100001时：(i-100000)=1，(i%100000)=1 → 结果相同\n- 当i=150000时：(i-100000)=50000，(i%100000)=50000 → 结果相同\n- 当i=200000时：(i-100000)=100000，(i%100000)=0 → 结果不同\n分析结论：变异实际改变了程序语义（当i=200000时结果不同），不满足必要性条件。\n\n### 步骤[数据依赖]：\n说明理由：虽然变异影响了计算结果，但根据数据依赖路径：\n1. 变异影响的bonus变量直接流向return语句\n2. 变量i和bonus1也都通过bonus流向输出\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于else-if分支中，其执行受上层if条件控制，但变异语句本身是赋值语句，不直接控制程序流程。return语句的执行不依赖于该赋值语句的控制流。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：在i=200000的边界情况下：\n- 原程序：bonus=bonus1+100000*0.075\n- 变异体：bonus=bonus1+0*0.075\n计算结果不同且直接影响最终返回值，没有后续执行能修正这个差异。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO"}
+完成变异体 MUT_010 的分析, 耗时: 42.8861 秒
+
+开始分析变异体 MUT_011...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_011": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为[i > 100000, i > 200000, i > 400000, i > 600000, i <= 1000000]，这些条件可以同时满足（例如i=700000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序语句为`bonus=bonus6+(i-600000)*0.015`，变异体为`bonus=bonus6+++(i-600000)*0.015`。变异体中的`bonus6++`会先使用bonus6的值，然后将其递增1。由于bonus6的值在后续计算中不再使用，且bonus的计算结果直接依赖于bonus6的原始值，因此变异实际上不会改变程序的状态（因为bonus6的递增不影响bonus的计算）。\n分析结论：变异未实际改变程序状态。\n\n### 步骤3：数据依赖\n说明理由：由于步骤2已确定变异未实际改变程序状态，因此无需进一步分析数据依赖。\n分析结论：无需分析。\n\n### 步骤4：控制依赖\n说明理由：由于步骤2已确定变异未实际改变程序状态，因此无需进一步分析控制依赖。\n分析结论：无需分析。\n\n### 步骤5：状态覆盖\n说明理由：由于步骤2已确定变异未实际改变程序状态，因此无需进一步分析状态覆盖。\n分析结论：无需分析。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_011 的分析, 耗时: 31.1339 秒
+
+开始分析变异体 MUT_012...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_012": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[i > 100000]，这是一个可满足的条件，因为i的值可以大于100000。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`else if(i<=200000)`，变异后的条件是`else if(i<200000)`。在i > 100000的路径约束下，当i = 200000时，原程序的条件为true，而变异后的条件为false。这将导致程序执行不同的分支，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是i，其数据依赖路径显示i的值会直接影响bonus的计算，而bonus是函数的返回值。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径显示，变异语句的真假结果直接决定了后续bonus的计算和返回值的路径。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的中间状态（如i = 200000时执行不同的分支），但这些状态改变会直接影响到bonus的计算和最终的返回值，且没有在后续执行中被修正或抵消。因此，程序的最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_012 的分析, 耗时: 60.7636 秒
+
+开始分析变异体 MUT_013...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_013": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[i <= 100000]`，这是一个可满足的条件（例如 `i = 50000`）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `bonus=i*0.1`，变异体为 `bonus=i--*0.1`。在变异语句可达的情况下（`i <= 100000`），变异操作 `i--` 会改变变量 `i` 的值（递减1），而原程序不会。因此，程序状态会被改变（`i` 的值和后续可能的使用）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `i` 和 `bonus`。`i` 的数据依赖路径显示，变异后的 `i` 会直接影响后续的 `if` 条件判断（如 `if (i<=200000)`）以及 `bonus` 的计算（如 `bonus=bonus1+(i-100000)*0.075`）。`bonus` 的数据依赖路径直接连接到 `return(bonus)`。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：数据依赖条件满足。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `bonus=i--*0.1` 的控制依赖路径为 `(11: if (i<=100000)) --True--> (12: bonus=i--*0.1) -- --> (23: return(bonus);)`。变异语句的执行会直接影响 `bonus` 的值，进而影响最终的返回值。因此，变异语句与输出语句存在控制依赖路径。\n分析结论：控制依赖条件满足。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `i` 的值，但 `i` 的递减操作 (`i--`) 会影响后续所有依赖 `i` 的计算（如 `if` 条件和 `bonus` 计算）。例如，若 `i = 100000`，原程序计算 `bonus=100000*0.1=10000`，而变异体计算 `bonus=100000*0.1=10000` 后 `i` 变为 `99999`，但后续的 `if` 条件（如 `if (i<=200000)`）仍为真，因此会执行 `bonus=bonus1+(i-100000)*0.075`，此时 `i-100000=-1`，导致 `bonus` 计算错误。因此，变异引入的错误状态未被修正或抵消，程序最终输出会受到影响。\n分析结论：错误状态未被覆盖，程序输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_013 的分析, 耗时: 58.7393 秒
+
+开始分析变异体 MUT_014...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_014": "### 步骤[可达性]：\n说明理由：变异语句位于程序的最后一行，即`return(abs(bonus));`。该语句在所有执行路径中都会被到达，因为它是程序的最终返回语句。无论之前的条件分支如何执行，最终都会到达这一行。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回`bonus`，而变异体返回`abs(bonus)`。`abs(bonus)`表示取`bonus`的绝对值。如果`bonus`的值是非负的，那么`abs(bonus)`与`bonus`的值相同；如果`bonus`的值是负的，那么`abs(bonus)`与`bonus`的值不同。因此，变异体在某些情况下会改变程序的状态（即返回值）。\n分析结论：变异体在某些情况下会改变程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`bonus`，而`bonus`的值直接通过`return(abs(bonus));`返回。因此，变异影响的变量`bonus`通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`return(abs(bonus));`是程序的最终返回语句，不受任何控制流的影响。因此，变异语句不通过控制流影响输出语句，而是直接输出。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体返回`abs(bonus)`，而原程序返回`bonus`。如果`bonus`是非负的，两者返回值相同；如果`bonus`是负的，两者返回值不同。因此，变异引入的错误状态（即返回值的差异）在后续执行中不会被修正或抵消，程序最终输出会受到影响。\n分析结论：变异引入的错误状态不会被修正或抵消，程序最终输出会受到影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_014 的分析, 耗时: 37.4836 秒
+
+开始分析变异体 MUT_015...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_015": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合[i > 100000 && i <= 200000]。该条件组合是可满足的，即存在输入使得变异语句被执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus1+(i-100000)*0.075`，变异体语句为`bonus=bonus1+(i++-100000)*0.075`。变异引入了i的自增操作（i++），这会改变i的值。在路径约束[i > 100000 && i <= 200000]下，i的值会影响后续条件判断（如i<=400000）和bonus的计算。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为i和bonus。变量i的数据依赖路径显示，i的值会通过后续条件判断和bonus计算传递到输出语句return(bonus)。变量bonus的数据依赖路径直接连接到输出语句。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径显示，变异语句的执行结果直接影响后续条件判断和bonus计算，最终影响输出语句return(bonus)。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（i的自增）会影响后续条件判断和bonus计算，且这些影响会传递到输出语句。没有证据表明这些错误状态在后续执行中被修正或抵消。因此，变异引入的错误状态会影响程序最终输出。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_015 的分析, 耗时: 43.4874 秒
+
+开始分析变异体 MUT_016...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_016": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：[i > 100000, i > 200000, i > 400000, i <= 600000, i <= 1000000]。这些条件可以同时满足，例如i=500000，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus6+(i-600000)*0.015`，变异体语句为`bonus=abs(bonus6)+(i-600000)*0.015`。由于bonus6的计算公式为`100000*0.1+100000*0.075+200000*0.05+200000*0.03`，计算结果为100000*0.1=10000，100000*0.075=7500，200000*0.05=10000，200000*0.03=6000，总和为10000+7500+10000+6000=33500，这是一个正数。对一个正数取绝对值不会改变其值，因此变异前后的表达式在当前路径下语义等价。\n分析结论：变异未实际改变程序语义，属于等价变异体。\n\n### 步骤[数据依赖]：\n说明理由：由于在必要性分析中已确定变异未改变程序语义，因此无需继续分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于在必要性分析中已确定变异未改变程序语义，因此无需继续分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于在必要性分析中已确定变异未改变程序语义，因此无需继续分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_016 的分析, 耗时: 40.8135 秒
+
+开始分析变异体 MUT_017...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_017": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合[i > 100000 && i <= 200000]。该条件组合是可满足的，例如i=150000。因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`bonus=bonus1+(i-100000)*0.075`和`bonus=bonus1+(abs(i)-100000)*0.075`。在路径约束[i > 100000 && i <= 200000]下，i始终为正数，因此abs(i)与i的值相同。这意味着变异前后表达式计算结果完全相同，程序状态未改变。\n分析结论：变异未实际改变程序状态，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于在必要性分析中已确认变异未改变程序状态，因此无需继续分析数据依赖。\n分析结论：无需继续分析。\n\n### 步骤[控制依赖]：\n说明理由：由于在必要性分析中已确认变异未改变程序状态，因此无需继续分析控制依赖。\n分析结论：无需继续分析。\n\n### 步骤[状态覆盖]：\n说明理由：由于在必要性分析中已确认变异未改变程序状态，因此无需继续分析状态覆盖。\n分析结论：无需继续分析。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_017 的分析, 耗时: 30.1851 秒
+
+开始分析变异体 MUT_018...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_018": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[i > 100000, i > 200000, i <= 400000]，这些条件可以同时满足（例如i=300000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus2+(i-200000)*0.05`，变异体为`bonus=bonus2--+(i-200000)*0.05`。变异操作是后置递减`bonus2--`，这会改变`bonus2`的值（虽然在此表达式中使用的是递减前的值），但后续代码中`bonus2`不再被使用，因此对程序状态没有实际影响。\n分析结论：变异未实际改变程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`bonus2`和`bonus`的数据依赖路径显示，`bonus2`的值会流向`bonus`，然后`bonus`作为返回值输出。但由于变异操作`bonus2--`在表达式中使用的是递减前的值，因此`bonus`的计算结果与原程序相同。\n分析结论：数据依赖存在但未导致输出差异。\n\n### 步骤[控制依赖]：\n说明理由：变异语句到输出语句的控制依赖路径存在，但变异操作不影响控制流，只是表达式内部的局部变化。\n分析结论：控制依赖存在但未导致输出差异。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异操作`bonus2--`理论上会改变`bonus2`的值，但由于在表达式中使用的是递减前的值，且`bonus2`后续不再被使用，因此程序最终输出未受影响。\n分析结论：变异引入的状态变化被抵消。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_018 的分析, 耗时: 31.5485 秒
+
+开始分析变异体 MUT_019...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_019": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[i > 100000, i > 200000, i <= 400000]`，即 `200000 < i <= 400000`。该条件是可满足的（例如 `i = 300000`），因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `bonus=bonus2+(i-200000)*0.05` 和 `bonus=bonus2+(abs(i)-200000)*0.05`。在路径约束 `200000 < i <= 400000` 下，`i` 始终为正数，因此 `abs(i) == i`，两表达式语义完全等价，未改变程序状态。  \n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤2已判定变异未改变程序语义（`abs(i)` 和 `i` 在路径约束下等价），数据依赖分析无需继续。即使数据依赖路径存在（`i` 和 `bonus` 流向输出），变异也未引入实际差异。  \n分析结论：数据依赖存在，但变异无实际影响。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤2已判定变异未改变程序语义，控制依赖分析无需继续。即使控制依赖路径存在（变异语句通过 `if` 条件控制分支），变异也未引入实际差异。  \n分析结论：控制依赖存在，但变异无实际影响。\n\n### 步骤[状态覆盖]：\n说明理由：在路径约束 `200000 < i <= 400000` 下，`abs(i)` 和 `i` 的值始终相同，变异引入的“错误状态”被逻辑抵消（实际未产生差异），程序输出不受影响。  \n分析结论：变异效果被逻辑抵消。\n\n### 最终结论：\n等价变异体判定结果：YES。  \n（步骤2的非必要性分析已足以判定为等价变异体，后续步骤仅为验证补充。）"}
+完成变异体 MUT_019 的分析, 耗时: 41.1120 秒
+
+开始分析变异体 MUT_020...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_020": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[i > 100000, i > 200000, i > 400000, i <= 600000, i <= 1000000]`，这些条件可以同时满足（例如 `i = 500000`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `bonus=bonus6+(i-600000)*0.015`，变异体为 `bonus=bonus6+(i---600000)*0.015`。`i---600000` 等价于 `(i--) - 600000`，这会先使用 `i` 的值再递减 `i`。由于 `i` 是局部变量且后续不再使用，递减操作不会影响程序状态。因此，变异未实际改变程序语义。\n分析结论：变异未改变程序状态，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤2已判定变异未改变程序状态，无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤2已判定变异未改变程序状态，无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于步骤2已判定变异未改变程序状态，无需进一步分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_020 的分析, 耗时: 34.5830 秒
+
+开始分析变异体 MUT_021...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_021": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `i > 100000, i > 200000, i > 400000, i > 600000, i > 1000000`。这些条件可以同时满足（例如 `i = 1000001`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `bonus=bonus10+(i-1000000)*0.01` 和 `bonus=bonus10--+(i-1000000)*0.01`。变异体中的 `bonus10--` 会先使用 `bonus10` 的值，然后将其减1，而原程序直接使用 `bonus10` 的值。这会导致 `bonus` 的计算结果不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `bonus` 和 `bonus10` 的数据依赖路径如下：\n- `bonus`: `(line 22: bonus=bonus10--+(i-1000000)*0.01) -> (line 23: return(bonus))`\n- `bonus10`: `(line 10: bonus10=...) -> (line 22: bonus=bonus10--+(i-1000000)*0.01)`\n变异后的 `bonus` 值直接通过 `return(bonus)` 输出，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `bonus=bonus10--+(i-1000000)*0.01` 的控制依赖路径为 `(19: if (i<=1000000)) --False--> (26: bonus=bonus10--+(i-1000000)*0.01) -- --> (28: return(bonus))`。变异语句的执行结果直接影响 `return(bonus)` 的输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`bonus` 的计算结果不同）直接传递到输出，且未被后续执行修正或抵消。因此，程序的最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_021 的分析, 耗时: 40.4825 秒
+
+开始分析变异体 MUT_022...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_022": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[i > 100000, i > 200000, i > 400000, i <= 600000]`，这些条件可以同时满足（例如 `i = 500000`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序语句为 `bonus=bonus4+(i-400000)*0.03`，变异体语句为 `bonus=bonus4--+(i-400000)*0.03`。变异体中的 `bonus4--` 会先使用 `bonus4` 的值，然后将其减1，而原程序直接使用 `bonus4` 的值。这会导致 `bonus` 的计算结果不同，因为 `bonus4` 的值在变异体中被修改。因此，程序状态被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量 `bonus4` 和 `bonus` 的数据依赖路径如下：\n- `bonus4`: `line 8 -> line 18 -> line 23`\n- `bonus`: `line 18 -> line 23`\n变异语句修改了 `bonus4` 的值，并通过 `bonus` 的计算传递到输出语句 `return(bonus)`，因此变异的影响可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句 `line 18` 的控制依赖路径为 `(17: if (i<=600000)) --True--> (18: bonus=bonus4--+(i-400000)*0.03) -- --> (23: return(bonus);)`。变异语句的执行依赖于 `if (i<=600000)` 的条件，但其结果直接影响 `bonus` 的计算，进而影响输出。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：变异体修改了 `bonus4` 的值，导致 `bonus` 的计算结果与原程序不同，且这一差异直接传递到输出语句 `return(bonus)`。没有后续执行步骤修正或抵消这一差异，因此程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_022 的分析, 耗时: 45.3650 秒
+
+开始分析变异体 MUT_023...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_023": "### 步骤[可达性]：\n说明理由：变异语句位于`else if(i<=1000000)`的`else`分支中，路径条件为`i > 100000, i > 200000, i > 400000, i > 600000, i > 1000000`。这些条件可以同时满足（例如`i=1000001`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`i-1000000`，变异表达式为`i%1000000`。当`i > 1000000`时，`i-1000000`和`i%1000000`的结果不同（例如`i=1000001`时，前者为1，后者为1；但当`i=2000001`时，前者为1000001，后者为1）。因此变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`bonus`和`i`的数据依赖路径直接流向`return(bonus)`。`bonus`的计算依赖于变异后的表达式`i%1000000`，因此变异效果会传播到输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于条件分支的`else`部分，其计算结果直接影响`bonus`的赋值，而`bonus`是返回值。因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`bonus`的计算方式，但在任何情况下（例如`i=1000001`和`i=2000001`），`i-1000000`和`i%1000000`的结果差异会导致`bonus`值不同，且这种差异会直接反映在返回值中，没有被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_023 的分析, 耗时: 36.5857 秒
+
+开始分析变异体 MUT_024...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_024": "### 步骤[可达性]：\n说明理由：变异体的路径条件组合为[i > 100000, i > 200000, i > 400000, i <= 600000]，这些条件可以同时满足（例如i=500000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus4+(i-400000)*0.03`，变异体为`bonus=bonus4+(i---400000)*0.03`。变异操作将i的值减1（i--），这会改变i的值，进而影响bonus的计算结果。在路径约束下（i > 400000），这种改变会导致bonus的值不同。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i和bonus都有直接的数据依赖路径到输出语句return(bonus)。变异后的i值会通过bonus的计算直接影响到最终返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于if(i<=600000)分支内，其执行结果直接影响bonus的赋值，而bonus的值直接作为返回值输出。因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了i的值和bonus的计算结果，但这种改变会直接反映在最终返回值中，没有被后续执行修正或抵消。\n分析结论：变异引入的错误状态没有被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_024 的分析, 耗时: 42.7467 秒
+
+开始分析变异体 MUT_025...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_025": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合[i > 100000 && i > 200000 && i > 400000 && i > 600000 && i > 1000000]。这些条件可以同时满足（例如i=1000001），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`bonus=bonus10+(i-1000000)*0.01`，变异表达式为`bonus=bonus10+(i---1000000)*0.01`。变异操作是后置递减运算符，会改变i的值。在可达路径下（i>1000000），i的值会被递减，从而影响计算结果。因此该变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i和bonus都有明确的数据依赖路径到达输出语句。变量i通过表达式计算直接影响bonus的值，而bonus直接作为返回值输出。因此变异效果可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于else分支的最后一条语句，其执行结果直接决定bonus的赋值，而bonus作为返回值输出。因此变异语句通过控制流直接影响输出语句。\n分析结论：存在控制依赖条件。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体满足可达性、必要性、数据依赖和控制依赖条件，但需要检查变异引入的错误状态是否被后续执行修正。在本例中，变异操作i---会改变i的值，但这个改变后的i值不会在后续执行中被重新使用或修正，会直接影响最终计算结果。\n分析结论：变异引入的错误状态未被修正。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_025 的分析, 耗时: 33.2589 秒
+
+开始分析变异体 MUT_026...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_026": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合[i>100000, i>200000, i<=400000]。这些条件可以同时满足，例如i=300000。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus2+(i-200000)*0.05`，变异体为`bonus=bonus2+(i---200000)*0.05`。在路径约束下（i>200000且i<=400000），i---200000等价于(i--)-200000，与i-200000相比会减少1。因此，变异操作会导致程序状态改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i和bonus都有直接的数据依赖路径到输出语句。变量i通过表达式计算影响bonus的值，而bonus直接作为返回值输出。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的执行依赖于条件(i<=400000)，而输出语句return(bonus)不受该条件的直接控制。变异语句通过数据依赖而非控制流影响输出语句。\n分析结论：变异语句不通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了状态改变（i的值减1），但这种改变会直接影响到bonus的计算结果。由于没有后续操作修正或抵消这种改变，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_026 的分析, 耗时: 37.5753 秒
+
+开始分析变异体 MUT_027...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_027": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `i > 100000, i > 200000, i > 400000, i > 600000, i > 1000000`。这些条件可以同时满足（例如 `i = 1000001`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别在于 `i-1000000` 变为 `i++-1000000`。在变异语句可达的情况下，`i++` 会先使用 `i` 的值进行计算，然后递增 `i`。由于 `i` 的值在计算后不再被使用，递增操作不会影响 `bonus` 的计算结果。因此，变异未实际改变程序语义。\n分析结论：变异未改变程序状态，属于等价变异体。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `i` 和 `bonus` 的数据依赖路径显示，`bonus` 直接从变异语句传递到返回语句。虽然 `i` 被修改，但其值在后续未被使用，因此不影响输出。\n分析结论：数据依赖路径存在，但变异效果不影响输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句到输出语句的控制依赖路径显示，变异语句直接影响到 `bonus` 的计算和返回。但由于变异未实际改变 `bonus` 的值，控制依赖不影响最终输出。\n分析结论：控制依赖路径存在，但变异效果不影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的 `i++` 操作虽然修改了 `i` 的值，但该修改不影响 `bonus` 的计算结果，因为 `i` 的值在计算后不再被使用。因此，变异引入的错误状态被后续执行逻辑覆盖，程序最终输出未受影响。\n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_027 的分析, 耗时: 37.2706 秒
+
+开始分析变异体 MUT_028...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_028": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：i > 100000, i > 200000, i > 400000, i <= 600000。这些条件可以同时满足，例如i=500000。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`bonus=bonus4+(i-400000)*0.03`和`bonus=bonus4+(i%400000)*0.03`。在路径约束i > 400000且i <= 600000下，(i-400000)和(i%400000)的结果不同（例如i=500000时，(i-400000)=100000而(i%400000)=100000；但i=450000时，(i-400000)=50000而(i%400000)=50000）。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为bonus，其数据依赖路径为：(line 18: bonus=bonus4+(i%400000)*0.03) --[Flows bonus]--> (line 23: return(bonus);)。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为：(17: if (i<=600000)) --True--> (18: bonus=bonus4+(i%400000)*0.03) -- --> (23: return(bonus);)。变异语句直接影响了bonus的计算，而bonus是返回值，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，且变异体造成的程序状态改变均可直接传递至输出。在i > 400000且i <= 600000的范围内，(i-400000)和(i%400000)的结果不同（例如i=450000时，(i-400000)=50000而(i%400000)=50000），但计算后的bonus值会不同，因此程序输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出会受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_028 的分析, 耗时: 48.8137 秒
+
+开始分析变异体 MUT_029...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_029": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为[i > 100000, i > 200000, i > 400000, i > 600000, i <= 1000000]，这些条件可以同时满足（例如i=700000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序使用(i-600000)*0.015计算bonus，变异体使用(i%600000)*0.015。在i>600000且i<=1000000的条件下，(i-600000)和(i%600000)的结果不同（例如i=700000时，前者为100000，后者为100000；i=900000时，前者为300000，后者为300000）。但在该区间内，i%600000实际上等于i-600000，因此两者计算结果相同。\n分析结论：变异未实际改变程序状态。\n\n### 步骤3：数据依赖\n说明理由：由于步骤2已证明变异未改变程序状态，无需继续分析数据依赖。\n分析结论：跳过。\n\n### 步骤4：控制依赖\n说明理由：由于步骤2已证明变异未改变程序状态，无需继续分析控制依赖。\n分析结论：跳过。\n\n### 步骤5：状态覆盖\n说明理由：由于步骤2已证明变异未改变程序状态，无需继续分析状态覆盖。\n分析结论：跳过。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_029 的分析, 耗时: 36.9911 秒
+
+开始分析变异体 MUT_030...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_030": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[i > 100000, i > 200000, i > 400000]，这些条件可以同时满足（例如i=500000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序条件为`i<=600000`，变异后为`i<600000`。在路径约束下（i>400000），当i=600000时，原程序执行`bonus=bonus4+(i-400000)*0.03`，而变异体执行`bonus=bonus6+(i-600000)*0.015`，计算结果不同（前者为6000，后者为6000），但实际测试发现两者计算结果相同（因为bonus4=100000*0.1+100000*0.075+200000*0.05=27500，bonus6=27500+200000*0.03=33500，计算得两者结果均为33500+200000*0.03=39500）。需要重新验证具体数值。\n更正分析：当i=600000时：\n- 原程序：bonus=bonus4+(600000-400000)*0.03=27500+200000*0.03=33500\n- 变异体：bonus=bonus6+(600000-600000)*0.015=33500+0=33500\n结果相同。但当i=599999时：\n- 原程序：bonus=bonus4+199999*0.03=27500+5999.97=33499.97\n- 变异体：bonus=bonus4+199999*0.03=27500+5999.97=33499.97\n仍相同。进一步验证i=400001：\n- 原程序：bonus=bonus2+200001*0.05=17500+10000.05=27500.05\n- 变异体：bonus=bonus2+200001*0.05=17500+10000.05=27500.05\n仍相同。似乎所有情况下计算结果相同，说明变异未改变程序语义。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于上一步已确定变异未改变程序语义，无需继续分析数据依赖。\n分析结论：跳过（因非必要性已确定等价）\n\n### 步骤[控制依赖]：\n说明理由：由于上一步已确定变异未改变程序语义，无需继续分析控制依赖。\n分析结论：跳过（因非必要性已确定等价）\n\n### 步骤[状态覆盖]：\n说明理由：由于上一步已确定变异未改变程序语义，无需继续分析状态覆盖。\n分析结论：跳过（因非必要性已确定等价）\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_030 的分析, 耗时: 49.7717 秒
+
+开始分析变异体 MUT_031...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_031": "### 步骤[可达性]：\n说明理由：变异语句的执行路径条件为 `[i > 100000, i > 200000, i > 400000, i > 600000, i <= 1000000]`。这些条件可以同时满足（例如 `i = 700000`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `bonus=bonus6+(i-600000)*0.015`，变异后为 `bonus=bonus6+(abs(i)-600000)*0.015`。在路径约束 `i > 600000 && i <= 1000000` 下，`i` 始终为正数，因此 `abs(i) == i`，两者计算结果完全相同。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤[必要性]已确定该变异为等价变异，无需继续后续分析步骤。\n分析结论：（跳过）\n\n### 步骤[控制依赖]：\n说明理由：由于步骤[必要性]已确定该变异为等价变异，无需继续后续分析步骤。\n分析结论：（跳过）\n\n### 步骤[状态覆盖]：\n说明理由：由于步骤[必要性]已确定该变异为等价变异，无需继续后续分析步骤。\n分析结论：（跳过）\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_031 的分析, 耗时: 34.5004 秒
+
+开始分析变异体 MUT_032...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_032": "### 步骤[可达性]：\n说明理由：变异语句位于`else`分支，路径条件为`i > 1000000`。根据提供的可达性约束`[i > 100000, i > 200000, i > 400000, i > 600000, i > 1000000]`，该路径条件可满足（例如输入`i=1000001`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原语句为`bonus=bonus10+(i-1000000)*0.01`，变异后为`bonus=bonus10+++(i-1000000)*0.01`。变异引入了对`bonus10`的后置自增操作（`bonus10++`），这会改变`bonus10`的值（增加1），从而影响`bonus`的计算结果。因此，程序状态被实际改变。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`bonus`和`bonus10`的数据依赖路径如下：\n1. `bonus`：变异语句 → `return(bonus)`，直接影响输出。\n2. `bonus10`：原始赋值 → 变异语句（自增操作） → `bonus`计算 → `return(bonus)`。\n因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`else`分支，其控制依赖路径为：\n`if (i<=1000000) --False--> else分支 -- --> 变异语句 -- --> return(bonus)`。\n变异语句的执行直接决定了`bonus`的赋值，进而影响最终的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`bonus10`自增）会直接影响`bonus`的计算结果，且`bonus`的值未被后续执行修正或抵消。因此，程序最终输出会因变异而改变。\n分析结论：错误状态未被覆盖，程序输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_032 的分析, 耗时: 39.3465 秒
+
+开始分析变异体 MUT_033...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_033": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合[i > 100000, i <= 200000]。这些条件是可满足的，例如i=150000满足i > 100000且i <= 200000。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus1+(i-100000)*0.075`，变异体语句为`bonus=bonus1--+(i-100000)*0.075`。变异操作是`bonus1--`，这会改变`bonus1`的值（减1），从而影响`bonus`的计算结果。在路径约束[i > 100000, i <= 200000]下，`bonus1`的值变化会直接导致`bonus`的值变化。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`bonus1`和`bonus`。`bonus1`的数据依赖路径为`(line 6: bonus1=100000*0.1) → (line 14: bonus=bonus1--+(i-100000)*0.075)`，`bonus`的数据依赖路径为`(line 14: bonus=bonus1--+(i-100000)*0.075) → (line 23: return(bonus))`。变异后的`bonus1`值通过`bonus`的计算直接传递到返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为`(11: if (i<=200000)) --True--> (13: bonus=bonus1--+(i-100000)*0.075) -- --> (28: return(bonus))`。变异语句的执行结果直接影响`bonus`的值，进而影响最终的返回值。变异语句与输出语句存在控制依赖路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`bonus1`减1）会直接导致`bonus`的值减少，且这一错误状态会通过`return(bonus)`传递到程序输出，没有被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_033 的分析, 耗时: 39.8302 秒
+
+开始分析变异体 MUT_034...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_034": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合[i > 100000, i <= 200000]。这些条件在数学上是可满足的（例如i=150000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`bonus=bonus1+(i-100000)*0.075`，变异表达式为`bonus=bonus1+(i---100000)*0.075`。后者相当于先对i进行递减操作（i--），然后计算与100000的差。在路径约束[i > 100000, i <= 200000]下，i的值会被修改（减少1），这将导致计算结果与原始表达式不同（相差0.075），从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i和bonus都有明确的数据依赖路径到达输出节点。变量i被修改后会通过后续多个if分支的计算最终影响bonus值，而bonus会直接作为返回值输出。具体路径显示变异后的i值会流向所有后续bonus计算语句，最终影响返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于条件分支(i<=200000)的True路径中，其计算结果直接决定bonus的赋值，而bonus会通过return语句输出。控制依赖路径显示变异语句的结果会直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体满足可达性、必要性、数据依赖和控制依赖条件，但在任何满足[i > 100000, i <= 200000]的输入下，i--操作都会使计算结果产生0.075的差异（因为(i-1-100000)*0.075与(i-100000)*0.075相差0.075），这个差异会通过数据依赖链直接传递到最终输出，不会被后续执行覆盖或抵消。\n分析结论：变异引入的错误状态不会被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_034 的分析, 耗时: 44.8468 秒
+
+开始分析变异体 MUT_035...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_035": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`i > 100000, i > 200000, i > 400000, i > 600000, i <= 1000000`。这些条件可以同时满足，例如当`i = 700000`时，所有条件均为真。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`bonus=bonus6+(i-600000)*0.015`和`bonus=bonus6--+(i-600000)*0.015`。变异体中的`bonus6--`会先使用`bonus6`的值，然后将其减1。这会导致`bonus`的计算结果与原程序不同，因为`bonus6`的值在计算后被修改。因此，该变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`bonus`和`bonus6`。`bonus`的数据依赖路径直接流向`return(bonus)`，而`bonus6`的值被修改后也会影响`bonus`的计算结果。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`bonus=bonus6--+(i-600000)*0.015`的执行依赖于`if (i<=1000000)`的条件判断。然而，变异语句本身并不控制程序分支的走向，而是直接计算`bonus`的值。因此，变异语句不通过控制流影响输出语句。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`bonus6`的值，但`bonus6`的修改是在计算`bonus`之后进行的（因为`bonus6--`是后置递减操作）。因此，`bonus`的计算结果实际上与原程序相同，因为`bonus6`的值在计算时未被修改。变异引入的错误状态被后续操作抵消，程序最终输出未受影响。\n分析结论：变异引入的错误状态被后续操作抵消，不影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_035 的分析, 耗时: 44.9954 秒
+
+开始分析变异体 MUT_036...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_036": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合[i > 100000 && i > 200000 && i > 400000 && i > 600000 && i > 1000000]。这些条件可以同时满足（例如i=1000001），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus10+(i-1000000)*0.01`，变异体语句为`bonus=abs(bonus10)+(i-1000000)*0.01`。由于bonus10的计算公式为`100000*0.1+100000*0.075+200000*0.05+200000*0.03+400000*0.015`，计算结果为100000*0.1=10000，100000*0.075=7500，200000*0.05=10000，200000*0.03=6000，400000*0.015=6000，总和为10000+7500+10000+6000+6000=39500，始终为正数。因此abs(bonus10)与bonus10的值始终相同。\n分析结论：变异未实际改变程序状态，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤[必要性]已确定该变异体属于等价变异体，根据规则\"若某一步已足以判断该变异体为等价变异体，则不再继续后续分析步骤\"，跳过此步骤。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤[必要性]已确定该变异体属于等价变异体，根据规则\"若某一步已足以判断该变异体为等价变异体，则不再继续后续分析步骤\"，跳过此步骤。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于步骤[必要性]已确定该变异体属于等价变异体，根据规则\"若某一步已足以判断该变异体为等价变异体，则不再继续后续分析步骤\"，跳过此步骤。\n分析结论：跳过。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_036 的分析, 耗时: 44.4577 秒
+
+开始分析变异体 MUT_037...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_037": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合[i > 100000, i <= 200000]。这些条件在实数范围内是可满足的（例如i=150000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus1+(i-100000)*0.075`，变异体为`bonus=bonus1+++(i-100000)*0.075`。变异操作是对bonus1进行后置自增，这会改变bonus1的值（虽然在此表达式中的使用仍是原值）。但由于bonus1在后续代码中不再被使用，且bonus的计算结果会因bonus1++而不同（虽然表达式中的bonus1使用原值，但整个赋值语句的执行会改变bonus1的值）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量bonus和bonus1中，bonus的数据依赖路径直接流向return语句，而bonus1的自增操作虽然改变了其值，但bonus1后续未被使用。因此变异对bonus的计算结果有直接影响（通过表达式中的bonus1值），且bonus的值会通过return语句输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的执行受控于外层if条件(i<=200000)，但变异语句本身不控制任何分支，只是简单的赋值语句。程序的输出完全依赖于return语句中的bonus值，而该值直接受变异语句影响。\n分析结论：变异语句通过数据流而非控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了bonus1的值，但由于bonus1后续未被使用，且bonus的计算结果会因bonus1++而不同（因为虽然表达式使用bonus1的原值，但整个语句执行会改变bonus1），这会导致最终返回的bonus值与原程序不同。没有状态被覆盖或抵消的情况。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_037 的分析, 耗时: 39.7364 秒
+
+开始分析变异体 MUT_038...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_038": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[i <= 100000]，这是一个可满足的条件（例如i=50000）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式是`bonus=i*0.1`，变异表达式是`bonus=i++*0.1`。在变异语句可达的情况下（i <= 100000），变异操作`i++`会先使用i的当前值计算bonus，然后将i的值加1。这会改变程序状态（i的值增加1），因此变异实际改变了程序语义。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是i和bonus。变量i的数据依赖路径显示，i的值会影响后续的条件判断（如if (i<=200000)）和bonus的计算。变量bonus的数据依赖路径直接连接到return语句。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`bonus=i++*0.1`的控制依赖路径直接连接到return语句。变异语句的执行会影响bonus的值，进而影响最终的返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了状态改变（i的值增加1），但后续的执行路径（如if (i<=200000)）可能会因为i的值改变而选择不同的分支。然而，由于i的初始值满足i <= 100000，且变异后的i值（i+1）可能仍然满足或不再满足后续条件，这会导致程序的行为发生改变。因此，变异引入的错误状态不会被完全抵消或修正。\n分析结论：变异引入的错误状态未被完全抵消，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_038 的分析, 耗时: 51.1695 秒
+
+开始分析变异体 MUT_039...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_039": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `i > 100000, i > 200000, i > 400000, i > 600000, i > 1000000`。这些条件可以同时满足（例如 `i = 1000001`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `bonus=bonus10+(i-1000000)*0.01` 和 `bonus=bonus10+(abs(i)-1000000)*0.01`。在路径约束 `i > 1000000` 下，`i` 始终为正数，因此 `abs(i) == i`，两者语义等价。\n分析结论：变异未实际改变程序状态，属于等价变异体。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤[必要性]已判定为等价变异体，无需继续后续分析。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤[必要性]已判定为等价变异体，无需继续后续分析。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于步骤[必要性]已判定为等价变异体，无需继续后续分析。\n分析结论：跳过。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_039 的分析, 耗时: 31.5469 秒
+
+开始分析变异体 MUT_040...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_040": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合[i > 100000, i <= 200000]。这些条件在实数范围内是可满足的（例如i=150000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序表达式为`bonus1+(i-100000)*0.075`，变异体为`abs(bonus1)+(i-100000)*0.075`。由于bonus1=100000*0.1=10000，其值始终为正数，abs(bonus1)与bonus1的值完全相同。因此该变异未实际改变程序语义。\n分析结论：变异未改变程序状态，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于在必要性分析中已确认该变异未改变程序语义，无需继续分析数据依赖。\n分析结论：（跳过）\n\n### 步骤[控制依赖]：\n说明理由：由于在必要性分析中已确认该变异未改变程序语义，无需继续分析控制依赖。\n分析结论：（跳过）\n\n### 步骤[状态覆盖]：\n说明理由：由于在必要性分析中已确认该变异未改变程序语义，无需继续分析状态覆盖。\n分析结论：（跳过）\n\n### 最终结论：\n等价变异体判定结果：YES"}
+完成变异体 MUT_040 的分析, 耗时: 34.1890 秒
+
+开始分析变异体 MUT_041...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_041": "### 步骤[可达性]：\n说明理由：变异语句 `if(i<100000)` 的路径条件组合为 `i` 的任意值，没有不可达的约束条件。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `if(i<=100000)`，变异后的条件是 `if(i<100000)`。当 `i=100000` 时，原程序会进入 `if` 分支，而变异体不会进入 `if` 分支。因此，变异会改变程序的控制流和状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `i`，其数据依赖路径如下：\n1. `if(i<100000)` → `True` → `bonus=i*0.1` → `return(bonus)`\n2. `if(i<100000)` → `False` → 后续条件判断 → 最终 `return(bonus)`\n变异后的 `i` 值会直接影响 `bonus` 的计算，并通过 `return` 语句输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if(i<100000)` 的控制依赖路径直接影响 `bonus` 的计算和返回语句。例如：\n- `if(i<100000)` → `True` → `bonus=i*0.1` → `return(bonus)`\n- `if(i<100000)` → `False` → 后续条件判断 → 最终 `return(bonus)`\n变异语句通过控制流影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的控制流和状态（例如 `i=100000` 时行为不同），但程序的其他部分并未修正或抵消这种改变。因此，变异引入的错误状态会直接反映在最终输出中。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_041 的分析, 耗时: 78.1482 秒
+
+开始分析变异体 MUT_042...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_042": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[i > 100000, i > 200000, i <= 400000]，这些条件可以同时满足（例如i=300000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus2+(i-200000)*0.05`，变异体语句为`bonus=bonus2+++(i-200000)*0.05`。变异体中的`bonus2++`会先使用bonus2的值，然后将其加1。由于bonus2的值在后续没有被使用，这个加1操作不会影响程序的其他部分。因此，变异实际上没有改变程序的状态。\n分析结论：变异未实际改变程序状态，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为bonus和bonus2。bonus的值直接流向return语句，但bonus2的值在变异后没有被后续使用。虽然bonus的值被返回，但由于变异没有实际改变bonus的计算结果（因为bonus2++的副作用不影响bonus的计算），数据依赖链没有传递变异的效果。\n分析结论：数据依赖链未传递变异效果。\n\n### 步骤[控制依赖]：\n说明理由：变异语句到输出语句的控制依赖路径存在，但变异没有改变控制流的方向或条件，因此控制依赖不影响程序输出。\n分析结论：控制依赖不影响程序输出。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（bonus2的增量）在后续执行中没有被使用，因此错误状态被覆盖，不影响程序最终输出。\n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_042 的分析, 耗时: 34.8556 秒
+
+开始分析变异体 MUT_043...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_043": "### 步骤[可达性]：\n说明理由：变异语句位于`return(bonus++);`，根据提供的控制流图，该语句在所有路径下都可达。REACHABILITY_CONSTRAINT显示所有条件组合都是可达的（通过否定条件表示可达性）。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回`bonus`，变异体返回`bonus++`。`bonus++`会先返回`bonus`的当前值，然后将其递增1。这会导致程序状态改变（`bonus`的值被修改），但返回值与原程序相同。\n分析结论：变异实际改变了程序状态（`bonus`的值被修改），但返回值未变。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`bonus`通过数据依赖链直接传播到输出节点（return语句）。所有对`bonus`的赋值都会流向`return(bonus++)`。\n分析结论：存在数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是程序的最终返回语句，不受其他控制流影响。它不通过控制流影响其他语句，而是直接输出结果。\n分析结论：无控制依赖影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体修改了`bonus`的值（`bonus++`），但返回值是`bonus`的原始值（后置递增特性），因此程序最终输出与原程序完全一致。变异引入的状态改变被语言语义（后置递增）覆盖。\n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_043 的分析, 耗时: 54.8977 秒
+
+开始分析变异体 MUT_044...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_044": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[i > 100000, i > 200000, i > 400000, i <= 600000]，这些条件可以同时满足（例如i=500000），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus4+(i-400000)*0.03`，变异体语句为`bonus=bonus4+(i++-400000)*0.03`。变异引入了i的自增操作，这会改变i的值（增加1），从而影响后续计算中i的值。在路径约束[i > 100000, i > 200000, i > 400000, i <= 600000]下，i的值会被改变，因此程序状态会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i和bonus都有数据依赖路径传播到输出节点。变量i的变化会影响后续if条件判断和bonus计算，变量bonus直接作为返回值输出。具体路径如下：\n1. i的变化会影响line 19的if条件判断，进而影响line 20或line 22的bonus计算，最终影响返回值。\n2. bonus的值直接通过return语句输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句到输出语句的控制依赖路径存在。变异语句的执行会影响后续if条件判断（line 19），从而可能改变程序的控制流路径，最终影响返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了i的自增操作，但这个改变会持续影响后续的if条件判断和bonus计算，不会被修正或抵消。例如，当i=500000时，原程序计算bonus时使用i=500000，而变异体会使用i=500000（但在计算后会自增为500001），这会影响到后续的if条件判断和可能的bonus计算，最终可能导致不同的返回值。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_044 的分析, 耗时: 39.9383 秒
+
+开始分析变异体 MUT_045...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_045": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断`if (i<=400000)`的分支中，该条件在输入`i`满足`200000 < i <= 400000`时为真。由于`i`的取值范围没有限制，存在满足该条件的输入（如`i=300000`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`bonus=bonus2+(i-200000)*0.05`，变异体为`bonus=abs(bonus2)+(i-200000)*0.05`。由于`bonus2`的计算结果为`100000*0.1+100000*0.075=17500`，恒为正数，因此`abs(bonus2)`与`bonus2`的值始终相同。变异未改变程序状态。\n分析结论：变异未实际改变程序语义，属于等价变异体。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤[必要性]已判定变异体为等价变异体，无需继续后续分析步骤。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤[必要性]已判定变异体为等价变异体，无需继续后续分析步骤。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于步骤[必要性]已判定变异体为等价变异体，无需继续后续分析步骤。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_045 的分析, 耗时: 35.0231 秒
+
+开始分析变异体 MUT_046...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_046": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：[i > 100000, i > 200000, i > 400000, i > 600000, i <= 1000000]。这些条件可以同时满足，例如i=700000，因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`bonus=bonus6+(i-600000)*0.015`和`bonus=bonus6+(i++-600000)*0.015`。变异体在计算bonus时使用了i++，这会改变i的值。在路径约束下（600000 < i <= 1000000），i++会使得i的值增加1，这会影响到后续对i的使用（如line 22的bonus计算和line 19的条件判断），因此会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为i和bonus。i的数据依赖路径显示其会影响line 22的bonus计算和line 19的条件判断，进而影响最终的bonus返回值。bonus的数据依赖路径直接连接到return语句。因此变异影响的变量通过数据依赖链传播到了程序输出节点。\n分析结论：存在数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于if (i<=1000000)条件为True的分支中，其执行结果直接影响bonus的计算和返回。控制依赖路径显示变异语句的执行会影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了i的值（增加了1），但在当前路径下（600000 < i <= 1000000），i的增加不会改变line 19的条件判断结果（仍为True），且line 22的bonus计算不会被执行。因此变异引入的状态改变不会影响最终的bonus返回值。\n分析结论：变异引入的错误状态被后续执行逻辑覆盖，不影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_046 的分析, 耗时: 43.3560 秒
+

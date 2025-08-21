@@ -1,0 +1,571 @@
+开始处理程序: D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantjavadiv\StringTokenizerNextZero.java
+开始分析变异体 MUT_005...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_005": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `newPosition >= 0 && !delimsChanged`。该条件在程序执行过程中可能被满足（例如当 `newPosition` 为正数且 `delimsChanged` 为 `false` 时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别在于将 `newPosition` 替换为 `newPosition--`。当条件 `newPosition >= 0 && !delimsChanged` 为真时，原程序直接使用 `newPosition` 的值赋值给 `currentPosition`，而变异体使用 `newPosition--` 的值（即 `newPosition` 的当前值，但之后 `newPosition` 会减 1）。这会改变 `newPosition` 的值，从而可能影响后续执行（例如下一次调用 `nextToken` 时）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `currentPosition` 和 `newPosition`。`currentPosition` 的值会直接影响 `start` 和最终的 `substring` 返回值。`newPosition` 的值虽然会被修改，但在当前方法中后续被赋值为 `-1`（`newPosition = -1`），因此其修改不会通过数据依赖链传播到程序输出节点。\n分析结论：`currentPosition` 的数据依赖链传播到输出节点，但 `newPosition` 的修改被覆盖，不影响输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句。`currentPosition` 的值直接决定 `start` 和 `substring` 的返回值，而 `currentPosition` 的值由变异语句的结果决定。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体修改了 `newPosition` 的值，但该值在后续执行中被 `newPosition = -1` 覆盖，因此其修改不会影响程序最终输出。`currentPosition` 的值虽然可能因变异而改变，但后续会被 `scanToken` 重新赋值，因此其初始值的改变可能被后续执行覆盖。\n分析结论：变异引入的错误状态在后续执行中被修正或抵消，程序最终输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_005 的分析, 耗时: 57.6782 秒
+
+开始分析变异体 MUT_008...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_008": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[currentPosition <= maxPosition]`。该条件组合是可满足的，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `if (currentPosition >= maxPosition)` 和 `if (currentPosition > maxPosition)`。在路径约束 `[currentPosition <= maxPosition]` 下，当 `currentPosition == maxPosition` 时，原表达式为 `true`，变异表达式为 `false`，会导致程序状态改变（是否抛出异常）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `currentPosition` 和 `maxPosition`。它们的数据依赖路径如下：\n- `currentPosition` 和 `maxPosition` 的比较结果直接影响是否抛出异常或执行后续语句（`start = currentPosition` 和 `return str.substring(start, currentPosition)`）。\n- 变异引入的状态差异可以通过数据依赖链传播到程序输出（返回值或异常）。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (currentPosition > maxPosition)` 的控制依赖路径如下：\n- `True` 分支：抛出异常。\n- `False` 分支：执行后续语句并返回子字符串。\n- 变异语句直接控制程序分支的走向，影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：在 `currentPosition == maxPosition` 时，原程序会抛出异常，而变异体不会抛出异常，而是继续执行并返回子字符串。这两种行为在输出上是不同的（异常 vs. 正常返回），因此变异引入的错误状态未被修正或抵消。\n分析结论：变异效果未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_008 的分析, 耗时: 49.0409 秒
+
+开始分析变异体 MUT_043...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_043": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[!(currentPosition >= maxPosition)]`，即`currentPosition < maxPosition`。这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition )`，变异体语句为`currentPosition = false && !delimsChanged ? newPosition : skipDelimiters( currentPosition )`。由于`false && !delimsChanged`恒为`false`，变异体语句等价于`currentPosition = skipDelimiters( currentPosition )`。与原程序相比，当`newPosition >= 0 && !delimsChanged`为`true`时，原程序会赋值`newPosition`，而变异体会赋值`skipDelimiters( currentPosition )`，程序状态可能改变。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`currentPosition`和`start`。`currentPosition`的值直接影响到`start`的赋值，而`start`和`currentPosition`又用于最终的`return str.substring( start, currentPosition )`。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`currentPosition = false && !delimsChanged ? newPosition : skipDelimiters( currentPosition )`的结果会影响后续`if (currentPosition >= maxPosition)`的条件判断，从而可能影响是否抛出异常或执行后续的输出语句。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖条件。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序状态，但最终输出`str.substring( start, currentPosition )`的值取决于`start`和`currentPosition`的值。由于`start`和`currentPosition`的值在变异体和原程序中可能不同，最终输出也可能不同，因此错误状态未被完全覆盖或抵消。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_043 的分析, 耗时: 52.2184 秒
+
+开始分析变异体 MUT_054...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_054": "### 步骤[可达性]：\n说明理由：变异语句的条件是`currentPosition == maxPosition`，而原程序的条件是`currentPosition >= maxPosition`。路径条件组合为`[currentPosition == maxPosition]`，这是一个可满足的条件（例如当`currentPosition`和`maxPosition`都为5时）。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`currentPosition >= maxPosition`，变异后的条件是`currentPosition == maxPosition`。当`currentPosition > maxPosition`时，原程序会进入if分支，而变异体不会。因此，变异确实改变了程序的行为。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`和`maxPosition`。数据依赖路径显示，`currentPosition`和`maxPosition`的值会直接影响if条件的判断结果，进而影响是否抛出异常或执行后续的返回语句。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示，变异语句`if (currentPosition == maxPosition)`直接控制是否抛出异常或执行后续的返回语句。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些情况下（`currentPosition > maxPosition`）会改变程序的行为（原程序抛出异常，变异体不抛出异常），但在`currentPosition == maxPosition`时，两者的行为是一致的。然而，由于存在`currentPosition > maxPosition`的情况，变异体的行为与原程序不同，且这种差异会传递到输出（是否抛出异常）。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_054 的分析, 耗时: 50.5482 秒
+
+开始分析变异体 MUT_059...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_059": "### 步骤[可达性]：\n说明理由：变异语句位于`if (currentPosition >= ++maxPosition)`，该语句的执行路径条件为`currentPosition >= maxPosition`。由于`maxPosition`和`currentPosition`的值在运行时可能满足该条件（例如当`currentPosition`等于`maxPosition`时），因此该路径条件是可满足的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原语句为`if (currentPosition >= maxPosition)`，变异后为`if (currentPosition >= ++maxPosition)`。变异引入了`maxPosition`的自增操作，这会改变`maxPosition`的值。例如，当`currentPosition == maxPosition`时，原语句为`true`，而变异后由于`maxPosition`自增，条件变为`false`，程序行为发生改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`maxPosition`。数据依赖路径显示：\n1. 如果条件为`true`，会抛出异常（影响输出）。\n2. 如果条件为`false`，会继续执行后续语句并返回子字符串（`maxPosition`的变化会影响后续调用，但当前输出不受影响）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示：\n1. 变异语句直接控制是否抛出异常（`true`分支）。\n2. `false`分支控制后续语句的执行，最终影响返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`maxPosition`的值，但在当前调用中：\n1. 如果条件为`true`，原程序和变异体的输出行为不同（原程序抛出异常，变异体可能不抛出）。\n2. 如果条件为`false`，`maxPosition`的变化不影响当前输出，但会影响后续调用。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响程序行为。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_059 的分析, 耗时: 49.5834 秒
+
+开始分析变异体 MUT_091...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_091": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `currentPosition < maxPosition`，这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `int start = currentPosition;`，变异体语句为 `int start = currentPosition--;`。变异体中的 `currentPosition--` 会先使用 `currentPosition` 的值赋值给 `start`，然后递减 `currentPosition`。这会导致 `currentPosition` 的值在后续使用中与原程序不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `start` 和 `currentPosition`。`start` 的数据依赖路径为 `(line 10: int start = currentPosition--) --[Flows start]--> (line 12: return str.substring( start, currentPosition );)`。`currentPosition` 的值在变异后递减，会影响 `str.substring(start, currentPosition)` 的第二个参数，从而影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径为 `(7: if (currentPosition >= maxPosition)) --False--> (10: int start = currentPosition--) -- --> (11: currentPosition = scanToken( currentPosition )) -- --> (12: return str.substring( start, currentPosition );)`。变异语句通过改变 `currentPosition` 的值，间接影响了 `scanToken` 的输入和 `str.substring` 的输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`currentPosition` 的值递减）在后续执行中未被修正或抵消，因此会直接影响程序输出。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_091 的分析, 耗时: 32.0020 秒
+
+开始分析变异体 MUT_119...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_119": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `currentPosition < maxPosition`。该条件组合是可满足的，因为 `currentPosition` 和 `maxPosition` 是独立变量，可以存在 `currentPosition < maxPosition` 的情况。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回 `str.substring(start, currentPosition)`，而变异体返回 `\"\"`。在变异语句可达的情况下，原程序返回的是从 `start` 到 `currentPosition` 的子字符串，而变异体直接返回空字符串。这两者在语义上完全不同，会直接影响程序的输出状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `start` 和 `currentPosition`。原程序中，`start` 和 `currentPosition` 的值用于生成子字符串并返回，而变异体直接返回空字符串，完全忽略了这些变量的值。因此，变异体的输出不依赖于 `start` 和 `currentPosition` 的值，但原程序的输出依赖于这些值。变异体的行为直接切断了数据依赖链。\n分析结论：变异体的输出不依赖于原程序的数据依赖链，但这是通过直接修改返回值实现的，而非通过数据依赖传播。\n\n### 步骤[控制依赖]：\n说明理由：变异体的返回值 `\"\"` 直接替换了原程序的 `str.substring(start, currentPosition)`，不依赖于任何控制流条件。因此，变异语句不通过控制流影响输出语句，而是直接修改了输出语句的行为。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体直接返回空字符串，与原程序返回的子字符串完全不同。没有后续执行可以修正或抵消这种差异，因此程序的可观察输出必然发生改变。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_119 的分析, 耗时: 47.7693 秒
+
+开始分析变异体 MUT_121...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_121": "### 步骤[可达性]：\n说明理由：变异语句位于程序入口处，没有前置条件限制，且路径条件组合为NULL，说明没有不可达的逻辑约束。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );`，变异体语句为`currentPosition = newPosition++ >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );`。变异操作是`newPosition++`，这会改变`newPosition`的值。在`newPosition >= 0`为真时，`newPosition++`会先使用`newPosition`的值进行比较，然后递增，这可能导致后续的`newPosition`值不同，从而影响程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`newPosition`。数据依赖路径显示`newPosition`的值会影响`currentPosition`，进而影响`start`和最终的`return str.substring( start, currentPosition )`。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示`currentPosition`的值会影响`if (currentPosition >= maxPosition)`的分支，进而影响后续的输出语句。变异语句通过改变`currentPosition`的值，间接控制了程序分支的走向，从而影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体引入了`newPosition++`的改变，但`newPosition`的值在后续执行中会被重置为`-1`（`newPosition = -1;`），因此变异引入的错误状态会被后续的赋值操作覆盖，不会影响最终的输出。\n分析结论：变异引入的错误状态被后续执行修正。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_121 的分析, 耗时: 41.5932 秒
+
+开始分析变异体 MUT_138...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_138": "### 步骤1：可达性\n说明理由：变异语句位于`currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );`，修改为`currentPosition = newPosition > 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );`。路径条件组合为`newPosition >= 0`变为`newPosition > 0`，但`newPosition`在之前被赋值为`-1`（`newPosition = -1;`），因此变异语句的路径条件为`newPosition > 0 && !delimsChanged`。由于`newPosition`初始为`-1`，且`delimsChanged`初始为`false`，路径条件为`false`，因此变异语句不可达。\n分析结论：变异语句不可达。\n\n### 步骤2：必要性\n说明理由：由于步骤1已确定变异语句不可达，无需继续分析必要性。\n分析结论：无需分析。\n\n### 步骤3：数据依赖\n说明理由：由于步骤1已确定变异语句不可达，无需继续分析数据依赖。\n分析结论：无需分析。\n\n### 步骤4：控制依赖\n说明理由：由于步骤1已确定变异语句不可达，无需继续分析控制依赖。\n分析结论：无需分析。\n\n### 步骤5：状态覆盖\n说明理由：由于步骤1已确定变异语句不可达，无需继续分析状态覆盖。\n分析结论：无需分析。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_138 的分析, 耗时: 54.2549 秒
+
+开始分析变异体 MUT_146...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_146": "### 步骤[可达性]：\n说明理由：变异语句位于`if (currentPosition >= maxPosition)`条件判断处，路径条件组合为`newPosition >= 0 && !delimsChanged`或`newPosition < 0 || delimsChanged`。这些条件均可满足（例如`newPosition=1, delimsChanged=false`或`newPosition=-1, delimsChanged=true`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`currentPosition >= maxPosition`，变异后为`currentPosition >= --maxPosition`。变异通过前置递减操作修改了`maxPosition`的值，这会直接影响条件判断结果（例如当`currentPosition == maxPosition`时，原条件为true，变异后条件可能变为false）。因此程序状态会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`maxPosition`通过以下路径传播到输出：\n1. 条件为true时：直接控制`throw`语句的执行（影响程序输出）。\n2. 条件为false时：通过`start`变量传递到`return str.substring(start, currentPosition)`。\n因此存在完整的数据依赖链。\n分析结论：变异影响可通过数据依赖传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制两个分支：\n1. True分支：执行`throw`语句（输出异常）。\n2. False分支：执行后续正常返回逻辑。\n因此变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异会改变`maxPosition`的值，但这种改变会直接影响条件判断结果，进而可能改变程序的控制流（如从抛出异常变为正常返回或反之）。不存在后续执行步骤会抵消这种改变的情况。\n分析结论：变异引入的错误状态不会被后续执行覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_146 的分析, 耗时: 46.1035 秒
+
+开始分析变异体 MUT_155...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_155": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为`newPosition >= 0 && !delimsChanged`。这是一个可满足的条件组合，因为`newPosition`可以大于等于0，且`delimsChanged`可以为false。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句的区别在于将`newPosition`替换为`~newPosition`（按位取反）。在`newPosition >= 0`的条件下，`newPosition`和`~newPosition`的值通常不同（除非`newPosition`为-1，但此时条件不满足）。因此，变异会实际改变程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`currentPosition`。`currentPosition`的值会直接影响到`if (currentPosition >= maxPosition)`的判断结果，进而影响是否抛出异常或执行后续的`start`赋值和`return`语句。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖\n说明理由：变异语句`currentPosition = ~newPosition`的结果会直接影响到`if (currentPosition >= maxPosition)`的分支选择，进而影响是否抛出异常或执行后续的`return`语句。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖路径。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体改变了`currentPosition`的值，但后续的`scanToken`调用会重新赋值`currentPosition`，因此变异引入的错误状态会被后续执行修正。然而，`currentPosition`的初始值会影响是否抛出异常（如果`~newPosition >= maxPosition`），因此变异体的行为可能与原程序不同。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_155 的分析, 耗时: 47.9323 秒
+
+开始分析变异体 MUT_156...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_156": "### 步骤[可达性]：\n说明理由：变异语句位于`return str.substring(start, currentPosition--);`，其路径条件为`currentPosition < maxPosition`。该条件在程序执行到该语句时已经满足（因为前一个条件`currentPosition >= maxPosition`为false才会执行到该语句），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的区别在于`currentPosition`和`currentPosition--`。`currentPosition--`会在返回后递减`currentPosition`的值，而原程序不会。这会导致`currentPosition`的状态在变异体中被改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`currentPosition`和`start`。`currentPosition`的值通过`str.substring(start, currentPosition--)`直接影响到返回值。`start`的值也通过`str.substring(start, currentPosition--)`影响到返回值。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`return str.substring(start, currentPosition--);`是程序的输出语句，直接控制程序的返回值。因此，变异语句直接影响输出语句的执行。\n分析结论：变异语句与输出语句存在控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`currentPosition`的状态，但这种改变发生在返回值计算之后（因为`currentPosition--`是后置递减操作），因此对当前返回值没有影响。然而，这种改变可能会影响后续调用的行为，但从单次调用的角度来看，返回值不受影响。\n分析结论：变异引入的状态改变在当前调用中被覆盖，不影响输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_156 的分析, 耗时: 42.2821 秒
+
+开始分析变异体 MUT_164...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_164": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`currentPosition < maxPosition`，这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition )`和`currentPosition = true && !delimsChanged ? newPosition : skipDelimiters( currentPosition )`。在`!delimsChanged`为真时，原程序的条件`newPosition >= 0`可能为假，而变异体的条件`true`始终为真，这将导致不同的分支选择，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`currentPosition`和`start`的数据依赖路径显示，`currentPosition`的值会直接影响`start`的值，而`start`又用于最终的`return str.substring( start, currentPosition )`。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`currentPosition = true && !delimsChanged ? newPosition : skipDelimiters( currentPosition )`的控制依赖路径显示，它直接影响到`if (currentPosition >= maxPosition)`的条件判断，进而影响后续的输出语句。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的中间状态，但由于`currentPosition`的值直接影响到输出语句`return str.substring( start, currentPosition )`，且变异体的分支选择可能导致不同的`currentPosition`值，因此变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_164 的分析, 耗时: 56.5184 秒
+
+开始分析变异体 MUT_165...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_165": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[currentPosition < maxPosition]`，这是一个可满足的条件，因为`currentPosition`和`maxPosition`的值在运行时可以满足`currentPosition < maxPosition`。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`return str.substring(start, currentPosition);`，变异体语句为`return str.substring(start, -currentPosition);`。`currentPosition`和`-currentPosition`在大多数情况下是不同的（除非`currentPosition`为0，但根据程序逻辑，`currentPosition`是扫描后的位置，不太可能为0）。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`start`和`currentPosition`，它们直接用于`return`语句。`start`和`currentPosition`的值会影响`str.substring`的结果，因此变异引入的状态改变会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是`return`语句，不受其他控制流的影响，也不影响其他控制流。因此，变异语句不通过控制流影响输出语句。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（使用`-currentPosition`代替`currentPosition`）会直接影响到`str.substring`的结果，导致返回的子字符串不同。没有后续执行会修正或抵消这种错误状态。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_165 的分析, 耗时: 46.5380 秒
+
+开始分析变异体 MUT_172...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_172": "### 步骤[可达性]：\n说明理由：变异语句位于程序的主逻辑路径上，没有前置条件限制其执行。程序入口到变异语句的路径条件组合为`newPosition >= 0 && !delimsChanged`或`!delimsChanged`（变异后），这些条件在程序执行过程中是可满足的。特别是`newPosition`在变异语句前被赋值为-1，但`delimsChanged`初始值未知，存在`!delimsChanged`为真的可能性。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的区别在于移除了`newPosition >= 0`的条件检查。当`newPosition`为负数时（如初始赋值为-1），原程序会执行`skipDelimiters(currentPosition)`，而变异体在`!delimsChanged`为真时会直接使用负数的`newPosition`。这会改变`currentPosition`的赋值结果，从而影响后续程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`currentPosition`和`newPosition`通过数据依赖链传播到程序输出节点。具体路径为：`currentPosition`的值直接影响`if (currentPosition >= maxPosition)`的判断结果，进而影响是否抛出异常或执行`return str.substring(start, currentPosition)`。`newPosition`的值通过影响`currentPosition`间接影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流直接影响输出语句。`currentPosition`的赋值结果控制着`if (currentPosition >= maxPosition)`的分支选择，进而决定程序是抛出异常还是返回子字符串。变异语句与输出语句存在直接的控制依赖路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`currentPosition`的赋值逻辑，但在`newPosition`为负数且`!delimsChanged`为真时，变异体会直接使用负数的`newPosition`，而原程序会执行`skipDelimiters(currentPosition)`。这两种情况会导致`currentPosition`的值不同，从而可能影响后续的`if (currentPosition >= maxPosition)`判断和最终的输出结果。没有证据表明这种差异会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消，影响程序最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_172 的分析, 耗时: 59.2357 秒
+
+开始分析变异体 MUT_179...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_179": "### 步骤[可达性]：\n说明理由：变异语句将条件判断从`if (currentPosition >= maxPosition)`改为`if (true)`。由于`true`是一个恒真条件，该变异语句在任何情况下都是可达的，不存在路径条件组合使其不可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件`currentPosition >= maxPosition`是一个动态判断，而变异后的`true`是一个恒真条件。这将导致程序总是执行`throw new java.util.NoSuchElementException()`分支，完全改变了原程序的控制流逻辑。因此，该变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`。数据依赖路径显示：\n1. `currentPosition`的值会影响`if (true)`的条件判断（虽然条件恒真，但变量仍被使用）。\n2. `currentPosition`的值会传递到`start`，最终影响`return str.substring(start, currentPosition)`的输出。\n因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示：\n1. `if (true)`的True分支直接导致抛出异常。\n2. False分支（理论上不可达，因为条件恒真）会继续执行后续代码。\n由于变异将条件改为恒真，实际上会强制程序走True分支，完全改变了原程序的控制流，从而直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（强制走异常分支）不会被后续执行修正或抵消。原程序在`currentPosition < maxPosition`时会正常返回子字符串，而变异体总是抛出异常，导致程序的可观察输出发生根本性改变。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_179 的分析, 耗时: 52.9589 秒
+
+开始分析变异体 MUT_182...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_182": "### 步骤1：可达性\n说明理由：变异语句位于条件判断 `newPosition >= 0` 被修改为 `newPosition == 0`。程序入口到该变异语句的路径条件组合为 `newPosition` 的值和 `delimsChanged` 的状态。由于没有不可达的路径约束（如 `newPosition >= 0 && newPosition < 0`），该变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是 `newPosition >= 0`，变异后为 `newPosition == 0`。在 `newPosition` 为正数但不等于0时（例如 `newPosition = 1`），原条件为真而变异条件为假，会导致程序选择不同的分支（`skipDelimiters` 被调用）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `currentPosition` 和 `newPosition`。`currentPosition` 的值直接影响 `start` 和最终的 `substring` 输出。`newPosition` 的变化通过条件判断间接影响 `currentPosition` 的赋值。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤4：控制依赖\n说明理由：变异语句通过条件判断控制 `currentPosition` 的赋值，进而影响后续的 `if (currentPosition >= maxPosition)` 分支和 `substring` 的输出。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了程序的分支选择（例如 `newPosition = 1` 时原程序调用 `newPosition` 而变异体调用 `skipDelimiters`），但 `skipDelimiters` 的具体行为未知。如果 `skipDelimiters` 在某些情况下返回与 `newPosition` 相同的值，可能导致最终输出相同。然而，由于无法保证所有情况下 `skipDelimiters` 的行为与 `newPosition` 一致，不能认为错误状态被覆盖。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_182 的分析, 耗时: 54.2569 秒
+
+开始分析变异体 MUT_189...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_189": "### 步骤[可达性]：\n说明理由：变异语句位于第4行，路径条件组合为`[currentPosition < maxPosition]`。该条件表示只有当`currentPosition`小于`maxPosition`时，程序才会继续执行后续语句。这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的区别在于删除了条件判断`newPosition >= 0 && !delimsChanged`，直接赋值为`newPosition`。这意味着无论`newPosition`是否大于等于0且`delimsChanged`是否为false，都会直接使用`newPosition`的值。这会导致程序状态的改变，因为原程序会根据条件选择是否调用`skipDelimiters`，而变异体则直接使用`newPosition`的值。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`，其数据依赖路径为：`currentPosition` -> `start` -> `return str.substring(start, currentPosition)`。因此，变异影响的变量会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于第4行，控制依赖路径为：`(6: if (currentPosition >= maxPosition)) --False--> (9: int start = currentPosition) -- --> (10: currentPosition = scanToken(currentPosition)) -- --> (11: return str.substring(start, currentPosition);)`。变异语句直接影响了`currentPosition`的值，进而影响了后续的`start`和最终的输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`currentPosition`的赋值逻辑，但后续的`scanToken`调用会重新设置`currentPosition`的值。因此，变异引入的错误状态可能在后续执行中被修正。然而，`scanToken`的行为依赖于`currentPosition`的初始值，因此变异体的行为可能与原程序不同，导致最终输出可能不同。\n分析结论：变异引入的错误状态未被完全修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_189 的分析, 耗时: 49.7565 秒
+
+开始分析变异体 MUT_194...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_194": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `currentPosition < maxPosition`。该路径条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `currentPosition = scanToken(currentPosition)`，变异表达式为 `currentPosition = scanToken(--currentPosition)`。在 `currentPosition < maxPosition` 的路径约束下，`--currentPosition` 会先递减 `currentPosition` 再传入 `scanToken`，这会改变 `currentPosition` 的值，从而可能影响 `scanToken` 的执行结果。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `currentPosition`。其数据依赖路径为：`currentPosition = scanToken(--currentPosition)` → `int start = currentPosition` → `return str.substring(start, currentPosition)`。变异后的 `currentPosition` 值直接影响 `start` 和最终的 `substring` 输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `currentPosition = scanToken(--currentPosition)` 直接控制输出语句 `return str.substring(start, currentPosition)` 的执行。变异语句的执行结果直接影响输出语句的参数值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体满足可达性、必要性、数据依赖与控制依赖路径均存在。变异体造成的程序状态改变（`currentPosition` 的值变化）会直接传递到输出语句，且没有证据表明这种改变会被后续执行修正或抵消。因此，变异体的输出可能与原程序不同。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_194 的分析, 耗时: 40.8046 秒
+
+开始分析变异体 MUT_199...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_199": "### 步骤[可达性]：\n说明理由：变异语句位于`currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters(currentPosition);`，其路径条件组合为`newPosition >= 0 && !delimsChanged`或`newPosition < 0 || delimsChanged`。这些条件在程序执行过程中可能被满足（例如`newPosition`初始为-1但可能被修改，`delimsChanged`初始为false但可能被修改），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别在于将`newPosition >= 0`改为`++newPosition >= 0`。变异操作会改变`newPosition`的值（递增1），从而可能影响条件判断结果和三元运算符的选择。例如，若`newPosition`初始为-1，原程序条件为false，变异体条件为`0 >= 0`（true），会导致不同的分支选择。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`newPosition`和`currentPosition`的数据依赖路径如下：\n1. `currentPosition`直接流向`start`和最终的`return`语句。\n2. `newPosition`的修改会影响`currentPosition`的赋值，进而影响输出。\n具体路径包括：\n- `currentPosition` → `start` → `return str.substring(start, currentPosition)`\n- `currentPosition` → `scanToken(currentPosition)` → `return`\n因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的结果（`currentPosition`的赋值）直接影响后续的`if (currentPosition >= maxPosition)`条件判断，进而控制是否抛出异常或继续执行到输出语句。变异语句通过控制流影响输出语句的执行路径。\n分析结论：存在控制依赖条件。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`newPosition`的值并可能影响`currentPosition`的赋值，但在某些情况下（例如`newPosition`初始为-1且`delimsChanged`为false），变异会导致`currentPosition`被赋值为`newPosition`（递增后为0）而非`skipDelimiters(currentPosition)`，从而可能改变最终的输出结果。没有证据表明这种状态改变会被后续执行修正或抵消。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_199 的分析, 耗时: 78.7183 秒
+
+开始分析变异体 MUT_208...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_208": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合`currentPosition < maxPosition`。该路径条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`return str.substring(start, currentPosition);`，变异表达式为`return str.substring(~start, currentPosition);`。`~`是按位取反操作，会显著改变`start`的值（例如`start=5`时，`~start=-6`）。这将导致`substring`的参数完全不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`start`，其数据依赖路径为`(line 10: int start = currentPosition) --> (line 12: return str.substring(~start, currentPosition))`。变异后的`~start`直接作为`substring`的参数，会传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为`(7: if (currentPosition >= maxPosition)) --False--> (10: int start = currentPosition) --> (12: return str.substring(~start, currentPosition))`。变异语句（`return`）是输出语句本身，不受其他控制流影响。\n分析结论：变异语句直接产生输出，无需通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体改变了`substring`的起始索引参数（`~start`），且该改变会直接反映在输出字符串中。没有后续操作能修正或抵消这个改变。\n分析结论：变异引入的错误状态未被修正或抵消，会影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_208 的分析, 耗时: 38.6441 秒
+
+开始分析变异体 MUT_213...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_213": "### 步骤1：可达性\n说明理由：根据提供的REACHABILITY_CONSTRAINT `[currentPosition < maxPosition]`，变异语句位于`return str.substring(start++, currentPosition);`，其路径条件为`currentPosition < maxPosition`。该条件可满足，因为只要输入满足`currentPosition`小于`maxPosition`即可触发变异语句执行。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原始表达式为`return str.substring(start, currentPosition);`，变异体为`return str.substring(start++, currentPosition);`。变异操作将`start`改为`start++`，这会先使用`start`的当前值，然后递增`start`。虽然`start`的值被修改，但由于`start`在后续执行中未被使用（函数立即返回），且`substring`的参数值在两种情况下相同（变异前后`start`的当前值相同），程序状态和输出未改变。\n分析结论：变异未实际改变程序语义，满足必要性条件。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量为`start`，其数据依赖路径为`(line 10: int start = currentPosition) --> (line 12: return str.substring(start++, currentPosition))`。虽然`start`被修改，但其修改后的值未传播到输出节点（因为`substring`使用的是`start`的当前值，且函数立即返回）。\n分析结论：数据依赖链未将变异效果传播到输出节点，数据依赖缺失。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径为`(7: if (currentPosition >= maxPosition)) --False--> (10: currentPosition = scanToken(currentPosition)) --> (12: return str.substring(start++, currentPosition))`。变异语句独立于输出语句的控制流，`start++`的操作不影响程序分支走向或输出语句的执行。\n分析结论：控制依赖缺失。\n\n### 步骤5：状态覆盖\n说明理由：变异引入了`start`的递增操作，但该操作的效果在后续执行中未被使用（函数立即返回），且`substring`的参数值与原始程序一致。因此，变异引入的错误状态被后续执行逻辑覆盖，不影响最终输出。\n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_213 的分析, 耗时: 34.4625 秒
+
+开始分析变异体 MUT_221...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_221": "### 步骤1：可达性\n说明理由：变异语句位于条件表达式 `newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters(~currentPosition)` 的备选分支中。该分支的执行条件是 `newPosition < 0 || delimsChanged`。由于 `newPosition` 初始值为 -1 且 `delimsChanged` 初始值为 false，存在输入使得该条件为真（如 `newPosition = -1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序使用 `skipDelimiters(currentPosition)`，而变异体使用 `skipDelimiters(~currentPosition)`。`~` 是按位取反操作符，会改变 `currentPosition` 的值。除非 `skipDelimiters` 函数对输入值的特定变化不敏感（例如忽略所有输入直接返回固定值），否则这种改变会影响函数的行为。由于 `skipDelimiters` 的具体实现未知，无法假设其对输入不敏感，因此变异可能改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量 `currentPosition` 通过以下路径传播到输出：\n1. `currentPosition` 赋值后用于 `if (currentPosition >= maxPosition)` 的条件判断。\n2. 若条件为假，`currentPosition` 的值被赋给 `start`，并最终用于 `return str.substring(start, currentPosition)`。\n因此，变异后的 `currentPosition` 值会直接影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于条件表达式的备选分支中，其执行会影响 `currentPosition` 的值。`currentPosition` 的值直接控制 `if (currentPosition >= maxPosition)` 的分支选择，进而影响是否抛出异常或执行后续输出语句。因此，变异语句通过控制流间接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了 `currentPosition` 的值，但 `skipDelimiters` 函数的具体行为未知。如果 `skipDelimiters` 对输入值的取反操作不敏感（例如返回固定值或忽略输入），则变异可能不会影响最终输出。但由于无法验证这一点，且默认情况下 `skipDelimiters` 应依赖于输入值，因此变异引入的状态改变可能未被抵消。\n分析结论：无法确认错误状态被覆盖。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_221 的分析, 耗时: 59.8349 秒
+
+开始分析变异体 MUT_231...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_231": "### 步骤1：可达性\n说明理由：根据变异体的控制流图分析，程序到变异语句的路径条件组合为 `currentPosition < maxPosition`。该条件在程序执行过程中是可以满足的（例如当 `currentPosition` 为 0 且 `maxPosition` 为 1 时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序语句为 `int start = currentPosition;`，变异体为 `int start = -currentPosition;`。在变异语句可达的情况下，`currentPosition` 的值会影响 `start` 的值。例如，若 `currentPosition` 为正数，`start` 的值会从正变为负，从而改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量为 `start`，其数据依赖路径为 `(line 10: int start = -currentPosition) --[Flows start]--> (line 12: return str.substring( start, currentPosition ))`。`start` 的值直接传递给 `str.substring`，影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径为 `(7: if (currentPosition >= maxPosition)) --False--> (10: int start = -currentPosition) -- --> (11: currentPosition = scanToken( currentPosition )) -- --> (12: return str.substring( start, currentPosition );)`。变异语句的执行会影响 `start` 的值，进而影响输出语句的执行结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了 `start` 的值，但 `str.substring(start, currentPosition)` 的结果会因为 `start` 的符号改变而不同（例如，原程序 `start` 为正，变异后为负，可能导致 `substring` 抛出异常或返回不同结果）。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_231 的分析, 耗时: 64.6792 秒
+
+开始分析变异体 MUT_232...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_232": "### 步骤[可达性]：\n说明理由：变异语句位于`if (currentPosition >= maxPosition)`条件判断处，变异后为`if (!(currentPosition >= maxPosition))`。该语句位于程序主流程中，没有任何前置不可达条件限制（`REACHABILITY_CONSTRAINT`为NULL），因此该变异语句在程序执行时是可被触发的。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`currentPosition >= maxPosition`，变异后为`!(currentPosition >= maxPosition)`，即逻辑取反。当`currentPosition`与`maxPosition`的值关系不同时（如`currentPosition=5, maxPosition=3`与`currentPosition=2, maxPosition=3`），原条件和变异条件的判断结果会完全相反，必然导致程序状态改变（如是否抛出异常的分支选择）。\n\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`currentPosition`和`start`通过以下路径传播到输出：\n1. `currentPosition`在`if`条件判断后：\n   - True分支：直接抛出异常（影响程序输出行为）\n   - False分支：赋值给`start`并最终影响`return str.substring(start, currentPosition)`\n2. `start`的值直接来源于`currentPosition`并用于最终输出。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制两个关键分支：\n1. True分支：`throw new java.util.NoSuchElementException()`\n2. False分支：执行后续正常返回逻辑。\n这两个分支均直接影响程序输出（异常或字符串截取结果）。\n\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在条件判断上完全反转了原逻辑，但：\n1. 当原条件为True时（需抛出异常），变异体为False会执行正常返回，与原行为不同；\n2. 当原条件为False时（需正常返回），变异体为True会抛出异常，与原行为不同。\n不存在任何输入能使变异体与原程序产生相同的最终输出状态。\n\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_232 的分析, 耗时: 50.2114 秒
+
+开始分析变异体 MUT_237...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_237": "### 步骤[可达性]：\n说明理由：变异语句位于`if (currentPosition >= maxPosition)`的条件判断处，变异后为`if (~currentPosition >= maxPosition)`。根据程序逻辑，`currentPosition`的值由前一行代码计算得出，且没有路径约束表明该条件永远为假。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`currentPosition >= maxPosition`，变异后为`~currentPosition >= maxPosition`。对于整数`currentPosition`，`~currentPosition`等于`-currentPosition - 1`。这意味着只有当`currentPosition`为负时，`~currentPosition`才可能大于等于`maxPosition`（假设`maxPosition`为正）。然而，根据程序逻辑，`currentPosition`的值由`skipDelimiters`或`newPosition`决定，通常为非负。因此，变异后的条件在大多数情况下与原条件不同，可能改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`，其数据依赖路径显示它直接影响到`if`条件的结果，进而通过控制流影响`throw`语句或`return`语句。具体来说，`currentPosition`的值决定了是否抛出异常或返回子字符串。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (~currentPosition >= maxPosition)`控制了两个分支：如果为真，执行`throw`语句；如果为假，执行`return`语句。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了条件判断的逻辑，但根据程序的实际输入和`currentPosition`的可能取值，变异后的条件可能导致不同的分支选择。例如，如果`currentPosition`为-1，`~currentPosition`为0，此时如果`maxPosition`为0，变异后的条件为真，而原条件为假。这将导致程序行为不同（抛出异常 vs 返回子字符串）。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出可能受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_237 的分析, 耗时: 104.1621 秒
+
+开始分析变异体 MUT_238...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_238": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`currentPosition < maxPosition`，这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`return str.substring( start, currentPosition );`和`return str.substring( start, ~currentPosition );`。`~currentPosition`是`currentPosition`的按位取反，这将导致子字符串的结束索引完全不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`currentPosition`，其数据依赖路径为`(line 11: currentPosition = scanToken( currentPosition )) --[Flows currentPosition]--> (line 12: return str.substring( start, ~currentPosition );)`。变异后的`~currentPosition`直接作为子字符串的结束索引，影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为`(7: if (currentPosition >= maxPosition)) --False--> (10: int start = currentPosition) -- --> (11: currentPosition = scanToken( currentPosition )) -- --> (12: return str.substring( start, ~currentPosition );)`。变异语句直接控制输出语句的执行，变异效果可以传递至输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`~currentPosition`作为子字符串结束索引）直接影响了程序输出，且没有后续执行步骤修正或抵消这种影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_238 的分析, 耗时: 38.9660 秒
+
+开始分析变异体 MUT_247...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_247": "### 步骤[可达性]：\n说明理由：变异语句位于`if (currentPosition >= maxPosition)`条件判断中，该语句的执行路径条件为`currentPosition`和`maxPosition`的值关系。由于没有不可达的路径约束（如`a > 0 && a < 0`），且`currentPosition`和`maxPosition`的值可以在运行时动态变化，因此该变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件判断是`if (currentPosition >= maxPosition)`，变异体改为`if (currentPosition++ >= maxPosition)`。变异体在判断条件时会对`currentPosition`进行自增操作，这会改变`currentPosition`的值。因此，变异体在实际执行时会改变程序状态（`currentPosition`的值），与原程序的行为不同。\n分析结论：变异体改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`。数据依赖路径显示：\n1. 如果条件为真，会抛出异常（输出行为）。\n2. 如果条件为假，`currentPosition`的值会用于`start`的赋值，并最终影响`return str.substring(start, currentPosition)`的输出。\n因此，变异引入的状态改变（`currentPosition`的自增）会通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示：\n1. 变异语句（`if (currentPosition++ >= maxPosition)`）的真假直接控制是否抛出异常或继续执行后续语句。\n2. 后续的输出语句（`return str.substring(start, currentPosition)`）的执行依赖于变异语句的条件判断结果。\n因此，变异语句通过控制流影响输出语句的执行。\n分析结论：存在控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体引入了`currentPosition`的自增操作，但这一改变会直接影响后续的输出行为（`return str.substring(start, currentPosition)`）。由于`currentPosition`的值被修改，且未被后续操作修正或抵消，因此程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消，程序输出会受到影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_247 的分析, 耗时: 49.7249 秒
+
+开始分析变异体 MUT_254...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_254": "### 步骤[可达性]：\n说明理由：变异语句位于程序的主逻辑路径中，没有不可达的路径条件组合。变异语句的执行依赖于`newPosition >= 0 && !delimsChanged`的条件，这些条件在程序执行过程中是可以满足的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`newPosition >= 0`进行判断，而变异体使用`newPosition-- >= 0`。虽然`newPosition--`会改变`newPosition`的值，但在三元运算符中，`newPosition`的值在自减前已经被使用。因此，变异操作不会改变程序的状态。\n分析结论：变异未实际改变程序语义。\n\n### 步骤[数据依赖]：\n说明理由：由于在步骤2中已经确定变异未改变程序语义，因此无需进一步分析数据依赖。\n分析结论：跳过此步骤。\n\n### 步骤[控制依赖]：\n说明理由：由于在步骤2中已经确定变异未改变程序语义，因此无需进一步分析控制依赖。\n分析结论：跳过此步骤。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异操作不会改变程序的状态，因此不存在错误状态需要被修正或抵消的情况。\n分析结论：变异不影响程序输出。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_254 的分析, 耗时: 50.3132 秒
+
+开始分析变异体 MUT_260...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_260": "### 步骤[可达性]：\n说明理由：变异语句位于程序入口点之后的第一个语句，且没有前置条件限制其执行。路径条件组合为NULL，表示没有不可达的逻辑约束。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用逻辑与操作符`&&`，变异体使用异或操作符`^`。这两个操作符在大多数情况下会产生不同的结果（只有当`newPosition >= 0`和`!delimsChanged`两个条件一个为真一个为假时结果相同）。因此，变异确实改变了程序的状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`currentPosition`和`start`都通过数据依赖链传播到程序输出节点。`currentPosition`的值直接影响`start`的赋值，而`start`和`currentPosition`又共同决定了最终的返回值`str.substring(start, currentPosition)`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的结果直接影响`if (currentPosition >= maxPosition)`的判断，从而控制程序是否抛出异常或继续执行后续语句。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的中间状态（使用`^`代替`&&`），但这些状态差异会通过数据依赖和控制依赖传递到输出语句，且没有证据表明这些差异会在后续执行中被修正或抵消。因此，变异的效果会影响最终输出。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_260 的分析, 耗时: 53.2497 秒
+
+开始分析变异体 MUT_262...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_262": "### 步骤[可达性]：\n说明理由：变异语句`currentPosition = scanToken( currentPosition );`的路径条件组合为`[currentPosition < maxPosition]`，这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别在于删除了`currentPosition = scanToken( currentPosition );`。在可达路径`currentPosition < maxPosition`下，删除该语句会导致`currentPosition`的值不会被更新为`scanToken(currentPosition)`的结果，从而影响后续的`return str.substring( start, currentPosition );`语句的输出。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`currentPosition`，其数据依赖路径为：`currentPosition` -> `start = currentPosition` -> `return str.substring( start, currentPosition )`。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`currentPosition = scanToken( currentPosition );`的控制依赖路径为：`if (currentPosition >= maxPosition)` -> `False` -> `start = currentPosition` -> `return str.substring( start, currentPosition )`。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异删除`currentPosition = scanToken( currentPosition );`会导致`currentPosition`的值不会被更新，从而影响`str.substring( start, currentPosition )`的输出。没有证据表明这种错误状态会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_262 的分析, 耗时: 47.2369 秒
+
+开始分析变异体 MUT_268...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_268": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `currentPosition < maxPosition`。该路径条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `currentPosition = scanToken(currentPosition)`，变异表达式为 `currentPosition = scanToken(currentPosition++)`。在变异语句可达的情况下，`currentPosition++` 会先使用 `currentPosition` 的值调用 `scanToken`，然后递增 `currentPosition`。虽然 `currentPosition` 的值会改变，但 `scanToken` 的输入参数仍然是原始值，且 `currentPosition` 的递增不会影响 `scanToken` 的返回值。因此，变异并未实际改变程序状态。\n分析结论：变异未实际改变程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `currentPosition`，其数据依赖路径为 `(line 11: currentPosition = scanToken(currentPosition++)) --[Flows currentPosition]--> (line 12: return str.substring(start, currentPosition))`。虽然 `currentPosition` 的值会递增，但 `scanToken` 的返回值是基于原始值计算的，且 `currentPosition` 的递增不会影响 `scanToken` 的返回值。因此，变异引入的状态差异不会通过数据依赖链传播到程序输出。\n分析结论：数据依赖缺失，变异效果无法传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(7: if (currentPosition >= maxPosition)) --False--> (10: currentPosition = scanToken(currentPosition++)) -- --> (12: return str.substring(start, currentPosition))`。变异语句的控制流不影响输出语句的执行，因为 `scanToken` 的返回值是基于原始值计算的，且 `currentPosition` 的递增不会影响 `scanToken` 的返回值。\n分析结论：控制依赖缺失，变异效果无法通过控制流传递到输出。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性，但未实际改变程序状态，且数据依赖和控制依赖均缺失。变异引入的错误状态在后续执行中被抵消，程序最终输出未受影响。\n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_268 的分析, 耗时: 40.1204 秒
+
+开始分析变异体 MUT_282...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_282": "### 步骤[可达性]：\n说明理由：变异语句的条件是`if (currentPosition >= maxPosition++)`，路径条件组合为`[newPosition >= 0 && !delimsChanged]/NULL`。这些条件在程序执行过程中是可以满足的，例如当`newPosition`为非负且`delimsChanged`为false时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`if (currentPosition >= maxPosition)`，变异后的条件是`if (currentPosition >= maxPosition++)`。变异操作在条件判断时对`maxPosition`进行了自增操作，这会改变`maxPosition`的值，从而可能影响后续的条件判断和程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`maxPosition`。数据依赖路径显示，`maxPosition`的变化会通过`currentPosition`间接影响返回值。具体来说，当条件为假时，`maxPosition`的变化会影响`currentPosition`的赋值，进而影响最终的返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径显示，变异语句控制了程序分支的走向。当条件为真时，程序抛出异常；当条件为假时，程序继续执行并返回子字符串。变异语句的真假结果直接决定了程序的输出行为。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了`maxPosition`的自增操作，但在条件为假时，`maxPosition`的变化会通过`currentPosition`间接影响返回值。然而，由于`maxPosition`的自增操作是在条件判断之后进行的，且`currentPosition`的赋值依赖于`scanToken`函数，因此变异引入的状态改变可能会被后续操作覆盖或抵消，但具体效果需要进一步分析。\n分析结论：变异引入的错误状态未被完全覆盖或抵消，可能影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_282 的分析, 耗时: 51.5735 秒
+
+开始分析变异体 MUT_304...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_304": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为`currentPosition < maxPosition`，这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序语句为`int start = currentPosition;`，变异体语句为`int start = ~currentPosition;`。`~`是按位取反操作，会改变`start`的值，除非`currentPosition`为`-1`（此时`~currentPosition`为`0`），但根据路径条件`currentPosition < maxPosition`，`currentPosition`可以是任意值（包括`-1`）。因此，变异会改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`start`通过数据依赖路径`(line 10: int start = ~currentPosition) --[Flows start]--> (line 12: return str.substring( start, currentPosition ))`传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句`int start = ~currentPosition;`与控制流无关，不通过控制流影响输出语句。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`start`的值被取反）会直接影响`str.substring(start, currentPosition)`的结果，除非`~currentPosition`与`currentPosition`在`substring`的上下文中效果相同（例如，`substring`的参数会被模运算或其他操作处理）。但根据程序逻辑，`start`的值直接用于`substring`，因此错误状态不会被修正或抵消。\n分析结论：变异引入的错误状态不会被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_304 的分析, 耗时: 37.9877 秒
+
+开始分析变异体 MUT_325...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_325": "### 步骤[可达性]：\n说明理由：变异语句位于程序的主逻辑路径中，没有不可达的路径条件。程序入口到变异语句的路径条件组合为`newPosition >= 0 && !delimsChanged`或`newPosition < 0 || delimsChanged`，这些条件在程序执行过程中是可满足的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`newPosition >= 0 && !delimsChanged`，变异后的条件是`newPosition >= 0 || !delimsChanged`。这两个条件在某些情况下会产生不同的结果（例如`newPosition >= 0`为真且`delimsChanged`为真时，原条件为假，变异条件为真），因此变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`，其数据依赖路径显示`currentPosition`的值会直接影响到后续的`if (currentPosition >= maxPosition)`判断、`start`的赋值、`scanToken`的调用以及最终的`return`语句。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的结果直接控制`currentPosition`的赋值，进而影响后续的`if`判断和输出语句的执行路径。变异语句与输出语句之间存在控制依赖路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的中间状态（`currentPosition`的值可能不同），但由于`currentPosition`的最终值会通过`scanToken`重新计算，且`scanToken`的行为不受变异直接影响，因此变异引入的错误状态可能在后续执行中被修正或抵消。然而，在某些情况下（例如`newPosition >= 0`为真且`delimsChanged`为真时），变异可能导致`currentPosition`的值与原程序不同，从而影响最终的输出。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_325 的分析, 耗时: 47.7652 秒
+
+开始分析变异体 MUT_328...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_328": "### 步骤[可达性]：\n说明理由：变异语句位于`if (currentPosition >= maxPosition)`条件判断中，路径条件组合为`newPosition >= 0 && !delimsChanged`或`skipDelimiters(currentPosition)`。这些条件在程序执行过程中是可满足的（例如`newPosition=1, delimsChanged=false`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`currentPosition >= maxPosition`，变异后为`currentPosition >= ~maxPosition`。由于位取反操作会完全改变`maxPosition`的值（例如`maxPosition=0`时`~maxPosition=-1`），这将导致条件判断结果可能不同（如`currentPosition=0`时原条件为true，变异后为false）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`maxPosition`和`currentPosition`通过数据依赖链直接传播到输出节点。具体路径：变异条件判断 → 影响异常抛出或`str.substring()`的调用参数 → 最终输出。\n分析结论：存在完整的数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流直接影响两个输出路径：1) 条件为真时抛出异常；2) 条件为假时执行正常返回逻辑。两种路径都直接受变异条件控制。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了条件判断的逻辑，但后续执行中没有任何操作能抵消这种改变。例如当`maxPosition=0`时，原程序可能抛出异常而变异体可能正常返回，输出结果完全不同。\n分析结论：错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_328 的分析, 耗时: 72.1144 秒
+
+开始分析变异体 MUT_335...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_335": "### 步骤[可达性]：\n说明理由：变异语句已被移除（ISDL操作），原始代码中的条件判断语句`if (currentPosition >= maxPosition)`及其抛出的异常已被删除。由于变异语句本身不存在，因此无法被执行到。\n分析结论：变异语句不可达。\n\n### 步骤[必要性]：\n说明理由：由于变异语句已被移除，无需进一步分析必要性。即使原语句可达，变异体的删除操作已经改变了程序的控制流，但在此情况下由于语句被完全移除，不涉及状态改变的比较。\n分析结论：无需分析，因变异语句不可达。\n\n### 步骤[数据依赖]：\n说明理由：变异语句已被移除，因此不存在数据依赖链的传播。原语句中的变量`currentPosition`和`start`的数据依赖路径虽然存在，但变异体并未引入新的数据依赖或改变现有依赖。\n分析结论：无数据依赖传播，因变异语句不可达。\n\n### 步骤[控制依赖]：\n说明理由：变异语句已被移除，控制依赖图中没有从变异语句开始的控制依赖路径。原始代码中的控制依赖分支已被删除，因此变异体无法通过控制流影响输出语句。\n分析结论：无控制依赖传播，因变异语句不可达。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异语句已被移除，程序的行为发生了显著变化（不再检查`currentPosition >= maxPosition`并抛出异常），因此不存在错误状态被覆盖的情况。程序的输出可能因未检查边界条件而直接返回子字符串，导致潜在的不同行为。\n分析结论：无状态覆盖，因变异语句不可达且行为已改变。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_335 的分析, 耗时: 48.1139 秒
+
+开始分析变异体 MUT_346...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_346": "### 步骤1：可达性分析\n说明理由：变异语句将条件`if (currentPosition >= maxPosition)`改为`if (false)`。这意味着无论`currentPosition`和`maxPosition`的值如何，该条件永远为假，因此变异语句的控制流路径永远不会被执行到。\n分析结论：变异语句不可达。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_346 的分析, 耗时: 26.5070 秒
+
+开始分析变异体 MUT_355...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_355": "### 步骤[可达性]：\n说明理由：变异语句位于`currentPosition = ~newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition )`，其路径条件组合为`newPosition >= 0 && !delimsChanged`或`newPosition < 0 || delimsChanged`。这些条件在逻辑上是可以满足的，例如`newPosition = 1`和`delimsChanged = false`可以满足第一条路径，`newPosition = -1`或`delimsChanged = true`可以满足第二条路径。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为`newPosition >= 0`，变异后的表达式为`~newPosition >= 0`。对于`newPosition`的不同取值，这两个表达式的值可能不同。例如，当`newPosition = 1`时，原表达式为`true`，变异表达式为`false`（因为`~1`是负数）。因此，变异确实改变了程序的状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`，其数据依赖路径如下：\n1. `currentPosition`在变异语句中被赋值，然后用于`if (currentPosition >= maxPosition)`的条件判断。\n2. 如果条件为`true`，则抛出异常；如果为`false`，则继续执行`int start = currentPosition`和`return str.substring( start, currentPosition )`。\n因此，`currentPosition`的值直接影响程序的输出或异常行为。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的结果直接影响`if (currentPosition >= maxPosition)`的分支选择，进而影响是否抛出异常或执行后续的输出语句。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`currentPosition`的值，但这种改变会直接传递到输出或异常行为中，没有后续的修正或抵消操作。因此，变异引入的错误状态不会被覆盖，程序的可观察输出会受到影响。\n分析结论：变异引入的错误状态不会被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_355 的分析, 耗时: 62.4322 秒
+
+开始分析变异体 MUT_377...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_377": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径条件组合为`newPosition <= 0 && !delimsChanged`。该条件在`newPosition`为0或负数且`delimsChanged`为false时可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`newPosition >= 0`和`newPosition <= 0`。在`newPosition`为0时，原程序执行`newPosition`赋值，而变异体也执行`newPosition`赋值（因为`0 <= 0`为true）。但在`newPosition`为正数时，原程序执行`newPosition`赋值，而变异体执行`skipDelimiters`。因此，变异会实际改变程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`currentPosition`的数据依赖路径为：变异语句 → `if (currentPosition >= maxPosition)` → 输出语句（`throw`或`return str.substring`）。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制`currentPosition`的赋值，而`currentPosition`的值影响后续的`if`条件和输出语句。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句与输出语句存在控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在`newPosition`为正数时会执行`skipDelimiters`而非直接赋值，但`skipDelimiters`函数的返回值可能与`newPosition`的值相同（例如，当`newPosition`已经是正确的位置时）。然而，这种覆盖并非逻辑上的必然，因此不能保证变异引入的错误状态会被修正或抵消。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_377 的分析, 耗时: 42.3736 秒
+
+开始分析变异体 MUT_383...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_383": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`currentPosition < maxPosition`，这是一个可满足的条件，没有逻辑矛盾。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`newPosition >= 0 && !delimsChanged`，而变异体将其简化为`newPosition >= 0`。这意味着变异移除了对`delimsChanged`的条件检查。在`delimsChanged`为`false`的情况下（因为`delimsChanged`在变异语句后被赋值为`false`），原程序和变异体的行为是一致的；但如果`delimsChanged`为`true`，原程序会执行`skipDelimiters(currentPosition)`，而变异体会直接使用`newPosition`（如果`newPosition >= 0`）。因此，变异可能改变程序状态。\n分析结论：变异可能改变程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`和`delimsChanged`。`currentPosition`的数据依赖路径从变异语句开始，经过条件判断，最终到达输出语句`return str.substring(start, currentPosition)`。`delimsChanged`的赋值语句没有数据依赖到输出语句。因此，`currentPosition`的变化可以通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量`currentPosition`通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径显示，变异语句的结果会影响`if (currentPosition >= maxPosition)`的条件判断，进而影响后续的输出语句。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异可能改变`currentPosition`的值，但在`delimsChanged`为`false`的情况下（这是常见情况，因为`delimsChanged`在变异语句后被赋值为`false`），原程序和变异体的行为完全一致。因此，变异引入的错误状态在后续执行中被修正或抵消，程序最终输出未受影响。\n分析结论：变异引入的错误状态被修正或抵消，程序最终输出未受影响。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_383 的分析, 耗时: 51.4209 秒
+
+开始分析变异体 MUT_386...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_386": "### 步骤[可达性]：\n说明理由：变异语句位于`if (currentPosition >= maxPosition)`条件判断处，该语句的执行路径条件为`currentPosition`和`maxPosition`的值关系。由于没有不可达的路径约束（如`a > 0 && a < 0`），且`currentPosition`和`maxPosition`的值可以在运行时动态确定，因此该变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`currentPosition >= maxPosition`，变异体将其改为`--currentPosition >= maxPosition`。变异体在判断条件前对`currentPosition`进行了自减操作，这会改变`currentPosition`的值，从而可能影响条件判断的结果。例如，若`currentPosition == maxPosition`，原程序条件为`true`，而变异体条件为`false`（因为`--currentPosition`会使`currentPosition`变为`maxPosition - 1`）。因此，变异体确实改变了程序状态。\n分析结论：变异体改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`。根据数据依赖路径：\n1. 如果变异条件为`true`，会抛出异常（输出行为改变）。\n2. 如果变异条件为`false`，`currentPosition`的值会用于`start`的赋值，并最终影响`return str.substring(start, currentPosition)`的输出。\n因此，变异影响的变量`currentPosition`通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (--currentPosition >= maxPosition)`直接控制两个分支：\n1. `true`分支：抛出异常。\n2. `false`分支：继续执行后续语句并返回子字符串。\n因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些情况下（如`currentPosition == maxPosition`）会改变程序的控制流和中间状态，但这些改变会直接导致不同的输出行为（抛出异常或返回不同的子字符串）。没有证据表明变异引入的错误状态会被后续执行修正或抵消。\n分析结论：变异体的行为未被覆盖，会影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_386 的分析, 耗时: 44.4797 秒
+
+开始分析变异体 MUT_387...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_387": "### 步骤1：可达性\n说明理由：变异语句位于条件表达式`newPosition >= 0 && !delimsChanged`的分支中。该路径条件组合为`newPosition >= 0 && !delimsChanged == false`，即`newPosition < 0 || delimsChanged == true`。这是一个可满足的条件组合，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体的区别在于将`skipDelimiters(currentPosition)`改为`skipDelimiters(-currentPosition)`。`skipDelimiters`函数的参数会影响其返回值，进而影响`currentPosition`的值。因此，变异操作可能导致程序状态改变。\n分析结论：变异实际改变了程序语义。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`currentPosition`通过数据依赖链传播到程序输出节点。具体路径为：变异语句 -> `currentPosition` -> `start` -> `return str.substring(start, currentPosition)`。因此，变异的效果可以通过数据依赖链传播到输出。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤4：控制依赖\n说明理由：变异语句通过控制流影响输出语句。变异语句的结果会影响`currentPosition`的值，进而影响`if (currentPosition >= maxPosition)`的判断结果，最终影响是否抛出异常或返回子字符串。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异引入了不同的中间状态（`currentPosition`的值可能不同），但这些差异会直接传递到输出语句`return str.substring(start, currentPosition)`，导致返回的子字符串可能不同。没有证据表明这些差异会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_387 的分析, 耗时: 49.1222 秒
+
+开始分析变异体 MUT_402...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_402": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[newPosition < 0 || delimsChanged]`。该条件表示当 `newPosition` 小于 0 或 `delimsChanged` 为 `true` 时，变异语句会被执行。这两个条件是可以满足的（例如 `newPosition = -1` 或 `delimsChanged = true`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的区别在于 `skipDelimiters(currentPosition)` 和 `skipDelimiters(currentPosition++)`。在变异语句可达的情况下（即 `newPosition < 0 || delimsChanged` 为 `true`），`currentPosition` 的值会被传递给 `skipDelimiters` 函数。原程序直接传递 `currentPosition`，而变异体传递 `currentPosition++`，这会先传递 `currentPosition` 的值，然后将其递增。因此，变异体实际传递的值与原程序不同，会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `currentPosition`。根据数据依赖路径：\n1. `currentPosition` 的值会影响 `start` 的赋值（`int start = currentPosition`）。\n2. `start` 的值会影响最终的返回值（`return str.substring(start, currentPosition)`）。\n因此，变异影响的变量 `currentPosition` 通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的执行会影响 `currentPosition` 的值，而 `currentPosition` 的值会决定 `if (currentPosition >= maxPosition)` 的分支走向：\n1. 如果为 `true`，抛出异常。\n2. 如果为 `false`，执行 `int start = currentPosition` 并最终返回 `str.substring(start, currentPosition)`。\n因此，变异语句通过控制流影响输出语句。\n分析结论：控制依赖存在。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `currentPosition` 的值（递增操作），但 `currentPosition` 的值会被后续的 `scanToken(currentPosition)` 调用覆盖（`currentPosition = scanToken(currentPosition)`）。因此，变异引入的错误状态（`currentPosition++` 的副作用）会被后续的 `scanToken` 调用修正，最终的程序输出（`str.substring(start, currentPosition)`）可能不受影响。\n分析结论：变异引入的错误状态被后续执行修正，程序最终输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_402 的分析, 耗时: 67.1293 秒
+
+开始分析变异体 MUT_410...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_410": "### 步骤1：可达性\n说明理由：变异语句位于条件表达式 `newPosition >= 0 && !delimsChanged` 的分支中。路径条件组合为 `newPosition >= 0 && !delimsChanged`，这是一个可满足的条件（例如 `newPosition = 1, delimsChanged = false`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序使用 `newPosition` 直接赋值给 `currentPosition`，而变异体使用 `newPosition++`。`newPosition++` 会先使用 `newPosition` 的值，然后将其递增。如果 `newPosition >= 0 && !delimsChanged` 为真，`currentPosition` 的值会与原程序相同（因为 `newPosition++` 的返回值是 `newPosition` 的原始值），但 `newPosition` 的值会被修改。因此，程序状态（`newPosition` 的值）被改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量为 `newPosition` 和 `currentPosition`。`currentPosition` 的值会直接影响后续的 `if` 条件判断和最终的 `return` 语句。`newPosition` 的值虽然被修改，但后续语句中 `newPosition` 被重新赋值为 `-1`，因此其修改不会传播到输出。\n分析结论：`currentPosition` 的数据依赖链传播到程序输出节点，但 `newPosition` 的修改被覆盖。\n\n### 步骤4：控制依赖\n说明理由：变异语句的结果（`currentPosition` 的值）直接影响 `if (currentPosition >= maxPosition)` 的判断，进而控制是否抛出异常或执行 `return` 语句。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体修改了 `newPosition` 的值，但 `newPosition` 的修改被后续的 `newPosition = -1` 覆盖，因此不会影响最终输出。`currentPosition` 的值与原程序相同（因为 `newPosition++` 的返回值是原始值），因此程序的最终输出不受影响。\n分析结论：变异引入的错误状态被后续执行覆盖，不影响输出。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_410 的分析, 耗时: 58.9224 秒
+
+开始分析变异体 MUT_427...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_427": "### 步骤[可达性]：\n说明理由：变异语句位于程序入口点之后，且没有不可达的路径条件限制。变异语句的条件组合为`newPosition >= 0 && !delimsChanged`或`!(newPosition >= 0) && !delimsChanged`，这两种条件在逻辑上都是可满足的（例如`newPosition=1, delimsChanged=false`或`newPosition=-1, delimsChanged=false`）。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件为`newPosition >= 0`，变异后的条件为`!(newPosition >= 0)`。这两个条件在逻辑上是互斥的（除了`newPosition=0`时两者均为false，但此时会执行`skipDelimiters`分支）。因此，变异会实际改变程序的状态（例如`newPosition=1`时原程序会执行`newPosition`分支，而变异体会执行`skipDelimiters`分支）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`currentPosition`通过数据依赖链传播到输出语句`return str.substring(start, currentPosition)`。具体路径为：变异语句修改`currentPosition` → `start`被赋值为`currentPosition` → `currentPosition`被`scanToken`修改 → 输出语句使用`start`和`currentPosition`。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的结果直接影响`currentPosition`的赋值，进而影响后续的`if (currentPosition >= maxPosition)`条件判断。该条件判断控制了两个分支：抛出异常或继续执行到输出语句。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的中间状态（例如`currentPosition`的赋值可能不同），但这些状态差异会直接传递到输出语句（`str.substring`的参数），导致最终输出可能不同。没有证据表明这些差异会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_427 的分析, 耗时: 52.3074 秒
+
+开始分析变异体 MUT_448...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_448": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`newPosition >= 0 && !delimsChanged`，这是一个可满足的条件（例如当`newPosition=1`且`delimsChanged=false`时）。因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`newPosition`直接赋值给`currentPosition`，而变异体使用`-newPosition`。当`newPosition > 0`时，这两个值不同（如`newPosition=1`时原程序赋1，变异体赋-1），会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`currentPosition`通过以下路径传播到输出：\n1. 影响第7行的`if (currentPosition >= maxPosition)`判断\n2. 影响第10行的`start`赋值\n3. 直接影响第12行的返回值`str.substring(start, currentPosition)`\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过以下控制流影响输出：\n1. 控制第7行的异常抛出分支\n2. 控制第10-12行的正常执行路径\n变异后的`currentPosition`值会直接影响程序的控制流走向。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`currentPosition`的值，但这个改变会直接传播到输出（通过`start`和最终的`currentPosition`），没有被后续操作修正或抵消。例如当`newPosition=1`时，原程序返回`substring(1, scanToken(1))`，而变异体返回`substring(-1, scanToken(-1))`，这两个输出明显不同。\n分析结论：变异引入的错误状态没有被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_448 的分析, 耗时: 59.2539 秒
+
+开始分析变异体 MUT_455...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_455": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `currentPosition < maxPosition`。该条件组合是可满足的，即存在输入使得变异语句被执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `currentPosition = scanToken(currentPosition)`，变异表达式为 `currentPosition = scanToken(~currentPosition)`。`~` 是按位取反操作，会显著改变 `currentPosition` 的值（除非 `currentPosition` 为特定值如 `-1`，但无证据表明这是唯一可能）。因此，变异会实际改变程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `currentPosition` 的数据依赖路径为：`(line 11: currentPosition = scanToken(~currentPosition)) --[Flows currentPosition]--> (line 12: return str.substring(start, currentPosition))`。变异后的 `currentPosition` 直接用于生成返回值，因此变异引入的状态差异可通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为：`(7: if (currentPosition >= maxPosition)) --False--> (10: currentPosition = scanToken(~currentPosition)) -- --> (12: return str.substring(start, currentPosition))`。变异语句的执行结果直接影响 `currentPosition` 的值，进而影响返回语句的输出，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体满足可达性、必要性、数据依赖与控制依赖路径均存在。虽然 `~` 操作会改变 `currentPosition` 的值，但 `scanToken` 函数的行为可能掩盖这种改变（例如，`scanToken` 可能对输入进行规范化处理）。然而，无证据表明 `scanToken` 会完全抵消 `~` 的效果，因此不能假设错误状态被覆盖。\n分析结论：变异引入的错误状态未被明确覆盖，可能影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_455 的分析, 耗时: 47.9149 秒
+
+开始分析变异体 MUT_464...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_464": "### 步骤1：可达性\n说明理由：变异语句位于`if (currentPosition >= maxPosition)`条件判断处，路径条件组合为`currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters(currentPosition)`。该路径条件可满足（例如当`newPosition >= 0 && !delimsChanged`为真时直接取`newPosition`值），因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句分别为`if (currentPosition >= maxPosition)`和`if (++currentPosition >= maxPosition)`。变异体通过前自增操作修改了`currentPosition`的值，这会直接影响条件判断结果（例如当`currentPosition == maxPosition - 1`时原条件为false而变异体条件为true），且该变量后续被用于`start`赋值和`scanToken`调用，必然改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`currentPosition`的数据依赖路径明确：\n1. 若变异条件为true：直接触发异常输出（控制依赖）\n2. 若为false：通过`start = currentPosition`和`scanToken(currentPosition)`传递到最终的`return str.substring(start, currentPosition)`\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径显示：\n1. 变异条件为true时直接控制异常抛出\n2. 为false时控制后续`start`赋值和返回值计算\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体在`currentPosition == maxPosition - 1`时会改变控制流（原程序继续执行，变异体抛出异常），但这种改变会导致可观察的行为差异（异常vs正常返回），且不存在状态被后续操作抵消的情况。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_464 的分析, 耗时: 43.2292 秒
+
+开始分析变异体 MUT_492...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_492": "### 步骤[可达性]：\n说明理由：变异语句位于`if (currentPosition >= maxPosition)`条件判断中，该语句的执行路径条件为`currentPosition`和`maxPosition`的初始值。由于没有不可达的路径约束（如矛盾条件），该变异语句在正常情况下是可执行的。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原语句为`if (currentPosition >= maxPosition)`，变异后为`if (currentPosition-- >= maxPosition)`。变异引入了`currentPosition`的后置递减操作，这会改变`currentPosition`的值（即使条件判断仍基于原值）。例如，若`currentPosition == maxPosition`，原程序直接进入条件分支，而变异体会在判断后递减`currentPosition`，导致后续代码中`currentPosition`的值不同。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`。其数据依赖路径如下：\n1. 若条件为真，直接抛出异常（输出行为受变异影响）。\n2. 若条件为假，`currentPosition`的值会影响`start`的赋值，进而影响最终的`substring`结果。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制是否抛出异常（条件为真）或继续执行后续代码（条件为假）。输出语句（`return str.substring(...)`或异常抛出）的控制流完全依赖于变异语句的真假结果。  \n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在条件判断后修改了`currentPosition`的值，但这一修改会直接影响后续的`start`赋值和`substring`操作。例如：\n- 若`currentPosition == maxPosition`，原程序抛出异常，而变异体因后置递减可能进入后续逻辑，导致不同输出。\n- 若`currentPosition > maxPosition`，变异体的递减操作不会覆盖状态差异，输出仍可能不同。  \n分析结论：变异引入的错误状态未被修正或抵消，程序输出可能改变。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_492 的分析, 耗时: 42.1124 秒
+
+开始分析变异体 MUT_521...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_521": "### 步骤1：可达性  \n说明理由：变异语句位于`if (currentPosition <= maxPosition)`条件判断处，其路径条件为`currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters(currentPosition)`。该路径条件可通过合法输入（如`newPosition >= 0`且`delimsChanged`为`false`）满足，因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性  \n说明理由：原条件为`currentPosition >= maxPosition`，变异后为`currentPosition <= maxPosition`。在`currentPosition`和`maxPosition`为任意合法整数时，两条件逻辑相反（如`currentPosition=5, maxPosition=3`时原条件为`true`，变异后为`false`），必然导致程序状态改变（控制流分支选择不同）。  \n分析结论：变异实际改变了程序语义，满足必要性。  \n\n### 步骤3：数据依赖  \n说明理由：变异影响的变量`currentPosition`通过数据依赖链传播到输出：  \n1. `currentPosition`决定`if`分支的真假，直接影响是否抛出异常。  \n2. 若未抛出异常，`currentPosition`的值会赋值给`start`，并最终用于`return str.substring(start, currentPosition)`。  \n分析结论：变异效果可通过数据依赖传递到输出。  \n\n### 步骤4：控制依赖  \n说明理由：变异语句直接控制后续分支：  \n- 若`currentPosition <= maxPosition`为`true`，执行`throw`语句并终止程序。  \n- 若为`false`，执行`return`语句返回子字符串。  \n分析结论：变异通过控制流直接影响输出语句的执行。  \n\n### 步骤5：状态覆盖  \n说明理由：变异体与原程序的行为差异无法被后续执行抵消。例如：  \n- 输入`currentPosition=5, maxPosition=3`时，原程序抛出异常，变异体返回子字符串。  \n- 输入`currentPosition=3, maxPosition=5`时，原程序返回子字符串，变异体抛出异常。  \n两类输出行为均不等价，且无逻辑抵消。  \n分析结论：变异引入的错误状态未被覆盖，影响最终输出。  \n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_521 的分析, 耗时: 37.0347 秒
+
+开始分析变异体 MUT_536...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_536": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件`currentPosition < maxPosition`。该条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`currentPosition = scanToken(currentPosition)`，变异表达式为`currentPosition = scanToken(++currentPosition)`。在变异语句可达的情况下，`++currentPosition`会先增加`currentPosition`的值再传递给`scanToken`，而原始表达式直接传递`currentPosition`的值。这会改变`scanToken`的输入参数，从而可能影响其返回值，进而影响`currentPosition`的最终赋值。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`，其数据依赖路径为：`(line 11: currentPosition = scanToken(++currentPosition)) --[Flows currentPosition]--> (line 12: return str.substring(start, currentPosition))`。变异后的`currentPosition`值直接传递到输出语句`return str.substring(start, currentPosition)`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为：`(7: if (currentPosition >= maxPosition)) --False--> (10: currentPosition = scanToken(++currentPosition)) -- --> (12: return str.substring(start, currentPosition);)`。变异语句的执行会影响输出语句的输入参数`currentPosition`，从而间接影响输出结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`scanToken`的输入参数，但`scanToken`的具体行为未知，无法确定其返回值是否会抵消`++currentPosition`的效果。因此，不能确定变异引入的错误状态是否被后续执行修正或抵消。\n分析结论：无法确认状态覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_536 的分析, 耗时: 41.7831 秒
+
+开始分析变异体 MUT_542...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_542": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `newPosition < 0 && !delimsChanged`。根据程序逻辑，`newPosition` 在第6行被赋值为 `-1`，且 `delimsChanged` 在第5行被赋值为 `false`。因此，路径条件 `newPosition < 0 && !delimsChanged` 恒为真，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件为 `newPosition >= 0 && !delimsChanged`，变异后的条件为 `newPosition < 0 && !delimsChanged`。由于 `newPosition` 被赋值为 `-1`，原条件为假，变异条件为真。因此，变异会导致程序选择不同的分支（原程序执行 `skipDelimiters(currentPosition)`，变异体执行 `newPosition`），从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `currentPosition` 和 `newPosition`。`currentPosition` 的值直接影响 `start` 和最终的 `return str.substring(start, currentPosition)`。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制了 `currentPosition` 的赋值，而 `currentPosition` 的值直接影响后续的 `if (currentPosition >= maxPosition)` 分支和最终的输出语句。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`currentPosition` 的赋值变化）会直接影响后续的 `if` 判断和输出语句，且没有逻辑抵消或修正这种变化。因此，变异体的输出可能与原程序不同。\n分析结论：变异引入的错误状态未被抵消，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_542 的分析, 耗时: 53.3975 秒
+
+开始分析变异体 MUT_544...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_544": "### 步骤[可达性]：\n说明理由：变异语句的条件是`currentPosition != maxPosition`，而原程序的条件是`currentPosition >= maxPosition`。根据提供的可达性约束`[currentPosition != maxPosition]`，该条件是可以满足的，即存在输入使得变异语句被执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件`currentPosition >= maxPosition`和变异体的条件`currentPosition != maxPosition`在语义上有显著差异。例如，当`currentPosition > maxPosition`时，两者行为一致；但当`currentPosition == maxPosition`时，原程序会进入if分支抛出异常，而变异体会跳过if分支继续执行。这会改变程序的控制流和输出行为。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`currentPosition`和`maxPosition`通过数据依赖链传播到输出语句。具体路径为：变异条件判断 → 控制流分支 → 影响`start`的赋值 → 最终影响`return str.substring(start, currentPosition)`的输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制了是否抛出异常或继续执行后续代码。输出语句`return str.substring(start, currentPosition)`的执行与否取决于变异条件的结果。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些情况下（如`currentPosition > maxPosition`）与原程序行为一致，但在`currentPosition == maxPosition`时会导致完全不同的控制流（原程序抛出异常，变异体返回子字符串）。这种差异无法被后续执行抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_544 的分析, 耗时: 43.9083 秒
+
+开始分析变异体 MUT_571...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 522 Connect origin timed out"
+Retrying request to /chat/completions in 0.465018 seconds
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_571": "### 步骤[可达性]：\n说明理由：变异语句`delimsChanged = false;`位于程序的主执行路径中，没有前置条件限制其执行。程序的控制流从入口开始，经过该语句，因此该变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的`delimsChanged = false;`将`delimsChanged`设置为`false`，而变异体删除了这条语句。在程序执行过程中，`delimsChanged`的值会影响`currentPosition`的计算（通过条件`!delimsChanged`）。如果`delimsChanged`未被设置为`false`，其值可能保持为`true`（假设初始值为`true`），从而改变`currentPosition`的计算结果。因此，该变异会实际改变程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`delimsChanged`。`delimsChanged`的值在计算`currentPosition`时被使用（`!delimsChanged`），而`currentPosition`的值直接影响`start`和最终的返回值`str.substring(start, currentPosition)`。因此，`delimsChanged`的变化会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`delimsChanged = false;`本身不直接控制任何分支，但其影响的`delimsChanged`变量会间接影响`currentPosition`的计算，从而可能影响后续的控制流（如`if (currentPosition >= maxPosition)`）。然而，变异语句本身并不直接通过控制流影响输出语句。\n分析结论：变异语句不直接通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`delimsChanged`的值，但程序的其他部分（如`scanToken`）可能会修正`currentPosition`的值，从而抵消`delimsChanged`的影响。然而，由于`delimsChanged`直接影响`currentPosition`的初始计算，且`currentPosition`直接影响输出，这种抵消并不一定总是发生。因此，变异引入的错误状态可能不会被完全修正或抵消。\n分析结论：变异引入的错误状态可能不会被完全修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_571 的分析, 耗时: 65.5410 秒
+
+开始分析变异体 MUT_572...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_572": "### 步骤[可达性]：\n说明理由：变异语句位于程序的主执行路径上，没有前置条件限制其执行。路径条件组合为`newPosition >= 0 && !delimsChanged`，这是一个可满足的条件（例如`newPosition=1, delimsChanged=false`）。因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`newPosition >= 0`作为条件，而变异体使用`--newPosition >= 0`。这会导致：\n1. 当`newPosition=1`时，原条件为true，变异条件为true（但会修改newPosition为0）\n2. 当`newPosition=0`时，原条件为true，变异条件为false（且会修改newPosition为-1）\n因此变异会改变程序状态（newPosition的值和条件判断结果）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`newPosition`和`currentPosition`的数据依赖路径如下：\n1. `newPosition`的变化会影响条件判断结果，进而影响`currentPosition`的赋值\n2. `currentPosition`会直接影响输出语句`return str.substring(start, currentPosition)`\n因此变异效果可以通过数据依赖链传播到输出。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的条件判断结果会直接影响：\n1. 是否抛出异常（当`currentPosition >= maxPosition`时）\n2. `start`和`currentPosition`的赋值\n3. 最终的`return`语句\n因此变异语句通过控制流影响输出语句。\n分析结论：变异通过控制流影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异会改变`newPosition`的值和条件判断结果，但这些改变会直接影响到：\n1. `currentPosition`的赋值（通过三元运算符）\n2. 后续的`scanToken`调用和返回值\n3. 最终的`substring`输出\n没有证据表明这些状态改变会被后续操作抵消。例如当`newPosition=0`时，原程序会执行`newPosition`分支，而变异体会执行`skipDelimiters`分支，导致不同输出。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_572 的分析, 耗时: 50.4725 秒
+
+开始分析变异体 MUT_582...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_582": "### 步骤1：可达性\n说明理由：变异语句位于`if (currentPosition >= maxPosition--)`，其路径条件组合为`newPosition >= 0 && !delimsChanged`或`newPosition < 0 || delimsChanged`。这些条件在程序执行时可能被满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句分别为`if (currentPosition >= maxPosition)`和`if (currentPosition >= maxPosition--)`。变异体在比较后对`maxPosition`进行了自减操作，这会影响后续的`maxPosition`值。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`maxPosition`。数据依赖路径显示，`maxPosition`的变化会影响`if`条件的判断结果，进而可能影响`throw new java.util.NoSuchElementException()`或`return str.substring( start, currentPosition )`的执行。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径显示，变异语句`if (currentPosition >= maxPosition--)`的控制流直接影响`throw`语句或`return`语句的执行。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体改变了`maxPosition`的值，但这种改变在后续执行中未被修正或抵消。`maxPosition`的自减操作会影响后续的`if`条件判断，进而可能改变程序的输出行为。因此，变异引入的错误状态未被覆盖，会影响程序最终输出。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_582 的分析, 耗时: 49.5447 秒
+
+开始分析变异体 MUT_592...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_592": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合`[currentPosition < maxPosition]`。该条件在当前程序上下文中是可满足的（即存在输入使得`currentPosition`小于`maxPosition`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`currentPosition = scanToken(currentPosition)`，变异体改为`currentPosition = scanToken(-currentPosition)`。在`currentPosition`不为零的情况下（根据可达性条件`currentPosition < maxPosition`且`maxPosition`通常为正），`currentPosition`和`-currentPosition`的值不同，会导致`scanToken`的输入参数不同，从而可能改变其返回值。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`，其数据依赖路径为：`(line 11: currentPosition = scanToken(-currentPosition)) → (line 12: return str.substring(start, currentPosition))`。变异后的`currentPosition`值直接作为`substring`的参数，影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`currentPosition = scanToken(-currentPosition)`与输出语句`return str.substring(start, currentPosition)`之间无控制流分支，输出语句无条件执行，因此控制依赖关系为直接传递。变异语句的结果直接影响输出语句的执行结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的状态改变（`currentPosition`的值变化）直接传递到输出语句，且未被后续执行修正或抵消。`scanToken(-currentPosition)`的结果与`scanToken(currentPosition)`不同时，会导致`substring`的截取范围不同，从而影响最终输出。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_592 的分析, 耗时: 37.0704 秒
+
+开始分析变异体 MUT_621...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_621": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[currentPosition >= maxPosition]`。该条件在程序执行时可能为真（例如当`currentPosition`确实大于或等于`maxPosition`时），因此变异语句是可到达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序在`currentPosition >= maxPosition`时抛出异常，而变异体移除了该异常抛出语句。在变异语句可达的情况下（即`currentPosition >= maxPosition`为真），原程序会抛出异常并终止执行，而变异体会继续执行后续语句（定义`start`并返回子字符串）。因此，变异实际改变了程序的行为（从抛出异常变为继续执行）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`start`，其数据依赖路径为`(line 9: int start = currentPosition) -> (line 11: return str.substring(start, currentPosition))`。虽然变异体移除了异常抛出语句，但`start`的定义和使用关系未改变，数据依赖路径仍然存在。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（移除异常抛出）位于`if (currentPosition >= maxPosition)`的THEN分支中。原程序的控制依赖路径为：`(7: if (currentPosition >= maxPosition)) --True--> (THEN: throw异常) -- --> (exit)`。变异后，THEN分支直接流向exit节点，不再抛出异常。输出语句（`return str.substring(...)`）位于ELSE分支中，不受THEN分支的控制流影响。因此，变异语句不通过控制流直接影响输出语句。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体移除了异常抛出语句，但在`currentPosition >= maxPosition`时，原程序会抛出异常，而变异体会继续执行并返回子字符串。这两种行为在输出上是完全不同的（异常 vs. 正常返回），因此变异引入的错误状态未被修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_621 的分析, 耗时: 63.6509 秒
+
+开始分析变异体 MUT_628...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_628": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `currentPosition < maxPosition`。该条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `return str.substring( start, currentPosition );`，变异表达式为 `return str.substring( start--, currentPosition );`。变异影响的变量为 `start`，其值在变异后会被递减。由于 `start` 的值直接影响 `substring` 的起始索引，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `start` 的数据依赖路径为 `(line 10: int start = currentPosition) --[Flows start]--> (line 12: return str.substring( start--, currentPosition );)`。`start` 的值直接传递到输出语句 `return str.substring`，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(7: if (currentPosition >= maxPosition)) --False--> (10: currentPosition = scanToken( currentPosition )) -- --> (12: return str.substring( start--, currentPosition );)`。变异语句 `return str.substring( start--, currentPosition );` 是输出语句，不受其他控制流分支的直接控制，因此变异语句本身不通过控制流影响输出语句。\n分析结论：控制依赖缺失。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体满足可达性、必要性、数据依赖条件，但变异引入的状态改变（`start` 的递减）会直接影响 `substring` 的起始索引，从而改变程序输出。没有证据表明错误状态会被后续执行修正或抵消。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_628 的分析, 耗时: 37.1199 秒
+
+开始分析变异体 MUT_630...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_630": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[(newPosition >= 0 && !delimsChanged) && !(currentPosition >= maxPosition)]`。该条件表示 `newPosition` 必须大于等于 0 且 `delimsChanged` 为 false，同时 `currentPosition` 必须小于 `maxPosition`。这些条件在逻辑上是可满足的，例如当 `newPosition = 0`、`delimsChanged = false`、`currentPosition = 0`、`maxPosition = 1` 时，路径条件成立。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异是删除了 `newPosition = -1;` 语句。在变异语句可达的情况下，`newPosition` 的值会影响 `currentPosition` 的赋值（`currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters(currentPosition)`）。如果 `newPosition` 未被重置为 -1，且 `newPosition` 的值在后续执行中未被修改，`currentPosition` 的值可能会依赖于 `newPosition` 的旧值，从而改变程序状态。因此，该变异可能实际改变程序状态。\n分析结论：变异可能改变程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `newPosition`。根据数据依赖路径，`newPosition` 的值会影响 `currentPosition` 的赋值，进而影响 `start` 的值，最终影响 `return str.substring(start, currentPosition)` 的输出。因此，`newPosition` 的值通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `newPosition = -1;` 是一个赋值语句，不直接控制程序分支。输出语句的执行依赖于 `if (currentPosition >= maxPosition)` 的条件判断，而该条件判断又依赖于 `currentPosition` 的值，`currentPosition` 的值受 `newPosition` 的影响。因此，变异语句间接通过数据依赖影响输出语句的执行，但不存在直接的控制依赖路径。\n分析结论：变异语句不通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句可能改变 `newPosition` 的值，进而影响 `currentPosition` 和 `start` 的值，但最终输出 `str.substring(start, currentPosition)` 的具体值是否改变取决于 `newPosition` 的旧值和 `skipDelimiters(currentPosition)` 的行为。如果 `newPosition` 的旧值在变异后未被使用（例如，`newPosition` 未被其他代码修改），且 `skipDelimiters(currentPosition)` 的行为不受影响，则程序输出可能保持不变。然而，由于 `newPosition` 的值可能影响 `currentPosition` 的赋值，且没有明确的逻辑表明这种影响会被抵消，因此不能确定变异引入的错误状态会被修正或抵消。\n分析结论：无法确定变异引入的错误状态会被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_630 的分析, 耗时: 64.9235 秒
+
+开始分析变异体 MUT_641...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_641": "### 步骤[可达性]：\n说明理由：变异语句位于条件判断`if (currentPosition >= maxPosition)`之前，且没有前置条件限制其执行。程序入口到该变异语句的路径条件组合为`NULL`，即没有不可达的约束条件。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件表达式为`newPosition >= 0 && !delimsChanged`，变异体将其改为`!(newPosition >= 0 && !delimsChanged)`。根据德摩根定律，`!(A && B)`等价于`!A || !B`，这与原表达式在逻辑上是等价的。因此，变异并未实际改变程序的状态。\n分析结论：变异未改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于在必要性分析中已确认变异未改变程序语义，因此无需进一步分析数据依赖路径。变异体与原程序在逻辑上等价，不会影响程序输出。\n分析结论：无需进一步分析。\n\n### 步骤[控制依赖]：\n说明理由：由于在必要性分析中已确认变异未改变程序语义，因此无需进一步分析控制依赖路径。变异体与原程序在逻辑上等价，不会影响程序输出。\n分析结论：无需进一步分析。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异体与原程序在逻辑上等价，不存在错误状态需要被修正或抵消的情况。程序最终输出未受影响。\n分析结论：无需进一步分析。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_641 的分析, 耗时: 48.1604 秒
+
+开始分析变异体 MUT_655...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_655": "### 步骤[可达性]：\n说明理由：变异语句位于条件表达式 `newPosition >= 0 && !delimsChanged` 的分支中。该路径条件组合为 `newPosition >= 0 && !delimsChanged == false`，即 `newPosition < 0 || delimsChanged == true`。这是一个可满足的条件组合（例如 `newPosition = -1` 或 `delimsChanged = true`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异在于 `skipDelimiters(currentPosition)` 和 `skipDelimiters(currentPosition--)`。`currentPosition--` 会先使用 `currentPosition` 的值调用 `skipDelimiters`，然后对 `currentPosition` 执行递减操作。由于 `currentPosition` 的值在调用 `skipDelimiters` 时未被修改，且 `skipDelimiters` 的返回值赋值给 `currentPosition` 会覆盖后续的递减操作，因此该变异实际上不会改变程序的状态。\n分析结论：变异未实际改变程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `currentPosition`。数据依赖路径显示 `currentPosition` 的值会流向 `if (currentPosition >= maxPosition)` 和 `int start = currentPosition`，最终影响 `return str.substring(start, currentPosition)`。然而，由于变异未实际改变程序状态（见必要性分析），因此不存在有效的数据依赖传播。\n分析结论：数据依赖链未传播变异效果。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `currentPosition = ...` 不是控制语句（如 `if` 或 `while`），因此不会直接影响控制流。程序的控制流依赖于 `currentPosition` 的值，但变异未实际改变其值（见必要性分析），因此控制依赖路径不受影响。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异未实际改变程序状态（见必要性分析），因此无需考虑状态覆盖问题。程序的行为与原程序完全一致。\n分析结论：变异引入的错误状态不存在，程序输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_655 的分析, 耗时: 43.0788 秒
+
+开始分析变异体 MUT_679...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_679": "### 步骤[可达性]：\n说明理由：变异语句的条件组合为`newPosition >= 0 && delimsChanged`。该条件在逻辑上是可满足的，例如当`newPosition = 1`且`delimsChanged = true`时，条件为真。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`newPosition >= 0 && !delimsChanged`，而变异体的条件是`newPosition >= 0 && delimsChanged`。这两个条件的逻辑完全相反（`!delimsChanged` vs `delimsChanged`），因此在任何情况下，原程序和变异体的条件不会同时为真或同时为假。这意味着变异会改变程序的状态（`currentPosition`的赋值来源不同）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`和`delimsChanged`。`currentPosition`的值直接影响到后续的`if (currentPosition >= maxPosition)`判断以及最终的`return str.substring(start, currentPosition)`输出。`delimsChanged`虽然被变异使用，但其值在变异后立即被重置为`false`（`delimsChanged = false`），因此对输出的影响有限。然而，`currentPosition`的变化会直接传播到输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的条件结果（`newPosition >= 0 && delimsChanged`）决定了`currentPosition`的赋值来源（`newPosition`或`skipDelimiters(currentPosition)`），进而影响后续的`if (currentPosition >= maxPosition)`判断和输出语句的执行。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`currentPosition`的赋值逻辑，但`delimsChanged`在变异后立即被重置为`false`，这可能会在某些情况下抵消变异的影响。然而，`currentPosition`的赋值来源（`newPosition`或`skipDelimiters`）的差异仍然可能导致最终的`currentPosition`值不同，从而影响输出。因此，变异引入的错误状态并未被完全修正或抵消。\n分析结论：变异引入的错误状态未被完全覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_679 的分析, 耗时: 60.3563 秒
+
+开始分析变异体 MUT_684...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_684": "### 步骤[可达性]：\n说明理由：变异语句位于程序的主逻辑路径中，没有不可达的路径条件。变异语句的执行依赖于`newPosition`和`delimsChanged`的值，这些变量在程序执行过程中可以被赋值，因此变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`newPosition >= 0`，变异后的条件是`newPosition != 0`。这两个条件在`newPosition`为正数时行为相同，但在`newPosition`为0时行为不同。原程序在`newPosition`为0时会执行`skipDelimiters`，而变异体在`newPosition`为0时会选择`newPosition`。因此，变异确实改变了程序的状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`currentPosition`和`newPosition`。`currentPosition`的值直接影响到后续的`if`条件判断和`start`的赋值，最终影响返回的字符串。`newPosition`的值通过影响`currentPosition`的值间接影响输出。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的结果直接决定了`currentPosition`的值，进而影响后续的`if`条件判断和输出语句的执行。因此，变异语句通过控制流影响输出语句。\n分析结论：控制依赖路径存在。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的状态，但在某些情况下（如`newPosition`为正数时），变异体和原程序的行为相同。然而，在`newPosition`为0时，变异体和原程序的行为不同，且这种差异会通过数据和控制依赖传递到输出，导致不同的输出结果。因此，变异引入的错误状态没有被后续执行修正或抵消。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_684 的分析, 耗时: 49.8301 秒
+
+开始分析变异体 MUT_688...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_688": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `currentPosition < maxPosition`。该条件组合是可满足的，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `int start = currentPosition;`，变异体语句为 `int start = currentPosition++;`。在变异语句可达的情况下，变异体语句会改变 `currentPosition` 的值（增加1），而原程序不会。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `start` 和 `currentPosition`。`start` 的数据依赖路径直接流向输出语句 `return str.substring( start, currentPosition );`，而 `currentPosition` 的数据依赖路径经过 `scanToken` 方法后也流向输出语句。因此，变异所引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `int start = currentPosition++;` 的控制依赖路径直接流向输出语句 `return str.substring( start, currentPosition );`。变异语句与输出语句存在控制依赖路径，变异语句影响输出语句的执行。\n分析结论：变异效果可以传递至输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `currentPosition` 的值，但 `scanToken` 方法可能会修正或覆盖 `currentPosition` 的值，导致最终输出 `str.substring( start, currentPosition )` 的值与原程序一致。然而，由于 `scanToken` 的具体行为未知，无法确定变异引入的错误状态是否被完全修正或抵消。\n分析结论：无法确定状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_688 的分析, 耗时: 41.5232 秒
+
+开始分析变异体 MUT_711...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_711": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `currentPosition < maxPosition`。该条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `return str.substring( start, currentPosition );`，变异表达式为 `return str.substring( start, currentPosition++ );`。变异体在 `currentPosition` 的值上增加了后置自增操作，但 `substring` 方法的第二个参数是结束索引（不包含），因此 `currentPosition++` 的实际效果与 `currentPosition` 相同（因为自增操作在返回值之后执行）。因此，程序状态未改变。\n分析结论：变异未实际改变程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤[必要性]已确认变异未改变程序状态，无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤[必要性]已确认变异未改变程序状态，无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于步骤[必要性]已确认变异未改变程序状态，无需进一步分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_711 的分析, 耗时: 32.1261 秒
+
+开始分析变异体 MUT_720...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_720": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[currentPosition >= maxPosition]`，而变异体将条件改为 `currentPosition < maxPosition`。原条件 `currentPosition >= maxPosition` 和变异条件 `currentPosition < maxPosition` 是互斥的，但两者都是可达的，因为 `currentPosition` 和 `maxPosition` 的值可以是任意的，满足其中一种条件。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `currentPosition >= maxPosition`，变异体改为 `currentPosition < maxPosition`。这两个条件的逻辑完全相反，因此变异会显著改变程序的控制流。例如，当 `currentPosition == maxPosition` 时，原程序会进入 `if` 分支抛出异常，而变异体会跳过 `if` 分支继续执行后续代码。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `currentPosition` 和 `start`。`currentPosition` 的值会直接影响 `start` 的赋值，而 `start` 又用于最终的 `return str.substring(start, currentPosition)`。因此，变异引入的状态改变（即控制流的改变）会通过 `start` 和 `currentPosition` 传递到输出语句。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if (currentPosition < maxPosition)` 直接控制是否抛出异常或继续执行后续代码。如果变异条件为 `true`，程序会跳过异常抛出，执行 `start = currentPosition` 和后续操作；如果为 `false`，程序会抛出异常。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（控制流改变）会直接导致程序行为的不同。例如，当 `currentPosition == maxPosition` 时，原程序会抛出异常，而变异体会继续执行并返回子字符串。这种差异无法被后续执行修正或抵消，因为程序的行为已经完全改变。\n分析结论：变异引入的错误状态未被修正或抵消，程序输出会受到影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_720 的分析, 耗时: 48.1374 秒
+
+开始分析变异体 MUT_721...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_721": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `currentPosition < maxPosition`。该条件在程序执行过程中是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `return str.substring( start, currentPosition );` 和 `return str.substring( -start, currentPosition );`。变异体将 `start` 修改为 `-start`，这会改变 `substring` 方法的起始索引。在 `start` 为正数的情况下，`-start` 为负数，会导致 `StringIndexOutOfBoundsException`。因此，变异体实际改变了程序状态。\n分析结论：变异体改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `start`，其数据依赖路径为 `(line 10: int start = currentPosition) --[Flows start]--> (line 12: return str.substring( -start, currentPosition );)`。变异体修改了 `start` 的使用方式，且 `start` 的值直接影响 `substring` 方法的输出，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(7: if (currentPosition >= maxPosition)) --False--> (10: int start = currentPosition) -- --> (11: currentPosition = scanToken( currentPosition )) -- --> (12: return str.substring( -start, currentPosition );)`。变异语句直接影响了输出语句的执行，因此变异效果可以通过控制流传递到输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体引入了 `-start` 的修改，会导致 `substring` 方法抛出异常或返回不同的子字符串（如果 `-start` 是有效的非负索引）。这种状态改变未被后续执行修正或抵消，因此会影响程序输出。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_721 的分析, 耗时: 39.6508 秒
+
+开始分析变异体 MUT_732...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_732": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`currentPosition < maxPosition`，这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`currentPosition = scanToken(currentPosition);`和`currentPosition = scanToken(currentPosition--);`。变异体中的`currentPosition--`会先使用`currentPosition`的值，然后将其减1。虽然`currentPosition`的值在变异体中被修改，但`scanToken`函数的返回值可能不受影响，因为`currentPosition`的值在调用`scanToken`时与原始程序相同。因此，程序状态可能未改变。\n分析结论：变异未实际改变程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`currentPosition`通过数据依赖链传播到程序输出节点`return str.substring(start, currentPosition);`。因此，变异所引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`currentPosition = scanToken(currentPosition--);`与控制流无关，不通过控制流影响输出语句。输出语句的执行不受变异语句的控制流影响。\n分析结论：控制依赖缺失。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体修改了`currentPosition`的值，但`scanToken`函数的返回值可能不受影响，且`currentPosition`的修改在后续执行中未被使用，因此变异引入的错误状态被抵消，程序最终输出未受影响。\n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_732 的分析, 耗时: 27.5221 秒
+
+开始分析变异体 MUT_753...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_753": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `newPosition >= 0 && !delimsChanged` 和 `currentPosition < maxPosition`。这些条件在特定输入下是可满足的，例如当 `newPosition` 初始为1且 `delimsChanged` 为false时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别是将 `newPosition = -1` 改为 `newPosition = 1`。在变异语句可达的情况下，`newPosition` 的值从-1变为1，这会直接影响 `currentPosition` 的赋值（因为 `currentPosition` 的值依赖于 `newPosition` 的值）。因此，程序状态会发生改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `newPosition` 的数据依赖路径如下：\n1. `newPosition` 的值影响 `currentPosition` 的赋值。\n2. `currentPosition` 的值影响 `if (currentPosition >= maxPosition)` 的条件判断。\n3. 根据条件判断的结果，程序可能抛出异常或继续执行到输出语句 `return str.substring( start, currentPosition )`。\n因此，`newPosition` 的值变化会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `newPosition = 1` 的控制依赖路径如下：\n1. `newPosition` 的值影响 `currentPosition` 的赋值。\n2. `currentPosition` 的值影响 `if (currentPosition >= maxPosition)` 的条件判断。\n3. 条件判断的结果控制程序是否抛出异常或执行输出语句。\n因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `newPosition` 的值，但这一改变会直接影响 `currentPosition` 的值，进而影响程序的控制流和输出。没有证据表明变异引入的错误状态会在后续执行中被修正或抵消。因此，程序最终输出可能会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_753 的分析, 耗时: 47.7885 秒
+

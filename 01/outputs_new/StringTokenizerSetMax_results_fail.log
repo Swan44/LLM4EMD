@@ -1,0 +1,8 @@
+开始分析变异体 MUT_303...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_303": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的迭代部分，其可达性依赖于`delimiters != null`的条件。根据提供的可达性约束`[delimiters != null]`，该条件可以满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的迭代语句是`i += Character.charCount(c)`，变异后变为`i -= Character.charCount(c)`。这将导致循环变量i的更新方向相反，从而完全改变循环的执行行为。在可达路径下，这种改变会显著影响程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i和c通过数据依赖链传播到程序输出节点。变量i直接影响循环条件和后续字符处理，变量c影响字符编码处理和最终的maxDelimCodePoint赋值。所有输出（maxDelimCodePoint和delimiterCodePoints）都直接或间接依赖于这些变量。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于循环控制结构中，直接影响循环的执行次数和后续所有依赖于循环的代码块（包括字符处理、maxDelimCodePoint赋值和delimiterCodePoints初始化）。输出语句的执行直接依赖于循环的正确执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了显著的行为改变（反向迭代），但这种改变不会被后续执行修正或抵消。它将导致完全不同的字符处理顺序和结果，最终影响maxDelimCodePoint和delimiterCodePoints的输出值。\n分析结论：变异引入的错误状态不会被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_303 的分析, 耗时: 116.8107 秒
+

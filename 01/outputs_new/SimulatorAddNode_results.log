@@ -1,0 +1,424 @@
+开始分析变异体 MUT_002...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_002": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的初始化部分，路径条件组合为`!nodeExists`，即当`nodeExists`为false时，变异语句可达。由于`nodeExists`初始值为false，且只有当循环中找到匹配的节点时才会被设置为true，因此存在输入（如nodesList为空或没有匹配的节点）使得变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的区别在于循环变量`i`的初始值从0变为-1。在循环条件`i < nodesList.size()`下，当`nodesList.size()`为0时，原程序不执行循环体，而变异体会执行一次循环体（i=-1 < 0）。这会导致`nodesList.elementAt(-1)`抛出`ArrayIndexOutOfBoundsException`，从而改变程序行为。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是循环变量`i`。`i`的值通过`nodesList.elementAt(i)`影响`nodeExists`的赋值，进而影响程序是否抛出异常或继续执行后续逻辑。数据依赖路径清晰：`i` → `nodeExists` → 输出（异常或正常执行）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（for循环初始化）通过控制循环体的执行与否，直接影响`nodeExists`的赋值和后续的异常抛出或正常执行。控制依赖路径明确：变异语句 → 循环条件 → 循环体 → 输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`i=-1`导致数组越界）无法被后续执行修正或抵消，会直接导致程序抛出异常，从而改变程序的可观察输出。\n分析结论：错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_002 的分析, 耗时: 111.5653 秒
+
+开始分析变异体 MUT_003...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_003": "### 步骤[可达性]：\n说明理由：变异语句位于第19行，路径条件组合为`[i >= nodesList.size() && nodeExists == false]`。该条件表示当循环遍历完所有节点且未找到重复节点时，会执行变异语句。该条件在逻辑上是可以满足的，例如当`nodesList`为空或所有节点的`id`都不匹配输入`id`时。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`float nAifsd = sifs + 2 * slot;`，变异体语句为`float nAifsd = sifs * (2 * slot);`。这两个表达式在大多数情况下会产生不同的计算结果（除非`sifs`为0或`2*slot`为1）。由于`sifs`和`slot`的具体值未知，无法保证两者语义等价。在可达路径下，变异会改变`nAifsd`的值。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`nAifsd`在后续代码中被用于`nd.params.InitParams`调用（第39行），并最终影响节点的初始化参数。数据依赖路径明确显示`nAifsd`的值会传递到输出节点（节点初始化）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`switch (ac)`语句之前，但其值会被后续`case`分支覆盖（例如第22、27、32、37行）。虽然`nAifsd`的初始值会被覆盖，但变异语句本身不直接控制任何分支的走向。控制依赖路径显示变异语句的影响会传递到输出节点，但实际影响被后续赋值覆盖。\n分析结论：变异语句通过控制流间接影响输出语句，但实际影响被后续赋值覆盖。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了`nAifsd`的初始值，但该值在后续的`switch`分支中会被重新赋值（例如`nAifsd = sifs + aifs1 * slot`等）。因此，变异引入的错误状态会被后续赋值修正，最终`nAifsd`的值与原始程序一致。\n分析结论：变异引入的错误状态被后续执行修正，程序最终输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_003 的分析, 耗时: 105.4365 秒
+
+开始分析变异体 MUT_004...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_004": "### 步骤[可达性]：\n说明理由：根据提供的REACHABILITY_CONSTRAINT，变异语句的路径条件组合为`[i < nodesList.size() == False || ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id == id == False, nodeExists == False]`。这意味着变异语句位于`nodeExists == False`的分支中，即当遍历节点列表未找到相同ID的节点时，该分支可达。该条件在逻辑上可满足（例如当节点列表为空或不存在相同ID时），因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`float nAifsd = sifs + 2 * slot`，变异体改为`float nAifsd = sifs + 2 / slot`。算术运算符从乘法变为除法，这将导致计算结果不同（除非`slot=1`且`sifs=0`的特殊情况）。由于`sifs`和`slot`是普通变量，其值不满足上述特殊情况，因此变异会实际改变程序状态。\n\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`nAifsd`通过数据依赖链传播到输出节点。具体路径为：\n1. 变异语句（line 19）→ `nd.params.InitParams()`调用（line 39）\n2. 后续所有对`nAifsd`的赋值（line 22/27/32/37）→ `nd.params.InitParams()`调用（line 39）\n`nAifsd`作为参数传递给`InitParams`方法，最终影响节点初始化行为。虽然程序没有显式返回值，但节点初始化状态的改变属于可观测的副作用。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`switch(ac)`语句之前，其计算结果不会直接影响控制流（如条件分支）。控制依赖路径显示变异语句通过数据依赖而非控制依赖影响输出。虽然`nAifsd`的值会被后续`switch-case`分支覆盖，但初始变异值仍可能通过未被覆盖的路径（如`ac=0`时）影响最终状态。\n\n分析结论：变异语句不通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：在`ac≠0`的情况下，`nAifsd`会被后续`case`分支覆盖，此时变异效果被抵消。但当`ac=0`（default分支）时，初始变异的`nAifsd`值会保留并传递到输出节点。因此存在输入（如`ac=0`）使得变异效果未被覆盖，导致程序行为改变。\n\n分析结论：变异引入的错误状态未被完全覆盖，程序最终输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_004 的分析, 耗时: 98.5038 秒
+
+开始分析变异体 MUT_005...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_005": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[i < nodesList.size() && ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id != id && !nodeExists && ac == 3]`。这些条件可以同时满足，例如当 `nodesList` 不为空且当前遍历的节点 ID 不等于输入的 `id`，且 `nodeExists` 为 `false`，且 `ac` 的值为 3 时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句为 `nAifsd = sifs + aifs3 * slot`，变异后的语句为 `nAifsd = sifs / (aifs3 * slot)`。这两个表达式在数学上不等价，除非 `sifs + aifs3 * slot == sifs / (aifs3 * slot)` 恒成立，但这在一般情况下不成立。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为 `(line 38: nAifsd = sifs / (aifs3 * slot)) --[Flows nAifsd]--> (line 50: nd.params.InitParams(id, rate, xPosition, yPosition, coverage, ac, nAifsd, nCwMin, nCwMax))`。`nAifsd` 的值被传递到 `nd.params.InitParams` 方法中，直接影响节点的初始化参数。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `case 3` 分支中，其控制依赖路径为 `(20: switch (ac)) --case 3--> (35: case 3:) --True--> (36: THEN) -- --> (38: nAifsd = sifs / (aifs3 * slot)) -- --> (41: break;) -- --> (47: nd.params.InitParams(...))`。变异语句的执行会影响后续的节点初始化操作。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`nAifsd` 的计算方式改变）会直接传递到 `nd.params.InitParams` 方法中，影响节点的初始化参数。没有后续操作修正或抵消这种改变，因此程序的可观察输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_005 的分析, 耗时: 61.8666 秒
+
+开始分析变异体 MUT_006...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_006": "### 步骤[1]：可达性分析\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[!nodeExists && ac != 1 && ac != 2 && ac != 3]`。该条件组合表示节点不存在且 `ac` 的值不为1、2或3，即进入 `default` 分支。该路径条件可满足（例如 `nodeExists=false` 且 `ac=0`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2]：必要性分析\n说明理由：原程序与变异体的差异在于将 `nAifsd = sifs + aifs0 * slot` 修改为 `nAifsd = sifs + aifs0 + slot`。在 `default` 分支下，`aifs0` 和 `slot` 的值均为非负整数（假设为正常参数），因此 `aifs0 * slot` 和 `aifs0 + slot` 的语义不同。例如，若 `aifs0=2` 且 `slot=3`，原程序计算 `nAifsd = sifs + 6`，而变异体计算 `nAifsd = sifs + 5`，程序状态会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[3]：数据依赖分析\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为：\n1. `nAifsd` 被传递到 `nd.params.InitParams` 方法中。\n2. `nd` 被添加到 `nodesList` 中。\n由于 `nAifsd` 的值直接影响 `nd` 的初始化参数，并通过 `nodesList.addElement(nd)` 影响程序状态，因此变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[4]：控制依赖分析\n说明理由：变异语句位于 `default` 分支，其控制依赖路径为：\n1. `switch (ac)` 的 `default` 分支控制 `nAifsd` 的赋值。\n2. `nAifsd` 的赋值直接影响 `nd.params.InitParams` 的调用。\n3. `nd` 的初始化参数影响后续的 `nodesList.addElement(nd)` 和 `nmbrOfNodes++`。\n因此，变异语句通过控制流间接影响输出语句的执行。\n分析结论：存在控制依赖路径影响输出。\n\n### 步骤[5]：状态覆盖分析\n说明理由：虽然变异体改变了 `nAifsd` 的计算方式，但程序最终输出（即 `nodesList.addElement(nd)` 和 `nmbrOfNodes++`）并未直接暴露 `nAifsd` 的值。然而，`nAifsd` 是 `nd` 的初始化参数之一，可能影响 `nd` 的行为（例如网络模拟中的时序参数）。若后续程序逻辑依赖于 `nAifsd` 的具体值（如超时判断），则变异体的行为可能与原程序不同；否则，若 `nAifsd` 的值未被后续逻辑使用，则可能属于状态覆盖。根据当前信息，无法完全确定状态是否被覆盖。\n分析结论：无法完全确定状态覆盖，但变异体可能影响程序行为。\n\n### 最终结论\n由于变异体满足可达性、必要性、数据依赖和控制依赖条件，且无法证明状态覆盖完全抵消变异影响，因此该变异体为非等价变异体。\n等价变异体判定结果：NO。"}
+完成变异体 MUT_006 的分析, 耗时: 79.9327 秒
+
+开始分析变异体 MUT_007...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_007": "### 步骤[可达性]：\n说明理由：变异体将循环条件从`i < nodesList.size()`改为`false`，这意味着循环体永远不会执行。根据`REACHABILITY_CONSTRAINT`，路径条件为`[!nodeExists]`，即`nodeExists`必须为`false`。由于循环体不会执行，`nodeExists`将保持初始值`false`，因此路径条件可满足，变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的区别在于循环条件。原程序会遍历`nodesList`并可能将`nodeExists`设为`true`，而变异体直接跳过循环，保持`nodeExists`为`false`。在`nodeExists`为`false`的情况下，程序会执行`else`分支，创建新节点并添加到`nodesList`。虽然循环行为不同，但最终`nodeExists`的值和程序行为在`nodeExists`初始为`false`时是一致的。\n\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`nodeExists`和`i`。由于循环体不会执行，`nodeExists`保持`false`，`i`也不会被更新。`nodeExists`的值会直接影响到`if (nodeExists)`的分支选择，但由于`nodeExists`始终为`false`，程序行为与原程序一致。`i`的值不会传播到输出节点。\n\n分析结论：变异影响的变量未通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（循环条件）的控制流直接影响`if (nodeExists)`的分支选择。由于循环体不会执行，`nodeExists`保持`false`，程序会执行`else`分支，与原程序在`nodeExists`为`false`时的行为一致。因此，变异语句的控制依赖路径与原程序一致。\n\n分析结论：变异语句未通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体跳过了循环，但`nodeExists`的初始值`false`使得程序行为与原程序在`nodeExists`为`false`时完全一致。变异引入的“错误状态”（跳过循环）被初始状态覆盖，程序最终输出未受影响。\n\n分析结论：变异引入的错误状态被初始状态覆盖，不影响输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_007 的分析, 耗时: 76.3911 秒
+
+开始分析变异体 MUT_008...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_008": "### 步骤[可达性]：\n说明理由：变异语句位于switch语句的case 3分支中，路径条件为ac == 3。该条件在程序执行时是可满足的，只要传入的ac参数为3即可触发该变异语句。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式是`nAifsd = sifs + aifs3 * slot`，变异体改为`nAifsd = sifs + aifs3 - slot`。运算符从乘法变为减法，这将导致计算结果不同（除非slot=1且aifs3=0的特殊情况，但这不是普遍情况）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量nAifsd通过数据依赖链传播到输出节点。nAifsd被用于nd.params.InitParams()方法的参数，最终影响节点的初始化参数。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于case 3分支中，其执行结果会影响后续的节点初始化操作。虽然变异语句不直接控制程序流程，但它影响的数据会通过后续操作影响程序状态。\n分析结论：变异语句通过数据流间接影响程序输出。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（nAifsd的错误计算）会直接传递到节点初始化参数中，不会被后续操作修正或抵消。这将导致节点参数与实际预期不同。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_008 的分析, 耗时: 51.7171 秒
+
+开始分析变异体 MUT_010...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_010": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`nodeExists == false && ac == 2 && (i < nodesList.size() == true)* && ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id == id == false`。这些条件在程序执行过程中是可以满足的，例如当`nodeExists`为false且`ac`为2时，变异语句会被执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句为`nAifsd = sifs + aifs2 * slot`，变异后的语句为`nAifsd = sifs % (aifs2 * slot)`。这两个操作（加法和取模）在大多数情况下会产生不同的结果，除非`sifs`是`aifs2 * slot`的整数倍。因此，变异操作通常会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`nAifsd`，其数据依赖路径为`(line 27: nAifsd = sifs % (aifs2 * slot)) --[Flows nAifsd]--> (line 50: nd.params.InitParams(id, rate, xPosition, yPosition, coverage, ac, nAifsd, nCwMin, nCwMax))`。`nAifsd`的值会被传递到`nd.params.InitParams`方法中，进而影响程序的行为。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`switch (ac)`的`case 2`分支中，控制依赖路径为`(20: switch (ac)) --case 2--> (28: case 2:) --True--> (29: THEN) -- --> (31: nAifsd = sifs % (aifs2 * slot)) -- --> (32: break;) -- --> (47: nd.params.InitParams(id, rate, xPosition, yPosition, coverage, ac, nAifsd, nCwMin, nCwMax))`。变异语句的执行会影响后续的`InitParams`调用。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异操作改变了`nAifsd`的值，但`nAifsd`的值会被传递到`nd.params.InitParams`方法中，进而影响程序的行为。除非`sifs`是`aifs2 * slot`的整数倍，否则变异操作会导致程序的行为与原程序不同。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出可能受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_010 的分析, 耗时: 64.2258 秒
+
+开始分析变异体 MUT_011...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_011": "### 步骤1：可达性分析\n说明理由：根据提供的变异体信息和PDG控制依赖图，变异语句位于行54（`nmbrOfNodes++;`被替换为空语句`;`）。控制流分析显示，该语句位于`if (nodeExists)`的false分支中，且路径条件`[i < nodesList.size(), ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id != id, !nodeExists]`是可满足的（例如当遍历节点列表未找到匹配id时）。因此，变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原语句`nmbrOfNodes++`是对全局变量`nmbrOfNodes`的增量操作，而变异体将其替换为空语句`;`，完全移除了该操作。这会导致`nmbrOfNodes`的状态未被更新，与原始程序行为不同。因此，变异实际改变了程序状态。\n\n分析结论：变异改变了程序状态，满足必要性条件。\n\n### 步骤3：数据依赖分析\n说明理由：虽然PDG中未明确包含`nmbrOfNodes`的数据依赖信息，但根据程序逻辑，`nmbrOfNodes`是全局计数器，其值可能被其他方法读取或用于后续逻辑（例如节点数量统计）。移除增量操作会导致该变量的值与其他方法中的预期不一致，可能通过全局状态间接影响程序输出。但由于缺乏完整的PDG数据依赖路径，无法确认具体传播链。\n\n分析结论：数据依赖路径不明确，需结合控制依赖分析。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句`nmbrOfNodes++`位于控制流末端（见控制依赖路径），其执行与否不影响后续任何语句的控制流（无分支依赖）。移除该语句仅影响`nmbrOfNodes`的值，但当前方法无返回值，且无直接输出语句依赖于`nmbrOfNodes`。因此，变异效果无法通过控制流传递到输出。\n\n分析结论：控制依赖缺失，变异不影响输出。\n\n### 步骤5：状态覆盖分析\n说明理由：尽管变异移除了`nmbrOfNodes`的更新，但该方法本身无返回值，且`nmbrOfNodes`的修改不直接影响当前方法的输出（无显式依赖）。其他方法可能依赖`nmbrOfNodes`的值，但此场景属于跨方法副作用，不满足\"程序输出\"的狭义定义（即当前方法的直接输出）。因此，变异引入的状态差异在当前方法执行过程中被\"覆盖\"（即无观测点）。\n\n分析结论：错误状态被覆盖，不影响当前方法输出。\n\n### 最终结论\n等价变异体判定结果：YES。  \n理由：虽然变异改变了`nmbrOfNodes`的状态（满足必要性），但该变量在当前方法中无数据依赖或控制依赖的输出路径，且方法本身无返回值，变异效果无法通过程序输出被观测到，符合等价变异体定义。"}
+完成变异体 MUT_011 的分析, 耗时: 108.7145 秒
+
+开始分析变异体 MUT_012...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_012": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[!nodeExists, ac == 3]`。这两个条件可以同时满足（当节点不存在且`ac`参数为3时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`nAifsd = sifs + aifs3 * slot`，变异体语句为`nAifsd = sifs + aifs3 % slot`。运算符从乘法`*`改为取模`%`，两者的语义完全不同。例如，当`aifs3=5`且`slot=3`时，原程序计算`5*3=15`，而变异体计算`5%3=2`，结果不同。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`nAifsd`通过数据依赖链传播到程序输出节点（`nd.params.InitParams`的参数）。具体路径为：变异语句（line 38）→ `InitParams`调用（line 50）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`switch(ac)`的`case 3`分支中，其执行结果直接影响后续`InitParams`调用的参数值。控制依赖路径为：变异语句（line 38）→ `InitParams`调用（line 50）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`nAifsd`的计算结果改变）会直接传递到`InitParams`调用，且没有后续操作修正或抵消这一改变。因此，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_012 的分析, 耗时: 48.3827 秒
+
+开始分析变异体 MUT_013...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_013": "### 步骤[可达性]：\n说明理由：根据提供的可达性约束条件 `[i < nodesList.size() == True, ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id == id == False (for all i), nodeExists == False, ac == 2]`，可以确定变异语句所在的路径是可执行的。具体来说，`ac == 2` 会触发 `case 2` 分支，从而执行变异语句 `nAifsd = sifs + aifs2 - slot`。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为 `nAifsd = sifs + aifs2 * slot`，变异后的表达式为 `nAifsd = sifs + aifs2 - slot`。运算符从乘法 (`*`) 变为减法 (`-`)，这将导致 `nAifsd` 的计算结果不同（除非 `slot` 的值为 1 且 `aifs2` 的值为 0，但这种特殊情况在一般情况下不成立）。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为 `(line 31: nAifsd = sifs + aifs2 - slot) --[Flows nAifsd]--> (line 50: nd.params.InitParams(...))`。`nAifsd` 的值会传递给 `nd.params.InitParams` 方法，从而影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `case 2` 分支中，其控制依赖路径为 `(20: switch (ac)) --case 2--> ... -- --> (50: nmbrOfNodes++)`。变异语句的执行会直接影响后续的 `InitParams` 调用和程序状态更新。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了 `nAifsd` 的值，但这一改变会直接传递到 `nd.params.InitParams` 方法中，且没有后续的修正或抵消操作。因此，变异引入的错误状态不会被覆盖或抵消，会直接影响程序输出。\n分析结论：变异引入的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_013 的分析, 耗时: 64.5302 秒
+
+开始分析变异体 MUT_014...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_014": "### 步骤[可达性]：\n说明理由：根据提供的可达性约束条件 `[i >= nodesList.size() || ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id != id, !nodeExists, ac == 2]`，变异语句位于 `ac == 2` 的分支中。这意味着当 `ac == 2` 且 `!nodeExists` 为真时，变异语句可达。这些条件在逻辑上是可以满足的，例如当 `nodesList` 中没有与 `id` 匹配的节点且 `ac` 值为 2 时。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句是 `nAifsd = sifs + aifs2 * slot`，变异后的语句是 `nAifsd = sifs - aifs2 * slot`。这两个表达式在语义上是不同的，前者是加法，后者是减法。除非 `aifs2 * slot` 的值为 0，否则这两个表达式的结果会不同。根据程序上下文，`aifs2` 和 `slot` 的值通常不为 0，因此变异会实际改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为 `(line 31: nAifsd = sifs - aifs2 * slot) --[Flows nAifsd]--> (line 50: nd.params.InitParams(id, rate, xPosition, yPosition, coverage, ac, nAifsd, nCwMin, nCwMax))`。`nAifsd` 的值被传递到 `nd.params.InitParams` 方法中，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `ac == 2` 的分支中，其控制依赖路径为 `(20: switch (ac)) --case 2--> (28: case 2:) --True--> (29: THEN) -- --> (31: nAifsd = sifs - aifs2 * slot) -- --> (34: break;) -- --> (47: nd.params.InitParams(...))`。变异语句的执行会影响后续 `nd.params.InitParams` 的调用，进而影响程序输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了 `nAifsd` 的值，但该值被直接传递到 `nd.params.InitParams` 方法中，且没有后续的修正或抵消操作。因此，变异引入的错误状态不会被覆盖或抵消，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_014 的分析, 耗时: 71.5139 秒
+
+开始分析变异体 MUT_015...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_015": "### 步骤[1]：可达性分析\n说明理由：变异语句位于switch语句的default分支，路径条件为ac不等于1、2、3。该条件可满足（例如ac=0），因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[2]：必要性分析\n说明理由：原表达式为`nAifsd = sifs + aifs0 * slot`，变异为`nAifsd = sifs + aifs0 - slot`。算术运算符从乘法变为减法，必然导致计算结果不同（除非slot=0且aifs0=0的特殊情况，但无此约束）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[3]：数据依赖分析\n说明理由：变异影响的变量nAifsd通过数据依赖链传递到输出节点（被用于nd.params.InitParams方法调用），且该方法调用会影响节点初始化行为。\n分析结论：存在完整的数据依赖路径传播到程序输出。\n\n### 步骤[4]：控制依赖分析\n说明理由：变异语句位于控制流图的顺序执行块中，不直接控制任何分支语句。但其计算结果通过数据依赖影响输出，而非通过控制流。\n分析结论：控制依赖缺失（变异效果不通过控制流传递）。\n\n### 步骤[5]：状态覆盖分析\n说明理由：虽然变异改变了nAifsd的计算值，但该值会直接传递给nd.params.InitParams方法，且无后续修正操作。程序输出（节点初始化行为）会因nAifsd值不同而改变。\n分析结论：错误状态未被覆盖，影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_015 的分析, 耗时: 45.5782 秒
+
+开始分析变异体 MUT_016...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_016": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `i <= nodesList.size()`，这是一个可达的条件，因为 `i` 的初始值为 0，且 `nodesList.size()` 是一个非负整数。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别在于循环条件从 `i < nodesList.size()` 变为 `i <= nodesList.size()`。在循环的最后一轮，当 `i == nodesList.size()` 时，原程序会退出循环，而变异体会执行一次额外的循环。这会导致 `nodesList.elementAt(i)` 抛出 `ArrayIndexOutOfBoundsException` 异常，从而改变程序的行为。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是循环控制变量 `i`。`i` 的数据依赖路径显示它会影响 `nodeExists` 的赋值和后续的 `if (nodeExists)` 判断。如果循环次数增加，可能会导致 `nodeExists` 被错误地设置为 `true` 或引发异常，从而影响程序的输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径显示，它直接控制循环的执行次数，进而影响 `nodeExists` 的赋值和后续的异常抛出或节点添加逻辑。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（额外的循环迭代）会导致 `ArrayIndexOutOfBoundsException` 或错误的 `nodeExists` 赋值，这些错误状态不会被后续执行修正或抵消，而是会直接导致程序行为改变。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_016 的分析, 耗时: 73.5487 秒
+
+开始分析变异体 MUT_018...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_018": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[!nodeExists, ac == 2]`。这两个条件可以同时满足（例如当 `nodeExists` 为 `false` 且 `ac` 为 `2` 时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为 `nAifsd = sifs + aifs2 * slot`，变异后的表达式为 `nAifsd = sifs + aifs2 % slot`。运算符从乘法（`*`）改为取模（`%`）。除非 `aifs2 * slot` 和 `aifs2 % slot` 在所有情况下计算结果相同（例如 `slot` 为 `1` 时），否则变异会改变程序状态。根据一般情况，`*` 和 `%` 的结果通常不同，因此变异会改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为：`nAifsd` 在第31行被赋值后，传递到 `nd.params.InitParams` 方法的参数中，最终影响 `nodesList.addElement(nd)` 的行为。因此，`nAifsd` 的值会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `switch (ac)` 的 `case 2` 分支中，其控制依赖路径为：`switch (ac)` → `case 2` → 变异语句 → `break` → `nd.params.InitParams` → `nodesList.addElement(nd)`。变异语句的执行会影响后续方法的调用，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了 `nAifsd` 的值，但后续程序逻辑中并未对 `nAifsd` 的值进行修正或抵消。`nAifsd` 的值会直接传递到 `nd.params.InitParams` 中，并影响 `nodesList.addElement(nd)` 的行为。因此，变异引入的错误状态未被覆盖，会影响程序输出。\n分析结论：变异引入的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_018 的分析, 耗时: 61.8256 秒
+
+开始分析变异体 MUT_019...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_019": "### 步骤[可达性]：\n说明理由：变异语句位于switch语句的default分支，只要ac的值不为1、2、3，就会执行到该变异语句。由于ac是方法的输入参数，没有约束条件限制其取值，因此该路径条件是可满足的，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`nAifsd = sifs + aifs0 * slot`，变异体语句为`nAifsd = sifs / (aifs0 * slot)`。这两个表达式在数学上是完全不同的运算，除非在特定情况下（如sifs=0且aifs0*slot≠0）可能产生相同结果，但一般情况下会得到不同的计算结果。因此该变异实际改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量nAifsd通过数据依赖链传递到输出节点：变异语句→nd.params.InitParams()调用→最终影响MobileNode对象的初始化参数。由于nAifsd是节点初始化的重要参数，其值的变化会直接影响节点行为。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于switch语句的default分支，其执行与否受ac值的控制，但变异语句本身不控制任何输出语句的执行流程。输出行为（节点添加）是由上层逻辑控制的，不受这个赋值语句的直接控制。\n分析结论：变异语句不通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了nAifsd的值，且这个值会传递到节点初始化参数，但需要具体分析这个改变是否会被后续执行抵消。由于nAifsd是节点的固定参数，其值的变化会持续影响节点行为，不会被后续执行修正或抵消。因此变异引入的状态改变会直接影响程序行为。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_019 的分析, 耗时: 54.5951 秒
+
+开始分析变异体 MUT_020...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_020": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[nodeExists == false]`，而变异体将`nodeExists`初始化为`true`。这意味着变异语句的执行路径条件`nodeExists == false`与变异体的初始值`nodeExists = true`矛盾，因此该路径条件逻辑上不可满足。\n分析结论：变异语句不可达。\n\n### 最终结论：\n由于变异语句不可达，满足等价变异体的第一个条件（不可达性），因此无需继续后续分析步骤。  \n等价变异体判定结果：YES。"}
+完成变异体 MUT_020 的分析, 耗时: 27.4374 秒
+
+开始分析变异体 MUT_021...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_021": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的条件部分，路径条件组合为`i != nodesList.size() && ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id != id`、`i != nodesList.size() && ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id == id`和`i == nodesList.size()`。这些条件在程序执行过程中是可满足的，例如当`nodesList`不为空且存在或不存特定id的节点时。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`i < nodesList.size()`作为循环条件，变异体改为`i != nodesList.size()`。在Java中，for循环通常使用`<`来避免数组越界，但`!=`在大多数情况下也能达到相同的效果。然而，当`i`超过`nodesList.size()`时（例如在并发修改情况下），`!=`可能导致无限循环，而`<`会正常终止。但在当前上下文（单线程遍历列表）中，两者的语义在正常执行路径下是等价的。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是循环控制变量`i`。`i`的值通过数据依赖链影响`nodeExists`的赋值，进而影响是否抛出异常或创建新节点。具体路径包括：(1)通过`nodeExists`影响异常抛出；(2)通过循环控制影响是否执行节点创建逻辑。因此，变异影响的变量能传播到程序输出。\n分析结论：存在数据依赖链连接变异节点与输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（循环条件）直接控制循环体的执行和后续的`if (nodeExists)`分支。变异后的循环条件可能改变循环次数，从而影响`nodeExists`的赋值和后续输出（异常或节点创建）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体将循环条件从`<`改为`!=`，但在正常执行路径下（无并发修改），两者的行为完全一致：都会遍历整个列表并在找到匹配id时设置`nodeExists`。因此，变异引入的状态改变在实际执行中被逻辑行为覆盖，不影响最终输出。\n分析结论：错误状态被覆盖，不影响输出。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_021 的分析, 耗时: 69.2740 秒
+
+开始分析变异体 MUT_022...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_022": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[nodeExists == False]`，即只有当 `nodeExists` 为 `false` 时才能执行到变异语句。该条件在程序中是可满足的，因为 `nodeExists` 的初始值为 `false`，且只有在遍历 `nodesList` 并找到匹配的 `id` 时才会被设为 `true`。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为 `float nAifsd = sifs + 2 * slot`，变异后的表达式为 `float nAifsd = sifs + 2 - slot`。这两个表达式的语义不同，前者是乘法运算，后者是减法运算。除非 `slot` 的值为 0 或 1（此时 `2 * slot` 和 `2 - slot` 可能相等），否则两者的计算结果不同。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径显示 `nAifsd` 的值最终会传递到 `nd.params.InitParams` 方法的调用中。因此，变异后的 `nAifsd` 值会影响程序的输出行为。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `float nAifsd = sifs + 2 - slot` 的控制依赖路径显示，其后续的执行路径（如 `switch` 语句的分支）会影响到 `nAifsd` 的最终值，并进一步传递到 `nd.params.InitParams` 方法的调用中。因此，变异语句通过控制流间接影响了输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了 `nAifsd` 的初始值，但在后续的 `switch` 语句中，`nAifsd` 的值会被重新赋值（如 `nAifsd = sifs + aifs1 * slot` 等）。因此，变异引入的错误状态（即 `nAifsd` 的初始值）会被后续的赋值覆盖，最终的程序输出可能不受影响。然而，这种覆盖行为依赖于 `ac` 的值。如果 `ac` 的值使得 `switch` 语句不执行任何分支（即 `default` 分支），则 `nAifsd` 的初始值会直接影响输出。因此，变异的效果可能在某些情况下被覆盖，但在其他情况下会影响输出。\n分析结论：变异引入的错误状态可能被后续执行覆盖，但并非在所有情况下都完全抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_022 的分析, 耗时: 93.8629 秒
+
+开始分析变异体 MUT_025...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_025": "### 步骤[可达性]：\n说明理由：变异语句位于`default`分支的`nAifsd = sifs + aifs0 * slot`，修改为`nAifsd = sifs * (aifs0 * slot)`。该分支在`switch(ac)`的`default`情况下执行，路径条件为`ac != 1 && ac != 2 && ac != 3`，这是可满足的条件组合（例如`ac = 0`或`ac = 4`等）。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为加法运算`nAifsd = sifs + aifs0 * slot`，变异后为乘法运算`nAifsd = sifs * (aifs0 * slot)`。除非`sifs = 0`或`aifs0 * slot = 1`，否则这两种运算结果通常不等。但原程序没有约束这些变量的值，因此存在输入（如`sifs=2, aifs0=3, slot=4`）使变异前后`nAifsd`的值不同（原为14，变异后为24）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`nAifsd`通过数据依赖链传递到输出节点：变异语句（line 45）→ `InitParams`调用（line 50）→ `nd`对象初始化→ `nodesList.addElement(nd)`。`nAifsd`作为参数影响`nd`对象的初始化状态，最终影响程序输出（节点列表的状态）。\n分析结论：存在数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`switch`的`default`分支，其执行受`ac`值的控制，但变异语句本身不直接控制其他语句的执行流程。输出语句（如`nodesList.addElement(nd)`）的执行不依赖于变异语句的真假结果，而是顺序执行。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了`nAifsd`的值，且该值通过`InitParams`传递到`nd`对象，但程序后续未对`nAifsd`的值进行修正或抵消。因此，变异引入的状态差异会直接影响`nd`对象的初始化参数，进而影响程序最终输出。\n分析结论：错误状态未被覆盖，程序输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。  \n（尽管控制依赖缺失，但变异通过数据依赖链影响输出，且状态未被覆盖，故为非等价变异体。）"}
+完成变异体 MUT_025 的分析, 耗时: 61.6819 秒
+
+开始分析变异体 MUT_026...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_026": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[i < nodesList.size() == True, ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id == id == True]`，即存在节点列表中某个元素的id与输入id相等。该条件在输入id存在于nodesList中时可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序在满足可达条件时将`nodeExists`设为true，而变异体将其设为false。这会直接改变程序状态（`nodeExists`的值），进而影响后续的`if (nodeExists)`判断。因此该变异实际改变了程序语义。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`nodeExists`通过以下路径传播到输出：\n1. 若`nodeExists`为true（原程序）：触发异常抛出（line 13）\n2. 若`nodeExists`为false（变异体）：执行节点创建流程（line 16-42）\n两种路径会导致完全不同的程序行为（抛出异常 vs 创建新节点），因此变异效果可通过数据依赖链传播到输出。\n分析结论：存在有效的数据依赖传播路径。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制`if (nodeExists)`的分支选择：\n- 原程序：进入异常抛出分支（控制依赖路径1）\n- 变异体：进入节点创建分支（控制依赖路径2）\n两种路径最终导致不同的程序输出（异常/节点数增加），因此变异通过控制流直接影响输出。\n分析结论：存在控制依赖影响。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的状态差异（`nodeExists`值改变）会持续影响程序行为，不会被后续执行修正。原程序抛出异常的行为与变异体创建节点的行为是完全互斥的，不存在状态覆盖现象。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_026 的分析, 耗时: 63.7225 秒
+
+开始分析变异体 MUT_027...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_027": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[!nodeExists, ac == 3]`。即当 `nodeExists` 为 `false` 且 `ac` 等于 `3` 时，变异语句可达。这两个条件可以同时满足（例如 `nodeExists` 初始为 `false`，且 `ac` 传入值为 `3`），因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `nAifsd = sifs + aifs3 * slot`，变异表达式为 `nAifsd = sifs - aifs3 * slot`。在 `ac == 3` 的路径下，`aifs3` 和 `slot` 的值会影响 `nAifsd` 的计算结果。除非 `aifs3 * slot == 0`，否则 `sifs + aifs3 * slot` 和 `sifs - aifs3 * slot` 的结果必然不同。因此，变异会实际改变程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为：`(line 38: nAifsd = sifs - aifs3 * slot) --> (line 50: nd.params.InitParams(id, rate, xPosition, yPosition, coverage, ac, nAifsd, nCwMin, nCwMax))`。`nAifsd` 的值会作为参数传递给 `InitParams` 方法，从而影响 `nd` 对象的初始化状态。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `switch (ac)` 的 `case 3` 分支中，其控制依赖路径为：`(20: switch (ac)) --case 3--> (35: case 3:) --> (38: nAifsd = sifs - aifs3 * slot) --> (50: nd.params.InitParams(...))`。变异语句的执行会直接影响 `nAifsd` 的赋值，进而影响 `InitParams` 的调用。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体将 `nAifsd` 的计算从 `sifs + aifs3 * slot` 改为 `sifs - aifs3 * slot`，这会直接改变 `nAifsd` 的值，进而影响 `nd.params.InitParams` 的调用。除非 `aifs3 * slot == 0`，否则 `nAifsd` 的值会不同，从而导致 `nd` 对象的初始化状态不同。程序后续行为（如 `nodesList.addElement(nd)` 和 `nmbrOfNodes++`）会因此受到影响。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，会影响程序最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_027 的分析, 耗时: 58.3287 秒
+
+开始分析变异体 MUT_028...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_028": "### 步骤1：可达性\n说明理由：变异语句位于case 2分支中，路径条件为`nodeExists == false && ac == 2`。这两个条件可以同时满足（例如当节点不存在且ac参数为2时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原表达式为`nAifsd = sifs + aifs2 * slot`，变异后为`nAifsd = sifs / (aifs2 * slot)`。这两个表达式在绝大多数情况下会产生不同的计算结果（除非`sifs = 0`且`aifs2 * slot ≠ 0`的特殊情况），因此会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`nAifsd`通过数据依赖链传播到`nd.params.InitParams()`方法调用，最终影响节点的初始化参数。这些参数会影响节点的行为。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于switch-case结构中，其执行结果会直接影响后续的节点初始化参数设置。虽然变异语句不直接控制输出语句的执行，但通过改变参数值间接影响程序行为。\n分析结论：变异语句通过控制流间接影响程序输出。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的状态改变（`nAifsd`值的改变）会直接影响节点初始化参数，且没有后续操作会覆盖或抵消这个改变。因此变异效果会持续影响程序行为。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO"}
+完成变异体 MUT_028 的分析, 耗时: 53.2363 秒
+
+开始分析变异体 MUT_029...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_029": "### 步骤[可达性]：\n说明理由：变异语句位于case 2分支中，路径条件为`ac == 2`。该条件在程序执行时是可满足的（只要传入的ac参数为2即可触发），且没有其他约束条件限制该路径的执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`nAifsd = sifs + aifs2 * slot`，变异后为`nAifsd = sifs * (aifs2 * slot)`。这两个表达式在绝大多数情况下会产生不同的计算结果（除非sifs=0或aifs2*slot=1等特殊情况），因此会实际改变程序状态。\n分析结论：变异确实改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量nAifsd通过InitParams方法传递到nd对象，最终被添加到nodesList中。存在完整的数据依赖链从变异语句传播到程序输出（节点添加操作）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于switch-case结构中，其执行结果直接影响后续InitParams和addElement操作的执行。虽然不直接控制程序分支，但作为数据计算的关键部分，其变异结果会通过数据流影响最终输出。\n分析结论：变异语句通过数据流间接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了nAifsd的计算方式，但这种改变会持续影响后续的节点初始化过程，最终影响被添加节点的状态。没有证据表明这种状态改变会在后续执行中被修正或抵消。\n分析结论：变异引入的状态改变会持续影响程序最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_029 的分析, 耗时: 53.8530 秒
+
+开始分析变异体 MUT_030...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_030": "### 步骤1：可达性分析\n说明理由：变异语句的条件从`if (nodeExists)`变为`if (false)`。原程序到变异语句的路径条件组合为`[i < nodesList.size() && ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id != id]`，这意味着只要循环条件满足且节点ID不匹配，路径就是可达的。因此，变异语句在逻辑上是可达的。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序的条件`if (nodeExists)`会根据`nodeExists`的真假执行不同分支，而变异后的条件`if (false)`将始终执行`else`分支。这意味着当`nodeExists`为`true`时，原程序会抛出异常，而变异体不会抛出异常，直接执行`else`分支。因此，变异确实改变了程序的行为。\n\n分析结论：变异改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`nodeExists`。`nodeExists`的数据依赖路径显示，其值会影响`if`语句的分支选择。原程序中，`nodeExists`为`true`时会抛出异常，而变异体中不会抛出异常。因此，变异影响的变量会通过数据依赖链传播到程序输出节点（即是否抛出异常）。\n\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句`if (false)`的控制依赖路径显示，其`False`分支会执行`else`部分的代码，而原程序的`if (nodeExists)`会根据`nodeExists`的值选择分支。因此，变异语句通过控制流影响了输出语句的执行（是否抛出异常）。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：变异引入的错误状态（即不抛出异常）不会被后续执行修正或抵消。原程序在`nodeExists`为`true`时会抛出异常，而变异体不会，这会导致程序的行为差异（是否抛出异常）。因此，变异引入的错误状态会影响程序的最终输出。\n\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_030 的分析, 耗时: 93.7242 秒
+
+开始分析变异体 MUT_031...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_031": "### 步骤[可达性]：\n说明理由：变异语句位于第19行，路径条件组合为`[!nodeExists]`，即当`nodeExists`为`false`时可达。根据程序逻辑，当`nodeExists`为`false`时，程序会进入`else`分支执行变异语句，因此该变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`float nAifsd = sifs + 2 * slot;`，变异体为`float nAifsd = sifs + 2 % slot;`。`*`（乘法）和`%`（取模）是完全不同的运算符，除非`sifs + 2 * slot`和`sifs + 2 % slot`在特定条件下计算结果相同，否则会改变程序状态。需要检查是否存在输入使两者计算结果相同。\n- 若`slot == 1`，则`2 * slot = 2`，`2 % slot = 0`，结果不同。\n- 若`slot == 2`，则`2 * slot = 4`，`2 % slot = 0`，结果不同。\n- 若`slot == 0`，则`2 % slot`会抛出异常（除以零），但原程序不会。\n因此，除非`slot`为特定值（如`slot == -2`时`2 * slot = -4`，`2 % slot = 0`，但`sifs`可能抵消差异），否则程序状态会被改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`nAifsd`，其数据依赖路径显示`nAifsd`的值会传递到`nd.params.InitParams`调用中，最终影响程序行为（如节点初始化参数）。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`float nAifsd = sifs + 2 % slot;`是赋值语句，不直接控制程序分支。但其赋值结果会影响后续`switch`分支中对`nAifsd`的重新赋值（如`case 1`分支中的`nAifsd = sifs + aifs1 * slot`）。然而，初始赋值`nAifsd`的值会被后续分支覆盖，因此变异效果可能被后续赋值抵消。\n分析结论：变异语句通过数据依赖间接影响输出，但控制依赖路径不直接决定输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了`nAifsd`的初始值，但后续`switch`分支会根据`ac`的值重新赋值`nAifsd`（如`case 1`中的`nAifsd = sifs + aifs1 * slot`）。因此，变异引入的错误状态会被后续赋值覆盖，最终`nAifsd`的值与原程序一致（假设`ac`的值合法且分支覆盖所有情况）。\n分析结论：变异引入的错误状态被后续执行覆盖，程序最终输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_031 的分析, 耗时: 106.6050 秒
+
+开始分析变异体 MUT_032...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_032": "### 步骤[可达性]：\n说明理由：变异语句位于第19行，路径条件组合为`[i < nodesList.size(), ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id != id, !nodeExists]`。这些条件表示：循环未越界、当前节点ID不匹配输入ID、且最终`nodeExists`为false。这些条件在正常执行流程中是可满足的（例如当节点不存在时）。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原语句为`nAifsd = sifs + 2 * slot`，变异为`nAifsd = sifs - 2 * slot`。虽然该变量后续在switch-case中被重新赋值（覆盖初始值），但若`ac`不匹配任何case（执行default分支），初始赋值差异会导致最终`nAifsd`值不同（`sifs±2*slot` vs `sifs+aifs0*slot`）。即使进入case分支，初始赋值差异也可能影响后续计算（如浮点精度累积）。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：`nAifsd`的数据依赖路径显示其值最终传递到`nd.params.InitParams()`调用，影响节点初始化参数。虽然所有case分支都会覆盖`nAifsd`，但初始赋值的差异可能通过以下方式影响输出：(1) 若未进入任何case分支（理论上不可能，因ac为枚举），(2) 浮点运算精度累积导致最终`nAifsd`与原始程序不同。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于控制流起点（switch前），其值虽被后续分支覆盖，但控制依赖路径显示所有分支最终汇聚到`InitParams`调用和节点添加操作。变异语句的修改可能通过浮点运算误差间接影响后续分支的计算结果（如`aifsN*slot`的叠加）。  \n分析结论：变异语句通过控制流间接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：尽管变异初始赋值在大多数情况下被后续分支覆盖，但存在理论场景（如未进入任何case分支）或浮点精度差异导致最终`nAifsd`与原程序不同。程序输出（节点参数）可能因此产生微小差异，但需具体输入验证。由于变异未被逻辑完全抵消，不属于状态覆盖。  \n分析结论：变异引入的错误状态未被完全修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。  \n（尽管变异影响可能微小，但存在输入使程序输出不同，且无证据表明所有路径下变异效果均被覆盖。）"}
+完成变异体 MUT_032 的分析, 耗时: 101.8567 秒
+
+开始分析变异体 MUT_035...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_035": "### 步骤[1]：可达性\n说明理由：变异语句位于switch语句的default分支，路径条件为`nodeExists == False`且`ac !=1 && ac !=2 && ac !=3`。这两个条件可以同时满足（例如当`nodeExists`为false且`ac`为0时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2]：必要性\n说明理由：原程序中的表达式为`nAifsd = sifs + aifs0 * slot`，变异后的表达式为`nAifsd = sifs % (aifs0 * slot)`。这两个操作（加法与取模）在绝大多数情况下会产生不同的结果（除非`sifs`是`aifs0 * slot`的整数倍）。因此，变异会实际改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[3]：数据依赖\n说明理由：变异影响的变量是`nAifsd`，其数据依赖路径为：`nAifsd`被赋值后直接传递给`nd.params.InitParams`方法。`nAifsd`的值会影响`nd`对象的初始化状态，进而可能影响程序行为。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4]：控制依赖\n说明理由：变异语句位于switch语句的default分支，其控制依赖路径为：`switch (ac)` → `nAifsd = sifs % (aifs0 * slot)` → `nd.params.InitParams` → `nodesList.addElement(nd)` → `nmbrOfNodes++` → 程序退出。变异语句的执行会影响后续方法的调用和程序状态。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5]：状态覆盖\n说明理由：虽然变异语句改变了`nAifsd`的计算方式（从加法变为取模），但`nAifsd`的值会被直接用于`nd`对象的初始化，且没有后续操作会覆盖或修正这一改变。因此，变异引入的错误状态不会被抵消，程序最终输出可能受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_035 的分析, 耗时: 48.9850 秒
+
+开始分析变异体 MUT_036...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_036": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[!nodeExists && ac != 1 && ac != 2 && ac != 3]`，即当 `nodeExists` 为 `false` 且 `ac` 不等于1、2、3时，变异语句可达。该条件组合是可满足的，例如当 `nodeExists=false` 且 `ac=0` 时，路径可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序中的表达式为 `nAifsd = sifs + aifs0 * slot`，变异体将其改为 `nAifsd = sifs + aifs0 / slot`。运算符从乘法变为除法，这会显著改变 `nAifsd` 的计算结果（除非 `slot=1` 且 `aifs0=0`，但这是特殊情况）。在一般情况下，该变异会改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量 `nAifsd` 的数据依赖路径为：`(line 45: nAifsd = sifs + aifs0 / slot) --[Flows nAifsd]--> (line 50: nd.params.InitParams(...))`。`nAifsd` 的值会传递给 `nd.params.InitParams` 方法，进而影响节点的初始化参数。因此，变异的效果可以通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于 `switch` 的 `default` 分支，其控制依赖路径为：`(20: switch (ac)) --default--> (45: nAifsd = sifs + aifs0 / slot) -- --> (47: nd.params.InitParams(...)) -- --> (49: nodesList.addElement(nd)) -- --> (50: nmbrOfNodes++) -- --> (51: exit)`。变异语句通过控制流影响后续的节点初始化和添加操作，进而影响程序输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`nAifsd` 的计算值改变）会直接传递到 `nd.params.InitParams` 方法，影响节点的初始化参数。后续操作（如 `nodesList.addElement(nd)` 和 `nmbrOfNodes++`）依赖于这些参数，因此错误状态不会被修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消，会影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_036 的分析, 耗时: 54.7462 秒
+
+开始分析变异体 MUT_037...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_037": "### 步骤[可达性]：\n说明理由：变异语句位于switch语句的default分支中，当ac的值不匹配任何case时，该分支会被执行。由于ac是一个输入参数，且没有前置约束限制其取值范围，因此存在输入使得default分支被执行，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式是`nAifsd = sifs + aifs0 * slot`，变异后为`nAifsd = sifs + aifs0 % slot`。乘法和取模运算在大多数情况下会产生不同的结果（除非`slot`是1或`aifs0`是0），因此该变异通常会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`nAifsd`通过数据依赖链传播到`nd.params.InitParams()`方法的调用中，该方法使用`nAifsd`作为参数。`InitParams`方法可能会影响程序的行为或输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于控制流路径上，其计算结果会影响后续`InitParams`方法的参数值，进而可能影响程序的行为。变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`nAifsd`的计算方式，但在后续执行中，这个值被直接传递给`InitParams`方法，没有被修正或抵消。因此，变异引入的状态改变会持续影响程序行为。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_037 的分析, 耗时: 51.5694 秒
+
+开始分析变异体 MUT_038...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_038": "### 步骤[可达性]：\n说明理由：变异语句位于第19行，路径条件为`nodeExists == False`。该条件可以通过输入使得`nodeExists`为`False`（例如当`nodesList`中不存在与给定`id`匹配的节点时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为`sifs + 2 * slot`，变异后为`sifs % (2 * slot)`。这两个表达式在大多数情况下会产生不同的结果（例如当`sifs=5`和`slot=2`时，原表达式结果为9，变异表达式结果为1），因此会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`nAifsd`通过数据依赖链传播到输出节点（被用于`nd.params.InitParams`调用）。具体路径显示`nAifsd`的值会最终影响节点初始化参数。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于switch语句之前，其值会影响后续case分支中的`nAifsd`赋值，但这些赋值会覆盖初始的变异值。最终所有路径都会执行`nd.params.InitParams`，因此变异效果会通过数据依赖传递到输出。\n分析结论：变异语句通过控制流间接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句的值会被后续case分支中的赋值覆盖，但初始的变异值`nAifsd = sifs % (2 * slot)`会在某些路径中短暂存在（例如当没有进入任何case分支时）。但由于`switch`语句的所有分支都会重新赋值`nAifsd`，最终传递到输出的`nAifsd`值与原始程序相同（因为分支中的赋值与原程序一致）。\n分析结论：变异引入的错误状态被后续赋值覆盖，不影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_038 的分析, 耗时: 97.6573 秒
+
+开始分析变异体 MUT_039...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_039": "### 步骤1：可达性\n说明理由：变异语句位于switch语句的default分支中，该分支在ac不等于1、2、3时执行。由于ac是方法的输入参数，且没有前置约束，因此存在输入使得该分支可达（例如ac=0）。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原表达式为`nAifsd = sifs + aifs0 * slot`，变异后为`nAifsd = sifs - aifs0 * slot`。除非`aifs0 * slot`为0，否则这两个表达式计算结果不同。由于aifs0和slot都是变量，通常不为0，因此变异会改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量nAifsd通过数据依赖链传播到InitParams方法的调用，进而影响MobileNode对象的初始化状态。由于该对象被添加到nodesList中，其状态变化会影响程序整体行为。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于switch语句的控制流中，但其本身不控制任何分支（是赋值语句）。不过它会影响后续InitParams调用的参数值，从而间接影响程序行为。\n分析结论：变异语句不直接影响控制流，但通过数据依赖影响输出。\n\n### 步骤5：状态覆盖\n说明理由：变异导致nAifsd的计算结果与原程序不同，且这个差异会传递到MobileNode的初始化参数中。没有证据表明这个差异会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_039 的分析, 耗时: 56.8056 秒
+
+开始分析变异体 MUT_041...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_041": "### 步骤[可达性]：\n说明理由：根据提供的可达性约束条件 `[i < nodesList.size() == True && ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id == id == False && nodeExists == False && ac == 1]`，可以确定变异语句位于 `ac == 1` 的分支中，且该分支在满足上述条件时是可执行的。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句是 `nAifsd = sifs + aifs1 * slot;`，变异后的语句是 `nAifsd = sifs % (aifs1 * slot);`。加法和取模操作在大多数情况下会产生不同的结果，除非 `sifs` 是 `aifs1 * slot` 的整数倍（此时取模结果为0，而加法结果为 `sifs + aifs1 * slot`）。因此，在一般情况下，变异会改变程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径显示 `nAifsd` 的值会被传递到 `nd.params.InitParams` 方法中。因此，变异后的 `nAifsd` 值会直接影响 `InitParams` 方法的调用，进而可能影响程序的行为。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `switch (ac)` 的 `case 1` 分支中，控制依赖路径显示该分支的执行会直接影响到 `nd.params.InitParams` 方法的调用和后续操作。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异会改变 `nAifsd` 的值，但需要进一步分析这种改变是否会被后续操作修正或抵消。从代码中可以看到，`nAifsd` 的值直接传递给 `InitParams` 方法，且没有后续操作修正或覆盖该值。因此，变异引入的状态改变会直接影响程序的最终行为。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_041 的分析, 耗时: 87.7949 秒
+
+开始分析变异体 MUT_042...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_042": "### 步骤[可达性]：\n说明理由：根据提供的可达性约束条件 `[i < nodesList.size() == True, ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id == id == False, nodeExists == False, ac == 1]`，可以确定变异语句所在的路径是可执行的。具体来说，`ac == 1` 触发了 `case 1` 分支，而其他条件确保了程序会执行到该分支。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句是 `nAifsd = sifs + aifs1 * slot;`，变异后的语句是 `nAifsd = sifs + aifs1 - slot;`。运算符从 `*` 改为 `-`，这会导致 `nAifsd` 的计算结果不同（除非 `slot` 为 0 或 `aifs1` 和 `slot` 满足特定关系，但题目未提供此类约束）。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为 `(line 22: nAifsd = sifs + aifs1 - slot) --[Flows nAifsd]--> (line 50: nd.params.InitParams(...))`。`nAifsd` 的值直接传递到 `InitParams` 方法的调用中，进而影响节点的初始化参数。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `case 1` 分支中，控制依赖路径为 `(20: switch (ac)) --case 1--> ... --> (24: nAifsd = sifs + aifs1 - slot) --> ... --> (51: exit)`。变异语句的执行会影响后续的节点初始化和添加操作。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `nAifsd` 的值，但该值会直接传递到 `nd.params.InitParams` 中，影响节点的初始化参数。没有证据表明这种改变会在后续执行中被修正或抵消。因此，变异的效果会持续影响程序的最终状态。\n分析结论：变异引入的错误状态未被覆盖，会影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_042 的分析, 耗时: 58.5598 秒
+
+开始分析变异体 MUT_044...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_044": "### 步骤[可达性]：\n说明理由：变异语句位于第24行，路径条件为`i >= nodesList.size(), nodeExists == False, ac == 1`。这些条件可以同时满足（例如当nodesList为空且ac=1时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`nAifsd = sifs + aifs1 * slot`，变异后为`nAifsd = sifs + aifs1 % slot`。在数学上，乘法和取模运算的结果通常不同（除非slot=1或aifs1=0等特殊情况）。在一般情况下，这会改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`nAifsd`通过数据依赖链传播到输出节点（被用于`nd.params.InitParams`调用）。变异后的值会直接影响该方法的参数。\n分析结论：存在有效的数据依赖路径。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于switch-case结构中，其执行结果会通过控制流传递到后续的`InitParams`调用和节点添加操作。变异语句的输出会影响程序行为。\n分析结论：存在控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`nAifsd`的计算方式，但该改变会直接传递到输出（节点初始化参数），没有在后续执行中被修正或抵消。例如当`aifs1=2, slot=3`时，原式结果为`sifs+6`而变异后为`sifs+2`，会导致不同的参数值。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_044 的分析, 耗时: 75.4130 秒
+
+开始分析变异体 MUT_046...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_046": "### 步骤1：可达性分析\n说明理由：变异语句位于第19行，路径条件为`nodeExists == False`。该条件在程序执行时是可满足的（例如当遍历`nodesList`未找到相同id的节点时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序表达式为`sifs + 2 * slot`，变异体为`sifs + 2 + slot`。除非`slot == 1`，否则这两个表达式的计算结果不同。由于`slot`的值在运行时可以取任意非1的值（如`slot=2`时原式=4，变异体=4；但`slot=3`时原式=6，变异体=5），因此变异会实际改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量`nAifsd`通过数据依赖链传播到输出节点（`nd.params.InitParams`的参数）。具体路径显示`nAifsd`的值直接影响节点初始化参数，最终影响程序行为。\n分析结论：存在数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句位于switch语句前，其值会影响后续case分支的执行（如`nAifsd`的赋值）。但变异本身（算术运算符改变）不直接控制程序分支，而是通过数据依赖影响输出。\n分析结论：变异不通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然`nAifsd`的初始值被变异改变，但在所有case分支中都会被重新赋值（如`nAifsd = sifs + aifs1 * slot`）。因此初始变异的效果会被后续赋值覆盖，最终`nAifsd`的值与原始程序一致。\n分析结论：变异引入的错误状态被后续执行覆盖。\n\n### 最终结论\n等价变异体判定结果：YES。  \n（关键依据：步骤5证明变异效果被完全覆盖，程序最终输出不受影响）"}
+完成变异体 MUT_046 的分析, 耗时: 93.9004 秒
+
+开始分析变异体 MUT_047...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_047": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!nodeExists, ac == 3]`。`!nodeExists` 表示节点不存在，`ac == 3` 表示 `ac` 的值为 3。这两个条件可以同时满足（例如，当 `nodesList` 中不存在指定 `id` 的节点且 `ac` 为 3 时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `nAifsd = sifs + aifs3 * slot`，变异体语句为 `nAifsd = sifs % (aifs3 * slot)`。加法运算和取模运算的语义完全不同，除非 `sifs` 是 `aifs3 * slot` 的整数倍（此时 `sifs % (aifs3 * slot)` 为 0，与 `sifs + aifs3 * slot` 不同），否则两者的计算结果不同。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为：`nAifsd` 被赋值后，传递到 `nd.params.InitParams` 方法，最终影响 `nodesList.addElement(nd)` 和 `nmbrOfNodes++`。`nAifsd` 的值会直接影响 `nd` 的初始化参数，进而影响程序的行为。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `switch (ac)` 的 `case 3` 分支中，其控制依赖路径为：`switch (ac)` → `case 3` → 变异语句 → `break` → `nd.params.InitParams` → `nodesList.addElement(nd)` → `nmbrOfNodes++`。变异语句的执行会影响后续的节点初始化和添加操作。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了 `nAifsd` 的值，但后续操作（如 `nodesList.addElement(nd)` 和 `nmbrOfNodes++`）依赖于 `nAifsd` 的具体值。除非 `sifs % (aifs3 * slot)` 和 `sifs + aifs3 * slot` 在某些情况下导致 `nd` 的初始化行为完全一致（例如，`InitParams` 方法对 `nAifsd` 的处理完全忽略其值差异），否则程序的输出或行为会受到影响。从一般情况来看，这种覆盖是不可能的。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_047 的分析, 耗时: 59.1541 秒
+
+开始分析变异体 MUT_048...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_048": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[nodeExists == False && ac == 1]`。根据程序逻辑，`nodeExists` 为 `False` 时，程序会进入 `else` 分支，且 `ac == 1` 时会进入 `case 1` 分支。因此，变异语句 `nAifsd = sifs / (aifs1 * slot)` 是可执行的，路径条件可满足。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句为 `nAifsd = sifs + aifs1 * slot`，变异体为 `nAifsd = sifs / (aifs1 * slot)`。加法操作和除法操作在数学上是完全不同的运算，除非 `sifs` 和 `aifs1 * slot` 的值满足特定条件（如 `sifs = 0` 且 `aifs1 * slot = 1`），否则两者的结果不同。在一般情况下，这种变异会改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为 `(line 24: nAifsd = sifs / (aifs1 * slot)) --[Flows nAifsd]--> (line 50: nd.params.InitParams(...))`。`nAifsd` 的值会作为参数传递给 `nd.params.InitParams` 方法，从而影响程序的行为或输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `case 1` 分支中，其控制依赖路径为 `(20: switch (ac)) --case 1--> (21: case 1:) --True--> (22: THEN) -- --> (24: nAifsd = sifs / (aifs1 * slot)) -- --> (27: break;) -- --> (47: nd.params.InitParams(...))`。变异语句的执行会直接影响 `nAifsd` 的值，进而影响 `nd.params.InitParams` 的调用。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `nAifsd` 的计算方式（从加法改为除法），但后续程序逻辑中并未对 `nAifsd` 的值进行修正或抵消。`nAifsd` 的值会直接传递给 `nd.params.InitParams`，从而影响程序的最终行为或输出。因此，变异引入的错误状态不会被覆盖或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_048 的分析, 耗时: 64.3669 秒
+
+开始分析变异体 MUT_050...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_050": "### 步骤[1. 可达性]：\n说明理由：变异语句位于switch语句的case 3分支中，当输入参数ac=3时，该分支会被执行。路径条件为ac=3，这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原表达式为`nAifsd = sifs + aifs3 * slot`，变异后为`nAifsd = sifs * (aifs3 * slot)`。这两个表达式在大多数情况下会产生不同的计算结果（除非sifs=0或aifs3*slot=1），因此会改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量nAifsd通过数据依赖链传播到程序输出节点（被用于nd.params.InitParams方法的参数），因此变异效果可以通过数据依赖影响程序输出。\n分析结论：存在数据依赖链连接变异节点与输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句位于顺序执行的代码块中，不直接影响控制流，但会影响传递给InitParams的参数值，进而可能间接影响程序行为。\n分析结论：变异语句不直接通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异改变了nAifsd的计算方式，但这个改变会直接传递到InitParams方法，没有证据表明这个错误状态会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态不会被后续执行覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_050 的分析, 耗时: 53.8365 秒
+
+开始分析变异体 MUT_051...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_051": "### 步骤1：可达性分析\n说明理由：变异语句的路径条件组合为 `[nodeExists == False]`，这是一个可满足的条件（即存在输入使得 `nodeExists` 为 `False`）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序中的语句为 `float nAifsd = sifs + 2 * slot;`，变异体为 `float nAifsd = sifs + -2 * slot;`。在 `nodeExists == False` 的路径下，`nAifsd` 的初始值会被后续的 `switch` 语句覆盖（例如 `case 1` 会将其赋值为 `sifs + aifs1 * slot`）。因此，初始值的变异不会影响最终的程序状态，因为 `nAifsd` 的值会被重新赋值。\n分析结论：变异未实际改变程序状态，属于非必要性变异。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径显示 `nAifsd` 的值会被传递到 `nd.params.InitParams` 方法中。然而，由于 `nAifsd` 的初始值会被后续的 `switch` 语句覆盖（如 `case 1`、`case 2` 等），变异引入的初始值差异不会传播到输出。\n分析结论：数据依赖链被后续赋值覆盖，变异效果无法传播到输出。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句的控制依赖路径显示，`nAifsd` 的初始值会被后续的 `switch` 语句覆盖。变异语句本身不控制任何分支或输出语句的执行，因此无法通过控制流影响输出。\n分析结论：控制依赖缺失，变异效果无法通过控制流传递到输出。\n\n### 步骤5：状态覆盖分析\n说明理由：变异引入的初始值差异（`sifs + -2 * slot` 与 `sifs + 2 * slot`）会被后续的 `switch` 语句覆盖（如 `case 1` 会将其赋值为 `sifs + aifs1 * slot`）。因此，变异的效果在后续执行中被修正，程序最终输出不受影响。\n分析结论：变异引入的错误状态被后续赋值覆盖，不影响输出。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_051 的分析, 耗时: 95.3308 秒
+
+开始分析变异体 MUT_055...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_055": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[!nodeExists && ac == 1]`。该条件表示节点不存在且 `ac` 的值为1，这是一个可满足的条件组合，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `nAifsd = sifs + aifs1 * slot`，变异表达式为 `nAifsd = sifs + aifs1 + slot`。在 `ac == 1` 的条件下，`aifs1` 和 `slot` 的值可能不同，导致 `nAifsd` 的计算结果不同。例如，若 `aifs1 = 2` 且 `slot = 3`，原始表达式结果为 `sifs + 6`，变异表达式结果为 `sifs + 5`，程序状态发生改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为 `(line 24: nAifsd = sifs + aifs1 + slot) --[Flows nAifsd]--> (line 50: nd.params.InitParams(...))`。`nAifsd` 的值直接传递到 `InitParams` 方法，影响程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `switch (ac)` 的 `case 1` 分支中，控制依赖路径为 `(20: switch (ac)) --case 1--> ... -- --> (50: nmbrOfNodes++)`。变异语句的执行通过控制流影响后续语句的执行，包括 `InitParams` 方法的调用。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `nAifsd` 的计算方式，但 `nAifsd` 的值直接传递到 `InitParams` 方法，且没有后续操作修正或抵消这一改变。因此，变异引入的错误状态会直接影响程序输出。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_055 的分析, 耗时: 56.4744 秒
+
+开始分析变异体 MUT_056...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_056": "### 步骤[可达性]：\n说明理由：变异语句位于`case 2`分支中，路径条件组合为`[!nodeExists, ac == 2]`。这两个条件可以同时满足（当节点不存在且`ac`参数为2时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用乘法运算符`nAifsd = sifs + aifs2 * slot`，变异体改为除法`nAifsd = sifs + aifs2 / slot`。除非`slot=1`且`aifs2=0`的特殊情况，这两个表达式在绝大多数情况下计算结果不同，会改变程序状态。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`nAifsd`通过数据依赖链直接传递到`nd.params.InitParams()`方法调用，最终影响节点初始化参数。数据依赖路径完整存在。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于switch-case控制结构中，其计算结果直接影响后续节点初始化参数的传递。控制依赖路径显示变异语句通过case 2分支直接影响输出节点的初始化。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`nAifsd`的计算方式，但该值会直接传递给节点初始化且不会被后续操作覆盖或修正。程序输出（节点初始化参数）会因此发生改变。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO"}
+完成变异体 MUT_056 的分析, 耗时: 72.8253 秒
+
+开始分析变异体 MUT_057...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_057": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[nodeExists == false && ac == 1]`。该条件组合是可满足的，因为 `nodeExists` 可以通过循环检查节点是否存在来设置为 `false`，而 `ac` 是一个输入参数，可以明确设置为 `1`。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句为 `nAifsd = sifs + aifs1 * slot;`，变异后的语句为 `nAifsd = sifs - aifs1 * slot;`。在路径约束 `[nodeExists == false && ac == 1]` 下，`aifs1` 和 `slot` 的值会影响 `nAifsd` 的计算结果。由于 `+` 和 `-` 操作符的行为完全不同，除非 `aifs1 * slot == 0`，否则程序状态会被改变。通常情况下，`aifs1` 和 `slot` 不会同时为 `0`，因此变异会实际改变程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `nAifsd`。`nAifsd` 的数据依赖路径如下：\n1. `nAifsd` 在变异语句中被赋值。\n2. `nAifsd` 被传递到 `nd.params.InitParams` 方法中。\n3. `nd.params.InitParams` 的结果会影响 `nd` 对象的初始化状态。\n4. `nd` 对象被添加到 `nodesList` 中，并影响 `nmbrOfNodes` 的计数。\n因此，`nAifsd` 的值通过数据依赖链传播到程序的输出节点（即 `nodesList` 和 `nmbrOfNodes`）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `switch (ac)` 的 `case 1` 分支中。该分支的执行会直接影响 `nAifsd` 的赋值，进而影响 `nd.params.InitParams` 的调用和后续操作。变异语句的控制依赖路径如下：\n1. `switch (ac)` 的 `case 1` 分支。\n2. `nAifsd` 的赋值语句。\n3. `nd.params.InitParams` 的调用。\n4. `nodesList.addElement(nd)` 和 `nmbrOfNodes++`。\n因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`nAifsd` 的错误计算）会直接传递到 `nd.params.InitParams` 中，从而影响 `nd` 对象的初始化状态。由于 `nd` 对象的状态会影响程序的最终输出（`nodesList` 和 `nmbrOfNodes`），且没有后续操作修正或抵消 `nAifsd` 的错误状态，因此程序的最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_057 的分析, 耗时: 71.4260 秒
+
+开始分析变异体 MUT_058...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_058": "### 步骤[可达性]：\n说明理由：变异语句位于switch语句的case 1分支中，只要ac的值为1，该变异语句就可以被执行到。由于ac是方法的输入参数，其值可以为1，因此变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式是`nAifsd = sifs + aifs1 * slot`，变异体将其改为`nAifsd = sifs * (aifs1 * slot)`。这两个表达式在大多数情况下会产生不同的计算结果，除非在特定情况下（如sifs=0或aifs1=0）可能相同。因此，该变异通常会改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量nAifsd通过数据依赖链传播到程序输出节点。具体路径为：变异语句(line 24) → nd.params.InitParams调用(line 50)。nAifsd的值会影响InitParams方法的执行结果。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于switch语句的case 1分支中，该分支的执行会影响后续的InitParams调用和节点添加操作。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了nAifsd的计算方式，但这种改变会直接影响到InitParams方法的参数值，进而影响程序的行为。没有证据表明这种改变会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_058 的分析, 耗时: 61.8451 秒
+
+开始分析变异体 MUT_059...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_059": "### 步骤[可达性]：\n说明理由：变异语句的条件从`if (nodeExists)`变为`if (true)`，且路径条件为`i < nodesList.size() == False`。这意味着循环不会执行，`nodeExists`保持初始值`false`。因此，变异语句的条件`if (true)`总是可执行，且路径条件`i < nodesList.size() == False`是可满足的（例如，当`nodesList`为空时）。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件`if (nodeExists)`在路径条件`i < nodesList.size() == False`下为`if (false)`（因为`nodeExists`初始为`false`且未被修改），而变异后的条件为`if (true)`。这导致原程序执行`else`分支，而变异体执行`if`分支，程序状态发生改变（抛出异常 vs. 执行节点添加逻辑）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`nodeExists`，其数据依赖路径显示`nodeExists`的值会直接影响`if`条件的判断结果。变异后，`if (true)`强制程序执行`throw`语句，而原程序会根据`nodeExists`的值选择分支。因此，变异通过数据依赖链直接影响了程序输出（是否抛出异常）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (true)`的控制依赖路径直接指向`throw`语句。变异强制程序执行`throw`分支，而原程序可能执行`else`分支。因此，变异语句通过控制流直接影响了输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（强制执行`throw`分支）未被后续执行修正或抵消。原程序在`nodeExists`为`false`时会执行`else`分支（添加节点），而变异体总是执行`throw`分支，导致程序行为完全不同（抛出异常 vs. 正常添加节点）。\n分析结论：变异引入的错误状态未被覆盖，程序输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_059 的分析, 耗时: 70.2579 秒
+
+开始分析变异体 MUT_060...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_060": "### 步骤1：可达性\n说明理由：变异语句位于switch语句的case 1分支中，路径条件为ac == 1。该条件在程序执行时是可满足的，因为ac是一个输入参数，可以取值为1。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序中的表达式为`nAifsd = sifs + aifs1 * slot`，变异体将其改为`nAifsd = sifs + aifs1 / slot`。乘法和除法是两种不同的运算，除非aifs1或slot为特定值（如slot=1），否则这两种运算的结果不同，会改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量nAifsd通过数据依赖链传播到nd.params.InitParams()方法，并最终影响nodesList.addElement(nd)的操作。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于switch语句的case 1分支中，控制流最终会影响到nodesList.addElement(nd)和nmbrOfNodes++的输出操作。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖条件。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了nAifsd的计算方式，但后续操作（如nodesList.addElement(nd)）并不直接依赖于nAifsd的具体值，而是将其作为参数传递给InitParams方法。如果InitParams方法对nAifsd的使用方式使得乘法和除法的差异不影响最终输出，则可能存在状态覆盖。然而，根据程序逻辑，nAifsd的值会影响节点的初始化参数，进而可能影响程序的行为。\n分析结论：变异引入的错误状态未被完全修正或抵消，可能影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_060 的分析, 耗时: 61.9034 秒
+
+开始分析变异体 MUT_061...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_061": "### 步骤[可达性]：\n说明理由：根据提供的可达性约束条件`[(i < nodesList.size()) == False || ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id == id == True), nodeExists == False]`，变异语句`nodesList.addElement(nd);`位于`nodeExists == False`的分支中。这意味着只要`nodeExists`为`False`，变异语句就是可达的。由于`nodeExists`的初始值为`false`，并且在循环中只有当找到匹配的`id`时才会设置为`true`，因此存在输入使得`nodeExists`保持`false`，变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句`nodesList.addElement(nd);`将`nd`添加到`nodesList`中，而变异体将其替换为空语句`;`。这直接移除了对`nodesList`的修改操作，导致`nd`不会被添加到`nodesList`中。这种修改显然改变了程序的状态，因为`nodesList`的内容会因此不同。\n\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`nd`，因为变异语句移除了`nodesList.addElement(nd)`。`nd`的数据依赖路径显示，`nd`被初始化后，其属性被设置（如`nd.params.InitParams`和`nd.contWind`），但这些操作并不直接影响程序的输出。程序的输出（如`nmbrOfNodes++`）并不直接依赖于`nd`是否被添加到`nodesList`中。因此，变异影响的变量`nd`并未通过数据依赖链传播到程序输出节点。\n\n分析结论：数据依赖缺失，变异效果未传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`nodesList.addElement(nd);`位于控制依赖路径的末尾，其执行与否不影响后续的输出语句（如`nmbrOfNodes++`）。控制依赖路径显示，变异语句的执行与否不会改变程序的控制流或输出语句的执行。因此，变异语句未通过控制流影响输出语句。\n\n分析结论：控制依赖缺失，变异效果未通过控制流影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体移除了`nodesList.addElement(nd);`，但程序的输出（如`nmbrOfNodes++`）并不依赖于`nodesList`的内容。因此，变异引入的错误状态（`nd`未被添加到`nodesList`）不会影响程序的最终输出。程序的其他部分（如`nmbrOfNodes++`）仍然会正常执行，且输出不受影响。\n\n分析结论：变异引入的错误状态被后续执行逻辑覆盖，不影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_061 的分析, 耗时: 108.1524 秒
+
+开始分析变异体 MUT_062...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_062": "### 步骤[可达性]：\n说明理由：变异语句位于`addNode`方法的`else`分支中，其可达性条件为`nodeExists == false`，即所有节点ID都不等于输入的`id`。该条件在逻辑上可满足（例如当`nodesList`为空或所有节点ID均不等于`id`时）。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`float nAifsd = sifs + 2 * slot;`，变异体改为`float nAifsd = sifs / (2 * slot);`。虽然变异语句可达，但在后续的`switch`语句中，`nAifsd`会被重新赋值为`sifs + aifsX * slot`（X为1/2/3/0），覆盖初始值。因此初始赋值对最终结果无影响。\n分析结论：变异未实际改变程序语义，属于等价变异体。\n\n### 步骤[数据依赖]：\n说明理由：虽然`nAifsd`在变异点被修改，但其数据依赖路径显示该变量会在后续`switch`分支中被覆盖（如`nAifsd = sifs + aifs1 * slot`），最终传递到输出节点`nd.params.InitParams()`的值与初始赋值无关。\n分析结论：变异影响的变量未通过数据依赖链影响最终输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于控制流图的顺序执行部分，不直接控制任何分支。后续`switch`语句的控制流与变异语句无关。\n分析结论：变异语句不通过控制流影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`nAifsd`的初始计算错误）在后续`switch`分支中被完全覆盖，所有执行路径都会重新计算`nAifsd`的正确值。\n分析结论：变异状态被后续执行完全修正。\n\n### 最终结论：\n等价变异体判定结果：YES"}
+完成变异体 MUT_062 的分析, 耗时: 103.6145 秒
+
+开始分析变异体 MUT_063...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_063": "### 步骤[1. 可达性]：\n说明理由：变异语句位于for循环的初始化部分，路径条件为`i < nodesList.size()`。只要`nodesList.size() >= 1`，该变异语句就是可达的。由于`nodesList`是一个集合，其大小可以大于等于1，因此该路径条件是可满足的。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序从`i=0`开始遍历，而变异体从`i=1`开始遍历。这意味着原程序会检查`nodesList`的第一个元素（索引0），而变异体会跳过第一个元素。如果`nodesList`的第一个元素的`id`与输入的`id`匹配，原程序会设置`nodeExists = true`并可能抛出异常，而变异体会跳过这个检查，导致不同的程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量是`i`，其数据依赖路径显示`i`的值会影响循环条件和`nodeExists`的赋值。具体来说，`i`的初始值变化会跳过第一个元素的检查，从而可能改变`nodeExists`的值，进而影响程序是否抛出异常或继续执行后续逻辑。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句的控制依赖路径显示，`nodeExists`的值直接控制是否抛出异常或执行后续节点创建逻辑。由于变异可能导致`nodeExists`的值与原程序不同，因此会通过控制流影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：变异引入的错误状态（跳过第一个元素的检查）不会被后续执行修正或抵消。如果第一个元素的`id`与输入的`id`匹配，原程序会抛出异常，而变异体会继续执行后续逻辑，导致不同的程序行为。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_063 的分析, 耗时: 141.2817 秒
+
+开始分析变异体 MUT_064...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_064": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!nodeExists, ac == 3]`。这两个条件可以同时满足（例如当 `nodeExists` 为 `false` 且 `ac` 的值为 `3` 时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为 `nAifsd = sifs + aifs3 * slot`，变异体将其改为 `nAifsd = sifs + aifs3 / slot`。运算符从乘法变为除法，除非 `aifs3 * slot` 和 `aifs3 / slot` 在特定情况下结果相同（例如 `slot` 为 `1` 时），否则通常会改变 `nAifsd` 的值。因此，该变异通常会改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `nAifsd` 的数据依赖路径为：`(line 38: nAifsd = sifs + aifs3 / slot) --> (line 50: nd.params.InitParams(...))`。`nAifsd` 的值直接传递到 `InitParams` 方法中，因此变异的效果可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `switch (ac)` 的 `case 3` 分支中，其控制依赖路径为：`(20: switch (ac)) --> (35: case 3:) --> (38: nAifsd = ...) --> (50: nd.params.InitParams(...))`。变异语句的执行会影响 `nAifsd` 的值，进而影响 `InitParams` 的调用，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`nAifsd` 的值改变）会直接传递到 `InitParams` 方法中，且没有后续操作修正或抵消这一改变。因此，变异的效果会反映在程序的最终状态中。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_064 的分析, 耗时: 54.0212 秒
+
+开始分析变异体 MUT_065...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_065": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[!nodeExists && ac == 2]`。该条件表示节点不存在且 `ac` 等于 2，这是可满足的条件，因为 `nodeExists` 可以通过循环检查节点是否存在，而 `ac` 是输入参数，可以设置为 2。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序中的表达式为 `nAifsd = sifs + aifs2 * slot`，变异后的表达式为 `nAifsd = sifs + aifs2 + slot`。乘法运算和加法运算在大多数情况下会产生不同的结果，除非 `slot` 为 1 或 `aifs2` 为 0，但这些情况不一定是恒定的。因此，变异操作可能导致程序状态改变。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `nAifsd`，其数据依赖路径为 `nAifsd` 被传递到 `nd.params.InitParams` 方法中。`nAifsd` 的值会直接影响 `nd.params.InitParams` 的调用参数，进而可能影响程序的行为或输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于 `switch (ac)` 的 `case 2` 分支中，控制流会直接执行该分支的语句，并通过 `break` 跳出 `switch`，最终执行 `nd.params.InitParams` 方法。变异语句的执行会影响 `nAifsd` 的值，进而影响后续方法的调用。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异操作改变了 `nAifsd` 的计算方式，但 `nAifsd` 的值会被传递到 `nd.params.InitParams` 方法中，且没有后续操作覆盖或修正这一改变。因此，变异引入的错误状态不会被抵消，程序最终输出可能受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_065 的分析, 耗时: 57.9320 秒
+
+开始分析变异体 MUT_066...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_066": "### 步骤[可达性]：\n说明理由：变异语句位于第19行，路径条件组合为`[∀i∈[0,nodesList.size()-1], ((pamvotis.core.MobileNode) nodesList.elementAt(i)).params.id != id ∧ nodesList.size() > 0]`。该条件表示当遍历所有节点未发现重复ID且节点列表非空时，可以执行到变异语句。这是一个可满足的条件，例如当`nodesList`包含至少一个节点且其ID与输入`id`不同时即可触发。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原语句为`float nAifsd = sifs + 2 * slot`，变异为`float nAifsd = sifs + 0 * slot`。虽然变异语句可达，但观察到`nAifsd`在switch语句的每个case分支（包括default）都会被重新赋值（第22/27/32/37行），其初始值会被覆盖。因此无论初始值是`sifs + 2 * slot`还是`sifs + 0 * slot`，最终`nAifsd`的值仅取决于后续分支的赋值。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤2已确定初始赋值被后续分支覆盖，无需继续分析数据依赖路径。但补充说明：即使`nAifsd`的初始值变异会影响第50行的`InitParams`调用，但实际传入的`nAifsd`值完全由switch分支决定，与初始赋值无关。\n分析结论：数据依赖不影响最终结论。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤2已确定初始赋值被后续分支覆盖，控制依赖分析无实际意义。变异语句不控制任何分支的走向。\n分析结论：控制依赖不影响最终结论。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的初始值差异（`2*slot` vs `0*slot`）在后续所有执行路径中均被分支赋值覆盖（如`aifs1 * slot`等），错误状态被完全修正。\n分析结论：变异效果被后续执行完全抵消。\n\n### 最终结论：\n等价变异体判定结果：YES。  \n（核心判定依据：步骤2证明初始赋值被后续分支覆盖，满足\"执行状态覆盖\"的等价性条件）"}
+完成变异体 MUT_066 的分析, 耗时: 106.0620 秒
+
+开始分析变异体 MUT_067...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_067": "### 步骤[1. 可达性]：\n说明理由：变异语句位于switch语句的case 3分支中，路径条件为ac == 3。该条件在程序执行时是可满足的，只要传入的ac参数值为3即可触发该变异语句的执行。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原表达式为nAifsd = sifs + aifs3 * slot，变异后为nAifsd = sifs + aifs3 + slot。乘法运算和加法运算的结果在大多数情况下不同（除非slot=1且aifs3=0的特殊情况），这会改变nAifsd的值，从而影响程序状态。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量nAifsd通过InitParams方法传递给nd对象，最终被添加到nodesList中。存在完整的数据依赖路径：变异语句→InitParams→addElement。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句位于case 3分支中，其执行结果会直接影响后续InitParams和addElement的调用。存在控制依赖路径：switch→case 3→变异语句→InitParams→addElement。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异改变了nAifsd的计算方式，但程序后续没有对nAifsd的值进行修正或覆盖。变异导致的计算结果差异会一直保持到程序结束，影响最终的nodesList状态。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_067 的分析, 耗时: 54.9916 秒
+

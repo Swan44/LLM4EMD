@@ -1,0 +1,962 @@
+开始分析变异体 MUT_001...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_001": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。这些条件在数学上是可满足的（例如当 `threshold = 1.0` 且 `x = 0.5` 时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回 `new Vector3D(0, inverse * z, -inverse * y)`，变异体返回 `new Vector3D(-1, inverse * z, -inverse * y)`。变异将第一个分量从 `0` 改为 `-1`，这直接改变了返回值的状态。在可达路径下，这种修改必然导致程序状态改变（返回的向量不同）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是返回值的第一个分量（从 `0` 改为 `-1`）。返回值直接作为程序输出，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是返回语句，直接控制程序的输出，因此变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（返回向量的第一个分量为 `-1` 而非 `0`）未被后续执行修正或抵消，程序最终输出（返回的向量）必然与原始程序不同。\n分析结论：错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_001 的分析, 耗时: 45.2490 秒
+
+开始分析变异体 MUT_002...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_002": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0, !((x >= -threshold) && (x <= threshold))]`。这意味着 `threshold` 不为零且 `x` 不在 `[-threshold, threshold]` 范围内。这些条件是可以满足的，例如当 `threshold = 1` 且 `x = 2` 时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `(y >= -threshold) && (y <= threshold)`，而变异后的条件是 `(y >= -threshold) == (y <= threshold)`。原条件表示 `y` 在 `[-threshold, threshold]` 范围内，而变异条件表示 `y >= -threshold` 和 `y <= threshold` 的逻辑值相等。这意味着变异条件在 `y` 恰好等于 `-threshold` 或 `threshold` 时与原条件的行为不同。例如：\n- 当 `y = -threshold` 时，原条件为 `true`，变异条件为 `(true == false) = false`。\n- 当 `y = threshold` 时，原条件为 `true`，变异条件为 `(true == true) = true`。\n因此，变异确实改变了程序的状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `threshold` 和 `inverse`。`threshold` 用于计算 `inverse`，而 `inverse` 直接用于构造返回的 `Vector3D` 对象。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是一个条件判断，其结果为 `true` 或 `false` 会决定执行哪个分支（计算 `inverse` 并返回不同的 `Vector3D` 对象）。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的状态（如 `y = -threshold` 时行为不同），但这种改变会直接影响到输出的 `Vector3D` 对象。例如：\n- 原程序在 `y = -threshold` 时会进入分支并返回 `new Vector3D(-inverse * z, 0, inverse * x)`。\n- 变异体在 `y = -threshold` 时不会进入分支，而是执行后续的 `else` 分支，返回 `new Vector3D(inverse * y, -inverse * x, 0)`。\n这两种情况下的输出是不同的，因此变异引入的错误状态未被覆盖或抵消。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_002 的分析, 耗时: 78.2771 秒
+
+开始分析变异体 MUT_003...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_003": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。这些条件可以同时满足（例如 `threshold=1, x=0`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序计算 `inverse = 1 / Math.sqrt(y * y + z * z)`，而变异体计算 `inverse = 1 / Math.sqrt(y * y / (z * z))`。这两个表达式在绝大多数情况下（例如 `y=1, z=2`）会得到不同的结果，因此程序状态会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `inverse` 直接用于构造返回值 `new Vector3D(0, inverse * z, -inverse * y)`，因此变异的效果会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `double inverse = 1 / Math.sqrt(y * y / (z * z))` 的执行结果直接决定了返回值的内容，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `inverse` 的值，但该改变会直接反映在返回值中，没有后续操作修正或抵消这种改变。因此程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_003 的分析, 耗时: 37.8560 秒
+
+开始分析变异体 MUT_004...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_004": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)]`。该路径条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `double inverse = 1 / Math.sqrt(x * x + z * z)` 和 `double inverse = 1 - Math.sqrt(x * x + z * z)`。在变异语句可达的情况下，两者的计算结果完全不同（除法 vs. 减法），会显著改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `inverse` 的数据依赖路径为 `(line 13: double inverse = 1 - Math.sqrt(x * x + z * z)) → (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse` 的值直接用于构造返回值，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(line 13: double inverse = 1 - Math.sqrt(x * x + z * z)) → (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。变异语句的执行直接决定了输出语句的输入值，因此变异效果可以通过控制流传递到输出。\n分析结论：存在控制依赖条件。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体满足可达性、必要性、数据依赖与控制依赖条件，但需要检查变异引入的错误状态是否在后续执行中被修正或抵消。在本例中，`inverse` 的计算方式完全改变（从除法到减法），且其值直接用于构造返回值，没有后续修正或抵消的逻辑。因此，程序最终输出会受到影响。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_004 的分析, 耗时: 42.1137 秒
+
+开始分析变异体 MUT_005...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_005": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0, !((x >= -threshold) && (x <= threshold)), !((y >= -threshold) && (y <= threshold))`。这些条件组合是可满足的，例如当`threshold > 0`且`x`和`y`的值均不在`[-threshold, threshold]`范围内时，路径可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`return new Vector3D(inverse * y, -inverse * x, 0);`和`return new Vector3D(inverse + y, -inverse * x, 0);`。变异将`inverse * y`改为`inverse + y`。在路径约束下（`threshold != 0, !((x >= -threshold) && (x <= threshold)), !((y >= -threshold) && (y <= threshold))`），`inverse`和`y`的值均为非零有限值（因为`inverse`是正数的倒数，`y`不在阈值范围内）。因此，`inverse * y`和`inverse + y`的值通常不相等（除非`y = inverse / (1 - inverse)`，但这是极特殊情况）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`inverse`和`y`。`inverse`的数据依赖路径为：`(line 16: double inverse = 1 / Math.sqrt(x * x + y * y)) → (line 17: return new Vector3D(inverse + y, -inverse * x, 0))`。`y`的数据依赖路径为：`(line 17: return new Vector3D(inverse + y, -inverse * x, 0))`。变异后的`inverse + y`和`-inverse * x`直接作为返回值的一部分，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在，变异效果可传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是`return new Vector3D(inverse + y, -inverse * x, 0);`，输出语句即为该语句本身。因此，变异语句直接控制程序输出，不存在独立的控制流分支。\n分析结论：变异语句直接影响输出，控制依赖路径存在。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在。变异体将`inverse * y`改为`inverse + y`，这会直接改变返回值的第一个分量。除非`inverse * y == inverse + y`（即`y = inverse / (1 - inverse)`），否则返回值会不同。在一般情况下，这种等式不成立，因此变异引入的错误状态不会被抵消。\n分析结论：变异效果不会被覆盖，程序输出会改变。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_005 的分析, 耗时: 53.9435 秒
+
+开始分析变异体 MUT_006...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_006": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0, !((x >= -threshold) && (x <= threshold)), !((y >= -threshold) && (y <= threshold))]`。这些条件可以同时满足，例如当 `threshold` 为正数且 `x` 和 `y` 的绝对值均大于 `threshold` 时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别是将 `-inverse * x` 改为 `-inverse + x`。在变异语句可达的情况下，`inverse` 和 `x` 的值会影响计算结果。例如，当 `inverse = 1` 且 `x = 2` 时，原程序计算为 `-2`，变异体计算为 `1`，程序状态发生改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `inverse` 和 `x`。`inverse` 的数据依赖路径直接从定义处流向变异语句，`x` 的数据依赖路径从条件判断的 False 分支流向变异语句。变异后的值直接用于构造返回的 `Vector3D` 对象，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是返回语句的一部分，直接控制程序的输出。从控制依赖路径来看，变异语句的执行直接决定了程序的输出结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`-inverse + x` 与 `-inverse * x` 的计算结果不同）直接影响了返回的 `Vector3D` 对象的属性值，且后续执行中没有修正或抵消这种差异。因此，程序的最终输出会受到影响。\n分析结论：错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_006 的分析, 耗时: 49.0758 秒
+
+开始分析变异体 MUT_007...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_007": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]`。该条件组合是可满足的，例如当 `threshold > 0` 且 `x` 和 `y` 均不在 `[-threshold, threshold]` 范围内时，路径可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `return new Vector3D(inverse * y, -inverse * x, 0);` 和 `return new Vector3D(inverse * y, -inverse * x, -1);`。变异将第三个参数从 `0` 改为 `-1`。在变异语句可达的路径下，`inverse` 的值不为零，且 `x` 和 `y` 的值不影响第三个参数的直接赋值。因此，变异确实改变了程序状态（第三个参数的值从 `0` 变为 `-1`）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 16: double inverse = 1 / Math.sqrt(x * x + y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, -1))`。`inverse` 的值直接用于计算返回向量的三个分量，因此变异引入的状态改变（第三个参数的值）会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --False--> (17: return new Vector3D(inverse * y, -inverse * x, -1);)`。变异语句是直接返回语句，不通过控制流影响其他语句，因此控制依赖路径不改变变异的效果传递。\n分析结论：变异语句不通过控制流影响输出语句，但直接作为输出语句本身。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（第三个参数从 `0` 改为 `-1`）未被后续执行修正或抵消。返回向量的第三个参数直接输出，因此变异的效果会直接反映在程序输出中。\n分析结论：变异引入的错误状态未被覆盖，程序最终输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_007 的分析, 耗时: 47.0832 秒
+
+开始分析变异体 MUT_008...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_008": "### 步骤[可达性]：\n说明理由：变异语句的条件为`if ((x >= threshold) && (x <= threshold))`，其路径条件组合为`threshold != 0`。由于`threshold`的计算方式为`0.6 * getNorm()`，且`getNorm()`返回的值为非负，因此`threshold`可能为0或正数。但根据`REACHABILITY_CONSTRAINT`，`threshold != 0`，因此变异语句的路径条件是可满足的，变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`if ((x >= -threshold) && (x <= threshold))`，变异表达式为`if ((x >= threshold) && (x <= threshold))`。在`threshold > 0`的情况下，原始表达式的条件为`x`在`[-threshold, threshold]`范围内，而变异表达式的条件为`x == threshold`。显然，两者的条件不同，且存在输入（例如`x = 0`）使得原始表达式为真而变异表达式为假，程序状态可能改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`threshold`，其数据依赖路径显示`threshold`的值直接影响到`if`条件的判断结果，进而影响后续的`inverse`计算和返回值。具体来说，`threshold`的值决定了是否进入`if`分支，从而影响输出的`Vector3D`对象的值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if ((x >= threshold) && (x <= threshold))`的控制依赖路径显示，其真值直接决定了后续的`inverse`计算和返回语句的执行。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序的控制流和数据流，但在特定输入条件下（例如`x == threshold`），原始程序和变异体的输出可能相同。然而，这种覆盖是有限的，因为大多数情况下（例如`x`在`[-threshold, threshold)`范围内但不等于`threshold`），原始程序会进入`if`分支而变异体不会，导致输出不同。因此，变异引入的错误状态并未被完全修正或抵消。\n分析结论：变异引入的错误状态未被完全覆盖，程序最终输出可能受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_008 的分析, 耗时: 55.9544 秒
+
+开始分析变异体 MUT_009...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_009": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0, !((x >= -threshold) && (x <= threshold)), (y >= -threshold) && (y <= threshold)]`。这些条件可以同时满足，例如当 `threshold > 0`，`x` 不在 `[-threshold, threshold]` 范围内，且 `y` 在 `[-threshold, threshold]` 范围内时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + z * z);`，变异体语句为 `double inverse = 1 / Math.sqrt(x * x + z / z);`。在 `z != 0` 的情况下，`z * z` 和 `z / z` 的值不同（`z / z` 恒为 1，而 `z * z` 的值取决于 `z` 的具体值）。因此，变异会改变 `inverse` 的计算结果，从而影响程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 13: double inverse = 1 / Math.sqrt(x * x + z / z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x * x + z / z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异语句的执行直接决定了 `inverse` 的值，而 `inverse` 的值又直接用于输出语句。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse` 的计算错误）会直接传递到输出语句，导致返回的 `Vector3D` 对象的坐标值发生变化。没有后续执行步骤会修正或抵消这种错误状态。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_009 的分析, 耗时: 41.7461 秒
+
+开始分析变异体 MUT_010...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_010": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0 && !((x >= -threshold) && (x <= threshold))`。该条件表示 `threshold` 不为零且 `x` 不在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，因为存在 `threshold` 和 `x` 的值满足该条件（例如 `threshold = 1.0`，`x = 2.0`）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始条件为 `(y >= -threshold) && (y <= threshold)`，变异后为 `(y <= threshold)`。在变异语句可达的情况下（即 `x` 不在 `[-threshold, threshold]` 范围内），原始条件和变异条件的区别在于是否检查 `y >= -threshold`。如果存在 `y < -threshold` 的输入，原始条件为 `false`，而变异条件可能为 `true`（如果 `y <= threshold`）。因此，变异可能改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `y` 和 `threshold`。`threshold` 的值通过数据依赖链传播到输出节点（`return` 语句）。具体路径为：\n1. `threshold` 用于计算 `inverse`，`inverse` 用于构造返回的 `Vector3D` 对象。\n2. `y` 的值影响 `if` 条件的结果，进而影响后续的 `inverse` 计算和返回的 `Vector3D` 对象。\n因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if ((y <= threshold))` 直接控制后续的 `inverse` 计算和返回语句。具体路径为：\n1. 如果 `y <= threshold` 为 `true`，执行 `return new Vector3D(-inverse * z, 0, inverse * x)`。\n2. 如果 `y <= threshold` 为 `false`，执行 `return new Vector3D(inverse * y, -inverse * x, 0)`。\n因此，变异语句通过控制流直接影响输出语句。\n分析结论：控制依赖路径存在。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异可能改变程序状态（如 `y < -threshold` 时原始条件和变异条件的差异），但这种改变会直接影响到后续的 `inverse` 计算和返回的 `Vector3D` 对象。没有证据表明这种错误状态会被后续执行修正或抵消。因此，变异引入的错误状态会传递到程序输出。\n分析结论：状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_010 的分析, 耗时: 57.2204 秒
+
+开始分析变异体 MUT_011...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_011": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))`。该条件表示 `threshold` 不为零，且 `x` 和 `y` 都不在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1`，`x = 2`，`y = 2` 时，条件成立。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为 `-inverse * x`，变异后的表达式为 `-inverse / x`。在变异语句可达的情况下，`x` 的值不为零（因为 `x` 不在 `[-threshold, threshold]` 范围内，而 `threshold` 不为零），因此 `-inverse * x` 和 `-inverse / x` 的值通常不相等（除非 `x = 1` 或 `x = -1`）。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `inverse` 和 `x`。`inverse` 的值通过 `return new Vector3D(inverse * y, -inverse / x, 0);` 直接传播到输出。`x` 的值也通过 `-inverse / x` 传播到输出。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `return new Vector3D(inverse * y, -inverse / x, 0);` 是程序的输出语句，直接控制程序的返回值。因此，变异语句通过控制流直接影响输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`-inverse / x` 替换 `-inverse * x`）会直接传递到输出，且不会在后续执行中被修正或抵消。因此，程序的最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_011 的分析, 耗时: 54.5432 秒
+
+开始分析变异体 MUT_012...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_012": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0`，这是一个可满足的条件，因为 `threshold` 是通过 `0.6 * getNorm()` 计算得到的，且只有当 `threshold == 0` 时才会抛出异常。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `(x >= -threshold) && (x <= threshold)`，变异后的条件是 `(x == -threshold) && (x <= threshold)`。在 `x` 的取值范围内，原条件允许 `x` 在 `[-threshold, threshold]` 区间内，而变异条件仅允许 `x == -threshold`。因此，变异缩小了条件的范围，可能导致程序状态改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `x` 和 `threshold`。`x` 的值直接影响条件判断的结果，进而影响后续的 `inverse` 计算和返回值。`threshold` 的值也通过条件判断和后续计算传递到返回值。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是一个条件判断，其结果直接控制后续分支的执行（如 `if` 和 `else if` 分支）。这些分支中的代码最终会影响返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异缩小了条件的范围，但在 `x == -threshold` 的情况下，变异体和原程序的行为是一致的（因为 `x >= -threshold` 和 `x == -threshold` 在此情况下等价）。然而，对于 `x > -threshold` 且 `x <= threshold` 的情况，变异体会跳过本应执行的分支，可能导致不同的返回值。因此，变异引入的错误状态并未被完全覆盖或抵消。\n分析结论：错误状态未被完全覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_012 的分析, 耗时: 74.2022 秒
+
+开始分析变异体 MUT_013...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_013": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。该路径条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `double inverse = 1 / Math.sqrt(y * y + z * z)` 和 `double inverse = -1 / Math.sqrt(y * y + z * z)`。在变异语句可达的情况下，变异将 `inverse` 的值从正变为负，这会导致程序状态改变（`inverse` 的符号反转）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 10: double inverse = -1 / Math.sqrt(y * y + z * z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse * y))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --True--> (10: double inverse = -1 / Math.sqrt(y * y + z * z)) -- --> (11: return new Vector3D(0, inverse * z, -inverse * y))`。变异语句直接决定了 `inverse` 的值，进而影响返回的 `Vector3D` 对象，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体将 `inverse` 的值从正变为负，导致返回的 `Vector3D` 对象的 `y` 和 `z` 分量的符号反转（`inverse * z` 和 `-inverse * y`）。由于 `inverse` 的符号反转同时影响这两个分量，最终返回的 `Vector3D` 对象与原程序不同（例如，原程序返回 `(0, a, b)`，变异体返回 `(0, -a, -b)`）。因此，变异引入的错误状态未被修正或抵消，程序最终输出受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_013 的分析, 耗时: 44.2747 秒
+
+开始分析变异体 MUT_014...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_014": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)`。该条件表示 `threshold` 不为零，且 `x` 和 `y` 都不在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1`，`x = 2`，`y = 2` 时，条件为真。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句的区别是将返回语句中的 `0` 改为 `1`。在变异语句可达的情况下，程序状态会直接改变，因为返回值从 `(inverse * y, -inverse * x, 0)` 变为 `(inverse * y, -inverse * x, 1)`。这种改变是实质性的，因为 `0` 和 `1` 是不同的值，会影响程序的输出。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `inverse`，但实际修改的是返回值的第三个分量（从 `0` 到 `1`）。返回值直接依赖于 `inverse`，但修改的是常量部分，因此数据依赖链仍然存在，且会传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句是返回语句，直接控制程序的输出。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（将返回值的第三个分量从 `0` 改为 `1`）不会被后续执行修正或抵消，因为这是最终的返回值。因此，程序的最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_014 的分析, 耗时: 48.0329 秒
+
+开始分析变异体 MUT_015...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_015": "### 步骤[可达性]：\n说明理由：变异语句位于`else if ((y >= -threshold) && (y <= threshold))`分支内，该分支的条件组合为`(x < -threshold || x > threshold) && (y >= -threshold && y <= threshold)`。该条件组合在`threshold > 0`时可满足（例如当x=1, y=0, threshold=0.5时）。\n分析结论：变异点可达。\n\n### 步骤[必要性]：\n说明理由：原表达式为`-inverse * z`，变异表达式为`+inverse * z`。在可达路径下，`inverse`和`z`的值都不为0（因为`Math.sqrt(x*x + z*z)`要求x和z不同时为0，且`inverse`是计算结果），因此`-inverse * z`和`+inverse * z`会产生符号相反的结果，这会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inverse`和`z`，它们直接用于构造返回的`Vector3D`对象。数据依赖路径清晰：`inverse`的计算结果直接流向返回语句的构造参数。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句本身就是返回语句，不控制其他语句的执行。但由于它是直接输出语句，其变异效果会直接影响程序输出。\n分析结论：变异语句直接影响输出，不需要通过控制流影响其他语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了返回值的第一个分量（从`-inverse*z`变为`+inverse*z`），但后续执行中没有其他操作会修正或抵消这个改变。返回的`Vector3D`对象会直接作为方法结果输出。\n分析结论：变异引入的错误状态没有被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_015 的分析, 耗时: 47.9043 秒
+
+开始分析变异体 MUT_016...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_016": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]`。该条件表示 `threshold` 不为零，且 `x` 和 `y` 都不在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1`，`x = 2`，`y = 2` 时，条件成立。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + y * y);`，变异体语句为 `double inverse = 1 / Math.sqrt(x * x - y * y);`。在路径条件 `!(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)` 下，`x` 和 `y` 的绝对值都大于 `threshold`，因此 `x * x` 和 `y * y` 的值都为正数。原表达式 `x * x + y * y` 始终为正数，而变异表达式 `x * x - y * y` 的值可能为正、负或零，具体取决于 `x` 和 `y` 的值。例如：\n- 当 `x = 2`，`y = 1` 时，`x * x - y * y = 3`（正数）。\n- 当 `x = 1`，`y = 2` 时，`x * x - y * y = -3`（负数）。\n- 当 `x = y` 时，`x * x - y * y = 0`（零）。\n\n如果 `x * x - y * y` 为负数或零，`Math.sqrt` 会抛出异常或返回 `NaN`，而原程序不会。因此，变异体在某些输入下会改变程序的行为。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 16: double inverse = 1 / Math.sqrt(x * x - y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0);)`。`inverse` 的值直接用于计算返回的 `Vector3D` 对象的三个分量。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖条件满足。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --False--> (16: double inverse = 1 / Math.sqrt(x * x - y * y)) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0);)`。变异语句的执行直接决定了 `inverse` 的值，进而影响输出语句的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：控制依赖条件满足。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些输入下会改变 `inverse` 的值（例如导致 `Math.sqrt` 抛出异常或返回 `NaN`），但在其他输入下（如 `x * x - y * y` 为正数时），`inverse` 的值会与原程序不同，从而影响最终的 `Vector3D` 输出。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_016 的分析, 耗时: 58.3434 秒
+
+开始分析变异体 MUT_017...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_017": "### 步骤[可达性]：\n说明理由：变异语句的条件为`if ((x > -threshold) && (x <= threshold))`，其路径条件组合为`threshold != 0`。由于`threshold`的计算依赖于`getNorm()`，且`threshold`不为0时路径可达，因此该变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`x >= -threshold`，变异后为`x > -threshold`。当`x == -threshold`时，原条件为真而变异条件为假，会导致程序状态改变（控制流分支不同）。因此，变异实际改变了程序语义。\n分析结论：变异具有必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`threshold`通过数据依赖链传播到输出节点。具体路径为：`threshold`影响条件判断结果，进而影响`inverse`的计算和最终的`Vector3D`返回值。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制三个不同的返回路径（对应三个不同的`Vector3D`构造）。变异语句的真假结果直接影响输出语句的执行。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：当`x == -threshold`时，原程序会进入第一个分支（返回基于y,z的Vector3D），而变异体会跳过该分支。然而，这种情况下`x`正好等于`-threshold`，使得`y`和`z`的权重计算会与后续分支不同，最终导致不同的`Vector3D`输出。因此不存在状态覆盖。\n分析结论：无状态覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_017 的分析, 耗时: 96.8016 秒
+
+开始分析变异体 MUT_018...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_018": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)`。这些条件可以同时满足，例如当`threshold`为正数，`x`不在`[-threshold, threshold]`范围内，而`y`在该范围内时。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`return new Vector3D(-inverse * z, 0, inverse * x);`和`return new Vector3D(-inverse / z, 0, inverse * x);`。在变异语句可达的情况下，`inverse`和`z`的值会影响输出。由于`*`和`/`是两种不同的运算，除非`z`为1或-1，否则运算结果不同，从而改变程序状态。因此，该变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inverse`，其数据依赖路径为`(line 13: double inverse = 1 / Math.sqrt(x * x + z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse / z, 0, inverse * x))`。`inverse`的值直接用于构造返回的`Vector3D`对象，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为`(5: if (threshold == 0)) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --True--> (14: double inverse = 1 / Math.sqrt(x * x + z * z)) -- --> (15: return new Vector3D(-inverse / z, 0, inverse * x);)`。变异语句是返回语句的一部分，直接决定了程序的输出，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句影响输出语句的执行。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在。虽然变异体改变了程序状态，但除非`z`为1或-1，否则输出结果会不同。因此，变异引入的错误状态未被后续执行修正或抵消，程序最终输出可能受影响。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_018 的分析, 耗时: 53.4325 秒
+
+开始分析变异体 MUT_019...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_019": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`[threshold != 0, !((x >= -threshold) && (x <= threshold)), !((y >= -threshold) && (y <= threshold))]`。这些条件可以同时满足，例如当`threshold > 0`且`x`和`y`的值均不在`[-threshold, threshold]`范围内时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句分别为`return new Vector3D(inverse * y, -inverse * x, 0);`和`return new Vector3D(inverse % y, -inverse * x, 0);`。在变异语句可达的情况下，`inverse * y`和`inverse % y`的语义不同。例如，当`inverse = 2.5`且`y = 2`时，`inverse * y = 5.0`，而`inverse % y = 0.5`，程序状态会发生改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量为`inverse`，其数据依赖路径为`(line 16: double inverse = 1 / Math.sqrt(x * x + y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse % y, -inverse * x, 0))`。变异后的`inverse % y`会直接影响返回的`Vector3D`对象的第一个分量，从而传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径信息显示，变异语句`return new Vector3D(inverse % y, -inverse * x, 0);`直接控制程序的输出，因为它是方法的最后一条语句，直接决定返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：基于前述分析，变异体满足可达性、必要性，数据依赖与控制依赖路径均存在，且变异引入的错误状态（`inverse % y`的计算结果）会直接传递到程序输出，不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_019 的分析, 耗时: 49.6371 秒
+
+开始分析变异体 MUT_020...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_020": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0`, `!((x >= -threshold) && (x <= threshold))`, `(true) && (y <= threshold)`。这些条件可以同时满足，例如当`threshold`为正数且`x`不在`[-threshold, threshold]`范围内且`y <= threshold`时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`(y >= -threshold) && (y <= threshold)`，变异后的条件是`(true) && (y <= threshold)`。在变异语句可达的情况下，原条件要求`y`在`[-threshold, threshold]`范围内，而变异后的条件仅要求`y <= threshold`。因此，当`y < -threshold`时，原条件为假而变异条件为真，程序状态会发生改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`y`和`threshold`。`y`的值直接决定了条件判断的结果，进而影响后续的`inverse`计算和返回值。`threshold`的值也参与了条件判断。数据依赖路径显示，`threshold`和`y`的值会通过`inverse`的计算传递到最终的返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if ((true) && (y <= threshold))`控制了程序的分支走向。如果条件为真，执行`return new Vector3D(-inverse * z, 0, inverse * x);`；如果为假，执行`return new Vector3D(inverse * y, -inverse * x, 0);`。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了条件判断的逻辑，但在某些情况下（如`y < -threshold`），原程序和变异体的行为会不同。例如，当`y < -threshold`时，原程序会跳过该分支，而变异体会进入该分支并返回不同的向量。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_020 的分析, 耗时: 61.2509 秒
+
+开始分析变异体 MUT_021...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_021": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0, (x < -threshold) || (x > threshold)]`。这些条件可以满足，例如当 `threshold` 为正数且 `x` 的值不在 `[-threshold, threshold]` 范围内时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件为 `(y >= -threshold) && (y <= threshold)`，变异后的条件为 `(y == -threshold) && (y <= threshold)`。在变异语句可达的情况下，原条件允许 `y` 在 `[-threshold, threshold]` 范围内，而变异条件仅允许 `y == -threshold`。因此，变异改变了程序的状态，例如当 `y` 在 `(-threshold, threshold]` 范围内时，原程序会进入该分支，而变异程序不会。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `threshold` 和 `y`。`threshold` 的值通过数据依赖链传播到输出节点：`threshold` 用于计算 `inverse`，而 `inverse` 直接用于构造返回的 `Vector3D` 对象。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if ((y == -threshold) && (y <= threshold))` 控制了程序的分支走向。如果条件为真，程序执行 `return new Vector3D(-inverse * z, 0, inverse * x)`；如果为假，程序执行 `return new Vector3D(inverse * y, -inverse * x, 0)`。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的状态和控制流，但在特定情况下（例如 `y == -threshold`），变异体和原程序的行为可能一致。然而，对于其他情况（例如 `y > -threshold`），变异体会跳过该分支，导致程序行为不同。因此，变异引入的错误状态并未被完全覆盖或抵消。\n分析结论：变异引入的错误状态未被完全覆盖或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_021 的分析, 耗时: 53.9908 秒
+
+开始分析变异体 MUT_022...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_022": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0, !((x >= -threshold) && (x <= threshold))]`。这些条件可以满足，例如当 `threshold > 0` 且 `x` 的值不在 `[-threshold, threshold]` 范围内时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `(y >= -threshold) && (y <= threshold)`，变异表达式为 `(y > -threshold) && (y <= threshold)`。两者的区别在于 `y == -threshold` 时，原始表达式为 `true`，而变异表达式为 `false`。因此，当 `y == -threshold` 时，变异会改变程序的控制流。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `threshold` 和 `y`。`threshold` 的数据依赖路径显示其值会影响 `inverse` 的计算和最终的返回值。`y` 的值直接参与条件判断，进而影响控制流和返回值。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if ((y > -threshold) && (y <= threshold))` 控制了两个分支的执行：如果条件为 `true`，则执行 `return new Vector3D(-inverse * z, 0, inverse * x);`；如果为 `false`，则执行 `return new Vector3D(inverse * y, -inverse * x, 0);`。因此，变异语句通过控制流直接影响输出语句。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的控制流和中间状态，但在 `y == -threshold` 时，原始程序会进入 `if` 分支，而变异程序不会。这会导致不同的 `inverse` 计算和返回值。因此，变异引入的错误状态没有被修正或抵消，程序最终输出会受到影响。\n分析结论：不存在状态覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_022 的分析, 耗时: 51.3733 秒
+
+开始分析变异体 MUT_023...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_023": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))`。这些条件可以同时满足，例如当 `threshold` 为正数且 `x` 和 `y` 的绝对值都大于 `threshold` 时。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为 `inverse * y`，变异后的表达式为 `inverse - y`。这两个表达式在大多数情况下语义不同，例如当 `inverse = 2` 且 `y = 1` 时，原表达式结果为 `2`，变异表达式结果为 `1`。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `inverse` 和 `y`。`inverse` 和 `y` 的值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态改变会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是方法的最后一条返回语句，不受任何控制流分支的直接控制。因此，变异语句不通过控制流影响输出语句。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序状态（`inverse * y` 变为 `inverse - y`），但这种改变直接影响了返回的 `Vector3D` 对象的第一个分量，没有后续执行可以修正或抵消这种改变。因此，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_023 的分析, 耗时: 51.8755 秒
+
+开始分析变异体 MUT_024...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_024": "### 步骤1：可达性分析\n说明理由：变异语句位于`return new Vector3D(-inverse * z, 0, inverse * x);`，修改为`return new Vector3D(-inverse * z, -1, inverse * x);`。根据可达性约束`[threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)]`，该路径条件可满足（例如当`threshold=1, x=2, y=0.5`时），因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序返回的Vector3D的第二个分量为0，而变异体将其改为-1。在路径约束下，`inverse`和`z`的值均不为0（因为`x`和`z`的平方和为正数），因此`-inverse * z`和`inverse * x`的值会因输入不同而变化，但第二个分量从0变为-1是确定的改变。程序状态（返回的Vector3D对象）必然不同。\n\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是返回语句中的直接量（从0改为-1），但关键变化在于返回的Vector3D对象的第二个分量。该分量通过返回语句直接传播到程序输出（即方法的返回值）。数据依赖路径明确：`return new Vector3D(-inverse * z, -1, inverse * x)` → 方法返回值。\n\n分析结论：变异影响的输出分量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句是返回语句，直接决定程序输出，不受后续控制流影响。控制依赖路径为：`(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = ...) --> (14: return ...)`，变异语句是路径的最终节点，直接输出结果。\n\n分析结论：变异语句直接控制程序输出，无后续覆盖或修正。\n\n### 步骤5：状态覆盖分析\n说明理由：变异引入的状态改变（Vector3D的第二个分量从0变为-1）直接体现在返回值中，后续无任何操作覆盖或修正该状态。程序输出必然不同。\n\n分析结论：错误状态未被覆盖，程序输出改变。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_024 的分析, 耗时: 51.7875 秒
+
+开始分析变异体 MUT_025...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_025": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)`。该条件表示阈值非零且x和y都不在阈值范围内，这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + y * y);`，变异体语句为 `double inverse = 1 - Math.sqrt(x * x + y * y);`。在路径条件下，`Math.sqrt(x * x + y * y)` 的值是一个正实数，因此 `1 / Math.sqrt(x * x + y * y)` 和 `1 - Math.sqrt(x * x + y * y)` 的值通常不同（除非 `Math.sqrt(x * x + y * y)` 恰好为1）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 16: double inverse = 1 - Math.sqrt(x * x + y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异后的 `inverse` 值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --False--> (16: double inverse = 1 - Math.sqrt(x * x + y * y)) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0);)`。变异语句的执行直接决定了 `inverse` 的值，进而影响返回的 `Vector3D` 对象，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse` 的值改变）直接影响了返回的 `Vector3D` 对象的构造，且没有后续操作修正或抵消这种改变。因此，变异引入的错误状态未被覆盖，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_025 的分析, 耗时: 47.1365 秒
+
+开始分析变异体 MUT_026...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_026": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `threshold != 0 && !((x >= -threshold) && (x <= threshold)) && ((y >= -threshold) && (y <= threshold))`。这些条件可以同时满足，例如当 `threshold` 为正数，`x` 不在 `[-threshold, threshold]` 范围内，且 `y` 在 `[-threshold, threshold]` 范围内时。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句分别为 `return new Vector3D(-inverse * z, 0, inverse * x);` 和 `return new Vector3D(-inverse + z, 0, inverse * x);`。在变异语句可达的情况下，`-inverse * z` 和 `-inverse + z` 的语义不同。例如，当 `inverse = 1` 且 `z = 2` 时，原程序返回 `-2`，而变异体返回 `1`。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `inverse` 和 `z`。`inverse` 和 `z` 的值直接用于构造返回的 `Vector3D` 对象，并通过 `return` 语句输出。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句是 `return` 语句的一部分，直接控制程序的输出。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`-inverse + z` 替代 `-inverse * z`）直接影响了返回的 `Vector3D` 对象的第一个分量，且该错误状态未被后续执行修正或抵消。因此，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_026 的分析, 耗时: 46.4360 秒
+
+开始分析变异体 MUT_027...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_027": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。该条件表示 `threshold` 不为零且 `x` 在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1` 且 `x = 0` 时，条件为真。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的语句分别为 `double inverse = 1 / Math.sqrt(y * y + z * z);` 和 `double inverse = 0 / Math.sqrt(y * y + z * z);`。在变异语句可达的情况下，`Math.sqrt(y * y + z * z)` 的值始终为正数（因为 `y` 和 `z` 的平方和为正数，平方根也为正数）。原程序计算 `1 / Math.sqrt(...)`，结果为非零正数；而变异体计算 `0 / Math.sqrt(...)`，结果为零。因此，`inverse` 的值从非零变为零，程序状态被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 10: double inverse = 0 / Math.sqrt(y * y + z * z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse * y))`。`inverse` 的值直接用于计算返回的 `Vector3D` 对象的 `y` 和 `z` 分量。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `double inverse = 0 / Math.sqrt(y * y + z * z);` 的执行依赖于控制条件 `if ((x >= -threshold) && (x <= threshold))` 为真。返回语句 `return new Vector3D(0, inverse * z, -inverse * y);` 直接依赖于变异语句的执行结果。因此，变异语句通过控制流影响输出语句。\n分析结论：控制依赖路径存在。\n\n### 步骤[状态覆盖]：\n说明理由：变异体将 `inverse` 的值从非零改为零，导致返回的 `Vector3D` 对象的 `y` 和 `z` 分量从非零值变为零。原程序返回的向量形式为 `(0, inverse * z, -inverse * y)`，而变异体返回的向量形式为 `(0, 0, 0)`。显然，两者的输出不同，且没有后续执行修正或抵消这种差异。因此，变异引入的错误状态未被覆盖，程序最终输出受到影响。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_027 的分析, 耗时: 47.8809 秒
+
+开始分析变异体 MUT_028...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_028": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。这些条件是可满足的，例如当 `threshold` 为正数且 `x` 的绝对值小于等于 `threshold` 时，路径可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(y * y + z * z);`，变异体语句为 `double inverse = 1 - Math.sqrt(y * y + z * z);`。在路径约束 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]` 下，`Math.sqrt(y * y + z * z)` 的值可能为正数，因此 `1 / Math.sqrt(y * y + z * z)` 和 `1 - Math.sqrt(y * y + z * z)` 的值通常不同，除非 `Math.sqrt(y * y + z * z)` 恰好为 1。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 - Math.sqrt(y * y + z * z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse * y);)`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --True--> (10: double inverse = 1 - Math.sqrt(y * y + z * z)) -- --> (11: return new Vector3D(0, inverse * z, -inverse * y);)`。变异语句的执行直接决定了 `inverse` 的值，进而影响输出语句的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在。变异体造成的程序状态改变（`inverse` 的值变化）会直接传递到输出语句，且没有逻辑表明这种改变会被后续执行修正或抵消。因此，程序最终输出会受到影响。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_028 的分析, 耗时: 44.8314 秒
+
+开始分析变异体 MUT_029...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_029": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。该条件组合是可满足的，例如当 `threshold = 1` 且 `x = 0` 时，条件为真。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `return new Vector3D(0, inverse * z, -inverse * y);` 和 `return new Vector3D(0, inverse * z, -inverse - y);`。变异将 `-inverse * y` 改为 `-inverse - y`。在变异语句可达的情况下，这两者的语义是不同的。例如，当 `inverse = 1` 且 `y = 1` 时，原程序输出 `-1`，而变异体输出 `-2`。因此，变异实际改变了程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `inverse` 和 `y`。`inverse` 的数据依赖路径为 `(line 10: double inverse = 1 / Math.sqrt(y * y + z * z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse - y))`。`y` 的数据依赖路径为 `(line 11: return new Vector3D(0, inverse * z, -inverse - y))`。变异影响的变量 `inverse` 和 `y` 直接用于构造返回值，因此变异所引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(9: if ((x >= -threshold) && (x <= threshold))) --True--> (10: double inverse = 1 / Math.sqrt(y * y + z * z)) -- --> (11: return new Vector3D(0, inverse * z, -inverse - y);)`。变异语句是返回值的一部分，直接影响了程序的输出，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性，数据依赖与控制依赖路径均存在。变异体造成的程序状态改变直接传递到输出，且不存在逻辑上的抵消或修正。例如，当 `inverse = 1` 且 `y = 1` 时，原程序输出 `-1`，而变异体输出 `-2`，程序的可观察输出发生了改变。\n分析结论：变异引入的错误状态未被抵消，程序最终输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_029 的分析, 耗时: 43.4292 秒
+
+开始分析变异体 MUT_030...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_030": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]`。该条件表示 `threshold` 不为零，且 `x` 和 `y` 都不在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1`，`x = 2`，`y = 2` 时，条件成立。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为 `1 / Math.sqrt(x * x + y * y)`，变异后的表达式为 `1 / Math.sqrt(x - x + y * y)`。在路径条件下，`x - x` 恒等于 0，因此变异后的表达式简化为 `1 / Math.sqrt(y * y)`。而原表达式为 `1 / Math.sqrt(x * x + y * y)`。显然，除非 `x = 0`，否则两者的计算结果不同。由于路径条件并未限制 `x = 0`，因此变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 16: double inverse = 1 / Math.sqrt(x - x + y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0);)`。变异后的 `inverse` 值会直接用于计算返回值，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --False--> (16: double inverse = 1 / Math.sqrt(x - x + y * y)) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异语句的执行结果直接影响返回值，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `inverse` 的值，但由于 `x - x` 恒为 0，变异后的 `inverse` 值为 `1 / Math.sqrt(y * y)`，而原程序的 `inverse` 值为 `1 / Math.sqrt(x * x + y * y)`。除非 `x = 0`，否则两者的返回值 `new Vector3D(inverse * y, -inverse * x, 0)` 会不同。例如，当 `x = 1`，`y = 1` 时，原程序返回 `(0.707, -0.707, 0)`，而变异体返回 `(1, -1, 0)`。因此，变异引入的错误状态未被修正或抵消。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_030 的分析, 耗时: 49.0377 秒
+
+开始分析变异体 MUT_031...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_031": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0, !((x >= -threshold) && (x <= threshold)), (y >= -threshold) && (y <= threshold)]`。这些条件可以同时满足（例如 `threshold=1, x=2, y=0.5`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异是将 `inverse * x` 改为 `inverse / x`。在变异语句可达的路径下，`x` 的值可能不为 0（因为 `x` 参与了 `Math.sqrt(x * x + z * z)` 的计算，且 `threshold != 0`），因此 `inverse * x` 和 `inverse / x` 的语义不同（除非 `x=1` 或 `x=-1`，但这不是普遍情况）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `inverse` 和 `x` 的数据依赖路径直接连接到输出语句（`return new Vector3D(-inverse * z, 0, inverse / x)`）。变异后的值会直接影响输出结果。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是返回语句的一部分，直接控制程序的输出，因此不存在控制依赖缺失的问题。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的状态改变（`inverse / x` 替换 `inverse * x`）会直接影响输出结果，且没有后续操作修正或抵消这种改变。除非 `x=1` 或 `x=-1`，否则输出结果会不同。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_031 的分析, 耗时: 46.1894 秒
+
+开始分析变异体 MUT_032...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_032": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径条件组合为`threshold != 0 && x <= threshold`。该条件组合是可满足的，例如当`threshold = 1`且`x = 0`时，条件为真。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`(x >= -threshold) && (x <= threshold)`，变异表达式为`(true) && (x <= threshold)`。在变异语句可达的情况下（即`threshold != 0 && x <= threshold`），原始表达式的值为`x >= -threshold && true`，而变异表达式的值为`true && true`。由于`x <= threshold`隐含`x >= -threshold`（因为`threshold`为正数），因此两者在当前路径约束下语义等价，未改变程序状态。\n分析结论：变异未实际改变程序语义，属于非必要性。\n\n### 步骤[数据依赖]：\n说明理由：由于步骤[必要性]已判定变异未改变程序语义，因此无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于步骤[必要性]已判定变异未改变程序语义，因此无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于步骤[必要性]已判定变异未改变程序语义，因此无需进一步分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_032 的分析, 耗时: 56.2027 秒
+
+开始分析变异体 MUT_033...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_033": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`[threshold != 0, !((x >= -threshold) && (x <= threshold)), (y >= -threshold) && (y <= threshold)]`。这些条件可以同时满足，例如当`threshold`为正数，`x`不在`[-threshold, threshold]`范围内，且`y`在`[-threshold, threshold]`范围内时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`return new Vector3D(-inverse * z, 0, inverse * x);`，变异表达式为`return new Vector3D(-inverse - z, 0, inverse * x);`。在变异语句可达的情况下，`-inverse * z`和`-inverse - z`的语义不同。例如，当`inverse = 1`且`z = 2`时，原始表达式结果为`-2`，变异表达式结果为`-3`。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`inverse`和`z`。`inverse`的数据依赖路径为`(line 13: double inverse = 1 / Math.sqrt(x * x + z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse - z, 0, inverse * x))`。`z`的值直接用于构造返回的`Vector3D`对象。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出，存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为`(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x * x + z * z)) -- --> (14: return new Vector3D(-inverse - z, 0, inverse * x);)`。变异语句是返回语句的一部分，直接决定了程序的输出，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句，存在控制依赖条件。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在。变异体造成的程序状态改变（`-inverse * z`与`-inverse - z`的差异）会直接反映在返回的`Vector3D`对象中，且没有后续执行步骤可以修正或抵消这种差异。因此，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_033 的分析, 耗时: 42.8976 秒
+
+开始分析变异体 MUT_034...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_034": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)]`。该条件表示 `threshold` 不为零，`x` 不在 `[-threshold, threshold]` 范围内，且 `y` 在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + z * z);`，变异体语句为 `double inverse = 1 / Math.sqrt(x - x + z * z);`。在变异语句可达的情况下，`x - x` 恒等于 0，因此变异体语句等价于 `double inverse = 1 / Math.sqrt(z * z);`。这与原程序语句 `1 / Math.sqrt(x * x + z * z)` 在 `x != 0` 时语义不同，会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量为 `inverse`，其数据依赖路径为 `(line 13: double inverse = 1 / Math.sqrt(x - x + z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse` 的值直接影响到返回语句的输出，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x - x + z * z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x))`。变异语句的执行直接影响到返回语句的输出，因此变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体改变了 `inverse` 的计算方式，但在 `x != 0` 的情况下，`inverse` 的值会与原程序不同，从而影响最终的输出。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：错误状态未被覆盖。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_034 的分析, 耗时: 44.3413 秒
+
+开始分析变异体 MUT_035...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_035": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]`。这些条件可以满足，例如当 `threshold` 为正数且 `x` 和 `y` 的值不在 `[-threshold, threshold]` 范围内时，路径可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + y * y);`，变异体语句为 `double inverse = 1 + Math.sqrt(x * x + y * y);`。在路径约束 `[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]` 下，`x` 和 `y` 的值不为零（否则 `threshold` 为零），因此 `Math.sqrt(x * x + y * y)` 为正数。原语句计算的是倒数，而变异体计算的是加一，两者的结果完全不同，程序状态必然改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 16: double inverse = 1 + Math.sqrt(x * x + y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0);)`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --False--> (16: double inverse = 1 + Math.sqrt(x * x + y * y)) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0);)`。变异语句的执行直接决定了后续的返回语句，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，且变异体的计算结果与原程序完全不同（倒数 vs. 加一），因此构造的 `Vector3D` 对象也会完全不同。没有证据表明变异引入的错误状态会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_035 的分析, 耗时: 44.6173 秒
+
+开始分析变异体 MUT_036...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_036": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `threshold != 0 && !((x >= -threshold) && (x <= threshold))`。该条件组合是可满足的，例如当 `threshold > 0` 且 `x < -threshold` 或 `x > threshold` 时，路径可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原始表达式为 `(y >= -threshold) && (y <= threshold)`，变异表达式为 `(y >= +threshold) && (y <= threshold)`。在路径约束 `threshold != 0 && !((x >= -threshold) && (x <= threshold))` 下，`threshold` 为正数。原始表达式允许 `y` 在 `[-threshold, threshold]` 范围内，而变异表达式仅允许 `y` 在 `[threshold, threshold]` 范围内（即 `y == threshold`）。因此，变异体显著缩小了条件范围，可能改变程序状态。\n分析结论：变异实际改变了程序语义。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `threshold`，其数据依赖路径从定义（`line 4`）到变异语句（`line 12`），并通过控制流影响后续的 `inverse` 计算和返回值。具体路径如下：\n- 如果变异条件为真，执行 `line 13-14`，返回 `Vector3D(-inverse * z, 0, inverse * x)`。\n- 如果变异条件为假，执行 `line 16-17`，返回 `Vector3D(inverse * y, -inverse * x, 0)`。\n因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖\n说明理由：变异语句（`line 12`）直接控制两个分支：\n- 条件为真时，执行 `line 13-14` 返回。\n- 条件为假时，执行 `line 16-17` 返回。\n输出语句（`return`）的执行完全依赖于变异语句的真假结果。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体改变了条件范围，但只有在 `y == threshold` 时，变异体和原程序的行为一致（均返回 `Vector3D(-inverse * z, 0, inverse * x)`）。对于其他 `y` 值（如 `y == -threshold`），原程序会进入该分支，而变异体不会，导致不同的输出。因此，变异引入的错误状态未被完全覆盖。\n分析结论：变异体的输出可能与原程序不同。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_036 的分析, 耗时: 69.6907 秒
+
+开始分析变异体 MUT_037...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_037": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))]`。这些条件可以同时满足，例如当 `threshold` 不为零且 `x` 和 `y` 的值不在 `[-threshold, threshold]` 范围内时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + y * y);`，变异体语句为 `double inverse = 1 / Math.sqrt(x * x + y + y);`。在路径约束 `[threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))]` 下，`x` 和 `y` 的值可以取任意非零实数。此时，`x * x + y * y` 和 `x * x + y + y` 的值通常不相等（除非 `y = 0` 或 `y = 2`，但路径约束不限制 `y` 的具体值），因此变异会实际改变 `inverse` 的值，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 16: double inverse = 1 / Math.sqrt(x * x + y + y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异后的 `inverse` 值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径为 `(16: double inverse = 1 / Math.sqrt(x * x + y + y)) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异语句是顺序执行的，不涉及分支控制，因此变异语句不通过控制流影响输出语句。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异后的 `inverse` 值直接用于计算返回的 `Vector3D` 对象的字段值。由于 `inverse` 的值被改变（步骤2），且该改变通过数据依赖链传播到输出（步骤3），因此变异引入的错误状态未被后续执行修正或抵消，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_037 的分析, 耗时: 47.4522 秒
+
+开始分析变异体 MUT_038...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_038": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[threshold != 0, !((x >= -threshold) && (x <= threshold)), !((y >= -threshold) && (y <= threshold))]`。这些条件表示：1) threshold不为零；2) x不在[-threshold, threshold]范围内；3) y不在[-threshold, threshold]范围内。这些条件可以同时满足（例如当x和y的绝对值均大于threshold时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序计算`inverse`的表达式为`1 / Math.sqrt(x * x + y * y)`，变异体改为`1 / Math.sqrt(x / x + y * y)`。当x≠0时，x/x=1，此时变异后的表达式为`1 / Math.sqrt(1 + y * y)`，与原表达式`1 / Math.sqrt(x * x + y * y)`在x≠±1时语义不同。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`inverse`直接用于构造返回值`new Vector3D(inverse * y, -inverse * x, 0)`。数据依赖路径清晰：变异点（第16行）→返回值（第17行）。变异后的`inverse`值直接影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（第16行）位于方法的最后一条执行路径，其执行不受任何控制流分支的后续影响。返回值（第17行）直接依赖于变异语句的计算结果，但不存在控制流分支的干预。\n分析结论：变异语句通过数据依赖直接影响输出，但不存在控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：变异后的`inverse`值直接用于返回值计算，且未被任何后续操作修正或抵消。当x≠0且x≠±1时，变异会导致`inverse`值与原程序不同，从而影响最终输出。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_038 的分析, 耗时: 45.5601 秒
+
+开始分析变异体 MUT_039...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_039": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`[threshold != 0, !((x >= -threshold) && (x <= threshold)), (y >= -threshold) && (y <= threshold)]`。这些条件可以同时满足，例如当`threshold > 0`且`x`不在`[-threshold, threshold]`范围内，同时`y`在`[-threshold, threshold]`范围内时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`double inverse = 1 / Math.sqrt(x * x + z * z);`和`double inverse = 1 / Math.sqrt(x * x % (z * z));`。在路径约束条件下，`x`和`z`的值可以使得`x * x + z * z`与`x * x % (z * z)`的结果不同（例如`x=2, z=3`时，前者为13，后者为4 % 9 = 4），从而导致`inverse`的值不同。因此，变异确实改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inverse`，其数据依赖路径为：`(line 13: double inverse = 1 / Math.sqrt(x * x % (z * z))) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse`的值直接用于构造返回的`Vector3D`对象，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为：`(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x * x % (z * z))) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异语句的执行直接决定了`inverse`的值，而`inverse`的值又直接影响了输出语句的返回值。因此，变异语句通过控制流影响了输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了`inverse`的计算方式，但`inverse`的值最终用于构造`Vector3D`对象并返回。由于`x * x % (z * z)`与`x * x + z * z`的结果不同（除非`z=0`，但`z=0`会导致`Math.sqrt(0)`，此时`inverse`为无穷大，与原程序的行为不同），因此变异体的输出可能与原程序不同。没有证据表明错误状态会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_039 的分析, 耗时: 48.9916 秒
+
+开始分析变异体 MUT_040...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_040": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !(x >= -threshold && x <= threshold)]`。该条件表示 `threshold` 不为零且 `x` 不在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1` 且 `x = 2` 时，条件为真。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件为 `(y >= -threshold) && (y <= threshold)`，变异后的条件为 `(y >= -threshold) && (true)`，即简化为 `y >= -threshold`。在变异语句可达的情况下（`x` 不在 `[-threshold, threshold]` 范围内），原条件要求 `y` 在 `[-threshold, threshold]` 范围内，而变异条件仅要求 `y >= -threshold`。因此，当 `y > threshold` 时，原条件为假，变异条件为真，程序状态会改变（例如进入不同的分支）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `y` 和 `threshold`。`y` 的值通过条件判断直接影响后续的 `inverse` 计算和返回值。具体来说：\n- 如果 `y >= -threshold` 为真（变异条件），程序会计算 `inverse` 并返回一个新的 `Vector3D` 对象。\n- 如果 `y <= threshold` 为假（原条件为假，变异条件为真），程序会进入不同的分支（例如计算 `inverse` 的方式不同）。\n因此，变异影响的变量会通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是一个条件判断，直接控制后续代码的执行路径。例如：\n- 原程序：如果 `y` 不在 `[-threshold, threshold]` 范围内，会执行 `else` 分支。\n- 变异体：如果 `y >= -threshold` 为真，会执行对应的分支（即使 `y > threshold` 也会执行）。\n因此，变异语句通过控制流直接影响输出语句的执行路径。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的程序状态（例如 `y > threshold` 时原程序不执行分支，而变异体会执行），但最终输出是否受影响取决于具体的输入。例如：\n- 如果 `y > threshold`，原程序会跳过该分支，直接执行最后的 `else` 分支；变异体会执行该分支，但可能因为 `y` 的值过大导致 `inverse` 计算不同，从而影响返回值。\n- 没有证据表明变异引入的错误状态会被后续执行修正或抵消。\n因此，变异可能导致程序输出不同。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_040 的分析, 耗时: 69.9689 秒
+
+开始分析变异体 MUT_041...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_041": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。这些条件在数学上是可满足的（例如，`threshold = 1.0`，`x = 0.5`）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `inverse * z`，变异表达式为 `inverse - z`。在变异语句可达的情况下，`inverse` 和 `z` 的值均为非零实数（因为 `Math.sqrt` 的结果为正，且 `z` 为输入变量）。对于大多数输入值，`inverse * z` 和 `inverse - z` 的结果不同（例如，`inverse = 2.0`，`z = 3.0` 时，`2.0 * 3.0 = 6.0`，而 `2.0 - 3.0 = -1.0`）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse` 和 `z`。`inverse` 和 `z` 的值直接用于构造返回的 `Vector3D` 对象（`return new Vector3D(0, inverse - z, -inverse * y)`）。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是返回语句（`return new Vector3D(...)`），其执行直接决定了程序的输出。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体满足可达性、必要性、数据依赖和控制依赖条件。虽然在某些特定输入下（例如 `inverse = z` 时 `inverse - z = 0`，而 `inverse * z = z^2`），变异的效果可能被部分抵消，但这种抵消是偶然的，并非普遍情况。因此，变异引入的错误状态未被普遍修正或抵消。\n分析结论：变异效果未被普遍抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_041 的分析, 耗时: 50.2713 秒
+
+开始分析变异体 MUT_042...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_042": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。该条件表示当`threshold`不为零且`x`在`[-threshold, threshold]`范围内时，变异语句可达。这是一个可满足的条件，例如当`threshold=1`且`x=0`时条件成立。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序表达式为`Math.sqrt(y * y + z * z)`，变异后为`Math.sqrt(y * y * (z * z))`。数学上`y*y + z*z`与`y*y * z*z`仅在以下两种情况下等价：(1) `z=0`时两者都等于`y*y`；(2) `y=0`时两者都等于`z*z`。但在一般情况下（如`y=1,z=2`），`1+4=5`不等于`1*4=4`，计算结果不同。因此该变异会实际改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`inverse`直接用于构造返回值`new Vector3D(0, inverse * z, -inverse * y)`。数据依赖路径清晰：变异语句(line 10) → return语句(line 11)，且`inverse`的值会直接影响输出向量的y和z分量。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于条件`(x >= -threshold) && (x <= threshold)`为真的分支中，该分支直接通过return语句输出结果。变异语句的执行会直接影响输出向量的计算，不存在独立于输出的控制流。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`inverse`的计算方式，但在以下两种特殊情况下输出结果可能保持不变：(1) 当`z=0`时，两种计算方式结果相同，输出向量均为`(0,0,-inverse*y)`；(2) 当`y=0`时，输出向量均为`(0,inverse*z,0)`。但在一般情况下（如`y=1,z=1`），`inverse`值会从`1/sqrt(2)`变为`1/1`，导致输出向量不同。因此不存在普遍的状态覆盖现象。\n分析结论：变异引入的错误状态不会被普遍覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_042 的分析, 耗时: 53.9450 秒
+
+开始分析变异体 MUT_043...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_043": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`threshold != 0 && (x >= -threshold) && (x <= threshold)`。这些条件可以同时满足（例如当threshold为正数且x在[-threshold, threshold]范围内时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`inverse * z`计算向量分量，变异体改为`inverse / z`。当z≠0时，这两个表达式在数学上不等价（除非z=1时结果相同）。在可达路径条件下，z的值由输入决定且未被约束为1，因此变异会实际改变程序状态。\n分析结论：变异改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`inverse`通过直接的数据依赖路径传播到return语句（构造Vector3D对象作为输出）。变异后的`inverse / z`计算结果会直接影响输出向量的第二个分量。\n分析结论：变异影响通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是return语句的一部分，不涉及控制流改变。输出语句的执行直接依赖于变异语句的计算结果。\n分析结论：变异直接影响输出语句的执行结果。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的状态改变（用除法代替乘法）会直接反映在输出向量的分量值上，且后续执行中没有操作能修正或抵消这种改变。\n分析结论：变异状态未被覆盖，会影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_043 的分析, 耗时: 43.4970 秒
+
+开始分析变异体 MUT_044...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_044": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。该条件在 `threshold` 非零且 `x` 在 `[-threshold, threshold]` 范围内时可满足，例如 `threshold=1, x=0`。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用除法运算符 `/` 计算 `inverse`，而变异体使用取模运算符 `%`。对于 `double` 类型，`1 / Math.sqrt(y * y + z * z)` 和 `1 % Math.sqrt(y * y + z * z)` 的语义完全不同。前者计算倒数，后者计算余数。因此，变异会显著改变 `inverse` 的值，从而影响程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `inverse` 直接用于构造返回值 `new Vector3D(0, inverse * z, -inverse * y)`。变异后的 `inverse` 值会通过数据依赖链传播到输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `double inverse = 1 % Math.sqrt(y * y + z * z)` 的执行结果直接影响后续的 `return` 语句。虽然变异语句本身不控制分支走向，但其计算结果会通过数据依赖直接影响输出。\n分析结论：变异语句通过数据流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse` 的计算错误）会直接传递到输出，导致返回值 `new Vector3D(0, inverse * z, -inverse * y)` 与原程序不同。没有后续操作能修正或抵消这种错误状态。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_044 的分析, 耗时: 37.1707 秒
+
+开始分析变异体 MUT_045...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_045": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。这些条件可以同时满足（例如 `threshold = 1.0, x = 0.5`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序计算 `inverse = 1 / Math.sqrt(y * y + z * z)`，变异体计算 `inverse = 1 / Math.sqrt(y * y + z + z)`。对于任意 `z != 0`，`z * z` 和 `z + z` 的值不同（例如 `z = 1` 时 `z * z = 1`，`z + z = 2`），因此 `inverse` 的值会改变，程序状态被实际改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `inverse` 直接用于构造返回值 `new Vector3D(0, inverse * z, -inverse * y)`，其值的变化会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `if ((x >= -threshold) && (x <= threshold))` 的分支内，其执行结果直接控制后续的 `return` 语句是否执行。变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `inverse` 的值，但该改变会直接传递到返回值中（`inverse * z` 和 `-inverse * y`），没有后续操作修正或抵消这种改变，因此程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_045 的分析, 耗时: 39.7938 秒
+
+开始分析变异体 MUT_046...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_046": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))`。该条件表示 `threshold` 不为零，且 `x` 和 `y` 都不在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1`，`x = 2`，`y = 2` 时，条件成立。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + y * y)`，变异体语句为 `double inverse = 1 / Math.sqrt(x % x + y * y)`。`x % x` 的值恒为 0（因为任何数对自身取模结果为 0），而 `x * x` 的值通常不为 0（除非 `x = 0`，但根据路径条件 `x` 不在 `[-threshold, threshold]` 范围内，且 `threshold != 0`，因此 `x` 不为 0）。因此，`x % x` 和 `x * x` 的值不同，会导致 `inverse` 的计算结果不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 16: double inverse = 1 / Math.sqrt(x % x + y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异后的 `inverse` 值直接用于构造返回的 `Vector3D` 对象，因此变异的影响会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `double inverse = 1 / Math.sqrt(x % x + y * y)` 不是条件语句，不直接控制程序分支。输出语句 `return new Vector3D(inverse * y, -inverse * x, 0)` 的执行不依赖于变异语句的真假结果，而是直接依赖于 `inverse` 的值。因此，变异语句不通过控制流影响输出语句。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `inverse` 的值，但程序最终输出 `Vector3D(inverse * y, -inverse * x, 0)` 的值是否与原程序一致需要进一步分析。由于 `x % x = 0`，而 `x * x` 不为 0，`inverse` 的值必然不同，因此 `inverse * y` 和 `-inverse * x` 的值也会不同。因此，程序最终输出会受到影响，错误状态未被修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_046 的分析, 耗时: 80.2190 秒
+
+开始分析变异体 MUT_047...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_047": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !((x >= -threshold) && (x <= threshold)) && (y >= -threshold) && (y == threshold)]`。这些条件可以同时满足，例如当 `threshold` 为正数且 `x` 不在 `[-threshold, threshold]` 范围内，且 `y` 恰好等于 `threshold` 时，路径可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `(y >= -threshold) && (y <= threshold)`，变异表达式为 `(y >= -threshold) && (y == threshold)`。在路径约束 `y == threshold` 下，原始表达式简化为 `(y >= -threshold) && true`，变异表达式简化为 `(y >= -threshold) && true`。由于 `y == threshold` 且 `threshold > 0`（因为 `threshold == 0` 已被排除），`y >= -threshold` 必然为真。因此，原始表达式和变异表达式在路径约束下语义等价。\n分析结论：变异未实际改变程序状态，属于等价变异体。\n\n### 最终结论：\n由于在必要性分析中已确认变异体与原程序语义等价，无需继续后续分析步骤。  \n等价变异体判定结果：YES。"}
+完成变异体 MUT_047 的分析, 耗时: 50.2855 秒
+
+开始分析变异体 MUT_048...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_048": "### 步骤[可达性]：\n说明理由：根据提供的REACHABILITY_CONSTRAINT `[threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))]`，变异语句位于第三个条件分支（当x和y都不在[-threshold, threshold]范围内时执行）。该路径条件组合是可满足的，例如当threshold=1, x=2, y=2时，所有条件都为真。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用除法运算符`/`计算inverse，而变异体使用取模运算符`%`。这两个运算符在数学上有完全不同的语义：除法返回商，取模返回余数。对于任何非零的Math.sqrt(x*x + y*y)值，1 / v和1 % v的结果都不同（除非v=1时两者都为0，但这是特殊情况）。因此变异必然改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量inverse直接用于构造返回值`new Vector3D(inverse * y, -inverse * x, 0)`。数据依赖路径清晰：变异语句(line 16) → 返回语句(line 17)。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于最终返回路径上（前两个条件分支都不满足时执行），不控制任何其他语句的执行。返回语句无条件执行，不受变异语句的控制流影响。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了inverse的计算方式，但这种改变会直接反映在最终的返回值中，没有被后续操作修正或抵消。取模运算和除法运算的结果差异会直接导致返回的Vector3D对象坐标值不同。\n分析结论：变异引入的错误状态没有被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。\n\n（注：虽然控制依赖步骤的结论是\"不影响\"，但由于数据依赖路径明确存在且状态改变必然传播到输出，因此整体判定为非等价变异体。这与示例2中的非等价变异体情况类似，都是运算符替换导致语义变化且影响输出。）"}
+完成变异体 MUT_048 的分析, 耗时: 45.0758 秒
+
+开始分析变异体 MUT_049...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_049": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：[threshold != 0, !((x >= -threshold) && (x <= threshold)), (y >= -threshold) && (y <= threshold)]。这些条件可以同时满足，例如当threshold > 0且x不在[-threshold, threshold]范围内，而y在[-threshold, threshold]范围内时。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序表达式为`Math.sqrt(x * x + z * z)`，变异体表达式为`Math.sqrt(x * x + z - z)`。在变异语句可达的情况下，`z - z`恒等于0，而`z * z`在z≠0时不等于0。因此，变异体与原程序的计算结果不同（除非x=0且z=0，但此时`Math.sqrt(0)`的结果相同）。然而，根据路径约束，x和z的值没有特定限制（除了threshold != 0），因此存在输入（如x=1, z=1）使变异体与原程序的计算结果不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`inverse`，其数据依赖路径为：`(line 13: double inverse = 1 / Math.sqrt(x * x + z - z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。变异体的`inverse`值与原程序不同时，会直接影响到返回语句中的`-inverse * z`和`inverse * x`，从而改变程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为：`(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x * x + z - z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异语句的执行直接决定了`inverse`的值，而`inverse`的值直接影响输出语句的结果。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，且变异体造成的程序状态改变均可直接传递至输出。具体来说，`inverse`值的改变会直接导致返回的`Vector3D`对象的值不同（除非x=0且z=0，但这是特殊情况）。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_049 的分析, 耗时: 47.2448 秒
+
+开始分析变异体 MUT_050...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_050": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0, !((x >= -threshold) && (x <= threshold)), (y >= -threshold) && (y <= threshold)]`。这些条件可以同时满足，例如当 `threshold` 为正数且 `x` 不在 `[-threshold, threshold]` 范围内而 `y` 在该范围内时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `Math.sqrt(x * x + z * z)` 和 `Math.sqrt(x % x + z * z)`。在路径约束下（`y` 在阈值范围内），`x % x` 的结果始终为 0（因为 `x % x` 等价于 `x - x * (x / x)`），而 `x * x` 的结果为 `x²`。除非 `x = 0`，否则 `x % x` 和 `x * x` 的结果不同。但 `x = 0` 时，`!((x >= -threshold) && (x <= threshold))` 不成立，因此 `x` 不可能为 0。因此，变异必然改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 13: double inverse = 1 / Math.sqrt(x % x + z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse` 的值直接用于计算返回值，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖条件满足。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径为 `(5: if (threshold == 0)) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x % x + z * z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x))`。变异语句的执行直接决定了 `inverse` 的计算，进而影响返回值，因此变异语句通过控制流影响输出语句。\n分析结论：控制依赖条件满足。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`x % x` 替换 `x * x`）会导致 `inverse` 的值与原程序不同，进而影响返回值 `new Vector3D(-inverse * z, 0, inverse * x)`。由于 `x % x` 和 `x * x` 的结果不同（`x ≠ 0`），且 `inverse` 直接用于返回值计算，错误状态不会被后续执行修正或抵消。\n分析结论：状态未被覆盖，程序输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_050 的分析, 耗时: 54.0337 秒
+
+开始分析变异体 MUT_051...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_051": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合：`threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))`。该条件组合是可满足的（例如，当`threshold > 0`且`x`和`y`均不在`[-threshold, threshold]`范围内时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`double inverse = 1 / Math.sqrt(x * x + y * y);`，变异体语句为`double inverse = 1 * Math.sqrt(x * x + y * y);`。在可达路径下，`Math.sqrt(x * x + y * y)`的值是一个正实数（因为`x`和`y`不同时为0，否则`threshold`为0已被排除）。原语句计算的是平方根的倒数，而变异体计算的是平方根本身，两者结果不同（除非`Math.sqrt(x * x + y * y) == 1`，但这是特殊情况）。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inverse`，其数据依赖路径为：`(line 16: double inverse = 1 * Math.sqrt(x * x + y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0);)`。变异后的`inverse`值直接用于构造返回的`Vector3D`对象，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`double inverse = 1 * Math.sqrt(x * x + y * y);`与控制流无关，其执行不依赖于任何条件分支。输出语句`return new Vector3D(inverse * y, -inverse * x, 0);`直接依赖于变异语句的计算结果，但不涉及控制流的影响。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse`值的改变）直接传递到输出语句，且未被后续执行修正或抵消。由于`inverse`的值不同，返回的`Vector3D`对象的属性值也会不同（除非`y`和`x`均为0，但此时`threshold`为0已被排除）。因此，变异体的输出与原程序的输出不同。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_051 的分析, 耗时: 50.8090 秒
+
+开始分析变异体 MUT_052...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_052": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合`[threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)]`。这些条件可以同时满足（例如`threshold=1, x=2, y=0.5`），因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异是将`double inverse = 1 / Math.sqrt(x * x + z * z)`改为`double inverse = 0 / Math.sqrt(x * x + z * z)`。由于`Math.sqrt(x * x + z * z)`的结果为正实数，`1 / val`和`0 / val`的结果必然不同（前者为非零值，后者恒为0）。因此，程序状态必然被改变。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`inverse`的数据依赖路径为`(line 13: inverse赋值) → (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse`的值直接用于构造返回值，因此变异引入的状态差异可通过数据依赖链传播到输出。  \n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`if ((y >= -threshold) && (y <= threshold))`的分支内，其执行结果直接影响`return new Vector3D(-inverse * z, 0, inverse * x)`的输出值。因此，变异语句通过控制流影响输出语句。  \n分析结论：存在控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体将`inverse`的计算结果从非零值改为0，但这一改变会直接导致返回值`new Vector3D(-inverse * z, 0, inverse * x)`变为`new Vector3D(0, 0, 0)`（原程序返回非零向量）。因此，错误状态未被后续执行修正或抵消，程序输出发生改变。  \n分析结论：无状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_052 的分析, 耗时: 46.0697 秒
+
+开始分析变异体 MUT_053...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_053": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]`。该条件表示 `threshold` 不为零，且 `x` 和 `y` 都不在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1`，`x = 2`，`y = 2` 时，条件成立。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `double inverse = 1 / Math.sqrt(x * x + y * y);` 和 `double inverse = 1 / Math.sqrt(x * x + y - y);`。在路径条件下，`y - y` 恒等于 0，因此变异后的表达式简化为 `Math.sqrt(x * x)`，即 `|x|`。而原表达式为 `Math.sqrt(x * x + y * y)`。除非 `y = 0`，否则两者不等价。但路径条件并未限制 `y = 0`，因此存在输入（如 `y != 0`）使两者结果不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 16: double inverse = 1 / Math.sqrt(x * x + y - y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0))`。由于 `inverse` 的值直接用于计算返回的 `Vector3D` 对象的字段，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖条件满足。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --False--> (16: double inverse = 1 / Math.sqrt(x * x + y - y)) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异语句的执行直接决定了 `inverse` 的值，进而影响输出语句的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：控制依赖条件满足。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体满足可达性、必要性、数据依赖和控制依赖条件，但在特定输入下（如 `y = 0`），变异后的表达式 `Math.sqrt(x * x)` 与原表达式 `Math.sqrt(x * x + y * y)` 结果相同（均为 `|x|`），此时程序输出未受影响。然而，对于 `y != 0` 的输入，程序输出会因 `inverse` 的不同而改变。因此，变异引入的错误状态并未被完全覆盖或抵消。\n分析结论：状态覆盖不成立。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_053 的分析, 耗时: 50.6190 秒
+
+开始分析变异体 MUT_054...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_054": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。这些条件可以同时满足（例如当 `threshold` 为正数且 `x` 在 `[-threshold, threshold]` 范围内时），因此变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为 `1 / Math.sqrt(y * y + z * z)`，变异后的表达式为 `1 / Math.sqrt(y * y + z / z)`。当 `z != 0` 时，`z / z` 的值为 1，这与 `z * z`（当 `z = 1` 时也为 1）在特定情况下可能相同，但在一般情况下（例如 `z ≠ 1`）会导致计算结果不同。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 / Math.sqrt(y * y + z / z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse * y))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异的影响会传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --True--> (10: double inverse = 1 / Math.sqrt(y * y + z / z)) -- --> (11: return new Vector3D(0, inverse * z, -inverse * y);)`。变异语句的执行直接决定了 `inverse` 的值，进而影响输出语句的返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `inverse` 的计算方式，但在某些情况下（例如 `z = 1`），`z / z` 和 `z * z` 的值相同，可能导致最终输出与原程序相同。然而，这种覆盖是特定输入下的偶然现象，并非普遍成立。对于大多数输入（例如 `z ≠ 1`），变异会导致不同的输出。\n分析结论：变异引入的错误状态未被普遍修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_054 的分析, 耗时: 42.1840 秒
+
+开始分析变异体 MUT_055...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_055": "### 步骤[可达性]：\n说明理由：变异语句位于程序的最后一条返回语句，路径条件为`[threshold != 0, !((x >= -threshold) && (x <= threshold)), !((y >= -threshold) && (y <= threshold))]`。这些条件可以满足，例如当`threshold`为正数且`x`和`y`都不在`[-threshold, threshold]`范围内时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`return new Vector3D(inverse * y, -inverse * x, 0);`和`return new Vector3D(inverse / y, -inverse * x, 0);`。在变异语句可达的情况下，`inverse * y`和`inverse / y`的语义不同（除非`y=1`），因此该变异会实际改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inverse`和`y`。`inverse`和`y`的值直接用于构造返回的`Vector3D`对象，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是程序的最后一条返回语句，不控制任何其他语句的执行，因此不存在通过控制流影响输出语句的情况。\n分析结论：不存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序状态（`inverse * y` vs `inverse / y`），但这种改变直接体现在返回的`Vector3D`对象的第一个分量上，没有后续执行可以修正或抵消这种改变。因此，程序的最终输出会受到影响。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_055 的分析, 耗时: 49.5605 秒
+
+开始分析变异体 MUT_056...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_056": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0]`。该条件组合是可满足的（例如 `threshold = 1`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `(x >= -threshold) && (x <= threshold)`，变异后为 `(x <= threshold)`。在路径约束 `threshold != 0` 下，存在输入（例如 `x = -1, threshold = 1`）使得原始表达式为 `false`（因为 `-1 >= -1` 为 `true`，但 `-1 <= 1` 为 `true`，整体为 `true`），而变异后表达式为 `true`（`-1 <= 1`）。但原始代码中 `x >= -threshold` 的缺失可能导致程序状态改变（例如 `x = -2, threshold = 1` 时原始为 `false`，变异后为 `false`，但 `x = -1, threshold = 1` 时原始为 `true`，变异后为 `true`）。然而，关键在于变异是否实际改变程序语义。在原始代码中，`x` 必须同时满足 `>= -threshold` 和 `<= threshold` 才能进入分支，而变异后只需满足 `<= threshold`。因此，变异确实放宽了条件，可能改变程序状态。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `x` 和 `threshold`。`x` 的数据依赖路径显示其值直接影响条件分支的选择，进而影响 `inverse` 的计算和最终的返回值。具体路径如下：\n1. 如果 `(x <= threshold)` 为 `true`，则计算 `inverse` 并返回 `Vector3D(0, inverse * z, -inverse * y)`。\n2. 如果为 `false`，则进入后续条件分支，可能返回其他 `Vector3D` 值。\n因此，变异影响的变量 `x` 通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在，变异效果可传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `if ((x <= threshold))` 直接控制后续分支的执行：\n1. 若为 `true`，执行 `return new Vector3D(0, inverse * z, -inverse * y);`。\n2. 若为 `false`，进入后续 `else if` 或默认分支。\n因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：控制依赖路径存在，变异效果可传递到输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体放宽了条件（原始要求 `x` 在 `[-threshold, threshold]` 内，变异后只需 `<= threshold`），但关键在于是否存在输入使得变异体与原程序的行为不同。例如：\n- 输入 `x = -2, threshold = 1`：原始条件为 `false`（因为 `-2 >= -1` 为 `false`），变异后为 `false`（`-2 <= 1`），行为一致。\n- 输入 `x = -1, threshold = 1`：原始条件为 `true`（`-1 >= -1` 且 `-1 <= 1`），变异后为 `true`，行为一致。\n- 输入 `x = -1.5, threshold = 1`：原始条件为 `false`（`-1.5 >= -1` 为 `false`），变异后为 `true`（`-1.5 <= 1`），行为不同。\n因此，存在输入（如 `x = -1.5, threshold = 1`）使得变异体与原程序进入不同分支，导致输出不同。\n分析结论：变异引入的错误状态未被完全覆盖，程序输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_056 的分析, 耗时: 81.2880 秒
+
+开始分析变异体 MUT_057...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_057": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))]`。该条件表示阈值非零且x和y都不在阈值范围内，这是一个可满足的条件组合，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + y * y);`，变异体语句为 `double inverse = 1 / Math.sqrt(x * x * (y * y));`。在路径条件下，x和y都不在阈值范围内，且x和y的值会影响计算结果。例如，当x=2, y=3时，原程序计算为 `1 / Math.sqrt(4 + 9) = 1 / Math.sqrt(13)`，变异体计算为 `1 / Math.sqrt(4 * 9) = 1 / Math.sqrt(36)`，结果不同。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 16: double inverse = 1 / Math.sqrt(x * x * (y * y))) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0);)`。变异后的 `inverse` 值直接用于构造返回的 `Vector3D` 对象，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --False--> (16: double inverse = 1 / Math.sqrt(x * x * (y * y))) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0);)`。变异语句的执行直接决定了 `inverse` 的值，进而影响输出语句的执行结果，因此变异语句通过控制流影响输出语句。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `inverse` 的计算方式，但并未在后续执行中被修正或抵消。变异后的 `inverse` 值直接用于构造返回的 `Vector3D` 对象，且计算结果与原程序不同（如x=2, y=3时），因此程序最终输出会受到影响。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_057 的分析, 耗时: 50.8612 秒
+
+开始分析变异体 MUT_058...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_058": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。该条件表示 `threshold` 不为零且 `x` 的绝对值不超过 `threshold`，这是一个可满足的条件组合。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序中的表达式为 `-inverse * y`，变异后的表达式为 `-inverse / y`。在 `y` 不为零的情况下（因为 `y` 是 `Math.sqrt(y * y + z * z)` 的一部分，且 `y` 和 `z` 不同时为零），`-inverse * y` 和 `-inverse / y` 的值通常不相等（除非 `y = 1` 或 `y = -1`）。因此，该变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 / Math.sqrt(y * y + z * z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse / y))`。变异后的 `inverse` 直接用于构造返回的 `Vector3D` 对象，因此变异的效果会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于第11行，其控制依赖路径为 `(9: if ((x >= -threshold) && (x <= threshold))) --True--> (10: double inverse = 1 / Math.sqrt(y * y + z * z)) -- --> (11: return new Vector3D(0, inverse * z, -inverse / y);)`。变异语句是返回语句的一部分，直接控制程序的输出，因此变异效果可以通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体满足可达性、必要性、数据依赖和控制依赖条件，但在特定情况下（如 `y = 1` 或 `y = -1`），`-inverse * y` 和 `-inverse / y` 的值可能相同，从而导致程序输出未改变。然而，这种情况是特例，大多数情况下变异会改变输出。因此，变异引入的错误状态并未被完全覆盖或抵消。\n分析结论：变异引入的错误状态未被后续执行修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_058 的分析, 耗时: 51.0948 秒
+
+开始分析变异体 MUT_059...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_059": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[threshold != 0, !((x >= -threshold) && (x <= threshold))]`。这意味着 `threshold` 不为零且 `x` 不在 `[-threshold, threshold]` 范围内。这些条件是可以满足的，例如当 `threshold = 1` 且 `x = 2` 时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是 `(y >= -threshold) && (y <= threshold)`，变异后的条件是 `(y >= -threshold) && (y < threshold)`。两者的区别在于是否包含 `y == threshold` 的情况。当 `y == threshold` 时，原程序的条件为真，而变异后的条件为假。因此，变异会改变程序的控制流，从而可能改变程序状态。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `threshold`，其数据依赖路径显示 `threshold` 的值会影响 `inverse` 的计算和最终的返回值。具体来说，`threshold` 的值决定了是否进入 `else if` 分支，从而影响 `inverse` 的计算和返回的 `Vector3D` 对象。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤4：控制依赖\n说明理由：变异语句 `if ((y >= -threshold) && (y < threshold))` 直接控制两个分支：如果条件为真，则执行 `return new Vector3D(-inverse * z, 0, inverse * x)`；如果为假，则执行 `return new Vector3D(inverse * y, -inverse * x, 0)`。因此，变异语句通过控制流直接影响输出语句。\n分析结论：控制依赖路径存在。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了程序的控制流和中间状态，但在 `y == threshold` 的情况下，原程序会进入 `else if` 分支并返回 `new Vector3D(-inverse * z, 0, inverse * x)`，而变异程序会跳过该分支并返回 `new Vector3D(inverse * y, -inverse * x, 0)`。这两种情况下返回的值是不同的，因此变异引入的错误状态没有被后续执行修正或抵消。\n分析结论：状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_059 的分析, 耗时: 60.1136 秒
+
+开始分析变异体 MUT_060...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_060": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !(x >= -threshold && x <= threshold)]`。该条件组合是可满足的，例如当 `threshold > 0` 且 `x < -threshold` 或 `x > threshold` 时，路径可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件为 `(y >= -threshold) && (y <= threshold)`，变异体将其简化为 `(y >= -threshold)`。在路径约束 `!(x >= -threshold && x <= threshold)` 下，`y` 的值可能超出 `[-threshold, threshold]` 范围。例如，当 `y > threshold` 时，原条件为 `false`，而变异条件为 `true`，这将导致程序执行不同的分支，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `threshold` 和 `inverse`。`threshold` 的值直接影响了 `inverse` 的计算，而 `inverse` 的值又直接影响了返回的 `Vector3D` 对象。因此，变异引入的状态改变可以通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句 `if ((y >= -threshold))` 控制了程序的分支走向，决定了是执行 `return new Vector3D(-inverse * z, 0, inverse * x);` 还是 `return new Vector3D(inverse * y, -inverse * x, 0);`。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体改变了程序的分支行为，但在某些情况下（例如 `y > threshold`），原程序和变异体的输出可能不同。例如，当 `y > threshold` 时，原程序会执行 `return new Vector3D(inverse * y, -inverse * x, 0);`，而变异体会执行 `return new Vector3D(-inverse * z, 0, inverse * x);`，两者的输出不同。因此，变异引入的错误状态未被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_060 的分析, 耗时: 67.2214 秒
+
+开始分析变异体 MUT_061...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_061": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]`。该路径条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `double inverse = 1 / Math.sqrt(x * x + y * y);` 和 `double inverse = -1 / Math.sqrt(x * x + y * y);`。在变异语句可达的情况下，变异操作将 `inverse` 的值从正变负，直接改变了程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `inverse`，其数据依赖路径为 `(line 16: double inverse = -1 / Math.sqrt(x * x + y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异后的 `inverse` 值直接用于计算返回值，因此变异所引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(16: double inverse = -1 / Math.sqrt(x * x + y * y)) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异语句直接影响了输出语句的计算，因此变异效果可以通过控制流传递到输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `inverse` 的符号，但在输出语句中，`inverse` 被用于计算 `inverse * y` 和 `-inverse * x`。由于 `inverse` 的符号变化同时影响了这两个计算，最终返回的 `Vector3D` 对象的三个分量中，`inverse * y` 和 `-inverse * x` 的符号变化相互抵消，导致最终输出的向量与原程序相同。因此，变异引入的错误状态在后续执行中被抵消，程序最终输出未受影响。\n分析结论：变异引入的错误状态被抵消，程序最终输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_061 的分析, 耗时: 43.4105 秒
+
+开始分析变异体 MUT_062...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_062": "### 步骤[不可达性]：\n说明理由：根据提供的`REACHABILITY_CONSTRAINT`，变异语句的路径条件组合为`[threshold != 1]`。这意味着只有当`threshold`不等于1时，变异语句才可达。然而，`threshold`的计算方式是`0.6 * getNorm()`，其值取决于`getNorm()`的返回值。由于`getNorm()`的返回值可能为0（导致`threshold == 0`）或正数（导致`threshold > 0`），但`threshold == 1`的情况需要`getNorm() ≈ 1.6667`，这在逻辑上是可能的。因此，变异语句的路径条件是可满足的，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[非必要性]：\n说明理由：原程序的条件是`if (threshold == 0)`，而变异体的条件是`if (threshold == 1)`。这两个条件的语义完全不同：原程序在`threshold == 0`时抛出异常，而变异体在`threshold == 1`时抛出异常。由于`threshold`的值可能为0或正数（包括1），这两个条件会导致不同的程序状态。例如，当`threshold == 0`时，原程序抛出异常而变异体不抛出；当`threshold == 1`时，变异体抛出异常而原程序不抛出。因此，变异实际改变了程序语义。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖缺失]：\n说明理由：变异影响的变量是`threshold`。根据`DATA_DEPENDENCY`，`threshold`的数据依赖路径如下：\n1. 如果`threshold == 1`为真，控制流会执行`throw new ArithmeticException(\"null norm\")`，直接影响程序输出（抛出异常）。\n2. 如果`threshold == 1`为假，`threshold`的值会传递到后续的`if`条件判断（如`(x >= -threshold) && (x <= threshold)`），进而影响`inverse`的计算和最终的`return`语句。\n因此，`threshold`的值通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在。\n\n### 步骤[控制依赖缺失]：\n说明理由：根据`CTRL_DEPENDENCY`，变异语句`if (threshold == 1)`的控制依赖路径如下：\n1. 如果为真，直接控制`throw`语句的执行。\n2. 如果为假，控制后续的`if`条件判断和返回语句的执行。\n因此，变异语句通过控制流直接影响输出语句。\n分析结论：控制依赖路径存在。\n\n### 步骤[执行状态覆盖]：\n说明理由：变异引入的错误状态（`threshold == 1`时抛出异常）不会被后续执行修正或抵消。原程序在`threshold == 0`时抛出异常，而变异体在`threshold == 1`时抛出异常。这两种情况会导致完全不同的程序行为（抛出异常或正常返回），且没有逻辑上的覆盖或抵消关系。因此，变异体的行为与原程序不等价。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_062 的分析, 耗时: 75.3337 秒
+
+开始分析变异体 MUT_063...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_063": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)]`。该路径条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `inverse * x`，变异表达式为 `inverse + x`。在路径约束 `y >= -threshold && y <= threshold` 下，`inverse` 和 `x` 的值均为非零实数（因为 `threshold != 0` 且 `x` 和 `y` 不满足阈值条件）。对于大多数输入，`inverse * x` 和 `inverse + x` 的结果不同，会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `inverse`，其数据依赖路径为 `(line 13: double inverse = 1 / Math.sqrt(x * x + z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse + x))`。变异后的 `inverse + x` 直接作为返回值的一部分，因此变异效果可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x * x + z * z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse + x);)`。变异语句是返回值的一部分，不涉及控制流分支，因此不通过控制流影响输出语句。\n分析结论：控制依赖缺失。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序状态（`inverse * x` 改为 `inverse + x`），但由于返回值中 `inverse + x` 的值与原程序 `inverse * x` 的值不同，且直接作为输出的一部分，因此变异效果未被后续执行修正或抵消。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_063 的分析, 耗时: 37.8688 秒
+
+开始分析变异体 MUT_064...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_064": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合`[threshold != 0 && !((x >= -threshold) && (x <= threshold))]`。该条件组合是可满足的（例如，当`threshold=1`且`x=2`时满足），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的条件为`(y >= -threshold) && (y <= threshold)`，变异体将其改为`false`。在变异语句可达的情况下（即`x`不在`[-threshold, threshold]`范围内），原条件可能为真或假（取决于`y`的值），而变异体强制为假。这将直接跳过原分支，导致程序状态改变（例如，不再计算`inverse`或返回特定向量）。\n分析结论：变异实际改变了程序状态，不满足非必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`threshold`和`y`（通过条件判断）。从数据依赖路径看：\n1. `threshold`的修改会影响后续`inverse`的计算（通过`Math.sqrt`的参数传递）。\n2. 变异体强制跳过原分支后，程序会直接执行最后的`else`分支，返回基于`x`和`y`的新向量。由于`y`的值未被变异直接影响（仅跳过其条件判断），但`threshold`的变化可能间接影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (false)`直接控制了程序分支的走向：\n1. 原程序可能进入`else if`分支或最后的`else`分支。\n2. 变异体强制跳过`else if`分支，直接执行最后的`else`分支。\n输出语句（`return new Vector3D`）的控制依赖于变异语句的真假结果，因此变异效果可以通过控制流传递到输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体强制跳过原分支，但最终的输出向量（基于`x`和`y`的计算）可能在某些输入下与原程序输出相同（例如，当`y`不在`[-threshold, threshold]`范围内时）。然而，对于其他输入（如`y`在范围内），变异体会返回不同的向量（因为跳过了正确的分支）。因此，变异引入的错误状态未被完全覆盖。\n分析结论：变异效果未被后续执行完全抵消，程序输出可能受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_064 的分析, 耗时: 61.8673 秒
+
+开始分析变异体 MUT_065...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_065": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`threshold != 0 && (x >= -threshold)`。该条件在`threshold != 0`且`x >= -threshold`时成立，是逻辑上可满足的。例如，当`threshold = 1`且`x = 0`时，条件成立。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件为`(x >= -threshold) && (x <= threshold)`，变异后的条件为`(x >= -threshold) && (true)`，即简化为`x >= -threshold`。在变异语句可达的情况下（`x >= -threshold`为真），原条件是否成立取决于`x <= threshold`。因此，当`x > threshold`时，原条件为假，而变异条件为真，程序状态会发生改变（例如控制流分支不同）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`threshold`，其数据依赖路径显示：\n1. 当变异条件为真时，会计算`inverse`并返回`Vector3D(0, inverse * z, -inverse * y)`。\n2. 当变异条件为假时，会进入后续条件判断（`y`相关条件）并可能返回其他`Vector3D`值。\n由于`threshold`的值直接影响`inverse`的计算和返回结果，变异效果可通过数据依赖链传播到输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if ((x >= -threshold) && (true))`直接控制以下分支：\n1. 真分支：返回`Vector3D(0, inverse * z, -inverse * y)`。\n2. 假分支：进入后续`y`相关条件判断。\n因此，变异语句通过控制流直接影响输出语句的执行路径。\n分析结论：存在控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序的控制流（例如`x > threshold`时原程序不进入该分支，而变异体会进入），但程序的其他逻辑（如后续`y`的条件判断）可能覆盖变异引入的状态差异。然而，由于`x`和`y`的取值独立，存在输入（如`x > threshold`且`y`不满足后续条件）使得程序输出与原始程序不同（例如返回不同的`Vector3D`值）。\n分析结论：变异引入的错误状态未被完全覆盖，程序输出可能受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_065 的分析, 耗时: 56.2451 秒
+
+开始分析变异体 MUT_066...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_066": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0`，这是一个可满足的条件（例如 `threshold = 1`）。因此，变异语句 `if ((x >= -threshold) && (x < threshold))` 是可执行的。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为 `x <= threshold`，变异后为 `x < threshold`。当 `x == threshold` 时，原条件为 `true`，变异条件为 `false`，程序状态会改变（进入不同的分支）。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `x` 和 `threshold`。`x` 的值直接影响条件判断结果，进而通过控制流决定后续的 `inverse` 计算和返回值。具体路径为：  \n1. 若条件为 `true`，计算 `inverse` 并返回 `Vector3D(0, inverse * z, -inverse * y)`。  \n2. 若条件为 `false`，进入后续分支（可能返回其他向量）。  \n因此，变异影响的变量通过数据依赖链传播到输出。  \n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制后续分支的执行（如 `inverse` 的计算和返回语句）。控制依赖路径明确：  \n- 变异语句为 `true` → 执行第10-11行。  \n- 变异语句为 `false` → 执行第12行及后续分支。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：当 `x == threshold` 时，原程序返回 `Vector3D(0, inverse * z, -inverse * y)`，而变异程序会进入 `else` 分支。若后续分支（如 `y` 的条件分支）未覆盖这一情况，返回值会不同。例如：  \n- 若 `y` 不满足 `(y >= -threshold) && (y <= threshold)`，最终返回 `Vector3D(inverse * y, -inverse * x, 0)`，与原程序不同。  \n因此，变异引入的错误状态未被完全覆盖。  \n分析结论：错误状态未被抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_066 的分析, 耗时: 72.7478 秒
+
+开始分析变异体 MUT_067...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_067": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。这些条件在数学上是可满足的（例如，`threshold = 1.0, x = 0.5`），因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `return new Vector3D(0, inverse * z, -inverse * y)`，变异表达式为 `return new Vector3D(1, inverse * z, -inverse * y)`。在路径约束 `threshold != 0 && (x >= -threshold) && (x <= threshold)` 下，变异将返回值的第一维从 `0` 改为 `1`，直接改变了程序状态（返回值对象）。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是返回值中的 `inverse` 和直接修改的常量 `0`→`1`。`inverse` 的数据依赖路径明确连接到输出语句（`return new Vector3D(...)`），且修改的常量 `1` 也会直接传递到输出。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是 `return` 语句，其执行直接控制程序输出，无需通过其他控制流传递。因此，变异效果必然影响输出。  \n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的状态改变（返回值第一维从 `0` 改为 `1`）未被后续执行修正或抵消，程序输出必然不同。  \n分析结论：变异状态未被覆盖，程序输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_067 的分析, 耗时: 39.7859 秒
+
+开始分析变异体 MUT_068...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_068": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。该条件表示 `threshold` 不为零且 `x` 的绝对值小于等于 `threshold`，这是一个可满足的条件组合。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为 `inverse * z`，变异体将其改为 `inverse % z`。在路径约束 `threshold != 0 && (x >= -threshold) && (x <= threshold)` 下，`inverse` 和 `z` 的值可能使得 `inverse * z` 和 `inverse % z` 的结果不同。例如，若 `inverse = 2.0` 且 `z = 3.0`，则 `inverse * z = 6.0`，而 `inverse % z = 2.0`。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 / Math.sqrt(y * y + z * z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse % z, -inverse * y))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖条件满足。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `return new Vector3D(0, inverse % z, -inverse * y);` 是程序的输出语句，直接控制程序的返回值。因此，变异语句通过控制流直接影响输出语句。\n分析结论：控制依赖条件满足。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse % z` 替代 `inverse * z`）会直接反映在返回的 `Vector3D` 对象的第二个分量上，且不会被后续执行修正或抵消。因此，程序最终输出会受到影响。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_068 的分析, 耗时: 37.3962 秒
+
+开始分析变异体 MUT_069...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_069": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !((x >= -threshold) && (x <= threshold)) && ((y >= -threshold) && (y <= threshold))]`。该条件表示 `threshold` 不为零，`x` 不在 `[-threshold, threshold]` 范围内，且 `y` 在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1`, `x = 2`, `y = 0.5` 时满足条件。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的差异是将 `Math.sqrt(x * x + z * z)` 改为 `Math.sqrt(x * x + z + z)`。在路径条件下，`z` 的值会影响计算结果。例如，当 `x = 1`, `z = 1` 时，原程序计算 `Math.sqrt(1 + 1) = 1.414`，变异体计算 `Math.sqrt(1 + 1 + 1) = 1.732`，结果不同。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 13: double inverse = 1 / Math.sqrt(x * x + z + z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异的影响会传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x * x + z + z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异语句的执行直接决定了 `inverse` 的值，进而影响输出语句的执行结果。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse` 的计算错误）会直接传递到输出语句，导致返回的 `Vector3D` 对象的值与原程序不同。例如，当 `x = 1`, `z = 1` 时，原程序返回的 `Vector3D` 的 `x` 分量为 `-1.414`，而变异体返回的 `x` 分量为 `-1.732`。因此，错误状态未被修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_069 的分析, 耗时: 46.2700 秒
+
+开始分析变异体 MUT_070...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_070": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold == 0]`。原程序中 `threshold = 0.6 * getNorm()`，而 `getNorm()` 返回的是向量的模，通常为正数（除非向量为零向量）。因此，`threshold == 0` 仅在 `getNorm() == 0` 时成立，即向量为零向量时可达。虽然这种情况较为特殊，但逻辑上是可满足的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异在于 `threshold` 的计算方式从 `0.6 * getNorm()` 变为 `0.0 * getNorm()`。当 `getNorm() != 0` 时，原程序的 `threshold` 为非零值，而变异体的 `threshold` 为 0，这会显著改变程序状态（例如后续的条件判断 `if (threshold == 0)` 和 `if ((x >= -threshold) && (x <= threshold))` 的行为）。因此，变异实际改变了程序语义。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `threshold`，其数据依赖路径如下：\n1. `threshold` 直接影响 `if (threshold == 0)` 的判断，进而可能触发异常或影响后续条件分支。\n2. `threshold` 的值会传递到 `if ((x >= -threshold) && (x <= threshold))` 和 `if ((y >= -threshold) && (y <= threshold))`，从而影响 `inverse` 的计算和最终的返回值。\n因此，`threshold` 的变化会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `threshold = 0.0 * getNorm()` 直接影响后续的控制流：\n1. 控制 `if (threshold == 0)` 的分支，可能触发异常。\n2. 控制 `if ((x >= -threshold) && (x <= threshold))` 和 `if ((y >= -threshold) && (y <= threshold))` 的分支，从而影响最终的返回值。\n因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `threshold` 的值，但在 `getNorm() == 0` 时（即向量为零向量），原程序和变异体的行为一致（都会抛出异常）。然而，对于 `getNorm() != 0` 的情况，变异体会将 `threshold` 设为 0，导致后续条件判断的行为与原程序完全不同（例如 `if ((x >= -threshold) && (x <= threshold))` 在 `threshold == 0` 时等价于 `if (x == 0)`，而原程序可能是更宽松的范围）。因此，变异引入的错误状态不会被完全覆盖或抵消，程序输出可能不同。\n分析结论：变异引入的错误状态未被完全覆盖或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_070 的分析, 耗时: 56.5052 秒
+
+开始分析变异体 MUT_071...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_071": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]`。该条件表示 `threshold` 不为零，且 `x` 和 `y` 都不在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1`，`x = 2`，`y = 2` 时，条件成立。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + y * y);`，变异体语句为 `double inverse = 0 / Math.sqrt(x * x + y * y);`。在可达路径下，`Math.sqrt(x * x + y * y)` 的值大于零（因为 `x` 和 `y` 不同时为零，否则 `threshold` 为零，与路径条件矛盾）。因此，原程序计算 `inverse` 为非零值，而变异体计算 `inverse` 为零。这会导致程序状态改变（`inverse` 的值不同）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 16: double inverse = 0 / Math.sqrt(x * x + y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异后的 `inverse` 值会直接传递到输出语句，影响返回值。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --False--> (16: double inverse = 0 / Math.sqrt(x * x + y * y)) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0);)`。变异语句的执行直接决定了输出语句的输入值（`inverse`），因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体将 `inverse` 的值从非零改为零，导致返回值 `new Vector3D(inverse * y, -inverse * x, 0)` 的所有分量均为零（因为 `inverse * y = 0`，`-inverse * x = 0`）。而原程序返回的 `Vector3D` 分量是非零的（除非 `x` 和 `y` 为零，但路径条件排除了这种情况）。因此，变异体的输出与原程序不同，错误状态未被覆盖或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_071 的分析, 耗时: 45.7636 秒
+
+开始分析变异体 MUT_072...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_072": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `threshold != 0 && (x >= -threshold) && (x <= threshold)`，这是一个可满足的条件。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序中的表达式是 `-inverse * y`，变异后的表达式是 `-inverse + y`。这两个表达式在语义上是不同的，乘法运算和加法运算的结果通常不同。因此，变异实际改变了程序语义。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `inverse` 和 `y`。`inverse` 和 `y` 的值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态改变会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句是返回语句的一部分，直接控制程序的输出。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了程序状态（从乘法到加法），但这种改变会直接反映在最终的输出值中，没有后续的执行步骤来修正或抵消这种改变。因此，程序的最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_072 的分析, 耗时: 47.4490 秒
+
+开始分析变异体 MUT_073...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_073": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]`。该条件表示 `threshold` 不为零，且 `x` 和 `y` 都不在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如 `threshold = 1, x = 2, y = 2` 即可满足。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `double inverse = 1 / Math.sqrt(x * x + y * y);` 和 `double inverse = 1 / Math.sqrt(x * x + y / y);`。在 `y != 0` 的情况下（因为 `threshold != 0` 且 `y` 不在 `[-threshold, threshold]` 范围内，所以 `y != 0`），`y / y` 的值为 1，而 `y * y` 的值通常不等于 1（除非 `y = 1` 或 `y = -1`）。因此，`Math.sqrt(x * x + y / y)` 和 `Math.sqrt(x * x + y * y)` 的值在大多数情况下不同，会导致 `inverse` 的值不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `inverse`，其数据依赖路径为 `(line 16: double inverse = 1 / Math.sqrt(x * x + y / y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0))`。`inverse` 的值直接用于计算返回的 `Vector3D` 对象的三个分量，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --False--> (16: double inverse = 1 / Math.sqrt(x * x + y / y)) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异语句的执行直接决定了 `inverse` 的值，而 `inverse` 的值直接影响输出语句的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在。变异体与原程序在 `y != 1` 且 `y != -1` 的情况下会计算出不同的 `inverse` 值，从而导致返回的 `Vector3D` 对象的分量不同。因此，变异引入的错误状态未被修正或抵消，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_073 的分析, 耗时: 49.5929 秒
+
+开始分析变异体 MUT_074...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_074": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。该条件表示 `threshold` 不为零且 `x` 的值在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1` 且 `x = 0` 时，条件为真。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句为 `double inverse = 1 / Math.sqrt(y * y + z * z);`，变异后的语句为 `double inverse = 1 * Math.sqrt(y * y + z * z);`。原语句计算的是 `Math.sqrt(y * y + z * z)` 的倒数，而变异语句直接计算 `Math.sqrt(y * y + z * z)`。除非 `Math.sqrt(y * y + z * z)` 的值为 1，否则两者的计算结果不同。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 * Math.sqrt(y * y + z * z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse * y);)`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异的影响可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `double inverse = 1 * Math.sqrt(y * y + z * z);` 和输出语句 `return new Vector3D(0, inverse * z, -inverse * y);` 之间没有控制流分支。变异语句的执行直接导致输出语句的执行，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse` 的计算方式改变）直接影响了输出语句中的 `Vector3D` 构造参数。除非 `Math.sqrt(y * y + z * z)` 的值为 1，否则输出结果会与原程序不同。因此，变异引入的错误状态未被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_074 的分析, 耗时: 49.2007 秒
+
+开始分析变异体 MUT_075...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_075": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))]`。该条件表示`threshold`不为0，且`x`和`y`都不在`[-threshold, threshold]`范围内。这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别是将`-inverse * x`改为`-inverse - x`。在变异语句可达的情况下，`inverse`和`x`的值会影响程序状态。由于`inverse`和`x`的值在一般情况下不满足`-inverse * x == -inverse - x`，因此该变异会实际改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`inverse`和`x`。`inverse`和`x`的值直接用于构造返回的`Vector3D`对象，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是返回语句的一部分，直接控制程序的输出。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句改变了程序状态，并且这种改变通过数据依赖和控制依赖传播到输出，但需要检查是否存在特定输入使得`-inverse * x`和`-inverse - x`的结果相同。由于`inverse`和`x`是任意实数，只有在`x == 0`或`inverse == x / (1 - x)`时两者才相等，但这种情况在一般情况下不成立。因此，变异引入的错误状态不会被修正或抵消。\n分析结论：变异引入的错误状态不会被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_075 的分析, 耗时: 53.6207 秒
+
+开始分析变异体 MUT_076...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_076": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。该条件组合是可满足的，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `double inverse = 1 / Math.sqrt(y * y + z * z);` 和 `double inverse = 1 / Math.sqrt(y * y % (z * z));`。在路径约束 `threshold != 0 && (x >= -threshold) && (x <= threshold)` 下，`y * y + z * z` 和 `y * y % (z * z)` 的计算结果可能不同（例如，当 `y = 2` 且 `z = 3` 时，`y * y + z * z = 13`，而 `y * y % (z * z) = 4 % 9 = 4`），因此程序状态可能改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 / Math.sqrt(y * y % (z * z))) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse * y);)`。变异后的 `inverse` 值直接影响了返回语句的输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(7: if ((x >= -threshold) && (x <= threshold))) --True--> (9: double inverse = 1 / Math.sqrt(y * y % (z * z))) -- --> (10: return new Vector3D(0, inverse * z, -inverse * y);)`。变异语句的执行直接决定了返回语句的输出值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性，数据依赖与控制依赖路径均存在，且变异体造成的程序状态改变可直接传递至输出，不存在状态覆盖现象。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_076 的分析, 耗时: 46.9317 秒
+
+开始分析变异体 MUT_077...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_077": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。这些条件在数学上是可满足的（例如 `threshold = 1, x = 0`），因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异是将 `inverse * z` 改为 `inverse + z`。在变异语句可达的路径下（`x` 在阈值范围内），`inverse` 和 `z` 的值均为实数，且 `inverse * z` 和 `inverse + z` 的语义不同（例如 `inverse = 1, z = 2` 时，`1 * 2 = 2` 而 `1 + 2 = 3`）。因此，变异实际改变了程序状态。  \n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `inverse` 和 `z` 直接用于构造返回值 `Vector3D` 的第二个分量（`inverse + z`）。根据数据依赖路径，`inverse` 和 `z` 的值通过 `return` 语句直接影响程序输出。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是 `return` 语句的一部分，其执行直接决定程序输出，不存在后续控制流覆盖其效果。因此，变异语句通过数据依赖而非控制依赖影响输出。  \n分析结论：变异语句直接决定输出，无需控制依赖分析。\n\n### 步骤[状态覆盖]：\n说明理由：变异体修改了 `Vector3D` 的第二个分量的计算方式（`inverse + z` 替代 `inverse * z`），且该分量的值直接作为输出的一部分。除非 `inverse * z == inverse + z`（例如 `z = 0` 或 `inverse = z/(1 - z)` 的特殊情况），否则输出必然不同。但题目未提供此类约束，因此默认情况下变异会改变输出。  \n分析结论：变异引入的状态改变未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_077 的分析, 耗时: 62.3664 秒
+
+开始分析变异体 MUT_078...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_078": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。这些条件可以同时满足（例如 `threshold = 1, x = 0`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序计算 `inverse` 的表达式为 `1 / Math.sqrt(y * y + z * z)`，变异后为 `1 / Math.sqrt(y / y + z * z)`。当 `y != 0` 时，`y / y` 结果为 1，与原表达式 `y * y` 不同（除非 `y = 1`）。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `inverse` 直接用于构造返回值 `new Vector3D(0, inverse * z, -inverse * y)`，因此变异引入的状态改变会通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `double inverse = 1 / Math.sqrt(y / y + z * z)` 的执行结果直接影响返回值，但变异语句本身不控制程序分支走向（无条件判断），因此不通过控制流影响输出语句。\n分析结论：控制依赖缺失（不影响输出）。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `inverse` 的值，但除非 `y = 1`，否则 `y / y` 与 `y * y` 的结果不同，导致 `inverse` 不同，进而影响返回值。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_078 的分析, 耗时: 41.3715 秒
+
+开始分析变异体 MUT_079...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_079": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]`。该条件表示阈值非零且x和y都不在阈值范围内，这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为`y * y`，变异后的表达式为`y % y`。对于任何非零y值，`y % y`等于0，而`y * y`等于y的平方。因此，除非y为0（此时`y % y`会抛出异常），否则这两个表达式的值不同，会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`inverse`通过数据依赖路径直接传播到输出语句（return语句）。变异后的`inverse`值会直接影响最终的输出结果。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于一个条件分支的末尾，其执行结果直接决定了后续的return语句的执行。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`inverse`的值，但由于`y % y`在y非零时为0，而`y * y`为y的平方，这会导致`inverse`的值完全不同，进而影响最终的输出结果。没有证据表明这种错误状态会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_079 的分析, 耗时: 46.5072 秒
+
+开始分析变异体 MUT_080...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_080": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)]`。该路径条件可满足（例如，当 `threshold > 0` 且 `x` 和 `y` 均不在 `[-threshold, threshold]` 范围内时），因此变异点可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `double inverse = 1 / Math.sqrt(x * x + y * y)` 和 `double inverse = 1 / Math.sqrt(x * x % (y * y))`。在路径约束下（`x` 和 `y` 均不为零且不满足阈值条件），`x * x + y * y` 与 `x * x % (y * y)` 的语义不同（例如，`x=3, y=2` 时，原表达式值为 `13`，变异表达式值为 `9 % 4 = 1`），导致 `inverse` 的计算结果不同，从而改变程序状态。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `inverse` 的数据依赖路径为 `(line 16: inverse 修改) → (line 17: return new Vector3D(inverse * y, -inverse * x, 0))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，其变化会通过返回值传播到程序输出。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于最终 `else` 分支，其执行结果直接决定返回值，且无其他控制流干扰。控制依赖路径为 `(变异语句) → (return 语句)`，变异效果可通过控制流传递到输出。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `inverse` 的计算方式，但在所有可能的输入下（如 `x=3, y=2`），`x * x % (y * y)` 的结果与原表达式 `x * x + y * y` 不同，导致返回的 `Vector3D` 值必然不同（例如，`inverse` 不同会直接影响 `inverse * y` 和 `-inverse * x` 的值）。因此，变异引入的错误状态未被后续执行修正或抵消。  \n分析结论：变异体的输出与原程序不同，不存在状态覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_080 的分析, 耗时: 56.5211 秒
+
+开始分析变异体 MUT_081...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_081": "### 步骤[可达性]：\n说明理由：变异语句位于程序的最后一条return语句，路径条件为`threshold != 0 && !(x >= -threshold && x <= threshold) && !(y >= -threshold && y <= threshold)`。该条件表示当threshold不为0且x和y都不在[-threshold, threshold]范围内时，变异语句可达。该条件在数学上是可满足的（例如x=2, y=2, threshold=1）。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回`new Vector3D(inverse * y, -inverse * x, 0)`，变异体返回`new Vector3D(inverse * y, +inverse * x, 0)`。两者在第二个分量上符号相反（-inverse*x vs +inverse*x）。在可达路径下，x和y都不在[-threshold, threshold]范围内，且inverse为正数（因为它是平方根的倒数），因此当x≠0时，变异会实际改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是inverse和x。inverse直接流向return语句的构造参数，x也通过乘法运算流向return语句。因此变异影响的变量通过数据依赖链直接传播到程序输出节点。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是程序的最终返回语句，不受任何控制流影响（没有后续语句可以覆盖它）。虽然它位于一个条件分支的else路径中，但变异本身是return语句，不通过控制流影响其他语句。\n分析结论：变异语句直接产生输出，不涉及控制依赖影响。\n\n### 步骤[状态覆盖]：\n说明理由：变异直接修改了return语句的输出值，且没有后续执行可以覆盖这个改变。在x≠0的情况下，返回的Vector3D对象的第二个分量值会发生改变（符号相反），这将导致程序的可观察输出不同。\n分析结论：变异引入的状态改变未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_081 的分析, 耗时: 87.5365 秒
+
+开始分析变异体 MUT_082...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_082": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold < 0]`。根据程序逻辑，`threshold` 是通过 `0.6 * getNorm()` 计算得到的，而 `getNorm()` 通常返回非负值（因为范数是非负的），因此 `threshold < 0` 的条件在逻辑上不可满足。这意味着变异语句的路径不可达。\n分析结论：不可达性条件满足，属于等价变异体。\n\n### 步骤[必要性]：\n说明理由：由于第一步已经确定变异语句不可达，无需进一步分析必要性。\n分析结论：跳过。\n\n### 步骤[数据依赖]：\n说明理由：由于第一步已经确定变异语句不可达，无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤[控制依赖]：\n说明理由：由于第一步已经确定变异语句不可达，无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤[状态覆盖]：\n说明理由：由于第一步已经确定变异语句不可达，无需进一步分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_082 的分析, 耗时: 50.3856 秒
+
+开始分析变异体 MUT_083...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_083": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。这些条件是可满足的，例如当 `threshold = 1.0`，`x = 0.5` 时，所有条件均为真。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(y * y + z * z);`，变异体语句为 `double inverse = 1 / Math.sqrt(y * y + z - z);`。在可达路径下，`z - z` 恒等于 0，而 `z * z` 是 `z` 的平方。除非 `z = 0`，否则 `y * y + z * z` 和 `y * y + z - z` 的值不同（前者为 `y^2 + z^2`，后者为 `y^2`）。因此，变异会改变 `inverse` 的计算结果，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 / Math.sqrt(y * y + z - z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse * y))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态改变会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --True--> (10: double inverse = 1 / Math.sqrt(y * y + z - z)) -- --> (11: return new Vector3D(0, inverse * z, -inverse * y);)`。变异语句的执行直接决定了 `inverse` 的值，而 `inverse` 的值直接影响输出语句的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体改变了 `inverse` 的计算方式（从 `1 / Math.sqrt(y^2 + z^2)` 变为 `1 / Math.sqrt(y^2)`），除非 `z = 0`，否则 `inverse` 的值会不同。`inverse` 的不同会直接导致返回的 `Vector3D` 对象的值不同（因为 `inverse * z` 和 `-inverse * y` 的值会改变）。因此，变异引入的错误状态不会被后续执行修正或抵消，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_083 的分析, 耗时: 48.2827 秒
+
+开始分析变异体 MUT_084...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_084": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)`。这些条件可以同时满足，例如当threshold为正数且x不在[-threshold, threshold]范围内而y在该范围内时。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句为`return new Vector3D(-inverse * z, 0, inverse * x);`和`return new Vector3D(-inverse * z, 1, inverse * x);`。变异将y坐标从0改为1。在变异语句可达的情况下，这将直接改变返回的Vector3D对象的y坐标值。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量为inverse，其数据依赖路径为：`(line 13: double inverse = 1 / Math.sqrt(x * x + z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 1, inverse * x);)`。变异后的y坐标值1直接作为返回对象的一部分，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径信息为：`(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x * x + z * z)) -- --> (14: return new Vector3D(-inverse * z, 1, inverse * x);)`。变异语句是返回语句本身，直接决定了程序的输出，因此变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，且变异体造成的程序状态改变（y坐标从0变为1）直接体现在最终输出中，不存在状态被修正或抵消的情况。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_084 的分析, 耗时: 53.4526 秒
+
+开始分析变异体 MUT_085...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_085": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。该条件组合是可满足的，例如当 `threshold = 1.0`，`x = 0.5` 时，条件为真。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `double inverse = 1 / Math.sqrt(y * y + z * z);` 和 `double inverse = 1 / Math.sqrt(y * y + z % z);`。在变异语句可达的情况下，`z % z` 的值恒为 0（因为任何数对自身取模结果为 0），而 `z * z` 的值在 `z != 0` 时不为 0。因此，`y * y + z % z` 和 `y * y + z * z` 的值在 `z != 0` 时不同，会导致 `inverse` 的值不同。因此，变异实际改变了程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 / Math.sqrt(y * y + z % z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse * y))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `double inverse = 1 / Math.sqrt(y * y + z % z);` 的控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --True--> (10: double inverse = 1 / Math.sqrt(y * y + z % z)) -- --> (11: return new Vector3D(0, inverse * z, -inverse * y);)`。变异语句的执行结果直接影响 `return` 语句的输出值，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse` 的值改变）直接传递到输出语句，且 `inverse` 的值在 `z != 0` 时与原程序不同，导致返回的 `Vector3D` 对象的值也不同。因此，变异引入的错误状态未被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_085 的分析, 耗时: 47.6244 秒
+
+开始分析变异体 MUT_086...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_086": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。该路径条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句分别为 `double inverse = 1 / Math.sqrt(y * y + z * z);` 和 `double inverse = 1 + Math.sqrt(y * y + z * z);`。在变异语句可达的情况下，两者的计算结果完全不同（除法 vs. 加法），会显著改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 + Math.sqrt(y * y + z * z)) --> (line 11: return new Vector3D(0, inverse * z, -inverse * y);)`。变异后的 `inverse` 值直接用于构造返回值，因此变异效果会传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径为 `(line 10: double inverse = 1 + Math.sqrt(y * y + z * z)) --> (line 11: return new Vector3D(0, inverse * z, -inverse * y);)`。变异语句直接决定返回值，因此变异效果会通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：基于前述分析，变异体满足可达性、必要性，且数据依赖与控制依赖路径均存在。变异后的 `inverse` 值与原程序完全不同，且直接用于构造返回值，因此程序最终输出会受到影响，不存在状态覆盖现象。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_086 的分析, 耗时: 44.4345 秒
+
+开始分析变异体 MUT_087...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_087": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`[threshold != 0, !((x >= -threshold) && (x <= threshold)), (y >= -threshold) && (y <= threshold)]`。这些条件可以同时满足，例如当`threshold`不为零，`x`不在`[-threshold, threshold]`范围内，且`y`在`[-threshold, threshold]`范围内时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`double inverse = 1 / Math.sqrt(x * x + z * z);`和`double inverse = 1 / Math.sqrt(x * x * (z * z));`。在变异语句可达的情况下，`x * x + z * z`与`x * x * (z * z)`的语义不同。例如，当`x=1, z=2`时，原表达式结果为`1 / Math.sqrt(1 + 4) = 1 / sqrt(5)`，而变异表达式结果为`1 / Math.sqrt(1 * 4) = 1 / sqrt(4)`，两者结果不同。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`inverse`，其数据依赖路径为：`(line 13: double inverse = 1 / Math.sqrt(x * x * (z * z))) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异后的`inverse`值直接用于构造返回的`Vector3D`对象，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为：`(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: THEN) -- --> (14: double inverse = 1 / Math.sqrt(x * x * (z * z))) -- --> (15: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异语句的执行依赖于`if`条件，但其结果直接用于构造返回值，不通过控制流影响输出语句。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`inverse`的值，且该值通过数据依赖链传播到输出，但变异后的`inverse`值与原程序的值在逻辑上可能在某些情况下导致相同的输出。例如，当`x=0`或`z=0`时，原表达式和变异表达式的计算结果可能相同。然而，在一般情况下（如`x=1, z=2`），变异会导致不同的输出。因此，变异引入的错误状态未被完全覆盖或抵消。\n分析结论：变异引入的错误状态未被完全覆盖或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_087 的分析, 耗时: 51.6242 秒
+
+开始分析变异体 MUT_088...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_088": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。这些条件可以满足，例如当 `threshold > 0` 且 `x` 的绝对值小于等于 `threshold` 时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句分别为 `return new Vector3D(0, inverse * z, -inverse * y);` 和 `return new Vector3D(0, inverse * z, +inverse * y);`。在变异语句可达的情况下，`-inverse * y` 和 `+inverse * y` 的值不同（除非 `y == 0`），因此程序状态会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `inverse` 和 `y`。`inverse` 的值通过 `return new Vector3D(0, inverse * z, +inverse * y);` 直接传播到程序输出节点（返回值）。`y` 的值也通过 `+inverse * y` 传播到输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句是 `return` 语句，直接控制程序的输出，因此变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`+inverse * y` 替代 `-inverse * y`）会直接反映在返回值中，除非 `y == 0`，否则返回值会不同。因此，错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_088 的分析, 耗时: 46.3298 秒
+
+开始分析变异体 MUT_089...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_089": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。这些条件可以同时满足（例如 `threshold = 1, x = 0`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序表达式为 `Math.sqrt(y * y + z * z)`，变异体表达式为 `Math.sqrt(y + y + z * z)`。对于大多数 `y` 和 `z` 的值（例如 `y = 1, z = 1`），原表达式结果为 `Math.sqrt(1 + 1) ≈ 1.414`，变异体表达式结果为 `Math.sqrt(1 + 1 + 1) ≈ 1.732`，计算结果不同，程序状态改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量 `inverse` 直接用于计算返回值 `new Vector3D(0, inverse * z, -inverse * y)`，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤4：控制依赖\n说明理由：变异语句 `double inverse = 1 / Math.sqrt(y + y + z * z)` 的结果直接用于构造返回值，输出语句的执行依赖于变异语句的计算结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`inverse` 的计算差异）会直接传递到返回值，且没有后续操作修正或抵消这种差异。因此，程序最终输出会受到影响。\n分析结论：错误状态未被修正或抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_089 的分析, 耗时: 38.3143 秒
+
+开始分析变异体 MUT_090...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_090": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。该条件表示 `threshold` 不为零且 `x` 在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold = 1` 且 `x = 0` 时，条件为真。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异在于将 `-inverse * y` 改为 `-inverse % y`。在数学上，`a * b` 和 `a % b` 是完全不同的运算，除非在特定情况下（如 `b = 1` 或 `a = 0`）可能结果相同。但在一般情况下，`-inverse * y` 和 `-inverse % y` 的值不同。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为：\n1. `inverse` 在 `line 10` 定义，流向 `line 11` 的返回语句（变异点）。\n2. `inverse` 的值直接用于构造返回的 `Vector3D` 对象。\n因此，变异影响的变量 `inverse` 通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖链存在，变异效果可传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是返回语句的一部分，直接控制程序的输出。因此，变异语句通过控制流直接影响输出语句。\n分析结论：控制依赖路径存在，变异效果可传递到输出。\n\n### 步骤[状态覆盖]：\n说明理由：变异将 `-inverse * y` 改为 `-inverse % y`，两者的结果在一般情况下不同（除非 `y = 1` 或 `inverse = 0`）。由于 `inverse` 是正数（`1 / Math.sqrt(...)`），且 `y` 可以是任意值，`-inverse % y` 的结果与 `-inverse * y` 不同，且不会被后续执行修正或抵消。因此，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_090 的分析, 耗时: 53.7779 秒
+
+开始分析变异体 MUT_091...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_091": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0, !((x >= -threshold) && (x <= threshold)), (y >= -threshold) && (y <= threshold)]`。这些条件可以同时满足，例如当 `threshold` 为正数，`x` 不在 `[-threshold, threshold]` 范围内，且 `y` 在 `[-threshold, threshold]` 范围内时。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为 `return new Vector3D(-inverse * z, 0, inverse * x);` 和 `return new Vector3D(-inverse * z, 0, inverse - x);`。在变异语句可达的情况下，`inverse * x` 和 `inverse - x` 的语义不同，会导致程序状态改变。例如，当 `inverse = 2` 且 `x = 1` 时，原程序返回 `2`，变异体返回 `1`，程序状态发生改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse` 和 `x`。`inverse` 的数据依赖路径为 `(line 13: double inverse = 1 / Math.sqrt(x * x + z * z)) --> (line 14: return new Vector3D(-inverse * z, 0, inverse - x))`，`x` 的数据依赖路径为 `(line 13: double inverse = 1 / Math.sqrt(x * x + z * z)) --> (line 14: return new Vector3D(-inverse * z, 0, inverse - x))`。变异后的值直接通过 `return` 语句输出，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `return new Vector3D(-inverse * z, 0, inverse - x);` 是方法的最终输出语句，不受其他控制流影响。因此，变异语句直接决定了程序的输出，无需通过控制流传递。\n分析结论：变异语句直接影响输出，无需控制依赖分析。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse - x` 替换 `inverse * x`）直接体现在输出中，没有后续执行步骤可以修正或抵消这种改变。因此，程序最终输出会受到影响。\n分析结论：错误状态未被覆盖，影响输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_091 的分析, 耗时: 49.4945 秒
+
+开始分析变异体 MUT_092...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_092": "### 步骤[可达性]：\n说明理由：变异语句的条件被修改为`if (false)`，这意味着该条件永远为假，因此变异语句的路径条件组合为`[threshold != 0, false]`。由于`false`恒为假，该路径逻辑上不可满足，因此变异语句不可达。\n分析结论：变异语句不可达。\n\n### 步骤[必要性]：\n说明理由：由于第一步已经确定变异语句不可达，根据等价变异体判定规则，无需继续后续分析步骤。\n分析结论：无需分析。\n\n### 步骤[数据依赖]：\n说明理由：由于第一步已经确定变异语句不可达，根据等价变异体判定规则，无需继续后续分析步骤。\n分析结论：无需分析。\n\n### 步骤[控制依赖]：\n说明理由：由于第一步已经确定变异语句不可达，根据等价变异体判定规则，无需继续后续分析步骤。\n分析结论：无需分析。\n\n### 步骤[状态覆盖]：\n说明理由：由于第一步已经确定变异语句不可达，根据等价变异体判定规则，无需继续后续分析步骤。\n分析结论：无需分析。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_092 的分析, 耗时: 44.2761 秒
+
+开始分析变异体 MUT_093...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_093": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)`。这些条件可以同时满足（例如当`threshold > 0`且`x`超出阈值范围而`y`在阈值范围内时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`x * x`，变异表达式为`x / x`。在路径约束下（`x`超出阈值范围且`x != 0`），`x * x`和`x / x`的语义完全不同：前者计算平方值，后者恒等于1（当`x != 0`时）。这将直接导致`inverse`的计算结果不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`inverse`的数据依赖路径为：`(line 13: inverse定义) → (line 14: return语句)`。变异后的`inverse`值通过返回语句直接影响程序输出，存在完整的数据依赖链。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`else if ((y >= -threshold) && (y <= threshold))`分支内，其计算结果直接决定返回的`Vector3D`对象的值。从变异语句到输出语句存在直接的控制依赖路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异将`x * x`改为`x / x`，导致`inverse`的计算结果从`1/sqrt(x²+z²)`变为`1/sqrt(1+z²)`（当`x != 0`）。这一差异会直接反映在返回的`Vector3D`对象的坐标值上，且没有后续操作能修正或抵消这种差异。\n分析结论：变异引入的错误状态未被覆盖，会影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_093 的分析, 耗时: 44.8676 秒
+
+开始分析变异体 MUT_094...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_094": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0]`，即 `threshold` 的值不为0时可达。由于 `threshold` 的计算方式从 `0.6 * getNorm()` 变为 `0.6 - getNorm()`，`getNorm()` 的返回值可能使得 `threshold` 不为0（例如 `getNorm() != 0.6` 时）。因此，存在输入使得 `threshold != 0` 成立，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序计算 `threshold = 0.6 * getNorm()`，变异体计算 `threshold = 0.6 - getNorm()`。两者的语义不同，除非 `getNorm()` 的值恰好满足 `0.6 * getNorm() == 0.6 - getNorm()`（即 `getNorm() ≈ 0.375`）。对于其他 `getNorm()` 值，`threshold` 的值会不同，从而影响后续的条件判断和程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `threshold` 通过数据依赖链传播到程序输出节点。具体路径如下：\n1. `threshold` 用于 `if (threshold == 0)` 的判断，影响是否抛出异常。\n2. `threshold` 用于 `if ((x >= -threshold) && (x <= threshold))` 和 `if ((y >= -threshold) && (y <= threshold))` 的判断，影响后续的 `inverse` 计算和返回值。\n因此，`threshold` 的变化会直接影响程序的输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `threshold = 0.6 - getNorm()` 的控制依赖路径直接影响后续的条件判断和输出语句。例如：\n1. `if (threshold == 0)` 的控制依赖决定是否抛出异常。\n2. `if ((x >= -threshold) && (x <= threshold))` 和 `if ((y >= -threshold) && (y <= threshold))` 的控制依赖决定返回哪种向量。\n因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `threshold` 的计算方式，但除非 `getNorm()` 的值恰好使得 `0.6 * getNorm() == 0.6 - getNorm()`，否则 `threshold` 的值会不同，从而影响后续的条件判断和输出。没有证据表明变异引入的错误状态会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_094 的分析, 耗时: 76.7784 秒
+
+开始分析变异体 MUT_095...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_095": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)]`。该路径条件可满足，即变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + z * z)`，变异体语句为 `double inverse = 1 * Math.sqrt(x * x + z * z)`。在路径约束下，`Math.sqrt(x * x + z * z)` 的值不为零（因为 `x` 和 `z` 的平方和为正数），因此原语句计算的是倒数，而变异体语句计算的是平方根本身。两者的计算结果不同，会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 13: double inverse = 1 * Math.sqrt(x * x + z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 * Math.sqrt(x * x + z * z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x))`。变异语句的执行直接决定了返回语句的输出值，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体改变了 `inverse` 的计算方式（从倒数变为平方根），且 `inverse` 的值直接用于构造返回的 `Vector3D` 对象。由于计算结果不同，返回的 `Vector3D` 对象的值也会不同，因此变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_095 的分析, 耗时: 44.9953 秒
+
+开始分析变异体 MUT_096...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_096": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0]`，即 `threshold` 不等于 0 时可达。由于 `threshold` 的计算方式从 `0.6 * getNorm()` 变为 `0.6 + getNorm()`，且 `getNorm()` 返回的是一个非负值（假设向量范数非负），因此 `threshold` 的值在变异后仍然可能为 0（例如当 `getNorm() = -0.6` 时）。但由于 `getNorm()` 通常返回非负值，且 `threshold` 的计算结果在大多数情况下不为 0，因此该变异语句在大多数输入下是可达的。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序计算 `threshold = 0.6 * getNorm()`，而变异体计算 `threshold = 0.6 + getNorm()`。这两种计算方式在大多数情况下会导致不同的 `threshold` 值（除非 `getNorm() = 0.6 * getNorm() / (1 - 0.6)`，即 `getNorm() = 0` 或特定值）。因此，变异会实际改变程序状态（`threshold` 的值），进而可能影响后续的条件判断和输出。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量是 `threshold`，其数据依赖路径如下：\n1. `threshold` 用于 `if (threshold == 0)` 的判断，直接影响是否抛出异常。\n2. `threshold` 用于 `if ((x >= -threshold) && (x <= threshold))` 和 `if ((y >= -threshold) && (y <= threshold))` 的判断，直接影响后续的 `inverse` 计算和返回值。\n因此，`threshold` 的值通过数据依赖链传播到程序输出节点（返回值）。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句 `threshold = 0.6 + getNorm()` 的结果直接影响以下控制流：\n1. `if (threshold == 0)` 的分支。\n2. `if ((x >= -threshold) && (x <= threshold))` 和 `if ((y >= -threshold) && (y <= threshold))` 的分支。\n这些分支决定了程序的输出（返回的 `Vector3D` 对象），因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异改变了 `threshold` 的值，但需要检查是否存在输入使得变异后的程序输出与原程序一致。例如：\n- 当 `getNorm() = 0` 时，原程序 `threshold = 0`，变异体 `threshold = 0.6`。原程序抛出异常，而变异体不会抛出异常，输出不同。\n- 当 `getNorm() = 1` 时，原程序 `threshold = 0.6`，变异体 `threshold = 1.6`。后续的 `if` 条件判断可能不同，导致输出不同。\n因此，变异引入的错误状态未被修正或抵消，程序输出可能受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_096 的分析, 耗时: 74.5132 秒
+
+开始分析变异体 MUT_097...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_097": "### 步骤1：可达性\n说明理由：根据提供的路径条件组合`[threshold > 0]`，变异语句`if (threshold <= 0)`的路径条件是`threshold > 0`。这意味着当`threshold > 0`时，变异语句的条件`threshold <= 0`为假，因此变异语句的可达性依赖于`threshold`的值。由于`threshold`的计算为`0.6 * getNorm()`，且`getNorm()`可能返回0（导致`threshold == 0`），因此存在输入使得变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是`threshold == 0`，变异后的条件是`threshold <= 0`。当`threshold == 0`时，两者行为一致；但当`threshold < 0`时，原程序的条件为假，而变异后的条件为真。然而，`threshold`的计算为`0.6 * getNorm()`，且`getNorm()`返回的是向量的范数（非负），因此`threshold`不可能小于0。因此，变异并未实际改变程序语义。\n分析结论：变异未改变程序语义，属于等价变异体。\n\n### 步骤3：数据依赖\n说明理由：由于步骤2已确定变异未改变程序语义，无需进一步分析数据依赖。\n分析结论：跳过。\n\n### 步骤4：控制依赖\n说明理由：由于步骤2已确定变异未改变程序语义，无需进一步分析控制依赖。\n分析结论：跳过。\n\n### 步骤5：状态覆盖\n说明理由：由于步骤2已确定变异未改变程序语义，无需进一步分析状态覆盖。\n分析结论：跳过。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_097 的分析, 耗时: 65.9746 秒
+
+开始分析变异体 MUT_098...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_098": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))]`。这些条件可以同时满足（例如当 `x` 和 `y` 的绝对值均大于 `threshold` 时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序计算 `inverse` 的方式为 `1 / Math.sqrt(x * x + y * y)`，而变异体改为 `1 / Math.sqrt(x * x / (y * y))`。这两者在数学上不等价（前者计算的是欧几里得距离的倒数，后者计算的是 `|y| / |x|`）。对于任何 `x` 和 `y` 不为零且不满足 `x = ±y` 的情况，两者的计算结果不同，因此程序状态会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量 `inverse` 直接流向最终的返回语句 `return new Vector3D(inverse * y, -inverse * x, 0);`。因此，变异引入的状态改变（`inverse` 的计算方式变化）会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句 `double inverse = 1 / Math.sqrt(x * x / (y * y));` 是顺序执行的一部分，不涉及控制流分支。输出语句 `return new Vector3D(inverse * y, -inverse * x, 0);` 直接依赖于变异语句的计算结果，但不受其控制流影响。因此，变异语句通过数据依赖而非控制依赖影响输出。\n分析结论：变异语句不通过控制流影响输出语句，但通过数据依赖影响输出。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`inverse` 的计算错误）会直接传递到输出语句，且不会被后续执行修正或抵消。因此，程序的最终输出会因变异而改变。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_098 的分析, 耗时: 56.0303 秒
+
+开始分析变异体 MUT_099...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_099": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`threshold != 0`，该条件可满足（例如`getNorm()`返回非零值），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序计算`threshold = 0.6 * getNorm()`，变异体改为`threshold = 0.6 / getNorm()`。当`getNorm()`不为0时，两种计算方式会导致`threshold`的值不同（例如`getNorm()=1`时原值为0.6，变异值为0.6；但`getNorm()=2`时原值为1.2，变异值为0.3），从而可能改变后续程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`threshold`通过数据依赖链传播到程序输出节点。具体路径为：`threshold`影响`if (threshold == 0)`的判断，进而影响后续所有分支和返回语句中的`inverse`计算及返回值。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流直接影响输出语句。`threshold`的值决定了后续所有分支的执行路径（如`if ((x >= -threshold) && (x <= threshold))`），最终影响返回的`Vector3D`对象。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`threshold`的值，但程序的所有分支和输出都依赖于`threshold`的新值，且没有逻辑表明错误状态会被后续执行修正或抵消。例如，`threshold`的不同会导致不同的`inverse`计算和返回值。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_099 的分析, 耗时: 64.3661 秒
+
+开始分析变异体 MUT_100...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_100": "### 步骤1：可达性\n说明理由：变异语句将`if (threshold == 0)`改为`if (false)`。由于`false`是一个恒假条件，该变异语句在逻辑上不可达，因为没有任何输入能够使`false`为真。\n分析结论：变异语句不可达。\n\n### 步骤2：必要性\n说明理由：由于步骤1已确定变异语句不可达，无需进行必要性分析。根据等价变异体判定规则，若变异语句不可达，则直接判定为等价变异体。\n分析结论：无需继续分析。\n\n### 步骤3：数据依赖\n说明理由：由于变异语句不可达，数据依赖分析无意义。\n分析结论：无需继续分析。\n\n### 步骤4：控制依赖\n说明理由：由于变异语句不可达，控制依赖分析无意义。\n分析结论：无需继续分析。\n\n### 步骤5：状态覆盖\n说明理由：由于变异语句不可达，状态覆盖分析无意义。\n分析结论：无需继续分析。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_100 的分析, 耗时: 48.3949 秒
+
+开始分析变异体 MUT_101...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_101": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0`, `(x < -threshold) || (x > threshold)`, `(y < -threshold) || (y > threshold)`。这些条件可以同时满足，例如当`threshold`为正数且`x`和`y`的绝对值大于`threshold`时。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体语句的区别是将`-inverse * x`改为`-inverse % x`。在数学上，乘法和取模运算是不同的操作，除非在特定情况下（如`x`为1时`-inverse * 1 == -inverse % 1`）。然而，`x`的值在一般情况下不满足这种特定条件，因此该变异会实际改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`inverse`，其数据依赖路径为：`inverse`的计算结果直接用于构造返回的`Vector3D`对象。具体来说，`inverse`的值通过`-inverse % x`传递到返回对象的第二个分量。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句是返回语句的一部分，直接控制程序的输出。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（将乘法改为取模）会直接影响到返回的`Vector3D`对象的第二个分量。由于取模运算的结果与乘法运算的结果在一般情况下不同，且没有后续操作修正或抵消这种差异，因此程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_101 的分析, 耗时: 48.1106 秒
+
+开始分析变异体 MUT_102...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_102": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[threshold != 0]`，即`threshold`不等于0时可达。由于`getNorm()`返回的值为向量的范数，始终非负，因此`0.6 * getNorm()`和`-0.6 * getNorm()`均可能不为0（除非`getNorm()`为0，但此时原程序会抛出异常）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的区别在于`threshold`的计算从`0.6 * getNorm()`变为`-0.6 * getNorm()`。由于`threshold`的符号会影响后续条件判断`(x >= -threshold) && (x <= threshold)`和`(y >= -threshold) && (y <= threshold)`的结果，从而可能改变程序的控制流和输出。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`threshold`，其数据依赖路径如下：\n1. `threshold`用于条件判断`if (threshold == 0)`，直接影响是否抛出异常。\n2. `threshold`用于后续的`if ((x >= -threshold) && (x <= threshold))`和`if ((y >= -threshold) && (y <= threshold))`，直接影响`inverse`的计算和最终的返回值。\n因此，`threshold`的值通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`threshold = -0.6 * getNorm()`控制后续的条件判断`if (threshold == 0)`和`if ((x >= -threshold) && (x <= threshold))`等，这些条件判断直接决定了程序的分支走向和最终的返回值。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`threshold`的符号，但在某些情况下（例如`x`和`y`均为0），`(x >= -threshold) && (x <= threshold)`和`(y >= -threshold) && (y <= threshold)`的结果可能与原程序相同，导致最终输出未受影响。然而，对于大多数输入，`threshold`符号的改变会导致条件判断结果不同，从而影响程序输出。因此，变异引入的错误状态并未被完全覆盖或抵消。\n分析结论：变异引入的错误状态未被完全覆盖或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_102 的分析, 耗时: 77.3375 秒
+
+开始分析变异体 MUT_103...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_103": "### 步骤[1. 可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0]`，即 `threshold` 不为0时可达。由于 `getNorm()` 的返回值可能为0或正数，因此存在输入使得 `threshold != 0` 成立（例如 `getNorm() > 0`）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序为 `threshold = 0.6 * getNorm()`，变异体为 `threshold = 0.6 % getNorm()`。当 `getNorm() != 0` 时：\n- 若 `getNorm() > 0`，`0.6 * getNorm()` 和 `0.6 % getNorm()` 的值通常不同（除非 `0.6` 是 `getNorm()` 的整数倍，但这是极特殊情况）。\n- 例如，`getNorm() = 1` 时，原程序 `threshold = 0.6`，变异体 `threshold = 0.6`（因为 `0.6 % 1 = 0.6`），此时语义相同；但 `getNorm() = 0.5` 时，原程序 `threshold = 0.3`，变异体 `threshold = 0.1`（因为 `0.6 % 0.5 = 0.1`），此时语义不同。\n因此，变异可能改变程序状态。\n分析结论：变异可能改变程序状态，满足必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量是 `threshold`，其数据依赖路径如下：\n1. `threshold` 用于 `if (threshold == 0)` 的判断，影响是否抛出异常。\n2. `threshold` 用于 `if ((x >= -threshold) && (x <= threshold))` 和 `if ((y >= -threshold) && (y <= threshold))` 的判断，影响后续的 `inverse` 计算和返回值。\n因此，`threshold` 的值通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到输出，存在数据依赖。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句 `threshold = 0.6 % getNorm()` 的控制依赖路径如下：\n1. 直接影响 `if (threshold == 0)` 的分支，可能抛出异常或进入后续逻辑。\n2. 后续的 `if ((x >= -threshold) && (x <= threshold))` 和 `if ((y >= -threshold) && (y <= threshold))` 的分支也依赖于 `threshold` 的值。\n因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句，存在控制依赖。\n\n### 步骤[5. 状态覆盖]：\n说明理由：\n- 当 `getNorm() = 1` 时，原程序和变异体的 `threshold` 值相同（均为 `0.6`），程序行为完全一致。\n- 当 `getNorm() = 0.5` 时，原程序 `threshold = 0.3`，变异体 `threshold = 0.1`，可能导致后续分支选择不同（例如 `x` 或 `y` 是否在 `[-threshold, threshold]` 范围内），从而影响返回值。\n- 因此，存在输入（如 `getNorm() = 0.5`）使得变异体和原程序的输出不同。\n分析结论：变异引入的错误状态未被完全覆盖，可能影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_103 的分析, 耗时: 79.7087 秒
+
+开始分析变异体 MUT_104...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_104": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)`。这些条件可以同时满足，例如当`threshold`为正数，`x`不在`[-threshold, threshold]`范围内，而`y`在该范围内时。\n分析结论：变异点可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`inverse * x`，变异表达式为`inverse % x`。在路径约束条件下，`inverse`和`x`的值可能不同（`inverse`是正数，`x`可以是任意实数）。例如，当`inverse = 2`且`x = 3`时，`inverse * x = 6`而`inverse % x = 2`，结果不同。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inverse`，其数据依赖路径为：`(line 13: double inverse = 1 / Math.sqrt(x * x + z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse % x))`。`inverse`的值直接用于构造返回的`Vector3D`对象，因此变异的影响会传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是返回语句的一部分，直接控制程序的输出。控制依赖路径为：`(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --True--> (14: double inverse = 1 / Math.sqrt(x * x + z * z)) -- --> (15: return new Vector3D(-inverse * z, 0, inverse % x);)`。变异语句直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体满足可达性、必要性、数据依赖与控制依赖路径均存在，但在某些情况下（如`x = 0`时，`inverse * x = 0`和`inverse % x`会抛出异常），变异体的行为与原程序不同。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_104 的分析, 耗时: 46.9998 秒
+
+开始分析变异体 MUT_105...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_105": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0 && !((x >= -threshold) && (x <= threshold)) && (y >= -threshold) && (y <= threshold)`。这些条件可以同时满足，例如当`threshold`为正数，`x`不在`[-threshold, threshold]`范围内，且`y`在`[-threshold, threshold]`范围内时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`double inverse = 1 / Math.sqrt(x * x + z * z);`，变异表达式为`double inverse = 1 / Math.sqrt(x * x / (z * z));`。在路径约束条件下，`x`和`z`的值可以使得`x * x + z * z`与`x * x / (z * z)`的结果不同（例如`x=2, z=1`时，前者为5，后者为4）。因此，变异会改变`inverse`的值，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inverse`，其数据依赖路径为：`(line 13: double inverse = 1 / Math.sqrt(x * x / (z * z))) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse`的值直接用于构造返回的`Vector3D`对象，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为：`(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x * x / (z * z))) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异语句的执行直接决定了`inverse`的值，进而影响返回的`Vector3D`对象。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了`inverse`的值，但`inverse`的值直接用于构造返回的`Vector3D`对象，且没有后续操作覆盖或修正这一改变。因此，变异引入的错误状态不会被抵消，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_105 的分析, 耗时: 45.7840 秒
+
+开始分析变异体 MUT_106...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_106": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为`[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。这些条件在数学上是可满足的（例如当`threshold=1.0`且`x=0.5`时成立），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原表达式为`1 / Math.sqrt(y * y + z * z)`，变异后为`1 / Math.sqrt(y * y - z * z)`。当`y*y > z*z`时，两者计算结果不同（例如`y=2, z=1`时原式结果为`1/sqrt(5)`，变异体为`1/sqrt(3)`），直接导致`inverse`值改变，进而影响后续返回值计算。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`inverse`通过数据依赖路径直接流向输出语句`return new Vector3D(0, inverse * z, -inverse * y)`。由于`inverse`的计算结果直接影响返回值，存在完整的数据依赖链。\n分析结论：变异效果可通过数据依赖传播到输出。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于条件分支`if ((x >= -threshold) && (x <= threshold))`的真分支中，但其本身不产生控制流改变（非条件语句）。输出语句的执行仅依赖于外层条件判断，与变异语句的计算结果无控制依赖关系。\n分析结论：变异语句不通过控制流影响输出。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异导致`inverse`值改变，但该改变会通过数据依赖直接传递到返回值（`inverse * z`和`-inverse * y`），且无任何后续操作能覆盖或抵消这种改变。例如当`y=2, z=1`时，原程序返回`(0, 1/sqrt(5), -2/sqrt(5))`，变异体返回`(0, 1/sqrt(3), -2/sqrt(3))`，输出明显不同。\n分析结论：错误状态未被覆盖。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_106 的分析, 耗时: 45.3066 秒
+
+开始分析变异体 MUT_107...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_107": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && (x >= -threshold) && (x <= threshold)]`。该条件组合是可满足的（例如，当 `threshold = 1`，`x = 0` 时），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序表达式为 `y * y`，变异体表达式为 `y % y`。对于任何非零 `y`，`y % y` 的值为 0，而 `y * y` 的值为 `y²`。因此，除非 `y = 0`，否则 `y % y` 和 `y * y` 的值不同。然而，`y = 0` 会导致 `Math.sqrt(y % y + z * z)` 和 `Math.sqrt(y * y + z * z)` 的值相同（因为 `0 + z * z = 0 + z * z`）。但 `y = 0` 不是路径约束的一部分，因此存在输入（如 `y = 1`）使得原程序和变异体的计算结果不同。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 / Math.sqrt(y % y + z * z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse * y))`。因此，`inverse` 的值直接影响到输出语句的返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：控制依赖路径为 `(9: if ((x >= -threshold) && (x <= threshold))) --True--> (10: double inverse = 1 / Math.sqrt(y % y + z * z)) -- --> (11: return new Vector3D(0, inverse * z, -inverse * y))`。变异语句的执行直接决定了 `inverse` 的计算，进而影响输出语句的返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异体在某些输入（如 `y = 0`）下与原程序的行为一致，但在其他输入（如 `y = 1`）下会导致 `inverse` 的值不同，从而影响最终的返回值。因此，变异引入的错误状态并未被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_107 的分析, 耗时: 44.5949 秒
+
+开始分析变异体 MUT_108...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_108": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)]`。这些条件是可满足的，例如当 `threshold > 0`、`x` 不在 `[-threshold, threshold]` 范围内且 `y` 在 `[-threshold, threshold]` 范围内时，路径可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + z * z);`，变异体语句为 `double inverse = 1 + Math.sqrt(x * x + z * z);`。在路径约束条件下，`Math.sqrt(x * x + z * z)` 的值始终为非负实数，因此 `1 / Math.sqrt(...)` 和 `1 + Math.sqrt(...)` 的语义完全不同。例如，当 `x=1, z=1` 时，原程序计算 `inverse ≈ 0.707`，而变异体计算 `inverse ≈ 2.414`。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `inverse` 的数据依赖路径为 `(line 13: inverse = 1 + Math.sqrt(...)) → (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse` 的值直接用于构造返回值，其改变会传递到输出。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径为 `(line 12: if (y >= -threshold && y <= threshold)) → (line 13: inverse = 1 + Math.sqrt(...)) → (line 14: return ...)`。变异语句的执行结果直接影响返回值，且无其他控制流覆盖其效果。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse` 的计算错误）直接传递到返回值，且未被后续执行修正或抵消。例如，返回值 `new Vector3D(-inverse * z, 0, inverse * x)` 中的 `inverse` 值与原程序不同，导致最终输出不同。  \n分析结论：变异状态未被覆盖，程序输出受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_108 的分析, 耗时: 63.2769 秒
+
+开始分析变异体 MUT_109...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_109": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0, (x < -threshold) || (x > threshold), (y >= -threshold) && (y <= threshold)]`。这些条件可以同时满足，例如当 `threshold` 为正数，`x` 的绝对值大于 `threshold`，且 `y` 的绝对值小于等于 `threshold` 时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + z * z);`，变异体语句为 `double inverse = -1 / Math.sqrt(x * x + z * z);`。在变异语句可达的情况下，`inverse` 的值从正变为负，直接改变了程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 13: double inverse = -1 / Math.sqrt(x * x + z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态改变会传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径为 `(5: if (threshold == 0)) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = -1 / Math.sqrt(x * x + z * z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异语句的执行直接决定了后续 `return` 语句的执行，因此变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体将 `inverse` 的值从正变为负，但在构造 `Vector3D` 对象时，`inverse` 的符号变化被后续的乘法操作抵消（例如 `-inverse * z` 和 `inverse * x`），最终返回的 `Vector3D` 对象的坐标值与原程序一致。因此，变异引入的错误状态在后续执行中被抵消，程序最终输出未受影响。\n分析结论：变异引入的错误状态被后续执行抵消，程序最终输出未受影响。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_109 的分析, 耗时: 45.2703 秒
+
+开始分析变异体 MUT_110...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_110": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `threshold != 0 && (x >= -threshold) && (x <= threshold)`。该条件表示 `threshold` 不为零且 `x` 在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序表达式为 `1 / Math.sqrt(y * y + z * z)`，变异体表达式为 `1 / Math.sqrt(y - y + z * z)`。在变异语句可达的情况下，`y - y` 恒等于 0，因此变异体表达式简化为 `1 / Math.sqrt(z * z)`。与原表达式相比，变异体忽略了 `y` 的贡献。除非 `y` 为零，否则这将导致 `inverse` 的值不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 10: double inverse = 1 / Math.sqrt(y - y + z * z)) --[Flows inverse]--> (line 11: return new Vector3D(0, inverse * z, -inverse * y))`。变异后的 `inverse` 值会直接影响到返回语句中的 `inverse * z` 和 `-inverse * y`，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为 `(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --True--> (10: double inverse = 1 / Math.sqrt(y - y + z * z)) -- --> (11: return new Vector3D(0, inverse * z, -inverse * y);)`。变异语句的执行直接决定了 `inverse` 的值，进而影响返回语句的输出，因此变异语句与输出语句存在控制依赖路径。\n分析结论：变异效果可以传递至输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `inverse` 的计算方式，但除非 `y` 为零，否则 `inverse` 的值会与原程序不同，从而影响最终的返回值。只有在 `y` 为零时，变异体的 `inverse` 值与原程序相同，此时错误状态被抵消。然而，`y` 为零只是输入空间的一个子集，因此不能保证在所有情况下错误状态都被抵消。\n分析结论：变异引入的错误状态未被完全覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_110 的分析, 耗时: 43.5151 秒
+
+开始分析变异体 MUT_111...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_111": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为`threshold != 0`，这是一个可满足的条件，因为`threshold`是通过`0.6 * getNorm()`计算得到的，除非`getNorm()`返回0，否则`threshold`不为0。根据`REACHABILITY_CONSTRAINT`，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是`(x >= -threshold) && (x <= threshold)`，表示`x`在`[-threshold, threshold]`区间内。变异后的条件是`(x >= -threshold) == (x <= threshold)`，这是一个逻辑等价性判断。当`x`在区间内时，`x >= -threshold`和`x <= threshold`都为真，`true == true`为真；当`x`不在区间内时，至少有一个条件为假，`false == false`或`false == true`或`true == false`，结果为假或假。因此，变异前后的条件在逻辑上是等价的。\n分析结论：变异未实际改变程序语义，属于等价变异体。\n\n### 步骤3：数据依赖\n说明理由：由于步骤2已经确定变异未改变程序语义，数据依赖分析可以跳过。\n分析结论：跳过。\n\n### 步骤4：控制依赖\n说明理由：由于步骤2已经确定变异未改变程序语义，控制依赖分析可以跳过。\n分析结论：跳过。\n\n### 步骤5：状态覆盖\n说明理由：由于步骤2已经确定变异未改变程序语义，状态覆盖分析可以跳过。\n分析结论：跳过。\n\n### 最终结论\n等价变异体判定结果：YES。"}
+完成变异体 MUT_111 的分析, 耗时: 57.8658 秒
+
+开始分析变异体 MUT_112...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_112": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0 && !((x >= -threshold) && (x <= threshold)) && !((y >= -threshold) && (y <= threshold))`。这些条件可以同时满足，例如当`threshold`为正数且`x`和`y`的绝对值都大于`threshold`时。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`double inverse = 1 / Math.sqrt(x * x + y * y);`和`double inverse = 1 / Math.sqrt(x + x + y * y);`。在变异语句可达的情况下，`x * x`和`x + x`的语义不同（例如`x=2`时，`x * x=4`，`x + x=4`；`x=3`时，`x * x=9`，`x + x=6`）。因此，变异会改变`inverse`的值，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`inverse`，其数据依赖路径为：`(line 16: double inverse = 1 / Math.sqrt(x + x + y * y)) --[Flows inverse]--> (line 17: return new Vector3D(inverse * y, -inverse * x, 0))`。变异后的`inverse`值会直接影响到返回的`Vector3D`对象的构造参数，因此变异效果可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句到输出语句的控制依赖路径为：`(16: double inverse = 1 / Math.sqrt(x + x + y * y)) -- --> (17: return new Vector3D(inverse * y, -inverse * x, 0);)`。变异语句直接计算`inverse`的值，而输出语句依赖于`inverse`的值，因此变异语句通过数据流而非控制流影响输出语句。控制依赖路径不存在。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`inverse`值的改变）会直接传递到输出语句，且没有后续操作修正或抵消这种改变。因此，程序的最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_112 的分析, 耗时: 44.2396 秒
+
+开始分析变异体 MUT_113...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_113": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`threshold != 0 && (x >= -threshold) && (x == threshold)`。这个条件组合是可满足的，例如当`threshold = 1`且`x = 1`时，所有条件都为真。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`(x >= -threshold) && (x <= threshold)`，变异表达式为`(x >= -threshold) && (x == threshold)`。在变异语句可达的情况下（即`x == threshold`），原始表达式的值为`true`（因为`x <= threshold`必然成立），而变异表达式的值也为`true`。因此，变异并未改变程序的状态。\n分析结论：变异未改变程序状态，属于等价变异体。\n\n### 最终结论：\n由于在必要性分析中已经确定变异未改变程序状态，因此无需继续后续分析步骤。\n等价变异体判定结果：YES。"}
+完成变异体 MUT_113 的分析, 耗时: 84.4827 秒
+
+开始分析变异体 MUT_114...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_114": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)`。这些条件可以同时满足，例如当`threshold`为正数且`x`不在`[-threshold, threshold]`范围内而`y`在该范围内时。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`double inverse = 1 / Math.sqrt(x * x + z * z);`和`double inverse = 1 / Math.sqrt(x * x + z % z);`。在路径约束`y >= -threshold && y <= threshold`下，`z`的值可能不为零（因为`z`未被约束）。对于`z != 0`，`z * z`和`z % z`的结果不同（`z % z`恒为0），因此`inverse`的计算结果会不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inverse`，其数据依赖路径为：`(line 13: double inverse = 1 / Math.sqrt(x * x + z % z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse`的值直接用于构造返回的`Vector3D`对象，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为：`(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x * x + z % z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异语句的执行依赖于条件`(y >= -threshold && y <= threshold)`，但其结果直接用于构造返回值，不通过控制流影响输出语句。\n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体满足可达性、必要性，且数据依赖路径存在。虽然`inverse`的计算结果因变异而改变，但最终输出的`Vector3D`对象的值会因`inverse`的不同而不同（除非`z`或`x`为零，但路径约束未限制`z`或`x`为零）。因此，变异引入的错误状态未被后续执行修正或抵消。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_114 的分析, 耗时: 53.6752 秒
+
+开始分析变异体 MUT_115...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_115": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[threshold != 0 && !((x >= -threshold) && (x <= threshold)) && ((y >= -threshold) && (y <= threshold))]`。该条件表示 `threshold` 不为零，`x` 不在 `[-threshold, threshold]` 范围内，且 `y` 在 `[-threshold, threshold]` 范围内。这是一个可满足的条件，例如当 `threshold=1`, `x=2`, `y=0.5` 时满足条件。因此，变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `double inverse = 1 / Math.sqrt(x * x + z * z);`，变异体语句为 `double inverse = 1 % Math.sqrt(x * x + z * z);`。除法 (`/`) 和取模 (`%`) 是两种完全不同的运算，对于绝大多数输入值（例如 `Math.sqrt(x * x + z * z) = 2`，原程序 `inverse=0.5`，变异体 `inverse=1`），两者的计算结果不同，会导致程序状态改变。因此，变异具有必要性。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `inverse`，其数据依赖路径为 `(line 13: inverse赋值) → (line 14: return new Vector3D(-inverse * z, 0, inverse * x))`。`inverse` 的值直接用于构造返回的 `Vector3D` 对象，因此变异引入的状态差异会通过数据依赖链传播到程序输出。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `double inverse = 1 % Math.sqrt(x * x + z * z);` 的执行依赖于控制条件 `(y >= -threshold) && (y <= threshold)`，但变异语句本身不控制任何分支（它是一条赋值语句）。输出语句 `return new Vector3D(...)` 的执行仅依赖于外层的 `if-else` 条件，与变异语句无直接控制依赖关系。因此，变异语句不通过控制流影响输出语句。  \n分析结论：变异语句不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句的计算结果与原程序不同（如必要性分析所示），但 `inverse` 的差异会直接传递到返回的 `Vector3D` 对象中（如数据依赖分析所示），导致最终输出不同。例如，当 `x=1`, `z=1` 时，`Math.sqrt(x * x + z * z) ≈ 1.414`，原程序 `inverse ≈ 0.707`，变异体 `inverse = 1 % 1.414 ≈ 1`，返回的 `Vector3D` 对象坐标值会显著不同。因此，变异引入的错误状态未被后续执行修正或抵消。  \n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_115 的分析, 耗时: 52.5871 秒
+
+开始分析变异体 MUT_116...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 522 Connect origin timed out"
+Retrying request to /chat/completions in 0.499596 seconds
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_116": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)`。这些条件可以同时满足，例如当`threshold`为正数，`x`不在`[-threshold, threshold]`范围内，且`y`在`[-threshold, threshold]`范围内时。\n分析结论：变异点可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句分别为`double inverse = 1 / Math.sqrt(x * x + z * z);`和`double inverse = 1 / Math.sqrt(x + x + z * z);`。在变异语句可达的情况下，`x * x`和`x + x`在大多数情况下不相等（除非`x=0`或`x=2`），因此变异会实际改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inverse`，其数据依赖路径为：`(line 13: double inverse = 1 / Math.sqrt(x + x + z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异后的`inverse`值直接用于构造返回的`Vector3D`对象，因此变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为：`(5: if (threshold == 0)) --False--> (9: if ((x >= -threshold) && (x <= threshold))) --False--> (12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x + x + z * z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异语句的执行直接决定了`inverse`的值，进而影响最终的返回值，因此变异语句与输出语句存在控制依赖路径。\n分析结论：变异效果可以传递至输出。\n\n### 步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性、数据依赖与控制依赖路径均存在。虽然变异改变了`inverse`的计算方式，但由于`inverse`的值直接用于构造返回的`Vector3D`对象，且`x * x`与`x + x`在大多数情况下不等，因此程序最终输出会受到影响。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_116 的分析, 耗时: 53.7163 秒
+
+开始分析变异体 MUT_117...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_117": "### 步骤[可达性]：\n说明理由：变异语句的条件是`threshold == -1`，而根据`REACHABILITY_CONSTRAINT`给出的路径条件为`[threshold != -1]`。这意味着在程序执行到该变异语句时，`threshold`的值不可能等于-1，因此变异语句的条件永远为假，路径不可达。\n分析结论：变异语句不可达。\n\n### 最终结论：\n由于变异语句不可达，根据等价变异体的判定规则，该变异体属于等价变异体。\n等价变异体判定结果：YES。"}
+完成变异体 MUT_117 的分析, 耗时: 49.5354 秒
+
+开始分析变异体 MUT_118...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_118": "### 步骤[1. 可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[threshold != 0 && x >= -threshold]`。这些条件是可满足的（例如，`threshold = 1.0` 且 `x = 0.5`），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[2. 必要性]：\n说明理由：原程序的条件为 `(x >= -threshold) && (x <= threshold)`，变异后为 `(x >= -threshold)`。在路径约束 `x >= -threshold` 下，原条件与变异条件的差异在于是否满足 `x <= threshold`。存在输入（例如 `x = threshold + 1`）使得原条件为假而变异条件为真，从而改变程序的控制流和状态。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[3. 数据依赖]：\n说明理由：变异影响的变量为 `threshold` 和 `inverse`。`threshold` 的值直接影响条件判断的结果，进而决定 `inverse` 的计算和返回的 `Vector3D` 对象。数据依赖路径显示 `threshold` 和 `inverse` 的值最终传播到输出语句（`return`）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[4. 控制依赖]：\n说明理由：变异语句 `if ((x >= -threshold))` 直接控制后续分支的执行（计算 `inverse` 和返回 `Vector3D` 对象）。控制依赖路径显示输出语句的执行依赖于变异语句的真假结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[5. 状态覆盖]：\n说明理由：虽然变异体改变了程序的控制流和中间状态，但在某些情况下（例如 `x > threshold`），原程序会进入 `else if ((y >= -threshold) && (y <= threshold))` 分支，而变异体可能直接进入 `if ((x >= -threshold))` 的分支。然而，由于后续逻辑的差异（例如 `inverse` 的计算方式不同），最终返回的 `Vector3D` 对象可能不同。因此，变异引入的错误状态未被完全覆盖或抵消。\n分析结论：变异引入的错误状态未被修正或抵消，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_118 的分析, 耗时: 71.6692 秒
+
+开始分析变异体 MUT_119...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_119": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)`。这些条件可以同时满足，例如当`threshold`为正数且`x`不在`[-threshold, threshold]`范围内而`y`在该范围内时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式为`1 / Math.sqrt(x * x + z * z)`，变异后的表达式为`1 / Math.sqrt(x * x - z * z)`。在变异语句可达的情况下，`x * x + z * z`和`x * x - z * z`的结果可能不同（除非`z = 0`，但这不是普遍情况）。因此，变异会实际改变`inverse`的值，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inverse`，其数据依赖路径为：`(line 13: double inverse = 1 / Math.sqrt(x * x - z * z)) --[Flows inverse]--> (line 14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异后的`inverse`值直接用于构造返回的`Vector3D`对象，因此变异的效果会传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：控制依赖路径为：`(12: if ((y >= -threshold) && (y <= threshold))) --True--> (13: double inverse = 1 / Math.sqrt(x * x - z * z)) -- --> (14: return new Vector3D(-inverse * z, 0, inverse * x);)`。变异语句的执行直接决定了`inverse`的值，进而影响输出语句的执行结果。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异后的`inverse`值直接用于构造返回的`Vector3D`对象，且没有后续操作覆盖或修正这一状态。因此，变异引入的错误状态不会被抵消或修正，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_119 的分析, 耗时: 45.2863 秒
+
+开始分析变异体 MUT_120...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_120": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足以下条件组合：`threshold != 0 && !(x >= -threshold && x <= threshold) && (y >= -threshold && y <= threshold)`。这些条件可以同时满足（例如当`threshold > 0`且`x`超出阈值范围而`y`在阈值范围内时），因此变异点可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式为`-inverse * z`，变异表达式为`-inverse % z`。在数学上，乘法和取模运算具有完全不同的语义（例如当`inverse=2.5`和`z=1.5`时，`-2.5*1.5=-3.75`而`-2.5%1.5=-1.0`）。由于`inverse`和`z`均为浮点数（由`Math.sqrt`和向量分量决定），这种差异会导致程序状态改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`inverse`通过直接数据依赖路径传播到输出节点（line 13 → line 14）。虽然其他分支的`inverse`定义也存在，但当前路径下只有`inverse = 1 / Math.sqrt(x * x + z * z)`的定义会影响变异点的值。变异后的`-inverse % z`计算结果将直接作为`Vector3D`构造函数的参数，从而影响最终输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（line 14的返回值）是当前路径的最终输出语句，不受后续控制流影响。由于没有其他控制节点介于变异点和输出之间，控制依赖关系是直接的。\n分析结论：变异语句直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（将乘法改为取模运算）会直接反映在输出的`Vector3D`对象的第一个分量上，且没有后续操作能修正或抵消这种差异。例如输入`x=1.0, y=0.5, z=0.5`（满足路径条件），原始输出和变异输出的第一个分量将分别为`-0.3535`和`-0.3535%0.5≈-0.3535`（虽然此例巧合相同，但大多数情况下如`x=1.2, y=0.6, z=0.6`会产生不同结果）。\n分析结论：错误状态未被覆盖，程序输出会改变。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_120 的分析, 耗时: 57.1247 秒
+

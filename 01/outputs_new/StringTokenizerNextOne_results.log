@@ -1,0 +1,32 @@
+开始处理程序: D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantjavadiv\StringTokenizerNextOne.java
+开始分析变异体 MUT_201...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_201": "### 步骤[可达性]：\n说明理由：变异语句`delimsChanged = true;`位于程序的主执行路径中，没有前置条件限制。程序从入口到该语句的路径条件组合为空（NULL），即无条件约束，因此该变异语句总是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异在于删除了`delimsChanged = true;`语句。该语句的作用是设置`delimsChanged`变量为`true`，但根据数据依赖分析，`delimsChanged`变量未被后续任何语句使用（数据依赖路径终止于该语句）。因此，删除该语句不会改变程序的实际状态或输出。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`delimsChanged`的数据依赖路径显示，该变量未被后续任何语句使用（数据依赖路径终止于该语句）。因此，变异的效果无法通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖缺失，变异效果无法传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`delimsChanged = true;`不控制任何分支或输出语句。控制依赖路径显示，变异语句直接流向返回语句或终止节点，没有控制依赖关系影响输出。\n分析结论：控制依赖缺失，变异效果无法通过控制流影响输出。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异语句的删除不影响任何后续程序状态（数据依赖和控制依赖均缺失），且`delimsChanged`变量未被使用，因此变异引入的“错误状态”（即删除赋值）实际上不会影响程序的最终输出。\n分析结论：变异状态被完全覆盖，不影响输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_201 的分析, 耗时: 41.3753 秒
+
+开始分析变异体 MUT_404...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_404": "### 步骤[可达性]：\n说明理由：变异语句`setMaxDelimCodePoint();`位于方法体中，没有前置条件限制其执行。程序入口到该语句的路径无条件约束，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：变异体移除了`setMaxDelimCodePoint();`调用，但该语句不影响关键变量`delim`的数据流。原程序与变异体在`delim`的处理上完全一致，未改变程序语义。\n分析结论：变异未实际改变程序状态，满足非必要性条件。\n\n### 步骤[数据依赖]：\n说明理由：根据数据依赖分析，变异影响的变量`delim`的数据流路径未受`setMaxDelimCodePoint()`移除的影响。`delim`从参数传递到赋值语句再到返回语句的路径完整，但变异操作本身不干扰该路径。\n分析结论：变异不影响数据依赖链的传播。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`setMaxDelimCodePoint();`是独立语句，不参与任何条件分支。其移除操作不会改变控制流路径，输出语句的执行不受影响。\n分析结论：变异不通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体移除了方法调用，但该方法的功能（设置分隔符编码点）不影响`delim`的传递逻辑和最终返回值。程序的可观察行为（返回`nextToken()`结果）保持不变。\n分析结论：变异引入的状态变化被后续逻辑覆盖，不影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_404 的分析, 耗时: 39.3103 秒
+
+开始分析变异体 MUT_603...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_603": "### 步骤[可达性]：\n说明理由：变异语句位于方法的最后一行，即`return \"\";`。该语句是方法的终止节点，无论之前的控制流如何，最终都会执行到该语句。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的返回语句是`return nextToken();`，而变异体的返回语句是`return \"\";`。`nextToken()`的返回值取决于输入和内部状态，而`\"\"`是一个空字符串常量。这两者在语义上是不同的，因为`nextToken()`可能返回非空字符串。因此，变异实际改变了程序的状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异直接修改了返回值语句，且新返回值`\"\"`是常量值，不涉及任何变量传递。原程序中的变量`delim`的数据依赖路径仅从方法参数到赋值语句，与返回值无关。因此，变异影响的变量（无显式变量）没有通过数据依赖链传播到程序输出节点。\n分析结论：数据依赖缺失。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`return \"\"`是终止节点，直接控制程序的输出。原程序的`return nextToken()`和变异体的`return \"\"`都是直接输出，没有中间控制流节点。因此，变异语句通过控制流直接影响输出语句。\n分析结论：控制依赖存在。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了返回值，但由于变异直接替换了返回值，且没有后续执行步骤可以修正或抵消这种改变，因此程序最终输出会受到影响。不存在状态覆盖现象。\n分析结论：状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_603 的分析, 耗时: 39.4662 秒
+
+开始分析变异体 MUT_686...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_686": "### 步骤[可达性]：\n说明理由：变异语句`delimiters = delim;`位于方法`nextToken`的开始部分，没有前置条件限制。程序入口到该变异语句的路径无条件组合，因此该变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为`delimiters = delim;`，变异体删除了该语句。该语句的作用是将参数`delim`赋值给成员变量`delimiters`。删除该语句会导致`delimiters`的值不被更新，但根据数据依赖分析，`delimiters`变量在后续代码中未被使用，因此该变异不会影响程序的实际输出状态。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤[数据依赖]：\n说明理由：根据提供的数据依赖分析，变异影响的变量`delim`通过赋值给`delimiters`，但后续没有语句直接使用`delimiters`变量。程序输出在`return nextToken();`语句，但该语句不依赖`delimiters`。因此，变异影响的变量没有到输出的数据依赖路径。\n分析结论：数据依赖缺失。\n\n### 步骤[控制依赖]：\n说明理由：根据提供的控制依赖分析，变异语句`delimiters = delim;`与控制流无关，不控制任何分支的走向。程序的输出语句`return nextToken();`不依赖于该变异语句的执行结果。\n分析结论：控制依赖缺失。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异语句的删除不影响任何后续程序状态（因为`delimiters`未被使用），且不影响程序的控制流，因此变异引入的状态改变在后续执行中不存在需要修正或抵消的情况。\n分析结论：变异不影响程序最终输出。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_686 的分析, 耗时: 45.5396 秒

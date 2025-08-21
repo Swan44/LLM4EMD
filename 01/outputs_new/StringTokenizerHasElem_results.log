@@ -1,0 +1,16 @@
+开始分析变异体 MUT_081...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_081": "### 步骤[可达性]：\n说明理由：变异语句位于`hasMoreElements()`方法的返回语句，该方法没有前置条件或路径约束限制其执行。因此，变异语句在任何调用`hasMoreElements()`的情况下都会被执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回`hasMoreTokens()`的结果，而变异体直接返回`true`。两者语义不同，因为`hasMoreTokens()`的结果取决于对象内部状态（可能为`true`或`false`），而变异体固定返回`true`。因此，变异实际改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异直接影响返回值，没有涉及其他变量的数据依赖。返回值直接传播到程序输出，因此存在数据依赖链。\n分析结论：变异影响的返回值通过数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是方法的唯一返回语句，控制流直接依赖该语句的执行结果。因此，变异语句通过控制流影响输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了程序状态（固定返回`true`而非`hasMoreTokens()`的结果），但该状态改变直接传递到输出，没有后续执行步骤修正或抵消这种改变。因此，程序最终输出会因变异而改变。\n分析结论：变异引入的状态改变未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_081 的分析, 耗时: 38.6459 秒
+
+开始分析变异体 MUT_649...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_649": "### 步骤[可达性]：\n说明理由：变异语句位于方法`hasMoreElements()`的返回语句处，该方法没有前置条件约束，因此变异语句总是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序返回`hasMoreTokens()`的结果，而变异体直接返回`false`。`hasMoreTokens()`的返回值取决于内部状态，可能为`true`或`false`，而变异体强制返回`false`。因此，当`hasMoreTokens()`为`true`时，程序状态会被改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是方法的返回值。数据依赖路径从方法声明到返回语句，变异直接将返回值从`hasMoreTokens()`改为`false`，因此变异效果会直接传播到输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是方法的返回语句，控制依赖路径从方法声明到返回语句。变异语句直接决定了方法的输出，因此变异效果会通过控制流影响输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体直接将返回值改为`false`，没有后续执行可以修正或抵消这一改变。因此，变异引入的错误状态不会被覆盖。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_649 的分析, 耗时: 40.7534 秒
+

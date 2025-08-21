@@ -1,0 +1,201 @@
+开始处理程序: D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantjavadiv\WordUtilsWrap4.java
+开始分析变异体 MUT_070...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_070": "### 步骤[可达性]：\n说明理由：变异语句位于while循环内部的条件判断中，其路径条件组合为`inputLineLength - offset > wrapLength`和`str.charAt(offset) != ' '`。这些条件在正常输入下是可满足的（例如非空字符串且长度大于wrapLength），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`spaceToWrapAt >= offset`，变异后为`spaceToWrapAt > offset`。当`spaceToWrapAt == offset`时，原条件为true而变异条件为false，会导致程序选择不同的分支（例如是否执行`wrappedLine.append`和`offset`的更新）。这会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`spaceToWrapAt`和`offset`通过以下路径传播到输出：\n1. `spaceToWrapAt` → 条件判断 → `wrappedLine.append` → `offset`更新 → while条件 → 最终输出\n2. `offset` → `spaceToWrapAt`计算 → 条件判断 → `wrappedLine.append` → `offset`更新 → while条件 → 最终输出\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异条件语句直接控制以下分支：\n1. True分支：执行`wrappedLine.append`和`offset`更新\n2. False分支：进入`wrapLongWords`判断逻辑\n这些分支最终都会影响`wrappedLine`的构建和返回结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异会改变程序的分支选择（当`spaceToWrapAt == offset`时），但：\n1. 在True分支中，`spaceToWrapAt > offset`会导致`wrappedLine`追加子串`(offset, spaceToWrapAt)`\n2. 在False分支中，原程序会执行相同操作\n但当`spaceToWrapAt == offset`时，子串`(offset, offset)`为空字符串，与不执行追加的效果相同。因此最终`wrappedLine`的内容和输出不会改变。\n分析结论：变异引入的错误状态被逻辑行为抵消，程序最终输出未受影响。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_070 的分析, 耗时: 84.6605 秒
+
+开始分析变异体 MUT_072...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_072": "### 步骤[可达性]：\n说明理由：变异语句的条件是`if (wrapLength < 0)`，而原程序的条件是`if (wrapLength < 1)`。根据可达性约束`[!str == null && newLineStr == null, !str == null && !newLineStr == null]`，变异语句的路径条件组合是可满足的，即存在输入使得`wrapLength < 0`为真或假。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`if (wrapLength < 1)`，变异后的条件是`if (wrapLength < 0)`。当`wrapLength`的值为0时，原程序的条件为真（0 < 1），而变异后的条件为假（0 < 0为假）。这将导致程序状态改变（例如，`wrapLength`是否被赋值为1）。因此，变异实际改变了程序语义。\n分析结论：变异满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`wrapLength`。根据数据依赖路径，`wrapLength`的值会影响`while (inputLineLength - offset > wrapLength)`的条件判断，进而影响`wrappedLine`的构建和最终的返回值。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (wrapLength < 0)`控制了程序分支的走向（是否执行`wrapLength = 1`），而`wrapLength`的值直接影响`while`循环的执行和后续的输出语句。因此，变异语句与输出语句存在控制依赖路径。\n分析结论：变异效果可以通过控制流传递到输出。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的程序状态（例如`wrapLength`的值变化），但在某些情况下（如`wrapLength`原本为负数时），变异体和原程序的行为可能一致。然而，对于`wrapLength`为0的情况，变异体和原程序的行为不同（原程序会执行`wrapLength = 1`，而变异体不会），这将导致后续的`while`循环条件和输出结果不同。因此，变异引入的错误状态未被完全覆盖或抵消。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_072 的分析, 耗时: 163.4484 秒
+
+开始分析变异体 MUT_073...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_073": "### 步骤[不可达性]：\n说明理由：变异语句位于第33行，原程序中的条件判断`if (spaceToWrapAt >= 0)`被修改为`if (true)`。根据控制流分析，该变异语句位于`else`分支中的`while`循环内，且没有前置不可达的条件约束。因此，该变异语句是可达的。\n分析结论：变异语句可达。\n\n### 步骤[非必要性]：\n说明理由：原程序中的条件`if (spaceToWrapAt >= 0)`用于判断是否存在空格位置，而变异体将其改为`if (true)`，即总是执行`if`分支。这会直接跳过`else`分支的逻辑，导致程序行为发生改变。因此，该变异实际改变了程序语义。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`spaceToWrapAt`。根据数据依赖路径分析，`spaceToWrapAt`的值直接影响`wrappedLine.append(str.substring(offset, spaceToWrapAt))`和后续的输出。变异体将条件改为`true`后，无论`spaceToWrapAt`的值如何，都会执行`if`分支，从而影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (true)`直接控制了程序分支的走向。原程序的分支逻辑被覆盖，导致`if`分支总是执行，而`else`分支永远不会执行。这种控制流的改变会直接影响输出语句的执行路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[执行状态覆盖]：\n说明理由：变异引入的错误状态（即总是执行`if`分支）不会被后续执行修正或抵消。由于`if`分支和`else`分支的逻辑不同，且`spaceToWrapAt`的值会影响输出结果，因此变异体的输出可能与原程序不同。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_073 的分析, 耗时: 70.6119 秒
+
+开始分析变异体 MUT_074...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_074": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `str != null && (newLineStr == null || newLineStr != null) && (wrapLength >= 1 || wrapLength < 1) && inputLineLength - offset <= wrapLength`。这些条件可以满足，例如当 `str` 不为 null，`newLineStr` 为 null 或非 null，`wrapLength` 为 1 或大于 1，且 `inputLineLength - offset <= wrapLength` 时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体语句的区别是将 `wrappedLine.append(str.substring(offset))` 替换为 `;`。在变异语句可达的情况下，原程序会将 `str.substring(offset)` 添加到 `wrappedLine` 中，而变异体不会执行任何操作。这会直接导致 `wrappedLine` 的内容不同，从而改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `wrappedLine`，其数据依赖路径显示 `wrappedLine` 的值会直接传递到最终的 `return wrappedLine.toString()`。因此，变异对 `wrappedLine` 的修改会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `while` 循环的末尾，其执行与否会影响 `wrappedLine` 的最终内容。控制依赖路径显示，变异语句的执行会直接影响 `return wrappedLine.toString()` 的输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体跳过了 `wrappedLine.append(str.substring(offset))`，但 `wrappedLine` 的内容在之前的操作中已经被修改，且最终的 `return wrappedLine.toString()` 会返回当前 `wrappedLine` 的内容。由于变异体没有执行追加操作，`wrappedLine` 的内容会与原程序不同，因此程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出会受影响。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_074 的分析, 耗时: 71.6359 秒
+
+开始分析变异体 MUT_075...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_075": "### 步骤[可达性]：\n说明理由：变异语句的条件从`if (newLineStr == null)`变为`if (false)`，这是一个恒假条件。因此，无论输入如何，该条件永远不会为真，变异语句的路径条件组合逻辑上不可满足。\n分析结论：变异语句不可达。\n\n### 最终结论：\n由于在第一步可达性分析中已经确定变异语句不可达，根据等价变异体判定规则，该变异体属于等价变异体。无需进行后续步骤分析。\n\n等价变异体判定结果：YES。"}
+完成变异体 MUT_075 的分析, 耗时: 59.3125 秒
+
+开始分析变异体 MUT_076...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_076": "### 步骤[可达性]：\n说明理由：根据提供的可达性约束条件 `[str != null ∧ newLineStr != null ∧ wrapLength >= 1 ∧ inputLineLength - offset > wrapLength ∧ str.charAt(offset) != ' ' ∧ spaceToWrapAt < offset ∧ ¬wrapLongWords]`，这些条件在逻辑上是可以满足的。例如，可以构造输入使得 `str` 不为空，`newLineStr` 不为空，`wrapLength` 大于等于1，且当前偏移量 `offset` 满足 `inputLineLength - offset > wrapLength`，同时当前字符不是空格，且 `spaceToWrapAt` 小于 `offset`，且 `wrapLongWords` 为 `false`。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句是 `spaceToWrapAt = str.indexOf(' ', wrapLength + offset)`，变异后的语句是 `spaceToWrapAt = str.indexOf(' ', wrapLength % offset)`。`wrapLength + offset` 和 `wrapLength % offset` 在大多数情况下是不同的，除非 `offset` 是 `wrapLength` 的因数且 `offset` 不为0。但在给定的约束条件下（`wrapLength >= 1` 且 `offset` 是动态变化的），`wrapLength % offset` 的值可能与 `wrapLength + offset` 不同，从而影响 `spaceToWrapAt` 的值。因此，变异会改变程序状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `spaceToWrapAt`，其数据依赖路径如下：\n1. `spaceToWrapAt` 的值用于条件判断 `if (spaceToWrapAt >= 0)`。\n2. 如果条件为真，`spaceToWrapAt` 的值用于 `wrappedLine.append(str.substring(offset, spaceToWrapAt))` 和 `offset = spaceToWrapAt + 1`。\n3. 如果条件为假，`wrappedLine.append(str.substring(offset))` 和 `offset = inputLineLength` 会被执行。\n4. 最终 `wrappedLine` 的值会通过 `return wrappedLine.toString()` 输出。\n因此，`spaceToWrapAt` 的值会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径如下：\n1. 变异语句的执行依赖于 `if (wrapLongWords)` 的条件为假。\n2. `spaceToWrapAt` 的值用于 `if (spaceToWrapAt >= 0)` 的条件判断，直接影响后续的 `wrappedLine.append` 和 `offset` 的赋值。\n3. 这些操作最终影响 `wrappedLine` 的内容和 `offset` 的值，从而影响程序的输出。\n因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句会改变 `spaceToWrapAt` 的值，但这种改变会直接影响到后续的条件判断和输出结果。没有证据表明变异引入的错误状态会被后续执行修正或抵消。例如，如果 `wrapLength % offset` 的结果与 `wrapLength + offset` 不同，会导致 `spaceToWrapAt` 的值不同，从而可能改变 `wrappedLine` 的内容和最终的输出字符串。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_076 的分析, 耗时: 107.7858 秒
+
+开始分析变异体 MUT_077...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_077": "### 步骤[可达性]：\n说明理由：变异语句从`if (str == null)`改为`if (false)`，这是一个恒假的条件。无论输入如何，该条件永远不会为真，因此变异语句的控制流路径在逻辑上不可达。\n分析结论：变异语句不可达。\n\n### 步骤[必要性]：\n说明理由：由于第一步已经确定变异语句不可达，根据等价变异体判定规则，若变异语句不可达，则无需继续后续分析步骤，直接判定为等价变异体。\n分析结论：无需分析。\n\n### 步骤[数据依赖]：\n说明理由：由于第一步已经确定变异语句不可达，根据等价变异体判定规则，无需继续后续分析步骤。\n分析结论：无需分析。\n\n### 步骤[控制依赖]：\n说明理由：由于第一步已经确定变异语句不可达，根据等价变异体判定规则，无需继续后续分析步骤。\n分析结论：无需分析。\n\n### 步骤[状态覆盖]：\n说明理由：由于第一步已经确定变异语句不可达，根据等价变异体判定规则，无需继续后续分析步骤。\n分析结论：无需分析。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_077 的分析, 耗时: 76.2300 秒
+
+开始分析变异体 MUT_078...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_078": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[str != null, newLineStr == null, wrapLength < 1]`。这些条件在程序执行时是可以满足的（例如当输入字符串非空、换行符参数为null且换行长度小于1时）。因此，变异语句`while (false)`是可以被到达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的循环条件`while (inputLineLength - offset > wrapLength)`被变异为`while (false)`。在可达路径下，原循环条件可能为真（例如当输入字符串长度大于wrapLength时），而变异后的条件恒为假。这将导致循环体不被执行，直接跳转到最后的`wrappedLine.append(str.substring(offset))`语句。这会显著改变程序的行为（原程序可能执行多次循环，而变异体完全不执行循环）。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`inputLineLength`和`offset`。虽然循环体不被执行，但这两个变量的初始值（`inputLineLength = str.length()`和`offset = 0`）会直接传递到最后的输出语句`wrappedLine.append(str.substring(offset))`。因此，变异通过跳过循环改变了`offset`的值（始终为0），从而影响了输出结果（直接返回完整字符串而非分段字符串）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`while (false)`直接控制了是否执行循环体。由于循环体被跳过，所有循环内的控制流（如条件判断、字符串拼接等）都不会执行，直接影响了最终的输出结果（返回完整字符串而非分段字符串）。\n分析结论：变异语句通过控制流显著影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（跳过循环）不会被后续执行修正或抵消。程序会直接返回未分段的原始字符串，这与原程序的行为（分段字符串）完全不同。因此，变异的效果会直接反映在最终输出中。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_078 的分析, 耗时: 82.1597 秒
+
+开始分析变异体 MUT_079...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_079": "### 步骤1：可达性分析\n说明理由：变异语句位于第36行，路径条件为`spaceToWrapAt >= offset`和`wrapLongWords == false`。这些条件在程序中是可满足的，例如当`spaceToWrapAt`大于等于`offset`且`wrapLongWords`为false时，变异语句会被执行。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序语句为`offset = spaceToWrapAt + 1`，变异体语句为`offset = spaceToWrapAt % 1`。对于任何整数`spaceToWrapAt`，`spaceToWrapAt % 1`的结果始终为0，而`spaceToWrapAt + 1`的结果为`spaceToWrapAt + 1`。因此，变异体改变了程序状态。\n分析结论：变异体改变了程序状态，满足必要性。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量是`offset`。`offset`的值会影响`while`循环的条件`inputLineLength - offset > wrapLength`以及后续的`wrappedLine.append(str.substring(offset))`和最终的返回值`wrappedLine.toString()`。因此，`offset`的变化会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句位于第36行，其控制依赖路径直接影响`while`循环的执行和后续的`wrappedLine.append`操作，最终影响返回值`wrappedLine.toString()`。因此，变异语句通过控制流影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体改变了`offset`的值（从`spaceToWrapAt + 1`变为0），但这种改变会导致`while`循环的终止条件`inputLineLength - offset > wrapLength`更快或不满足，从而影响最终的`wrappedLine`内容。因此，变异引入的错误状态未被修正或抵消，程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被修正或抵消，程序最终输出受影响。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_079 的分析, 耗时: 83.1272 秒
+
+开始分析变异体 MUT_081...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_081": "### 步骤[可达性]：\n说明理由：变异语句位于while循环条件中，其可达性依赖于前置条件[str != null, newLineStr == null, wrapLength < 1]。这些条件在程序入口处被检查，且均为可满足的条件组合（例如str非空、newLineStr为空、wrapLength小于1时会被设置为1）。因此，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用减法运算(inputLineLength - offset > wrapLength)，而变异体使用取模运算(inputLineLength % offset > wrapLength)。当offset为0时，取模运算会导致除零异常；当offset不为0时，两种运算的结果完全不同（例如inputLineLength=10, offset=3, wrapLength=2时，原条件为5>2=true，变异条件为1>2=false）。这会显著改变循环行为。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量inputLineLength、offset和wrapLength均通过数据依赖链传播到输出节点（如通过循环条件影响控制流，通过offset影响字符串截取位置等）。具体路径显示这些变量的修改会直接影响wrappedLine的构建过程。\n分析结论：存在完整的数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句作为循环条件，直接控制整个循环体的执行。所有输出语句（如wrappedLine.append操作）都控制依赖于该循环条件。变异会改变循环次数和内部分支的执行情况。\n分析结论：变异通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异会改变循环行为（如循环次数、分支选择等），但这些改变会直接反映在最终的wrappedLine字符串拼接结果中。不存在后续操作能抵消这种改变的情况（例如没有反向操作会恢复原始状态）。\n分析结论：错误状态未被覆盖，会影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO"}
+完成变异体 MUT_081 的分析, 耗时: 107.5404 秒
+
+开始分析变异体 MUT_083...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_083": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[str != null, newLineStr == null, wrapLength < 1, inputLineLength - offset > wrapLength, str.charAt(offset) != ' ']。这些条件在程序执行过程中是可以满足的，例如当输入字符串不为空、newLineStr为null、wrapLength小于1且当前偏移量未超过字符串长度时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的表达式是`str.lastIndexOf(' ', wrapLength + offset)`，而变异体将其改为`str.lastIndexOf(' ', wrapLength - offset)`。这两个表达式在大多数情况下会产生不同的结果，例如当offset不为0时，wrapLength + offset和wrapLength - offset的值不同，会导致查找的空格位置不同。因此，变异确实改变了程序的状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`spaceToWrapAt`，该变量的值直接影响到后续的`if (spaceToWrapAt >= offset)`判断以及`wrappedLine.append`的操作。通过数据依赖路径可以看到，`spaceToWrapAt`的值会传递到最终的输出语句`return wrappedLine.toString()`。因此，变异引入的状态差异可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`int spaceToWrapAt = str.lastIndexOf(' ', wrapLength - offset)`的结果直接控制后续的分支判断`if (spaceToWrapAt >= offset)`，进而影响`wrappedLine.append`和`offset`的赋值。这些操作最终会影响程序的输出。因此，变异语句通过控制流影响了输出语句的执行。\n分析结论：变异语句与输出语句存在控制依赖路径。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了不同的中间状态（`spaceToWrapAt`的值可能不同），但这些状态差异会直接影响到`wrappedLine`的构建和最终的输出。没有证据表明这些差异会在后续执行中被修正或抵消。因此，变异体的输出可能与原程序不同。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_083 的分析, 耗时: 102.3769 秒
+
+开始分析变异体 MUT_084...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_084": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[str != null, newLineStr != null, wrapLength >= 1]`，这些条件在程序执行时是可满足的。例如，当输入`str=\"test\"`、`newLineStr=\"\\n\"`、`wrapLength=1`时，所有条件均为真，变异语句`int offset = 1;`会被执行。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的区别是将`offset`的初始值从`0`改为`1`。`offset`是控制字符串截取和拼接的关键变量，其初始值的改变会直接影响后续的`while`循环条件（`inputLineLength - offset > wrapLength`）和字符索引操作（如`str.charAt(offset)`和`str.substring(offset)`）。因此，变异会改变程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`offset`通过数据依赖链传播到程序输出节点。具体路径包括：\n1. `offset`影响`while`循环条件，决定是否进入循环。\n2. `offset`用于计算`spaceToWrapAt`（如`str.lastIndexOf(' ', wrapLength + offset)`），影响字符串截取位置。\n3. `offset`的值直接决定`wrappedLine.append(str.substring(offset, ...))`的内容，最终影响返回值`wrappedLine.toString()`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句。例如：\n1. `offset`的初始值影响`while`循环的执行次数。\n2. `offset`的值影响`if (str.charAt(offset) == ' ')`和`if (spaceToWrapAt >= offset)`等条件分支的选择，从而间接控制`wrappedLine.append`的调用和最终输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了状态改变（`offset`初始值不同），但后续执行中`offset`的值会被多次更新（如`offset++`、`offset = spaceToWrapAt + 1`等），可能导致最终输出与原程序在某些情况下相同。然而，这种覆盖不是绝对的，例如当输入字符串长度较短时，初始`offset=1`可能直接跳过首字符，导致输出不同。\n分析结论：变异引入的错误状态未被完全修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_084 的分析, 耗时: 107.8128 秒
+
+开始分析变异体 MUT_085...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_085": "### 步骤[可达性]：\n说明理由：根据提供的可达性约束条件`[str != null, (newLineStr == null || newLineStr != null), (wrapLength < 1 || wrapLength >= 1), inputLineLength - offset > wrapLength, str.charAt(offset) != ' ', spaceToWrapAt < offset, wrapLongWords == True]`，可以确定变异语句所在的路径是可执行的。具体来说，变异语句位于`wrapLongWords == True`的分支中，且前面的条件（如`str != null`、`inputLineLength - offset > wrapLength`等）均可满足。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句为`wrappedLine.append(str.substring(offset, wrapLength + offset));`，变异后为`;`（即删除了该语句）。该语句的作用是将`str`的一部分内容追加到`wrappedLine`中。删除该语句会导致`wrappedLine`中缺少这部分内容，从而直接改变程序状态。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`wrappedLine`和`str`。`wrappedLine`的数据依赖路径显示，其值最终会通过`return wrappedLine.toString();`输出。删除`append`操作会导致`wrappedLine`的内容缺失，从而影响最终的输出。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于`if (wrapLongWords)`的分支中，其控制依赖路径显示，变异语句的执行会影响后续的`offset += wrapLength`和循环条件，最终影响输出语句的执行。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异删除的`append`操作会导致`wrappedLine`中缺失部分内容，且后续没有其他操作可以修正或抵消这一缺失。因此，程序的最终输出会受到影响。  \n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_085 的分析, 耗时: 106.7711 秒
+
+开始分析变异体 MUT_089...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_089": "### 步骤1：可达性分析  \n说明理由：变异语句的条件为`wrapLength != 1`，其路径约束为`str != null && (newLineStr == null || newLineStr != null)`。该约束可满足（例如`str = \"abc\"`, `newLineStr = null`或`newLineStr = \"\\n\"`），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性分析  \n说明理由：原条件为`wrapLength < 1`，变异为`wrapLength != 1`。两者语义差异体现在：  \n- 原条件仅对`wrapLength < 1`为真（如`wrapLength = 0`），而变异条件对`wrapLength < 1`或`wrapLength > 1`为真（如`wrapLength = 2`）。  \n- 当`wrapLength = 1`时，原条件为假，变异条件也为假；当`wrapLength = 0`时，两者均为真；但当`wrapLength = 2`时，原条件为假，变异条件为真。  \n因此，变异可能改变程序状态（如`wrapLength = 2`时，原程序跳过赋值`wrapLength = 1`，而变异体执行赋值）。  \n分析结论：变异改变了程序状态，满足必要性。  \n\n### 步骤3：数据依赖分析  \n说明理由：变异影响的变量`wrapLength`通过以下路径传播到输出：  \n1. 变异条件为真时，执行`wrapLength = 1`，后续`while`循环和字符串操作均依赖`wrapLength`，最终影响返回值`wrappedLine.toString()`。  \n2. 变异条件为假时，`wrapLength`未被修改，但后续仍通过`while`循环依赖其原始值影响输出。  \n分析结论：变异通过数据依赖链传播到输出节点。  \n\n### 步骤4：控制依赖分析  \n说明理由：变异语句的控制依赖路径直接影响后续分支：  \n- 若`wrapLength != 1`为真，执行`wrapLength = 1`，后续循环次数和分支逻辑可能改变（如`wrapLength`从2变为1）。  \n- 若为假，跳过赋值，保持原逻辑。  \n变异通过控制流影响输出语句的执行路径（如循环终止条件、子字符串截取位置等）。  \n分析结论：变异通过控制依赖路径影响输出。  \n\n### 步骤5：状态覆盖分析  \n说明理由：虽然变异可能改变中间状态（如`wrapLength`赋值和循环行为），但存在以下抵消情况：  \n- 当`wrapLength = 0`或`wrapLength = 1`时，原程序和变异体的行为完全一致（均执行`wrapLength = 1`或保持原值）。  \n- 当`wrapLength > 1`时，变异体强制设为1，可能改变循环次数，但最终输出可能因逻辑抵消而相同（例如截取位置调整后结果一致）。  \n但严格来说，存在输入（如`wrapLength = 2`且特定字符串）使得输出不同，因此状态未被完全覆盖。  \n分析结论：变异未完全被状态覆盖覆盖，可能影响输出。  \n\n### 最终结论  \n等价变异体判定结果：NO。  \n\n（注：尽管部分情况下行为一致，但存在输入使输出不同，故为非等价变异体。）"}
+完成变异体 MUT_089 的分析, 耗时: 212.7004 秒
+
+开始分析变异体 MUT_091...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_091": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `str != null && (newLineStr == null || newLineStr != null) && (wrapLength < 1 || wrapLength >= 1) && inputLineLength - offset > wrapLength && str.charAt(offset) != ' ' && spaceToWrapAt < offset && !wrapLongWords && spaceToWrapAt >= 0`。这些条件可以同时满足，例如当 `str` 不为空、`wrapLength` 大于等于1、`offset` 小于 `inputLineLength - wrapLength` 且 `spaceToWrapAt` 大于等于0时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的语句是 `offset = spaceToWrapAt + 1`，变异体改为 `offset = spaceToWrapAt / 1`。对于任何整数 `spaceToWrapAt`，`spaceToWrapAt / 1` 的结果与 `spaceToWrapAt` 相同，因此 `offset` 的值在变异前后相同。程序状态未改变。\n分析结论：变异未改变程序状态，属于等价变异体。\n\n### 步骤[数据依赖]：\n说明理由：由于在必要性分析中已经确定变异未改变程序状态，因此无需进一步分析数据依赖。\n分析结论：无需分析。\n\n### 步骤[控制依赖]：\n说明理由：由于在必要性分析中已经确定变异未改变程序状态，因此无需进一步分析控制依赖。\n分析结论：无需分析。\n\n### 步骤[状态覆盖]：\n说明理由：由于在必要性分析中已经确定变异未改变程序状态，因此无需进一步分析状态覆盖。\n分析结论：无需分析。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_091 的分析, 耗时: 63.4481 秒
+
+开始分析变异体 MUT_093...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_093": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为`[str != null, newLineStr == null, wrapLength < 1]`。这些条件在程序执行时是可以满足的，例如当输入`str`不为空、`newLineStr`为`null`且`wrapLength`小于1时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序与变异体的区别在于`StringBuffer`的初始容量从`inputLineLength + 32`变为`inputLineLength + 0`。虽然初始容量不同，但`StringBuffer`会自动扩容，因此在实际执行中不会影响程序的状态或输出。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`wrappedLine`，其数据依赖路径显示`wrappedLine`的值会传递到最终的输出语句。然而，由于`StringBuffer`的初始容量差异不会影响其最终内容（因为会自动扩容），因此数据依赖链的传播不会导致输出差异。\n分析结论：数据依赖存在，但不会影响最终输出。\n\n### 步骤4：控制依赖\n说明理由：变异语句的控制依赖路径显示其执行会影响后续的`append`操作和输出语句。但由于初始容量的差异不会改变`StringBuffer`的行为（内容不变），控制依赖的存在也不会导致输出差异。\n分析结论：控制依赖存在，但不会影响最终输出。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异引入了初始容量的差异，但`StringBuffer`的自动扩容机制会覆盖这一差异，最终输出的字符串内容与原程序完全一致。因此，变异引入的错误状态被后续执行修正。\n分析结论：错误状态被覆盖，不影响最终输出。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_093 的分析, 耗时: 96.6924 秒
+
+开始分析变异体 MUT_094...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_094": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[str != null && inputLineLength - offset > wrapLength && str.charAt(offset) != ' ' && spaceToWrapAt >= offset]`。这些条件在程序执行过程中是可以满足的，例如当输入字符串不为空且长度大于 `wrapLength`，且当前字符不是空格时，可以触发该变异语句的执行。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序与变异体的差异在于将 `offset = spaceToWrapAt + 1` 改为 `offset = spaceToWrapAt - 1`。在变异语句可达的情况下，`offset` 的值会被修改为不同的值（`spaceToWrapAt - 1` 而不是 `spaceToWrapAt + 1`），这会直接影响后续的 `offset` 值，从而改变程序状态。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `offset`，其数据依赖路径显示 `offset` 的值会直接影响 `while` 循环的条件判断以及后续的字符串截取操作（`wrappedLine.append(str.substring(offset))`），最终影响返回值 `wrappedLine.toString()`。因此，变异影响的变量通过数据依赖链传播到程序输出节点。  \n分析结论：存在数据依赖链传播到输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `if (spaceToWrapAt >= 0)` 的分支中，其控制流直接影响 `offset` 的赋值和后续的字符串拼接逻辑。变异语句的执行会改变 `offset` 的值，从而影响 `while` 循环的终止条件和最终的字符串拼接结果。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了 `offset` 的值，但程序在后续执行中会继续根据新的 `offset` 值进行字符串截取和拼接。由于 `offset` 的改变直接影响了最终的字符串拼接结果（`wrappedLine.append(str.substring(offset))`），程序输出会因变异而不同，不存在状态覆盖现象。  \n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_094 的分析, 耗时: 87.8981 秒
+
+开始分析变异体 MUT_095...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_095": "### 步骤[可达性]：\n说明理由：变异语句`int offset = -1;`位于程序入口后的初始化部分，没有任何前置条件限制其执行。程序的控制流图显示从程序入口到该变异语句的路径是无条件可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序初始化`offset = 0`，变异体改为`offset = -1`。在后续执行中，`offset`的值会影响循环条件`inputLineLength - offset > wrapLength`以及字符串操作`str.charAt(offset)`和`str.substring(offset)`。由于初始值的改变会直接影响这些操作的起始位置，程序状态会发生改变。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`offset`通过数据依赖链传播到程序输出节点。具体路径包括：影响循环条件判断、字符串操作的位置参数以及最终的`wrappedLine.append(str.substring(offset))`和返回值`wrappedLine.toString()`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`int offset = -1;`通过控制流影响输出语句。`offset`的初始值会影响循环的执行次数、分支选择（如`if (str.charAt(offset) == ' ')`）以及最终的字符串拼接逻辑，从而间接控制输出语句的执行路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了`offset`初始值的改变，但后续的`offset++`、`offset = spaceToWrapAt + 1`等操作会覆盖初始值的影响。然而，这种覆盖并非完全抵消，因为初始值的改变会改变第一次循环的行为（例如`str.charAt(-1)`会抛出异常，而原程序不会）。因此，变异引入的错误状态未被完全修正或抵消。\n分析结论：变异引入的错误状态未被完全修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_095 的分析, 耗时: 103.3235 秒
+
+开始分析变异体 MUT_096...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_096": "### 步骤[可达性]：\n说明理由：变异语句的条件是`if (wrapLength < -1)`，原程序的条件是`if (wrapLength < 1)`。路径条件组合为`[!(str == null), newLineStr == null]/[!(str == null), !(newLineStr == null)]`，即`str`不为空且`newLineStr`为空或不为空。这些条件均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`wrapLength < 1`，变异后的条件是`wrapLength < -1`。对于`wrapLength`的值在`[-1, 1)`区间内（例如`wrapLength = 0`），原程序会进入条件分支（`0 < 1`为真），而变异体不会进入（`0 < -1`为假）。这会改变程序状态（是否执行`wrapLength = 1`）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`wrapLength`。数据依赖路径显示，`wrapLength`的值会影响`while`循环条件、`spaceToWrapAt`的计算、`offset`的更新以及最终的`wrappedLine`输出。因此，变异影响的变量会通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (wrapLength < -1)`控制是否执行`wrapLength = 1`，而`wrapLength`的值直接影响后续的循环和输出逻辑。控制依赖路径显示，变异语句的真假会影响后续语句的执行路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体在某些情况下会改变程序状态（如`wrapLength = 0`时原程序执行`wrapLength = 1`而变异体不执行），但后续逻辑中`wrapLength`的值会被重新使用。例如，如果`wrapLength`未被重置为1，可能导致`while`循环条件`inputLineLength - offset > wrapLength`的行为不同，从而影响最终的`wrappedLine`输出。因此，变异引入的错误状态未被完全抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_096 的分析, 耗时: 109.4606 秒
+
+开始分析变异体 MUT_099...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_099": "### 步骤[可达性]：\n说明理由：变异语句位于第33行的条件判断语句，路径条件组合为NULL，意味着没有不可达的约束条件。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`if (spaceToWrapAt >= 0)`，变异体改为`if (spaceToWrapAt >= 1)`。`spaceToWrapAt`是`str.indexOf(' ', wrapLength + offset)`的返回值，可能为-1（未找到空格）或非负整数（找到空格的位置）。当`spaceToWrapAt`为0时，原程序的条件为真，变异体的条件为假，程序状态会改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`spaceToWrapAt`，其数据依赖路径显示，`spaceToWrapAt`的值直接影响`wrappedLine.append`的操作，最终影响返回值`wrappedLine.toString()`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (spaceToWrapAt >= 1)`控制了两个分支的执行：True分支执行`wrappedLine.append(str.substring(offset, spaceToWrapAt))`，False分支执行`wrappedLine.append(str.substring(offset))`。这两个分支最终都会影响返回值`wrappedLine.toString()`。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：当`spaceToWrapAt`为0时，原程序执行True分支，变异体执行False分支，导致`wrappedLine`的内容不同（原程序包含`str.substring(offset, 0)`，变异体包含`str.substring(offset)`），最终返回值不同。因此，错误状态未被覆盖或抵消。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_099 的分析, 耗时: 98.8866 秒
+
+开始分析变异体 MUT_100...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_100": "### 步骤[可达性]：\n说明理由：变异语句位于`offset = spaceToWrapAt + 1`修改为`offset = spaceToWrapAt - 1`，该语句在`if (spaceToWrapAt >= offset)`为真时执行。路径条件为`str != null && newLineStr != null && wrapLength >= 1 && inputLineLength - offset > wrapLength && str.charAt(offset) != ' ' && spaceToWrapAt >= offset`，这些条件在合理输入下均可满足（如非空字符串、有效换行符和换行长度等）。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原表达式`offset = spaceToWrapAt + 1`与变异表达式`offset = spaceToWrapAt - 1`在语义上不同。例如，当`spaceToWrapAt`为5时，原程序设置`offset`为6，而变异体设置为4。这会直接影响后续循环条件`inputLineLength - offset > wrapLength`和子字符串操作，从而改变程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`offset`通过数据依赖链传播到输出节点。具体路径包括：1) 影响循环条件`while (inputLineLength - offset > wrapLength)`；2) 影响子字符串操作`str.substring(offset, ...)`；3) 最终影响返回值`wrappedLine.toString()`。所有路径均表明`offset`的值直接或间接影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于条件分支`if (spaceToWrapAt >= offset)`的真分支中，其赋值结果直接影响后续循环的终止条件和子字符串的起始位置。输出语句（`return wrappedLine.toString()`）的控制依赖于循环和子字符串操作，因此变异语句通过控制流影响输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的`offset`值改变未被后续执行修正或抵消。例如，`offset`减少会导致循环提前终止或子字符串范围变化，从而可能使输出字符串的换行位置或内容与原程序不同。不存在逻辑上的覆盖或抵消机制。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_100 的分析, 耗时: 92.5545 秒
+
+开始分析变异体 MUT_101...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_101": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为[str != null, newLineStr == null, wrapLength < 1, inputLineLength - offset > wrapLength, str.charAt(offset) != ' ']。这些条件在特定输入下可以同时满足（例如str=\"abc\", wrapLength=0, offset=0），因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`wrapLength + offset`计算查找位置，而变异体使用`wrapLength % offset`。当offset为0时会出现除零错误；当offset不为0时，计算结果与原程序完全不同（例如wrapLength=5, offset=2时，原值为7，变异值为1）。这会显著改变spaceToWrapAt的值，从而影响后续控制流。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变量spaceToWrapAt的数据依赖路径清晰可见：变异后的值直接影响if (spaceToWrapAt >= offset)判断，进而通过多个分支影响wrappedLine的构建和最终输出。所有路径最终都会将wrappedLine传递到return语句。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制四个不同的执行路径（如控制依赖路径信息所示），每个路径都通过不同的控制流影响wrappedLine的构建，最终影响返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了完全不同的计算逻辑（加法vs取模），但在所有可能的执行路径中，变异导致的spaceToWrapAt值变化都会直接反映在最终输出的wrappedLine中，没有出现状态被后续操作覆盖的情况。\n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_101 的分析, 耗时: 74.1787 秒
+
+开始分析变异体 MUT_102...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_102": "### 步骤1：可达性\n说明理由：变异语句位于`wrappedLine.append(str.substring(offset, spaceToWrapAt))`，其路径条件为`spaceToWrapAt >= offset`。该条件在程序执行过程中是可满足的，例如当输入字符串中存在空格且满足`spaceToWrapAt >= offset`时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序执行`wrappedLine.append(str.substring(offset, spaceToWrapAt))`，而变异体将其替换为空语句`;`。这将导致`wrappedLine`中缺少了`str.substring(offset, spaceToWrapAt)`的内容，从而改变了程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是`wrappedLine`。根据数据依赖路径，`wrappedLine`的值直接影响到最终的返回值`wrappedLine.toString()`。变异导致`wrappedLine`缺少部分内容，因此变异效果会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句位于`if (spaceToWrapAt >= offset)`的分支中，其控制依赖路径直接影响到后续的`wrappedLine.append(newLineStr)`和最终的返回值。变异语句的控制流会影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（`wrappedLine`缺少部分内容）在后续执行中未被修正或抵消。最终的返回值`wrappedLine.toString()`会直接反映出`wrappedLine`内容的缺失，因此程序最终输出会受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_102 的分析, 耗时: 64.0916 秒
+
+开始分析变异体 MUT_103...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_103": "### 步骤1：可达性分析\n说明理由：变异语句位于`StringBuffer wrappedLine = new StringBuffer( inputLineLength - 32 )`，其路径条件为`str != null, newLineStr == null, wrapLength < 1`。这些条件在程序执行时可以被满足（例如：`str=\"test\"`, `newLineStr=null`, `wrapLength=0`），因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原程序使用`inputLineLength + 32`初始化`StringBuffer`，变异体改为`inputLineLength - 32`。当`inputLineLength < 32`时，`inputLineLength - 32`为负数，会导致`StringBuffer`初始化时抛出`NegativeArraySizeException`，而原程序不会。因此，变异体改变了程序行为。  \n分析结论：变异实际改变了程序语义，满足必要性条件。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量`wrappedLine`通过后续的`append`操作直接传递到最终的`return wrappedLine.toString()`，存在完整的数据依赖链。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句是初始化操作，不涉及控制流分支，因此不会通过控制流影响输出语句。  \n分析结论：变异语句与控制流无关，控制依赖缺失。\n\n### 步骤5：状态覆盖分析\n说明理由：虽然变异体可能因负值导致异常（如`inputLineLength < 32`），但若`inputLineLength >= 32`，`StringBuffer`的初始容量差异（`+32` vs `-32`）不会影响最终的字符串拼接结果（因为`StringBuffer`会自动扩容）。此时程序输出与原程序一致，错误状态被覆盖。  \n分析结论：在`inputLineLength >= 32`时，变异引入的状态差异不影响最终输出。\n\n### 最终结论\n等价变异体判定结果：YES。  \n（尽管存在部分输入会导致行为差异，但在满足`inputLineLength >= 32`的合法输入下，程序输出与原程序等价，符合等价变异体定义）"}
+完成变异体 MUT_103 的分析, 耗时: 101.6272 秒
+
+开始分析变异体 MUT_104...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_104": "### 步骤[可达性]：\n说明理由：变异语句位于while循环内部，且没有不可达的路径条件。程序入口到变异语句的路径条件组合为`inputLineLength - offset > wrapLength`和`str.charAt(offset) != ' '`，这些条件在正常情况下是可满足的。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`spaceToWrapAt >= offset`，变异后为`spaceToWrapAt == offset`。当`spaceToWrapAt > offset`时，原条件为真而变异条件为假，这会改变程序的控制流。例如，当`spaceToWrapAt = offset + 1`时，原程序会进入if分支，而变异体会进入else分支。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`spaceToWrapAt`和`offset`通过数据依赖链传播到输出语句。具体路径为：变异条件→分支选择→`wrappedLine.append`操作→最终的`return wrappedLine.toString()`。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异条件直接控制后续分支的选择（是否执行`wrappedLine.append`等操作），而这些分支的结果直接影响最终的输出。控制依赖路径明确存在。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的控制流和中间状态，但在某些情况下（如`spaceToWrapAt == offset`），变异体和原程序的行为一致。然而，存在其他情况（如`spaceToWrapAt > offset`）会导致不同的输出。因此，变异引入的错误状态未被完全覆盖或抵消。  \n分析结论：变异引入的错误状态未被修正或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_104 的分析, 耗时: 108.1693 秒
+

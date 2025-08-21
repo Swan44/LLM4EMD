@@ -544,12 +544,12 @@ HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK
 完成变异体 MUT_301 的分析, 耗时: 126.6890 秒
 
 开始分析变异体 MUT_303...
-HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
-HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
-HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
-HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
-{"MUT_303": "步骤[可达性]：\n说明理由： 变异语句位于for循环的迭代部分(i -= Character.charCount(c))，该循环的进入条件是delimiters != null（由REACHABILITY_CONSTRAINT给出）。由于delimiters != null是一个可满足的条件（例如，当delimiters为非空字符串时），因此变异语句所在的循环体可以被执行到。没有证据表明路径条件组合存在逻辑矛盾导致不可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序使用i += Character.charCount(c)进行正向迭代，而变异体使用i -= Character.charCount(c)进行负向迭代。在循环条件i < delimiters.length()下，使用负向迭代会导致i的值迅速变为负数（因为初始i=0，减去一个正数后变为负），从而使得循环条件i < delimiters.length()立即变为false（因为负数总是小于字符串长度）。因此，变异后的循环实际上不会执行循环体，直接跳过整个循环。这与原程序执行循环多次的行为完全不同，显著改变了程序状态（如m、count、hasSurrogates等变量的值）。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量i和c通过数据依赖链传播到程序输出。变量m的值（受循环体内对c的比较和赋值影响）被赋给maxDelimCodePoint，这是方法的输出之一。count的值用于决定是否创建delimiterCodePoints数组及其大小，也是输出状态的一部分。hasSurrogates标志位也影响后续代码执行路径。由于变异导致循环体完全不执行，这些输出相关变量都会保持初始值（m=0, count=0, hasSurrogates=false），与原程序执行循环后的值完全不同。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句位于循环控制结构中，直接影响循环是否执行。循环体内的语句（如对m、count、hasSurrogates的赋值）以及循环后的输出语句（maxDelimCodePoint = m和if(hasSurrogates)块）都控制依赖于这个循环。变异导致循环不执行，从而改变了这些输出相关语句的执行结果。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 基于以上分析，变异引入了显著的程序状态改变（循环不执行导致所有循环相关变量保持初始值），并且这些改变通过数据和"}
-完成变异体 MUT_303 的分析, 耗时: 118.7981 秒
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_303": "### 步骤[可达性]：\n说明理由：变异语句位于for循环的迭代部分，其可达性依赖于`delimiters != null`的条件。根据提供的可达性约束`[delimiters != null]`，该条件可以满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序中的迭代语句是`i += Character.charCount(c)`，变异后变为`i -= Character.charCount(c)`。这将导致循环变量i的更新方向相反，从而完全改变循环的执行行为。在可达路径下，这种改变会显著影响程序状态。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量i和c通过数据依赖链传播到程序输出节点。变量i直接影响循环条件和后续字符处理，变量c影响字符编码处理和最终的maxDelimCodePoint赋值。所有输出（maxDelimCodePoint和delimiterCodePoints）都直接或间接依赖于这些变量。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于循环控制结构中，直接影响循环的执行次数和后续所有依赖于循环的代码块（包括字符处理、maxDelimCodePoint赋值和delimiterCodePoints初始化）。输出语句的执行直接依赖于循环的正确执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异引入了显著的行为改变（反向迭代），但这种改变不会被后续执行修正或抵消。它将导致完全不同的字符处理顺序和结果，最终影响maxDelimCodePoint和delimiterCodePoints的输出值。\n分析结论：变异引入的错误状态不会被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_303 的分析, 耗时: 116.8107 秒
 
 开始分析变异体 MUT_306...
 HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"

@@ -1,0 +1,57 @@
+开始处理程序: D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantjavadiv\WordUtilsCapitalize.java
+开始分析变异体 MUT_087...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_087": "### 步骤[可达性]：\n说明理由：变异语句的条件为`if (str == null || str.length() == 1 || delimLen == 1)`，其可达性约束为`[str != null && str.length() != 1 && delimLen != 1]`。这意味着当`str`不为null且长度不为1，且`delimLen`不为1时，该条件为假，程序会执行后续逻辑。因此，变异语句在满足这些条件时是可达的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`if (str == null || str.length() == 0 || delimLen == 0)`，变异后为`if (str == null || str.length() == 1 || delimLen == 1)`。在`str`不为null且长度不为1，且`delimLen`不为1的情况下，原条件和变异条件的取值可能不同。例如，当`str.length() == 0`或`delimLen == 0`时，原条件为真，而变异条件为假，程序行为会发生变化。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为`str`和`delimLen`。根据数据依赖路径，这些变量的值会通过控制流影响程序的输出。例如，`str`的值会影响`buffer`的构造和最终返回的字符串，`delimLen`的值也会通过条件判断影响程序的分支走向和输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (str == null || str.length() == 1 || delimLen == 1)`直接控制程序的分支走向。如果条件为真，程序直接返回`str`；如果为假，程序会执行后续逻辑并返回`buffer.toString()`。因此，变异语句通过控制流直接影响输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异语句在特定条件下会改变程序的分支走向，但在某些情况下（如`str.length() == 0`或`delimLen == 0`），原程序和变异程序的输出可能会不同。例如，当`str.length() == 0`时，原程序会直接返回`str`，而变异程序会执行后续逻辑并返回`buffer.toString()`，两者的输出可能不同。因此，变异引入的错误状态并未被完全抵消。\n分析结论：变异引入的错误状态未被完全抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_087 的分析, 耗时: 74.9468 秒
+
+开始分析变异体 MUT_088...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_088": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[!(str == null || str.length() == 0 || delimLen == 0)]`，即当输入字符串不为空且分隔符数组不为空时，变异语句可达。这是一个可满足的条件，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序循环初始化为`for (int i = 0; i < strLen; i++)`，变异体改为`for (int i = -1; i < strLen; i++)`。这将导致循环多执行一次迭代（当i=-1时），且第一次循环中`str.charAt(-1)`会抛出`StringIndexOutOfBoundsException`异常。这明显改变了程序的行为。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是循环变量`i`，其数据依赖路径显示`i`的值直接影响`str.charAt(i)`的调用和后续所有操作，最终影响输出`buffer.toString()`。因此变异效果可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n### 步骤[控制依赖]：\n说明理由：变异语句是循环控制语句，直接影响循环体的执行次数和流程。控制依赖路径显示循环条件控制着整个循环体的执行，进而影响输出语句的执行。\n分析结论：存在控制依赖条件。\n\n### 步骤[状态覆盖]：\n说明理由：变异导致的异常行为（`StringIndexOutOfBoundsException`）无法被后续执行修正或抵消，会直接导致程序异常终止，这与原程序的正常执行流程完全不同。\n分析结论：不存在状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_088 的分析, 耗时: 58.6129 秒
+
+开始分析变异体 MUT_090...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_090": "### 步骤[可达性]：\n说明理由：变异语句的条件是`if (false)`，这是一个恒假条件，因此该变异语句在逻辑上不可达。任何输入都无法使该条件为真，因此变异语句无法被执行到。\n分析结论：变异语句不可达。\n\n### 步骤[必要性]：\n说明理由：由于变异语句不可达，无需进一步分析必要性。即使变异语句在语法上改变了程序，但由于其不可达，不会实际改变程序状态。\n分析结论：无需分析必要性，变异语句不可达。\n\n### 步骤[数据依赖]：\n说明理由：由于变异语句不可达，无需分析数据依赖。变异语句无法被执行，因此不会影响任何变量的数据依赖链。\n分析结论：无需分析数据依赖，变异语句不可达。\n\n### 步骤[控制依赖]：\n说明理由：由于变异语句不可达，无需分析控制依赖。变异语句无法被执行，因此不会通过控制流影响输出语句。\n分析结论：无需分析控制依赖，变异语句不可达。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异语句不可达，无需分析状态覆盖。变异语句无法被执行，因此不会引入任何错误状态。\n分析结论：无需分析状态覆盖，变异语句不可达。\n\n### 最终结论：\n等价变异体判定结果：YES。"}
+完成变异体 MUT_090 的分析, 耗时: 68.6498 秒
+
+开始分析变异体 MUT_092...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_092": "### 步骤[可达性]：\n说明理由：变异语句的条件为`if (str == null || str.length() <= 0 || delimLen == 0)`，其路径约束为`[!(str == null || str.length() <= 0 || delimLen == 0)]`。该约束表示当`str`不为null且长度大于0且`delimLen`不等于0时，变异语句可达。这些条件在实际执行中是可以满足的，例如当输入一个非空字符串且`delimiters`不为空时。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件为`str.length() == 0`，变异后为`str.length() <= 0`。对于字符串长度来说，`== 0`和`<= 0`在语义上是等价的，因为字符串长度不可能为负数。因此，变异并未实际改变程序的状态或行为。\n分析结论：变异未改变程序语义，属于等价变异体。\n\n### 最终结论：\n由于在必要性分析中已经确定该变异体是等价的，无需继续后续分析步骤。\n等价变异体判定结果：YES。"}
+完成变异体 MUT_092 的分析, 耗时: 70.8446 秒
+
+开始分析变异体 MUT_097...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_097": "### 步骤1：可达性\n说明理由：变异语句的条件组合为`[str == null || str.length() >= 0 || delimLen == 0]`。其中`str.length() >= 0`恒为真（字符串长度不可能为负），因此整个条件简化为`str == null || true || delimLen == 0`，即恒为真。这意味着变异语句始终可达。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原条件`str.length() == 0`与变异后条件`str.length() >= 0`在语义上不等价。虽然`str.length() >= 0`恒为真，但`str.length() == 0`仅在字符串为空时为真。因此，变异会改变程序的控制流（例如原程序在`str.length() == 0`时直接返回，而变异后会继续执行后续逻辑）。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`str`和`delimLen`通过数据依赖链传播到输出节点。例如：\n- `str`的修改会影响`strLen`、`buffer`的构建以及最终的`return buffer.toString()`。\n- `delimLen`的修改会影响条件判断，进而影响是否直接返回`str`或继续执行后续逻辑。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句直接控制程序是否进入`return str`分支或继续执行后续逻辑。变异后的条件`str.length() >= 0`恒为真，会使得程序不再检查字符串是否为空，从而改变控制流路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然变异改变了控制流和数据流，但并未在后续执行中被修正或抵消。例如：\n- 原程序在`str.length() == 0`时直接返回空字符串，而变异后会尝试处理空字符串，可能导致不同的输出（如`buffer`的构建逻辑）。\n分析结论：变异引入的错误状态未被覆盖，会影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_097 的分析, 耗时: 84.8285 秒
+
+开始分析变异体 MUT_098...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_098": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为`[str == null || str.length() == 0 || false]`。其中`false`是一个恒假条件，因此整个条件简化为`str == null || str.length() == 0`。这意味着只有当`str`为`null`或空字符串时，变异语句才会被执行。虽然条件被简化，但仍然存在满足条件的输入（如`str = null`或`str = \"\"`），因此变异语句是可达的。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是`str == null || str.length() == 0 || delimLen == 0`，而变异体的条件是`str == null || str.length() == 0 || false`。变异将`delimLen == 0`替换为`false`，即完全移除了对`delimLen`的检查。在`delimLen == 0`为`true`但`str`不为`null`且`str.length() != 0`的情况下，原程序会进入`if`块返回`str`，而变异体不会进入`if`块，会继续执行后续逻辑。因此，变异确实改变了程序的行为。\n\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`delimLen`。`delimLen`的数据依赖路径仅从定义点（`line 4`）流向变异语句（`line 5`）。变异语句的输出（`return str`或继续执行）不直接依赖于`delimLen`的值，因为`delimLen`的值在变异语句中已被替换为`false`。因此，变异后的`delimLen`不会通过数据依赖链传播到程序输出节点。\n\n分析结论：数据依赖缺失。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（`line 5`）的控制依赖路径直接影响程序的输出。如果条件为`true`，程序直接返回`str`；如果为`false`，程序继续执行后续逻辑并最终返回`buffer.toString()`。然而，由于变异将`delimLen == 0`替换为`false`，`delimLen`的值不再影响控制流，因此变异语句的控制依赖路径实际上被切断。\n\n分析结论：控制依赖缺失。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的行为（如步骤[必要性]所述），但在实际执行中，`delimLen`的值不会通过数据或控制依赖传播到输出。因此，变异引入的状态改变不会影响程序的最终输出。\n\n分析结论：错误状态被覆盖。\n\n### 最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_098 的分析, 耗时: 63.3589 秒
+
+开始分析变异体 MUT_105...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_105": "### 步骤[可达性]：\n说明理由：变异语句的条件组合为 `(str == null || str.length() == 0) != (delimLen == 0)`，该条件可以通过多种输入组合满足（例如 `str=null` 且 `delimLen=1`，或 `str=\"a\"` 且 `delimLen=0`）。因此，变异语句的路径是可满足的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件 `str == null || str.length() == 0 || delimLen == 0` 和变异条件 `(str == null || str.length() == 0) != (delimLen == 0)` 在逻辑上不完全等价。例如：\n- 当 `str=null` 且 `delimLen=0` 时，原条件为 `true`，变异条件为 `false`。\n- 当 `str=\"a\"` 且 `delimLen=1` 时，原条件为 `false`，变异条件为 `true`。\n因此，变异会改变程序的控制流和状态。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `str` 和 `delimLen` 的数据依赖路径显示：\n1. 若变异条件为 `true`，直接返回 `str`（输出依赖 `str`）。\n2. 若变异条件为 `false`，后续逻辑（如 `buffer` 的构造和返回）间接依赖 `str` 和 `delimLen`。\n因此，变异的影响可通过数据依赖传递到输出。\n分析结论：存在数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径显示：\n1. 若变异条件为 `true`，直接控制 `return str`。\n2. 若变异条件为 `false`，控制后续所有逻辑（如循环、`buffer` 构造等）。\n因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的控制流和中间状态，但不存在逻辑上的抵消或修正机制。例如：\n- 当 `str=null` 且 `delimLen=0` 时，原程序返回 `null`，而变异程序会执行后续逻辑（可能抛出异常或返回非预期结果）。\n- 当 `str=\"a\"` 且 `delimLen=1` 时，原程序执行后续逻辑，而变异程序直接返回 `\"a\"`。\n因此，变异的影响未被覆盖，会导致输出差异。\n分析结论：变异引入的错误状态未被覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_105 的分析, 耗时: 106.7205 秒
+
