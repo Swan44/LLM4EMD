@@ -1,0 +1,192 @@
+开始处理程序: D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantjavadiv\ArrayUtilsToMap.java
+开始分析变异体 MUT_004...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_004": "步骤[可达性]：\n说明理由： 变异语句的路径条件组合为：array != null && i < array.length && !(object instanceof Map.Entry) && object instanceof Object[] && !(entry.length < 2)。这些条件都是可满足的：array不为空，i在有效索引范围内，当前对象不是Map.Entry类型而是Object[]类型，且entry数组长度不小于2。因此，存在输入（如包含长度>=2的Object[]元素的非空数组）可以触发该变异语句的执行。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序使用entry[0]作为key，变异体使用entry[-1]作为key。在Java中，数组索引-1会导致ArrayIndexOutOfBoundsException异常，而原程序entry[0]是有效的第一个元素访问。即使entry数组长度>=2，entry[-1]始终是无效索引，会抛出异常，而原程序正常执行put操作。这显著改变了程序的行为状态。\n分析结论： 变异实际改变了程序语义，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量entry确实通过数据依赖链传播到程序输出：entry用于map.put()操作，而map最终被返回。具体路径：entry → map.put() → return map。变异导致的异常或不同的put操作会直接影响最终的map内容。\n分析结论： 存在数据依赖链连接到输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句map.put(entry[-1], entry[1])不是控制语句（如if、while等），它不直接控制其他语句的执行流程。它是一条执行语句，其影响通过数据依赖而非控制依赖传播。输出语句return map的执行不直接依赖于该变异语句的控制流。\n分析结论： 控制依赖缺失，但数据依赖已存在，故不影响变异效果的传播。\n\n步骤[状态覆盖]：\n说明理由： 变异引入的错误状态（使用无效索引entry[-1]）不会被后续执行修正或抵消。它会立即导致ArrayIndexOutOfBoundsException异常，从而终止程序正常执行，而原程序在该路径下会正常执行put操作并返回map。两者的最终输出（正常map与异常）完全不同。\n分析结论： 错误状态未被覆盖，直接影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_004 的分析, 耗时: 140.5402 秒
+
+开始分析变异体 MUT_017...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_017": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[array != null ∧ i < array.length ∧ ¬(object instanceof Map.Entry) ∧ object instanceof Object[] ∧ entry.length >= 2]，这些条件都是可满足的。array不为null，i在数组长度范围内，object是Object[]类型但不是Map.Entry类型，且entry数组长度大于等于2。这些条件在运行时都可以同时成立，因此变异语句（原第19行的map.put语句）可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句是\"map.put(entry[0], entry[1]);\"，变异体将其替换为空语句\";\"。在可达路径条件下，原语句会向map中添加键值对(entry[0], entry[1])，而变异体不执行任何操作，不会向map中添加这个键值对。这明显改变了程序状态，map的内容会不同。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是entry，但变异体删除的是map.put操作，而不是修改entry本身。从数据依赖路径看，entry变量确实有数据流路径到输出（return map），但变异体删除的是使用entry[0]和entry[1]向map添加内容的操作，而不是修改entry的值。因此，变异导致map中缺少了本应添加的键值对，这个状态改变会通过map的返回传播到程序输出。\n分析结论：变异影响的map状态改变可以通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句位于for循环内部，其执行受循环控制。从控制依赖路径看，变异语句的执行会影响最终的map内容，而map作为返回值输出。虽然变异语句本身不直接控制程序分支，但它修改了程序的状态（map的内容），这个状态改变会直接影响最终的输出结果。\n分析结论：变异语句通过修改程序状态影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：变异体删除了向map添加键值对的操作，这个状态改变不会被后续执行修正或抵消。在后续的循环迭代中，可能会向map添加其他键值对，但缺少的这个特定键值对不会被补偿。最终返回的map会缺少本应包含的(entry[0], entry[1])键值对，导致程序输出与原始程序不同。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_017 的分析, 耗时: 152.9564 秒
+
+开始分析变异体 MUT_044...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_044": "步骤[可达性]：\n说明理由：变异语句为for循环的条件部分，原条件为\"i < array.length\"，变异后为\"false\"。根据控制流分析，要执行到该变异语句，需要满足路径条件：array != null（因为如果array为null，程序会在第4行返回null，不会执行到第7行）。当array != null时，程序会进入第7行的for循环。但变异后的条件为\"false\"，这意味着循环条件永远为假，因此循环体（第8-25行）将永远不会被执行。然而，变异语句本身（即for循环的条件判断部分）仍然是可达的，因为程序在执行到第7行时必然会评估循环条件。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：虽然变异语句可达，但我们需要分析变异是否实际改变了程序语义。原程序中的for循环条件\"i < array.length\"用于控制循环次数，确保处理数组中的每个元素。变异后将条件改为\"false\"，这意味着循环体永远不会执行。这与原程序的行为有显著不同：原程序会处理数组中的所有元素并构建map，而变异体直接跳过循环体，返回一个空的map（在第6行初始化）。因此，变异确实改变了程序状态：原程序可能返回包含多个键值对的map，而变异体总是返回空map。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是i。根据提供的数据依赖路径信息，变量i的数据依赖路径最终都指向return map语句。然而，由于循环条件为false，循环体不会执行，因此变量i的赋值和自增操作实际上不会影响map的内容。map在第6行被初始化为空HashMap，并且由于循环体未执行，map保持为空。虽然从语法上看存在数据依赖路径，但实际上变异导致循环体不执行，从而切断了map与输入数组的数据依赖关系。\n分析结论：虽然存在形式上的数据依赖路径，但变异实际上阻止了数据流向map，因此数据依赖链被破坏。\n\n步骤[控制依赖]：\n说明理由：根据提供的控制依赖路径信息，for循环条件\"false\"控制着循环体的执行。由于条件为false，循环体不会执行，这意味着所有在循环体内的操作（包括对map的修改）都不会发生。输出语句return map控制依赖于for循环的执行结果，但由于循环体未执行，map保持初始状态（空map）。因此，变异语句通过控制流直接影响输出：它决定了循环体是否执行，从而决定了map的内容。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：基于以上分析，变异引入了显著的程序状态改变：原程序会处理输入数组并返回包含多个键值对的map，而变异体直接返回空map。这种状态改变没有被后续执行修正或抵消，因为循环体完全被跳过，没有其他代码会修改map的内容。因此，程序的最终输出（返回的map）确实受到了影响。\n分析结论：变异引入的错误状态没有被修正或抵消，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_044 的分析, 耗时: 139.0099 秒
+
+开始分析变异体 MUT_098...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_098": "步骤[可达性]：\n说明理由：变异语句位于for循环的初始化部分（int i = 1），该循环的执行条件为array != null。根据REACHABILITY_CONSTRAINT，当array != null时，该循环语句可达。路径条件array != null是可满足的（例如，array = new Object[1]），因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序从i=0开始遍历数组，变异体从i=1开始遍历数组。这意味着原程序会处理数组的第一个元素（索引0），而变异体会跳过第一个元素。在array != null且array.length > 0的情况下，这种变异会导致程序状态改变：原程序会处理array[0]，而变异体不会处理array[0]。这会影响map的内容（如果array[0]是有效的Map.Entry或Object[]）或可能改变异常消息中的索引值（如果array[0]无效）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量i通过数据依赖链传播到程序输出。具体路径包括：1) i用于数组索引array[i]，影响获取的对象；2) i用于异常消息中的索引显示；3) i用于循环控制，影响哪些元素被处理。最终，map的内容（通过put操作）或抛出的异常消息（包含i的值）都依赖于i的取值。由于变异改变了i的初始值，这些输出都会受到影响。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句（for循环初始化）通过控制流影响输出语句。循环控制决定了是否执行循环体内的语句（包括map.put和异常抛出），而这些语句直接影响程序输出（返回的map或抛出的异常）。变异改变了循环的起始索引，从而影响了循环的执行次数和处理的元素范围，进而影响最终的输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异引入了错误状态（跳过第一个元素），但该错误状态没有被后续执行修正或抵消。程序的行为发生了明显改变：原程序处理所有元素，而变异体跳过第一个元素。这会导致返回的map缺少第一个元素的映射关系，或者在某些情况下抛出不同的异常（例如，当第一个元素无效时，原程序会抛出异常而变异体可能不会）。\n分析结论：变异引入的错误状态没有被覆盖，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_098 的分析, 耗时: 187.4767 秒
+
+开始分析变异体 MUT_147...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_147": "步骤1：可达性\n说明理由：根据提供的可达性约束条件，变异语句的路径条件为：array != null && i < array.length && !(object instanceof Map.Entry) && object instanceof Object[] && entry.length >= 0。这些条件都是可满足的，例如当array不为空且包含Object[]类型的元素，且该数组长度大于等于0时，变异语句就可以被执行到。\n分析结论：变异语句可达。\n\n步骤2：必要性\n说明理由：原程序的条件是\"if (entry.length < 2)\"，变异体改为\"if (entry.length < 0)\"。在entry.length >= 0的路径约束下（由可达性分析可知），这两个条件的语义完全不同：\n- 原条件：当entry.length为0或1时条件为真，抛出异常；当entry.length >= 2时条件为假，执行map.put操作\n- 变异条件：由于entry.length >= 0（数组长度不可能为负数），变异条件\"entry.length < 0\"永远为假，永远不会抛出异常，总是执行map.put操作\n分析结论：变异确实改变了程序语义，满足必要性。\n\n步骤3：数据依赖\n说明理由：变异影响的变量是entry，数据依赖路径显示：\n1. 当变异条件为真时：抛出异常，异常信息中包含i和object的值\n2. 当变异条件为假时：执行map.put操作，最终返回map\n虽然变异条件永远为假（entry.length >= 0），但变异确实改变了程序的行为路径，影响了最终的输出（map的内容或是否抛出异常）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤4：控制依赖\n说明理由：控制依赖路径显示变异语句\"if (entry.length < 0)\"直接控制两个分支：\n1. True分支：抛出IllegalArgumentException异常\n2. False分支：执行map.put操作并继续循环\n变异语句通过控制流直接影响程序的输出行为（是返回map还是抛出异常）。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤5：状态覆盖\n说明理由：虽然变异改变了程序的行为（从可能抛出异常变为总是执行map.put），但这种改变不是被后续执行修正或抵消的，而是根本性的语义改变。在entry.length为0或1的情况下：\n- 原程序：抛出IllegalArgumentException异常\n- 变异体：执行map.put(entry[0], entry[1])，可能产生ArrayIndexOutOfBoundsException或其他错误行为\n这种差异会导致程序的可观察输出完全不同，不存在状态覆盖现象。\n分析结论：变异引入的错误状态没有被修正或抵消，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_147 的分析, 耗时: 145.3156 秒
+
+开始分析变异体 MUT_162...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_162": "步骤[可达性]：\n说明理由：变异语句位于for循环的条件部分（i != array.length）。该循环的初始条件为i=0，且数组长度array.length是一个非负整数（可能为0）。当array.length为0时，初始条件i=0 != 0为false，循环不会执行；当array.length>0时，循环会执行。因此，存在输入（如非空数组）可以使该变异语句被执行，路径条件可满足。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序使用i < array.length作为循环条件，变异体使用i != array.length。在大多数情况下，这两个条件在循环执行过程中是等价的，因为i从0开始递增，最终会等于array.length。但是，当i超过array.length时（例如由于其他代码错误修改了i），i != array.length可能为true而i < array.length为false，导致额外循环迭代。然而，在正常执行路径下，i严格递增且不会跳过array.length值，因此两种条件在循环终止判断上是等价的，不会改变程序状态。\n分析结论：变异未实际改变程序语义，属于非必要性变异。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_162 的分析, 耗时: 168.8817 秒
+
+开始分析变异体 MUT_192...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_192": "步骤[可达性]：\n说明理由：变异语句是for循环的条件判断，从程序入口到该语句的路径条件为array != null（由外层if保证）和i <= array.length。由于i初始化为0且array.length>=0（数组长度非负），条件array != null && i <= array.length是可满足的。例如，当array为非空数组时，i=0肯定满足i <= array.length。因此变异语句可达。\n分析结论：变异语句可达，继续下一步分析。\n\n步骤[必要性]：\n说明理由：原程序条件为i < array.length，变异后为i <= array.length。当i等于array.length时，原条件为false而变异条件为true，这会导致循环多执行一次。在循环体内，会执行Object object = array[i]语句，当i等于array.length时，这将导致数组越界访问，抛出ArrayIndexOutOfBoundsException异常。这与原程序的行为不同（原程序正常结束循环并返回map），因此变异实际改变了程序状态。\n分析结论：变异改变了程序语义，满足必要性，继续下一步分析。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是i，在循环体内，i被用于数组索引访问（array[i]），获取的对象可能被用于map操作或异常消息。具体地，i的值会通过数据流传播到：1）array[i]的访问结果；2）异常消息中的字符串拼接（如\"Array element \" + i）；3）循环控制变量i++。这些数据依赖路径最终可能影响程序输出（map的内容或抛出的异常消息）。\n分析结论：变异影响的变量i通过数据依赖链传播到程序输出节点，存在数据依赖，继续下一步分析。\n\n步骤[控制依赖]：\n说明理由：变异语句（for循环条件）直接控制循环体的执行。当i <= array.length为true时，执行循环体；为false时，退出循环并执行return map。变异改变了循环条件，从而可能改变循环的执行次数（多执行一次），这直接影响是否执行循环体内的语句（包括map操作和可能抛出的异常），进而影响程序的输出行为。\n分析结论：变异语句通过控制流影响输出语句，存在控制依赖，继续下一步分析。\n\n步骤[状态覆盖]：\n说明理由：变异导致循环多执行一次当i等于array.length时，这会引发ArrayIndexOutOfBoundsException异常（因为数组索引从0到array.length-1），而原程序在此情况下会正常退出循环并返回map。异常抛出会终止程序执行，导致无法执行到return map语句。这种错误状态无法在后续执行中被修正或抵消，会直接导致程序输出与原程序不同（异常vs正常返回map）。\n分析结论：变异引入的错误状态无法被覆盖，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_192 的分析, 耗时: 183.3591 秒
+
+开始分析变异体 MUT_208...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_208": "步骤[可达性]：\n说明理由：根据提供的REACHABILITY_CONSTRAINT '[array != null]'，变异语句位于第6行，该行在if (array == null)条件为false时执行。由于array != null是一个可满足的条件（例如，array可以是非空数组），因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序使用表达式`array.length * 1.5`计算HashMap的初始容量，而变异体使用`array.length + 1.5`。这两个表达式在数学上不等价：对于任何array.length ≥ 0，`array.length * 1.5`和`array.length + 1.5`会产生不同的数值结果（除非array.length = 3，此时两者都等于4.5，但转换为int后都是4）。因此，变异确实改变了程序状态，创建了具有不同初始容量的HashMap。\n分析结论：变异改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是map，它被直接赋值在第6行。根据DATA_DEPENDENCY，变量map通过数据依赖链传播到输出：map在第11行和第19行被使用（put操作），最终在第26行作为返回值。虽然map的内容通过put操作被修改，但初始容量可能影响HashMap的内部行为（如扩容时机），但最终返回的map对象在语义上应该相同（包含相同的键值对），因为put操作不依赖于初始容量。\n分析结论：变异影响的变量map通过数据依赖链传播到输出节点。\n\n步骤[控制依赖]：\n说明理由：根据CTRL_DEPENDENCY，变异语句（第6行）控制依赖于if (array == null)条件（第3行），但本身不直接控制任何输出语句。输出语句（第26行）控制依赖于循环结束条件。变异语句不通过控制流影响输出语句，它只影响map的初始化。\n分析结论：变异语句不通过控制流影响输出语句，控制依赖缺失。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了HashMap的初始容量（从`(int)(array.length * 1.5)`变为`(int)(array.length + 1.5)`），但HashMap在Java中的语义保证：无论初始容量如何，只要添加相同的键值对，最终生成的Map在内容上是等价的。put操作会处理任何初始容量下的内部调整，因此最终返回的Map对象在行为上是不可区分的。变异引入的\"错误状态\"（不同的初始容量）被HashMap的内部机制所覆盖，不影响最终的输出结果。\n分析结论：变异引入的错误状态被后续执行覆盖，不影响程序输出。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_208 的分析, 耗时: 164.4041 秒
+
+开始分析变异体 MUT_223...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_223": "步骤[可达性]：  \n说明理由：根据提供的REACHABILITY_CONSTRAINT，变异语句位于第6行，其可达条件为array != null。该条件在程序入口处（第3行）检查array是否为null，若不为null则执行后续语句。由于array != null是一个可满足的条件（例如，array为非空数组），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n步骤[必要性]：  \n说明理由：原程序语句为`final Map map = new HashMap((int) (array.length * 1.5));`，变异体语句为`final Map map = new HashMap((int) (array.length * 0.0));`。变异将HashMap的初始容量从1.5倍数组长度改为0。在Java中，HashMap的初始容量仅影响内部存储结构的初始大小，而不影响其语义行为（如键值对的存储和检索）。无论初始容量如何，后续的map.put操作都会正确执行，并且最终返回的map内容完全相同。因此，该变异未改变程序状态（即map的内容和返回值）。  \n分析结论：变异未改变程序状态，属于非必要性变异。  \n\n由于在步骤[必要性]中已确定该变异未改变程序状态（即不满足感染条件），根据等价变异体判定规则，无需继续后续分析步骤，可直接判定为等价变异体。  \n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_223 的分析, 耗时: 157.3275 秒
+
+开始分析变异体 MUT_245...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_245": "步骤[可达性]：\n说明理由：变异语句的路径条件组合为：array != null && i < array.length && !(object instanceof Map.Entry) && object instanceof Object[] && !(entry.length < 2)。这些条件都是可满足的：array不为空，i在有效索引范围内，当前数组元素不是Map.Entry类型而是Object[]类型，且entry数组长度不小于2。因此，存在输入可以触发该变异语句的执行。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句为map.put(entry[0], entry[1])，变异体语句为map.put(entry[1], entry[1])。在变异语句可达的情况下，entry[0]和entry[1]通常是不同的值（除非entry[0] == entry[1]）。变异将键从entry[0]改为entry[1]，这改变了put操作的键值对。即使值相同（都是entry[1]），键的改变也会导致map中存储的映射关系不同。因此，该变异实际改变了程序状态。\n分析结论：变异改变了程序语义，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是entry。从数据依赖路径看，entry通过map.put(entry[1], entry[1])语句被使用，然后map通过return map语句返回。具体路径为：(line 13: Object[] entry = (Object[]) object) --[Flows entry]--> (line 19: map.put(entry[1], entry[1])) --[Flows map]--> (line 26: return map)。变异改变了put操作的参数，这些参数直接影响map的内容，而map最终被返回。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖，变异效果可以传播到输出。\n\n步骤[控制依赖]：\n说明理由：从控制依赖路径看，变异语句map.put(entry[1], entry[1])位于if (entry.length < 2)的条件分支为False的路径上，该语句执行后程序继续循环或最终返回map。变异语句本身不是控制语句，但它受上层控制依赖影响（依赖于object instanceof Object[]和entry.length < 2的条件）。然而，变异语句的输出（map的修改）直接影响最终返回值，但控制流本身没有因为变异而改变路径。\n分析结论：变异语句通过数据依赖影响输出，而不是通过控制流直接影响输出语句的执行路径。\n\n步骤[状态覆盖]：\n说明理由：变异将键从entry[0]改为entry[1]，这会导致map中存储的键值对发生变化。例如，原程序存储(entry[0], entry[1])，变异体存储(entry[1], entry[1])。除非entry[0]等于entry[1]，否则这是两个不同的映射。在后续执行中，这种差异不会被修正或抵消，因为map的内容会直接作为函数结果返回。因此，程序的最终输出（返回的map）会因变异而不同。\n分析结论：变异引入的状态改变不会被覆盖，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_245 的分析, 耗时: 149.4487 秒
+
+开始分析变异体 MUT_247...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_247": "步骤[可达性]：\n说明理由：变异语句为\"if (false)\"，其条件恒为假。从程序入口到该语句的路径条件组合为无约束（即任何输入均可到达该语句），但由于条件恒假，该语句的True分支（即then分支）不可达，而False分支可达。因此，变异语句本身是可达的（程序执行会经过该点），但其then分支不可达。\n分析结论：变异语句可达，但then分支不可达。\n\n步骤[必要性]：\n说明理由：原条件\"if (array == null)\"检查输入数组是否为null，而变异体改为\"if (false)\"，条件恒假。这意味着原程序的then分支（返回null）永远不会执行，而else分支（正常处理数组）总是执行。当输入array为null时，原程序返回null，而变异体不会返回null，而是继续执行后续代码（如访问array.length），这将导致NullPointerException。因此，变异实际改变了程序状态（特别是当array为null时）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是array。当输入array不为null时，变异体与原程序行为一致（都执行else分支）。但当array为null时，变异体不会返回null，而是尝试访问array.length，这会导致异常（程序输出为异常而非正常返回）。数据依赖路径显示array的值会影响后续操作（如array.length访问），且异常也是一种程序输出。因此，变异引入的状态改变（不返回null而抛出异常）可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句\"if (false)\"的控制依赖路径显示：其False分支控制着后续所有语句的执行（包括map创建、循环处理等），而True分支（返回null）不再被执行。当输入array为null时，原程序通过True分支返回null，而变异体通过False分支执行后续代码并最终抛出异常。因此，变异语句通过控制流直接影响程序输出（返回null或抛出异常）。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：基于以上分析，当输入array不为null时，变异体与原程序行为一致（都正常处理数组并返回map）。但当输入array为null时，变异体不会像原程序那样返回null，而是会抛出NullPointerException。这种状态改变（异常抛出）没有被后续执行修正或抵消，而是直接作为程序输出（异常终止）。因此，变异引入的错误状态（不处理null情况）会导致程序输出不同。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_247 的分析, 耗时: 194.5186 秒
+
+开始分析变异体 MUT_274...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_274": "步骤[可达性]：\n说明理由： 变异语句位于第6行，其执行条件为array != null（由REACHABILITY_CONSTRAINT给出）。该条件在程序执行时是可满足的，因为存在非空数组输入。控制流图显示，当array != null时，程序会执行到第6行的HashMap初始化语句。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序使用乘法操作符(*)计算初始容量：array.length * 1.5，而变异体使用取模操作符(%)：array.length % 1.5。对于任何正整数array.length，这两个表达式的结果通常不同。例如，当array.length = 3时，3 * 1.5 = 4.5 → (int)4.5 = 4，而3 % 1.5 = 0.0 → (int)0.0 = 0。这会导致HashMap初始容量不同，从而影响程序状态。\n分析结论： 变异确实改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量map通过数据依赖链传播到程序输出。数据依赖路径显示：变异语句(line 6) → map.put操作(line 11或line 19) → return map(line 26)。map变量在循环中被修改，最终作为返回值输出，存在完整的数据依赖路径。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句(line 6)不是控制语句，它不直接控制程序分支。控制依赖分析显示，该语句的执行依赖于array != null的条件，但它本身不控制其他语句的执行路径。输出语句(line 26)的控制依赖于循环结束条件，而不是HashMap的初始化方式。\n分析结论： 变异语句不通过控制流影响输出语句，但数据依赖已确保变异效果能传播到输出。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了HashMap的初始容量，但HashMap具有自动扩容机制。当添加元素超过初始容量时，HashMap会自动扩容。因此，即使初始容量不同（如4 vs 0），在添加足够多的元素后，最终的HashMap状态可能相同。特别是当array.length为0时，两种初始化方式都会创建容量为0的HashMap；当array.length使得array.length * 1.5和array.length % 1.5的结果相同时（如array.length = 0），变异不会产生影响。\n分析结论： 在某些情况下（如array.length使得两种计算方式结果相同，或HashMap扩容后状态相同），变异引入的状态差异可能被覆盖，不影响最终输出。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_274 的分析, 耗时: 165.5315 秒
+
+开始分析变异体 MUT_298...
+Retrying request to /chat/completions in 0.492150 seconds
+Retrying request to /chat/completions in 0.858666 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+Retrying request to /chat/completions in 0.455486 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_298": "步骤[可达性]：\n说明理由： 变异语句的路径条件组合为 (array != null) && (i < array.length) && !(object instanceof Map.Entry) && (object instanceof Object[]) && (entry.length <= 2)。这些条件都是可满足的：array不为空，i在有效索引范围内，object是Object[]类型但不是Map.Entry，且entry.length满足<=2的条件。因此，存在输入可以触发该变异语句的执行。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序的条件是 if (entry.length < 2)，变异体改为 if (entry.length <= 2)。在路径约束 (entry.length <= 2) 下，当 entry.length == 2 时，原条件为 false，变异条件为 true，这会导致程序执行不同的分支：原程序会执行 map.put(entry[0], entry[1])，而变异体会抛出 IllegalArgumentException 异常。因此，该变异确实改变了程序状态。\n分析结论： 变异改变了程序语义，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是 entry。数据依赖路径显示，当变异条件为 true 时，会抛出异常，异常消息包含了 i 和 object 的信息；当变异条件为 false 时，会执行 map.put(entry[0], entry[1])，然后返回 map。在这两种情况下，变异引入的状态改变（不同的控制流）都会直接影响程序的输出（要么抛出异常，要么修改map并返回）。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 控制依赖路径显示，变异语句 if (entry.length <= 2) 直接控制两个分支：True 分支抛出异常，False 分支执行 map.put 并最终返回 map。输出语句（抛出异常或返回map）都控制依赖于该变异语句的结果。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了程序的行为（在 entry.length == 2 时从正常执行变为抛出异常），但这种改变是直接可见的，而不是在后续执行中被修正或抵消。程序在 entry.length == 2 时的输出完全不同（异常 vs 正常返回map），因此错误状态没有被覆盖。\n分析结论： 变异引入的错误状态没有被修正或抵消，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_298 的分析, 耗时: 215.1410 秒
+
+开始分析变异体 MUT_302...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+Retrying request to /chat/completions in 0.450957 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_302": "步骤[可达性]：\n说明理由：变异语句位于第6行，即HashMap的初始化语句。根据提供的可达性约束条件\"array != null\"，该条件是可满足的（例如，当array为非空数组时）。控制流图显示，当array不为null时，程序会执行到第6行。因此，变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序使用表达式\"array.length * 1.5\"计算HashMap的初始容量，而变异体使用\"array.length - 1.5\"。这两个表达式在数学上完全不同：乘法操作会产生一个比原数组长度更大的值（通常用于HashMap的负载因子优化），而减法操作会产生一个比原数组长度更小的值。对于任何非空的array（array.length ≥ 0），这两个表达式都会产生不同的数值结果，从而影响HashMap的初始容量设置。\n分析结论：变异确实改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是map，数据依赖分析显示map变量有三条数据依赖路径到达输出语句return map：1) 通过map.put(entry.getKey(), entry.getValue())；2) 通过map.put(entry[0], entry[1])；3) 直接通过return map。HashMap的初始容量会影响其内部结构和性能，虽然不会改变map的语义内容（即键值对数据），但会影响map对象的状态（如内部桶数组的大小、扩容阈值等）。由于最终返回的是map对象本身（而不仅仅是其内容），变异导致的map对象状态差异会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：控制依赖分析显示，变异语句（第6行）到输出语句（第26行）存在控制依赖路径。虽然变异语句不是条件语句，但它位于for循环之前，且map变量的初始化会影响后续所有对map的操作。从控制流角度看，变异语句的执行会影响后续所有使用map的语句（第11行和第19行的put操作），最终影响return map语句的输出值。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了HashMap的初始容量（从array.length * 1.5变为array.length - 1.5），但需要分析这是否会影响程序的最终输出。HashMap在Java中的语义是：无论初始容量如何设置，只要正确添加了所有的键值对，最终map的内容（键值对集合）应该是相同的。初始容量只影响HashMap的内部性能和扩容行为，不影响其语义。程序最终返回的是map对象，虽然其内部状态不同，但从外部观察者的角度看，map的内容是相同的。因此，变异引入的状态差异（不同的初始容量）不会影响程序的功能性输出，只会影响性能特征。\n分析结论：变异引入的错误状态被HashMap的语义所覆盖，不影响最终的程序输出。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_302 的分析, 耗时: 192.2210 秒
+
+开始分析变异体 MUT_321...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_321": "步骤[可达性]：\n说明理由： 变异语句的路径条件组合为：array != null && i < array.length && !(object instanceof Map.Entry) && object instanceof Object[] && entry.length >= -2。其中entry.length >= -2这个条件对于任何数组长度（entry.length >= 0）都恒为真，因为数组长度不可能为负数。因此该路径条件可满足，变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"entry.length < 2\"，变异体条件为\"entry.length < -2\"。对于任何实际的数组长度（entry.length >= 0），原条件在entry.length < 2时为真，而变异条件entry.length < -2永远为假（因为entry.length >= 0 > -2）。因此，变异实际上将条件从\"entry.length < 2\"变成了恒假条件，这显著改变了程序的语义和行为。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是entry，其数据依赖路径显示：当条件为真时，会抛出异常；当条件为假时，会执行map.put操作并最终返回map。由于变异将条件从可变为恒假，这改变了控制流，使得原本可能抛出异常的情况现在会执行map.put操作，从而影响最终的map输出。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句通过控制流直接影响输出：当条件为真时控制流向异常抛出（也是一种输出），当条件为假时控制流向map.put操作并最终返回map。变异改变了这个控制依赖关系，使得原本可能抛出异常的情况现在总是执行map.put操作。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 变异引入的错误状态（将条件从可变为恒假）没有被后续执行修正或抵消。相反，它永久性地改变了程序的行为：原本在entry.length < 2时会抛出异常，现在无论entry.length为何值都会执行map.put操作。这会导致程序输出不同（一个抛出异常，一个返回map），特别是在entry.length < 2的情况下。\n分析结论： 变异引入的错误状态没有被覆盖，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_321 的分析, 耗时: 137.4450 秒
+
+开始分析变异体 MUT_382...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_382": "步骤[可达性]：\n说明理由： 根据提供的可达性约束条件`(array != null) && (i < array.length) && (object instanceof Map.Entry)`，该条件组合是可满足的。具体来说，当传入的数组不为空，当前循环索引i在有效范围内，且当前数组元素是Map.Entry类型时，变异语句（第11行）就会被执行。这些条件在实际执行中很容易满足，例如传入一个包含Map.Entry元素的非空数组即可。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原语句`map.put(entry.getKey(), entry.getValue());`执行了一个重要的操作：将Map.Entry对象的键值对放入map中。变异后的语句`;`是一个空语句，完全不执行任何操作。在变异语句可达的情况下（即当前元素是Map.Entry类型时），原程序会向map中添加一个键值对，而变异体不会执行这个添加操作。这直接导致了程序状态的改变：map中缺少了这个本应添加的键值对。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量主要是`map`。从数据依赖路径来看，map在第6行被初始化，最终在第28行被返回。变异语句原本应该修改map的状态（添加键值对），但变异后这个修改操作被移除。由于map是最终返回值，且变异导致map缺少了应有的键值对，这种状态改变会通过数据依赖链直接传播到程序输出节点（return map语句）。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 从控制依赖路径来看，变异语句位于if (object instanceof Map.Entry)条件为真的分支中。虽然这个分支的执行不会直接影响后续的控制流（不会改变循环条件或引发异常），但它通过修改map的内容间接影响了最终的输出。不过，更重要的是变异语句本身并不控制任何后续语句的执行流程，它只是执行一个数据操作。\n分析结论： 变异语句不通过控制流直接影响输出语句，但通过数据依赖影响输出。\n\n步骤[状态覆盖]：\n说明理由： 基于以上分析，变异引入了错误状态（map中缺少了应有的键值对），且这个错误状态没有被后续执行修正或抵消。程序会继续执行循环处理后续元素，但缺失的键值对不会自动补上，最终返回的map就是不完整的。没有任何机制会检测并修复这种缺失。\n分析结论： 变异引入的错误状态没有被修正或抵消，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_382 的分析, 耗时: 141.1808 秒
+
+开始分析变异体 MUT_398...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_398": "步骤[可达性]：\n说明理由： 变异语句位于for循环的初始化部分，路径条件为[array != null]。当array不为null时，程序会进入for循环，因此变异语句可达。没有逻辑上不可满足的条件阻止该语句执行。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序初始化i=0，变异体初始化i=-1。在循环条件i < array.length判断时，当array.length>0时，i=-1满足条件，会执行循环体，而原程序i=0也会执行循环体。但第一次循环时，变异体i=-1，会访问array[-1]，导致数组越界异常(ArrayIndexOutOfBoundsException)，而原程序访问array[0]是正常访问。这显著改变了程序状态和行为。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量i通过数据依赖链传播到多个输出节点：1) 在异常消息中拼接i值（line 15和line 21）；2) 作为数组索引访问array[i]（line 8）；3) 影响循环控制条件i < array.length（line 7）。这些数据依赖路径最终会影响程序输出（异常消息内容或正常返回的map）。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句位于for循环初始化部分，控制着整个循环的执行。循环体中的语句（包括输出语句）都控制依赖于这个for循环。变异改变了循环初始条件，会影响循环的执行次数和循环体内的控制流，从而间接影响输出语句的执行。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 变异将i初始化为-1而不是0，会导致：1) 第一次循环时访问array[-1]引发数组越界异常；2) 循环次数增加一次（从-1开始到array.length-1）。这种状态改变不会被后续执行修正或抵消，会直接导致程序行为差异：要么抛出不同的异常（数组越界vs正常执行或其他异常），要么导致map中包含不同的元素集合。\n分析结论： 变异引入的错误状态不会被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_398 的分析, 耗时: 163.2435 秒
+
+开始分析变异体 MUT_399...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_399": "步骤[可达性]：\n说明理由： 变异语句的路径条件为\"array != null && i < array.length && object instanceof Object[] && entry.length != 2\"。这些条件都是可满足的：array不为null，i在有效索引范围内，object是Object[]类型，且entry.length不等于2。这些条件没有逻辑矛盾，存在输入可以满足所有条件（例如，一个包含长度为3的数组元素的非空数组）。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序的条件是\"entry.length < 2\"，变异后的条件是\"entry.length != 2\"。在路径约束下（entry.length != 2），这两个条件的行为不同：当entry.length < 2时，原条件为true而变异条件为false；当entry.length > 2时，原条件为false而变异条件为true。因此，变异确实改变了程序的控制流，会导致不同的执行路径。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是entry。数据依赖路径显示，entry的值通过条件判断直接影响控制流：如果条件为true，会抛出异常（输出错误信息）；如果条件为false，会执行map.put操作，最终影响返回的map。entry的值通过控制流间接影响了程序的输出（异常信息或返回的map）。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 控制依赖路径显示，变异语句（条件判断）直接控制两个分支：true分支抛出异常，false分支执行map.put并最终返回map。变异语句通过控制流直接影响输出语句的执行（抛出异常或返回map）。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了程序的控制流，但在某些情况下，这种改变可能被后续执行抵消。具体分析：当entry.length < 2时，原程序抛出异常，变异体不抛出异常而是执行map.put，这会导致不同的输出行为；当entry.length > 2时，原程序执行map.put，变异体抛出异常，也会导致不同的输出行为。没有证据表明变异引入的错误状态会在后续执行中被修正或抵消。\n分析结论： 变异引入的错误状态不会被后续执行修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_399 的分析, 耗时: 135.9528 秒
+
+开始分析变异体 MUT_402...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+Retrying request to /chat/completions in 0.481681 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+Retrying request to /chat/completions in 0.463142 seconds
+Retrying request to /chat/completions in 0.770929 seconds
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_402": "步骤[可达性]：\n说明理由：变异语句位于第6行，是HashMap的初始化语句。该语句的执行条件为array != null（因为第3行的if条件为false时才会执行第6行）。由于array != null是一个可满足的条件（例如，当array为非空数组时），因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序使用array.length * 1.5计算HashMap的初始容量，而变异体使用array.length / 1.5。这两个表达式在数学上不等价，对于大多数array.length值（特别是当array.length不是1.5的倍数时），计算结果不同。例如，当array.length = 3时，原程序计算为4.5（转换为int后为4），变异体计算为2.0（转换为int后为2）。这会直接影响HashMap的初始容量。\n分析结论：变异确实改变了程序状态（HashMap的初始容量）。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是map。根据提供的数据依赖路径，map变量通过三条路径传播到输出语句（return map）：\n1. map → map.put() → return map\n2. map → map.put() → return map  \n3. map → return map\n变异改变了map的初始容量，而map的容量会影响其后续的put操作性能（如是否需要扩容），但不会改变map最终包含的键值对内容。因为无论初始容量如何，所有有效的键值对都会被正确添加到map中。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点，但变异只影响性能特征，不影响语义输出。\n\n步骤[控制依赖]：\n说明理由：变异语句（第6行）到输出语句（第26行）存在控制依赖路径。变异语句在控制流图中处于必须执行的位置（一旦array != null就会执行），并且其执行结果（map的初始化）会影响后续的map操作，但同样，这种影响只涉及性能而不影响最终的map内容。\n分析结论：变异语句通过控制流影响输出语句，但只影响性能特征。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了HashMap的初始容量，但这只是一个性能优化参数，不影响程序的语义行为。无论初始容量是多少，最终返回的map都会包含所有正确的键值对。变异引入的\"错误状态\"（不同的初始容量）不会影响程序的最终输出结果，因为HashMap的内部实现会保证所有元素都被正确存储。\n分析结论：变异引入的状态差异被HashMap的内部实现所覆盖，不影响最终输出。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_402 的分析, 耗时: 208.1830 秒
+
+开始分析变异体 MUT_425...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_425": "步骤[可达性]：\n说明理由： 变异语句位于第6行，其可达性约束条件为\"array != null\"。该条件在程序入口处通过if (array == null)判断，当条件不满足时（即array不为null）就会执行变异语句。由于array != null是一个可满足的条件（例如传入非空数组），因此变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序使用表达式\"array.length * 1.5\"计算HashMap初始容量，而变异体使用\"array.length * -1.5\"。在array.length > 0的情况下（因为array != null且需要进入循环），这两个表达式会产生完全不同的数值结果：一个是正数，一个是负数。这会直接影响HashMap的初始化行为，改变程序状态。\n分析结论： 变异确实改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是map，数据依赖分析显示map变量通过三条路径传播到输出语句return map：1) 通过map.put操作后最终返回；2) 通过另一分支的map.put操作后最终返回；3) 直接返回到输出。变异改变了map的初始状态（使用负容量初始化HashMap），这个改变会通过后续的map.put操作影响最终的map对象状态。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句位于第6行，控制依赖分析显示该语句在array != null的条件下执行，然后控制流进入for循环。虽然变异语句本身不直接控制输出语句的执行路径（输出语句在循环结束后执行），但变异语句的执行会影响后续map操作的行为，进而间接影响输出结果。\n分析结论： 变异语句通过数据依赖影响输出，但控制依赖路径存在。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异引入了错误状态（使用负容量初始化HashMap），但在Java的HashMap实现中，构造函数会对初始容量参数进行处理：如果参数为负数，会抛出IllegalArgumentException异常。因此，当array.length * -1.5为负数时，new HashMap((int) (array.length * -1.5))会抛出异常，导致程序异常终止而不是正常返回map。这与原程序的行为完全不同（原程序正常返回包含所有元素的map）。\n分析结论： 变异引入的错误状态没有被修正或抵消，而是导致程序行为发生根本性改变。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_425 的分析, 耗时: 163.6720 秒
+
+开始分析变异体 MUT_427...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_427": "步骤[可达性]：\n说明理由： 变异语句的路径条件组合为(array != null) && (i < array.length) && !(object instanceof Map.Entry) && (object instanceof Object[])。这些条件都是可满足的：array不为null，i在数组范围内，object不是Map.Entry类型而是Object[]类型。因此，变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"if (entry.length < 2)\"，变异体条件为\"if (false)\"。在变异语句可达的情况下，原条件可能为真或假，但变异体条件恒为假。这显著改变了程序的控制流：原程序在entry.length < 2时会抛出异常，而变异体永远不会执行该异常分支，直接执行map.put操作。这种改变会影响程序状态（是否抛出异常）和输出结果。\n分析结论： 变异实际改变了程序状态。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是entry，其数据依赖路径为：entry → map.put(entry[0], entry[1]) → return map。虽然变异体改变了控制流（不再检查entry.length），但entry变量本身的数据依赖链仍然存在，entry[0]和entry[1]的值会通过map.put传播到最终输出。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句\"if (false)\"控制着两个分支：True分支抛出异常，False分支执行map.put操作。在变异体中，由于条件恒为假，总是执行False分支。这与原程序的行为不同（原程序在entry.length < 2时执行True分支抛出异常）。控制依赖路径明确显示变异语句直接影响输出：要么抛出异常（不返回map），要么执行map.put并最终返回map。\n分析结论： 变异语句通过控制流直接影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 基于以上分析，变异体改变了程序的控制流行为：原程序在entry.length < 2时会抛出IllegalArgumentException异常，而变异体永远不会抛出该异常，总是执行map.put操作。这种差异无法在后续执行中被修正或抵消，会导致不同的程序输出（异常 vs 正常的Map对象）。\n分析结论： 变异引入的错误状态不会被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_427 的分析, 耗时: 128.7466 秒
+
+开始分析变异体 MUT_462...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_462": "步骤[可达性]：\n说明理由： 变异语句的路径条件组合为(array != null) && (i < array.length) && !(object instanceof Map.Entry) && (object instanceof Object[]) && !(entry.length < 2)。这些条件都是可满足的：array不为null且长度大于0，当前索引i在有效范围内，object是Object[]类型但不是Map.Entry，且entry数组长度不小于2。因此，存在输入（如非空数组包含长度≥2的Object[]元素）可以触发该变异语句的执行。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序语句为`map.put(entry[0], entry[1])`，变异体为`map.put(entry[0], entry[-1])`。在路径约束下，entry是一个长度≥2的Object数组。entry[1]访问数组的第二个元素（索引1），而entry[-1]试图访问数组的负索引位置，这在Java中会抛出ArrayIndexOutOfBoundsException异常。原程序行为是正常放入键值对，而变异体会导致异常抛出，这显著改变了程序状态（从正常执行变为异常终止）。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是entry。数据依赖路径显示：entry通过(line 13)定义，流向(line 19)的map.put操作，最终影响返回的map。虽然存在完整的数据依赖链连接到输出，但由于变异导致的是异常抛出而非正常的map修改，异常会直接终止程序执行，不会正常到达return map语句。因此，变异的效果（异常）确实会传播到程序输出（表现为异常而非正常返回值）。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 控制依赖路径显示，变异语句(line 19)的执行依赖于前驱条件（如entry.length不小于2），但其本身不直接控制其他语句的执行流程。然而，变异导致的异常会改变控制流，使程序跳转到异常处理而不是继续执行循环和返回语句。因此，变异通过引发异常间接影响了程序的控制流和最终输出方式。\n分析结论： 变异语句通过引发异常影响控制流和输出。\n\n步骤[状态覆盖]：\n说明理由： 变异引入的错误状态（试图访问entry[-1]）会立即导致ArrayIndexOutOfBoundsException异常，该异常不会被后续执行修正或抵消。程序会因异常而终止，不会执行正常的return语句，因此输出（异常）与原程序（正常返回Map）完全不同。\n分析结论： 错误状态未被覆盖，直接影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_462 的分析, 耗时: 143.9995 秒
+
+开始分析变异体 MUT_468...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_468": "步骤[可达性]：\n说明理由： 变异语句的路径条件组合为：array != null && i < array.length && !(object instanceof Map.Entry) && object instanceof Object[] && !(entry.length < 2)。这些条件都是可满足的：array不为空，i在有效索引范围内，object是Object[]类型但不是Map.Entry类型，且entry数组长度不小于2。因此，变异语句可达。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序语句为map.put(entry[0], entry[1])，变异体语句为map.put(entry[0], entry[0])。在路径约束条件下，entry是一个长度至少为2的Object数组。变异将第二个参数从entry[1]改为entry[0]，这意味着原本应该使用数组第二个元素作为值，现在使用第一个元素作为值。除非entry[0]和entry[1]的值相同，否则这会改变put操作的值参数，从而改变程序状态（map的内容）。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是entry。数据依赖路径显示：entry在line 13定义，在line 19使用（map.put(entry[0], entry[0])），然后map在line 26返回。变异改变了put操作的值参数（从entry[1]到entry[0]），这会直接影响map的内容，而map最终被返回。因此，变异通过数据依赖链传播到程序输出。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 控制依赖路径显示：变异语句（map.put(entry[0], entry[0])）在if (entry.length < 2)条件为false时执行，然后继续循环或最终返回map。变异语句本身不是控制语句，它不直接控制程序分支，但它的执行会影响程序状态（map的内容）。然而，从控制依赖的角度，输出语句（return map）并不直接控制依赖于这个put语句；它只依赖于循环的完成。但变异的效果已经通过数据依赖传播到输出。\n分析结论： 变异语句不通过控制流直接影响输出语句，但通过数据依赖影响输出。\n\n步骤[状态覆盖]：\n说明理由： 变异将put的值从entry[1]改为entry[0]。除非entry[0]等于entry[1]，否则这会改变map中对应键的值。在一般情况下，entry[0]和entry[1]可以不同，因此变异会改变最终的map输出。例如，如果entry = [\"key\", \"value\"]，原程序会put(\"key\", \"value\")，变异体会put(\"key\", \"key\")，导致返回的map不同。没有证据表明这种改变会在后续执行中被修正或抵消。\n分析结论： 变异引入的错误状态不会被覆盖，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_468 的分析, 耗时: 138.5303 秒
+

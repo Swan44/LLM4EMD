@@ -1,0 +1,193 @@
+开始处理程序: D:\bishe_code\progex_benchmark\mutantbench\mutantjava\mutantjavadiv\ArrayUtilsLastBoolean.java
+开始分析变异体 MUT_007...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_007": "### 步骤[可达性]：\n说明理由：变异语句位于第6行，将原条件`if (startIndex < 0)`改为`if (false)`。根据可达性约束`[ArrayUtils.isEmpty(array) == False]`，变异语句的路径条件仅需满足数组非空即可。该条件逻辑上可满足，因此变异点可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件`if (startIndex < 0)`的实际功能是检查`startIndex`是否为负数，而变异条件`if (false)`会直接跳过所有负值检查。例如输入`startIndex = -1`时：\n- 原程序会返回`INDEX_NOT_FOUND`（满足`startIndex < 0`）。\n- 变异体会跳过此分支（因`false`恒假），进入后续逻辑并可能导致不同输出（如搜索数组内容）。  \n分析结论：变异实际改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变量`startIndex`的数据依赖路径显示其值会流入后续循环（`i = startIndex`）和输出（`return i`或`return INDEX_NOT_FOUND`）。变异后，若`startIndex < 0`的情况未被处理，可能导致循环初始值错误（如`i = -1`），进而影响输出结果。  \n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径直接影响后续分支（如`if (startIndex >= array.length)`）和循环执行。例如：\n1. 原程序会通过`startIndex < 0`提前返回，而变异体强制进入后续逻辑。\n2. 变异体可能跳过对`startIndex`合法性的检查，导致循环未按预期执行或输出错误索引。  \n分析结论：变异语句通过控制流显著影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：无证据表明变异引入的错误状态会被后续执行修正或抵消。例如：\n- 输入`startIndex = -1`时，原程序直接返回`INDEX_NOT_FOUND`，而变异体会错误传递负值给循环变量`i`，导致未定义行为或异常。\n- 即使后续循环可能因`i >= 0`不成立而立即退出，输出`INDEX_NOT_FOUND`，但该行为是偶然的（依赖循环条件），而非逻辑等价。  \n分析结论：错误状态未被覆盖，程序输出可能不同。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_007 的分析, 耗时: 81.1371 秒
+
+开始分析变异体 MUT_014...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_014": "### 步骤1：可达性\n说明理由：路径条件组合为 `[!(ArrayUtils.isEmpty(array)) && !(startIndex < 0) && !(startIndex >= array.length)]`，即数组非空且 `startIndex` 合法（非负且小于数组长度）。该条件在程序执行时可满足（例如 `array = [true, false], startIndex = 1`），因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原循环条件为 `i >= 0`，变异后为 `i >= 1`。若数组非空且存在 `valueToFind` 在索引 `0` 处（例如 `array = [true], valueToFind = true, startIndex = 0`），原程序会返回 `0`，而变异体因跳过 `i = 0` 会返回 `INDEX_NOT_FOUND`。二者行为不同，程序状态被改变。  \n分析结论：变异实际改变程序语义，满足必要性。\n\n### 步骤3：数据依赖\n说明理由：变量 `i` 的数据依赖路径为：`i` 的初始值通过循环条件影响循环体和返回值。若 `valueToFind == array[i]` 为 `true`，`i` 直接作为返回值输出；否则循环终止后返回 `INDEX_NOT_FOUND`。变异影响的 `i` 取值范围（跳过 `0`）直接影响输出。  \n分析结论：变异通过数据依赖链传播到输出节点。\n\n### 步骤4：控制依赖\n说明理由：循环条件 `i >= 1` 控制循环是否执行。若条件为 `false`（如 `startIndex = 0`），直接跳转至 `return INDEX_NOT_FOUND`；若为 `true`，进入循环体并可能返回 `i`。变异通过控制流直接影响输出语句的执行路径。  \n分析结论：变异通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：根据步骤1-4，变异满足可达性、必要性，且数据和控制依赖路径均存在。在输入如 `array = [true], valueToFind = true, startIndex = 0` 时，原程序返回 `0`，变异体返回 `INDEX_NOT_FOUND`，输出结果不同，错误状态未被覆盖。  \n分析结论：变异未被抵消，影响最终输出。\n\n### 最终结论\n等价变异体判定结果：NO。\n\n---  \n**注**：尽管步骤2已明确变异体非等价，但完整分析步骤3-5进一步验证了其语义差异的可观测性。"}
+完成变异体 MUT_014 的分析, 耗时: 62.8462 秒
+
+开始分析变异体 MUT_015...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_015": "### 步骤[可达性]：\n说明理由：变异体将条件判断`if (ArrayUtils.isEmpty(array))`修改为`if (false)`。对于任何输入，该条件表达式恒为false，因此变异语句之后的代码块（返回INDEX_NOT_FOUND）将永远不会被执行。但变异语句本身（条件判断语句）是可达的，因为它位于程序的起始位置，没有任何前置条件限制其执行。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始条件`ArrayUtils.isEmpty(array)`用于检查数组是否为空，而变异后的条件`false`使得该判断永远不成立。这将直接影响程序的控制流：原程序中若数组为空会提前返回`INDEX_NOT_FOUND`，而变异体中这一行为被完全禁用（直接跳过该检查）。因此，变异会显著改变程序行为（尤其是当输入数组为空时）。  \n分析结论：变异实际改变了程序语义，满足必要性条件。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`array`和`valueToFind`。数据依赖路径显示：\n- `array`和`valueToFind`的原始使用在循环中（`if (valueToFind == array[i])`），但变异直接跳过了对数组是否为空的检查。如果输入数组为空，原程序会立即返回`INDEX_NOT_FOUND`，而变异体会继续执行后续逻辑（可能引发错误或不一致行为）。因此，变异的影响会通过后续的数据依赖路径传递到输出。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径显示：\n1. 若条件为`true`（原逻辑中数组为空），直接返回`INDEX_NOT_FOUND`；\n2. 若条件为`false`（变异后的逻辑），程序会跳过检查，继续执行后续逻辑。\n由于变异强制条件为`false`，原程序中对空数组的检查被完全绕过，从而改变了程序的控制流（例如，空数组输入会导致后续循环逻辑错误或无意义操作）。  \n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（跳过空数组检查）无法在后续执行中被修正或抵消。例如，若输入`array`为空，原程序会正确返回`INDEX_NOT_FOUND`，而变异体会错误地尝试访问空数组元素，导致未定义行为或被后续逻辑覆盖（如循环可能不执行，最终返回`INDEX_NOT_FOUND`，但这是巧合而非语义等价）。因此，变异体的行为与原程序不完全等价。  \n分析结论：变异引入的错误状态未被后续执行覆盖。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_015 的分析, 耗时: 78.2332 秒
+
+开始分析变异体 MUT_041...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_041": "### 步骤1：可达性分析\n说明理由：变异体的控制流图分析显示，从程序入口到变异语句的路径满足条件组合：`!ArrayUtils.isEmpty(array) && startIndex >= 0 && startIndex < array.length && i >= 0`。这些条件在正常情况下（非空数组、合法起始索引、循环变量有效）是可满足的。\n分析结论：变异语句可达。\n\n### 步骤2：必要性分析\n说明理由：原条件为`valueToFind == array[i]`，变异后为`valueToFind`。二者的语义差异在于：\n- 原条件要求`valueToFind`与`array[i]`严格相等\n- 变异条件仅检查`valueToFind`是否为true\n当`valueToFind`为false时：\n- 原条件可能为true（若`array[i]`也为false）\n- 变异条件必然为false\n当`valueToFind`为true时：\n- 原条件取决于`array[i]`\n- 变异条件必然为true\n因此在多数情况下语义不同。\n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖分析\n说明理由：变异影响的变量`valueToFind`:\n- 直接影响条件判断结果\n- 通过控制流影响返回值（返回i或继续循环）\n变量`i`:\n- 直接影响返回位置\n- 通过循环条件影响控制流\n两条数据依赖路径均能传递到输出节点（返回值）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出。\n\n### 步骤4：控制依赖分析\n说明理由：变异语句的控制依赖路径清晰可见：\n- True分支直接返回i（输出节点）\n- False分支影响循环控制流，最终可能返回INDEX_NOT_FOUND（另一输出节点）\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖分析\n说明理由：变异引入的状态改变（条件判断语义变化）会：\n1. 直接导致不同的控制流走向\n2. 影响返回值的具体结果\n3. 无法被后续执行修正\n例如当`valueToFind=false`而`array[i]=false`时：\n- 原程序返回i\n- 变异体继续循环\n分析结论：变异效果未被覆盖，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_041 的分析, 耗时: 56.6399 秒
+
+开始分析变异体 MUT_080...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_080": "### 步骤1：可达性\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径条件是 `!ArrayUtils.isEmpty(array) && !(startIndex < 0) && !(startIndex >= array.length) && i >= 0`。这些条件是可满足的，即变异语句可以被执行到。  \n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序的条件是 `if (valueToFind == array[i])`，变异后的条件是 `if (array[i])`。在变异语句可达的情况下，如果 `valueToFind` 是 `false` 且 `array[i]` 是 `false`，原程序的条件为 `true`（因为 `false == false`），而变异后的条件为 `false`（因为 `array[i]` 是 `false`）。因此，变异会导致程序状态改变。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量是 `array[i]`。`array[i]` 的数据依赖路径直接连接到输出语句（`return i` 或 `return INDEX_NOT_FOUND`）。变异导致的条件判断结果改变会直接影响程序的返回值。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句 `if (array[i])` 直接控制程序的分支走向，决定是返回 `i` 还是继续循环或返回 `INDEX_NOT_FOUND`。因此，变异语句通过控制流影响输出语句。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：尽管变异满足可达性、必要性、数据依赖和控制依赖，但在某些情况下（如 `valueToFind` 和 `array[i]` 均为 `true`），原程序和变异体的行为是一致的。然而，存在其他情况下（如 `valueToFind` 是 `false` 而 `array[i]` 是 `true`），变异体会导致不同的返回值。因此，变异引入的错误状态未被完全抵消或修正。  \n分析结论：程序最终输出可能受影响，不存在完全的覆盖或抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_080 的分析, 耗时: 68.2912 秒
+
+开始分析变异体 MUT_133...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_133": "### 步骤[可达性]：\n说明理由：变异体的控制流图分析显示，从程序入口到该变异语句的路径满足条件组合 `[!ArrayUtils.isEmpty(array) && startIndex >= 0 && startIndex >= array.length]`。其中 `array.length % 1` 在任何情况下都等于 0（因为任何数模 1 的结果都是 0），因此该路径条件可以满足。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始表达式 `startIndex = array.length - 1` 和变异表达式 `startIndex = array.length % 1` 在语义上有显著差异。前者会将 `startIndex` 设置为 `array.length - 1`，而后者会将其设置为 0。这种改变会导致后续循环 `for (int i = startIndex; i >= 0; i--)` 的起始点不同，从而可能影响程序的行为（例如影响到返回的索引值）。因此，变异实际改变了程序状态。  \n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量为 `startIndex`，其数据依赖路径明确连接到程序的输出节点（如 `return i` 或 `return INDEX_NOT_FOUND`）。具体路径如下：\n1. `startIndex` 直接赋值给 `i`，`i` 用于循环控制和返回值。\n2. 变异后的 `startIndex` 值会影响循环的起始点和循环次数，进而影响最终返回值。  \n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句 `startIndex = array.length % 1` 的值直接决定了循环变量 `i` 的初始值，从而通过循环控制流影响输出语句的执行（如 `return i` 或 `return INDEX_NOT_FOUND`）。控制依赖路径显示变异语句与输出语句之间存在直接的控制依赖关系。  \n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体改变了 `startIndex` 的值（从 `array.length - 1` 变为 0），但这种改变并未在后续执行中被修正或抵消。例如：\n- 原始程序：`startIndex = array.length - 1`，循环从 `array.length - 1` 开始。\n- 变异体：`startIndex = 0`，循环从 0 开始。\n这会导致循环范围完全不同，从而可能出现不同的返回值（例如原始程序可能返回更高的索引，而变异体可能返回更低的索引或 `INDEX_NOT_FOUND`）。因此，变异引入的错误状态未被覆盖，程序输出可能受到影响。  \n分析结论：不存在状态覆盖现象。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_133 的分析, 耗时: 70.0387 秒
+
+开始分析变异体 MUT_137...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_137": "### 步骤1：可达性  \n说明理由：变异语句的路径条件组合为 `!ArrayUtils.isEmpty(array) && startIndex >= 0 && startIndex >= array.length`。这些条件均可满足（例如非空数组且 `startIndex` 超过数组长度），因此变异语句可达。  \n分析结论：变异语句可达。  \n\n### 步骤2：必要性  \n说明理由：原语句 `startIndex = array.length - 1` 和变异语句 `startIndex = array.length - -1`（即 `startIndex = array.length + 1`）在语义上显著不同。前者将 `startIndex` 设为数组末尾索引，后者设为超出数组长度的值。在后续循环中，原程序会从 `array.length - 1` 开始遍历，而变异体会从 `array.length + 1` 开始（但循环条件 `i >= 0` 会立即阻止执行）。  \n分析结论：变异实际改变了程序状态。  \n\n### 步骤3：数据依赖  \n说明理由：变异影响的变量 `startIndex` 通过数据依赖链传递到循环变量 `i`（`i = startIndex`），进而影响循环条件和返回值。具体路径：  \n- `startIndex` → `i` → 循环条件 `i >= 0` → 返回值（`i` 或 `INDEX_NOT_FOUND`）。  \n分析结论：变异通过数据依赖链传播到输出节点。  \n\n### 步骤4：控制依赖  \n说明理由：变异语句直接影响循环的初始值 `i = startIndex`，进而控制循环是否执行。若 `startIndex` 无效（如 `array.length + 1`），循环会直接跳过，导致返回 `INDEX_NOT_FOUND`，而原程序可能返回有效索引。  \n分析结论：变异通过控制流影响输出语句。  \n\n### 步骤5：状态覆盖  \n说明理由：尽管变异改变了程序状态（`startIndex` 值），但该错误状态未被后续逻辑修正或抵消。例如：  \n- 原程序：`startIndex = 2`（数组长度=3），循环从索引2开始，可能返回有效值。  \n- 变异体：`startIndex = 4`（数组长度=3），循环直接跳过，返回 `INDEX_NOT_FOUND`。  \n最终输出结果可能不同。  \n分析结论：错误状态未被覆盖，影响程序输出。  \n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_137 的分析, 耗时: 57.9602 秒
+
+开始分析变异体 MUT_175...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_175": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为`[!ArrayUtils.isEmpty(array), startIndex < -1]`。这意味着当数组不为空且`startIndex`小于-1时，变异语句可达。该条件在逻辑上是可以满足的（例如`startIndex=-2`时）。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序条件为`startIndex < 0`，变异后为`startIndex < -1`。两者在`startIndex=-1`时行为不同：原程序会返回`INDEX_NOT_FOUND`，变异程序会继续执行后续逻辑。这会改变程序状态（例如影响`startIndex`的重赋值和循环行为）。\n分析结论：变异实际改变了程序语义。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量`startIndex`通过以下路径传播到输出：\n1. 直接影响返回`INDEX_NOT_FOUND`（当`startIndex < -1`为真时）\n2. 通过`startIndex`赋值影响循环变量`i`，最终影响返回值或二次返回`INDEX_NOT_FOUND`\n存在完整的数据依赖链。\n分析结论：变异影响的变量能通过数据依赖传播到输出。\n\n### 步骤4：控制依赖\n说明理由：变异语句直接控制以下输出路径：\n1. 真分支：立即返回`INDEX_NOT_FOUND`\n2. 假分支：控制后续`startIndex`调整和循环逻辑，最终影响返回值\n存在控制依赖路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：虽然所有依赖条件均满足，但关键区别在于当`startIndex=-1`时：\n- 原程序返回`INDEX_NOT_FOUND`\n- 变异程序会继续执行后续逻辑\n该差异会导致不同的程序输出（例如当`array[-1]==valueToFind`时，可能返回-1而非`INDEX_NOT_FOUND`），错误状态未被覆盖。\n分析结论：变异引入的状态差异未被抵消。\n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_175 的分析, 耗时: 58.8829 秒
+
+开始分析变异体 MUT_176...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_176": "### 步骤[可达性]：\n说明理由： 变异语句位于 `else if (startIndex > array.length)` 分支，其路径条件为 `!ArrayUtils.isEmpty(array) && startIndex >= 0`。该条件组合完全可满足（例如当 array 非空且 startIndex 为正数时），因此变异语句可达。  \n分析结论： 变异语句可达。\n\n### 步骤[必要性]：\n说明理由： 原条件 `startIndex >= array.length` 和变异条件 `startIndex > array.length` 的唯一差异在于边界情况 `startIndex == array.length`。此时原程序会进入分支并执行 `startIndex = array.length - 1`，而变异体不会进入分支，直接保留 `startIndex` 原值。这将导致后续循环的起始索引不同（`i = startIndex` vs `i = array.length - 1`），从而可能影响程序输出。  \n分析结论： 变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由： 变异影响的变量 `startIndex` 通过数据依赖链传播到输出节点：\n- 若变异条件为真（`startIndex > array.length`），原程序会将 `startIndex` 赋值为 `array.length - 1`，而变异体不赋值，导致后续循环的 `i` 初始值不同。\n- 若变异条件为假（`startIndex <= array.length`），两者行为一致。\n受影响变量 `i` 的值直接决定循环范围和返回值（`return i` 或 `return INDEX_NOT_FOUND`）。  \n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由： 变异语句通过控制流直接影响输出：\n- 变异条件为真时，原程序进入分支并调整 `startIndex`，而变异体跳过分支，导致后续循环范围不同。\n- 变异条件为假时，两者行为一致。\n输出语句（`return i` 或 `return INDEX_NOT_FOUND`）的控制流取决于循环执行结果，而循环范围受变异条件控制。  \n分析结论： 变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由： 在 `startIndex == array.length` 时：\n- 原程序返回值为 `array.length - 1`（若 `array[array.length - 1] == valueToFind`）或 `INDEX_NOT_FOUND`。\n- 变异体返回值为 `array.length`（越界，导致 `INDEX_NOT_FOUND`）或 `INDEX_NOT_FOUND`。\n因此，存在输入（如 `startIndex == array.length` 且 `array[array.length - 1] == valueToFind`）使两者输出不同（原程序返回有效索引，变异体返回 `INDEX_NOT_FOUND`）。  \n分析结论： 变异引入的错误状态未被抵消，程序输出可能改变。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_176 的分析, 耗时: 80.9596 秒
+
+开始分析变异体 MUT_180...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_180": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!ArrayUtils.isEmpty(array), startIndex >= 0, startIndex < array.length]`，这些条件在合法输入下是可满足的（例如非空数组且合法的startIndex）。因此，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序循环条件为 `i >= 0`，变异体改为 `i >= -1`。当 `i == -1` 时，原程序会终止循环，而变异体会继续执行一次循环体（访问 `array[-1]` 会导致数组越界异常）。此时程序状态发生改变（异常抛出）。\n分析结论：变异实际改变了程序语义。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是循环变量 `i`，其数据依赖路径显示 `i` 的值直接影响循环条件判断和数组访问。变异后的 `i` 值会传播到 `array[i]` 的访问和返回语句（若找到匹配值）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句（循环条件）直接控制循环体的执行和后续返回语句的执行路径（通过 `return i` 或抛出异常）。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（`i == -1` 时的异常）不会被后续执行修正，会导致程序行为完全不同（抛出异常而非正常返回索引或 `INDEX_NOT_FOUND`）。\n分析结论：变异引入的错误状态未被抵消。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_180 的分析, 耗时: 47.6537 秒
+
+开始分析变异体 MUT_182...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_182": "### 步骤[可达性]：\n说明理由：变异语句的条件组合为`else if (true)`，这是一个恒为真的条件，因此该变异语句在任何情况下都是可达的。原程序的`else if (startIndex >= array.length)`在特定条件下可能不满足，但变异后的`else if (true)`总是会被执行。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件`startIndex >= array.length`用于检查`startIndex`是否超出数组范围，并在满足条件时将`startIndex`调整为`array.length - 1`。变异后的条件`true`将强制执行调整逻辑，无论`startIndex`是否超出范围。因此，变异体在执行时会强制调整`startIndex`的值，改变了原程序的行为逻辑。\n\n分析结论：变异实际改变了程序状态（强制调整`startIndex`的值）。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`startIndex`，其数据依赖路径显示：\n1. 变异语句强制调整`startIndex`为`array.length - 1`。\n2. `startIndex`的值直接影响循环变量`i`的初始值。\n3. `i`的值进一步决定了程序的输出（返回的索引或`INDEX_NOT_FOUND`）。\n因此，变异引入的状态改变（`startIndex`的强制调整）会通过数据依赖链传播到程序输出。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径显示：\n1. 变异语句`if (true)`总是进入其分支，执行`startIndex = array.length - 1`。\n2. 这一修改直接影响了后续循环中`i`的初始值，从而控制了程序是否进入循环以及循环的执行路径。\n3. 程序的输出（返回的索引或`INDEX_NOT_FOUND`）依赖于循环的执行结果。\n因此，变异语句通过控制流影响了输出语句。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异强制调整了`startIndex`的值，但这一调整并非总是与原程序的行为一致。例如：\n- 当`startIndex`原本小于`array.length`时，原程序不会调整`startIndex`，而变异体会强制调整它。\n- 强制调整可能导致循环的初始`i`值不同（例如`startIndex`原为中间值，但被调整为末尾），进而可能影响最终的返回值（如找到的索引位置）。\n因此，变异引入的错误状态没有被完全覆盖或抵消，程序输出可能受到影响。\n\n分析结论：变异引入的错误状态未被修正或抵消，程序输出可能改变。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_182 的分析, 耗时: 82.5399 秒
+
+开始分析变异体 MUT_191...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_191": "### 步骤[可达性]：\n说明理由：变异语句的执行路径条件为`!(ArrayUtils.isEmpty(array)) && !(startIndex < 0) && (startIndex >= array.length)`，这些条件是可以同时满足的。例如，当array不为空、startIndex为非负数且大于等于数组长度时，变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：变异体将`startIndex = array.length - 1`修改为`startIndex = array.length - 0`，即`startIndex = array.length`。在可达路径下，原程序将startIndex设置为数组最后一个元素的索引，而变异体将其设置为数组长度（超出最后一个元素的索引）。这将导致后续循环的起始点不同，可能影响循环的执行次数和结果。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变量`startIndex`的数据依赖路径显示，它直接影响循环变量`i`的初始值，进而影响循环的执行和返回结果。具体来说，`startIndex`的值会传递到`i`，然后通过循环条件`i >= 0`和`valueToFind == array[i]`的判断影响输出（`return i`或`return INDEX_NOT_FOUND`）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句的控制依赖路径显示，它直接影响后续循环的执行（`for (int i = startIndex; i >= 0; i--)`）和返回语句（`return i`或`return INDEX_NOT_FOUND`）。变异语句的执行结果会通过控制流传递到输出语句。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：变异体将`startIndex`设置为`array.length`，而原程序设置为`array.length - 1`。这将导致循环的初始`i`值不同：\n- 原程序：`i = array.length - 1`，从最后一个元素开始遍历。\n- 变异体：`i = array.length`，首次循环条件`i >= 0`可能不成立（取决于数组长度是否为零），直接返回`INDEX_NOT_FOUND`。\n  即使循环执行，也可能因为`i`的初始值越界而行为不同。因此，变异引入的错误状态未被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_191 的分析, 耗时: 63.7940 秒
+
+开始分析变异体 MUT_202...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_202": "### 步骤[可达性]：\n说明理由：变异语句位于for循环条件判断处，路径约束条件为`!ArrayUtils.isEmpty(array) && !(startIndex < 0) && !(startIndex >= array.length)`。这些条件是可满足的，表示数组非空且startIndex在合法范围内。因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序使用`i >= 0`作为循环条件，变异体改用`i > 0`。当`i=0`时：\n- 原程序会执行循环体并检查array[0]\n- 变异体会直接终止循环\n这会改变程序的控制流和可能的返回值。\n\n分析结论：变异实际改变了程序状态和行为。\n\n### 步骤[数据依赖]：\n说明理由：变量i直接影响循环条件判断和数组访问索引。当i=0时：\n- 原程序会执行return i(返回0)或return INDEX_NOT_FOUND\n- 变异体直接跳过i=0的情况\n数据依赖链清晰地连接到程序输出。\n\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句直接控制循环是否继续，而循环体内包含return语句（输出节点）。当i=0时：\n- 原程序：循环继续→可能执行return i或后续INDEX_NOT_FOUND\n- 变异体：循环终止→直接执行最后的return INDEX_NOT_FOUND\n控制流受到直接影响。\n\n分析结论：变异语句通过控制流显著影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：没有证据表明变异引入的错误状态会被后续执行修正。当要查找的元素恰好在array[0]位置时：\n- 原程序会正确返回0\n- 变异体会错误返回INDEX_NOT_FOUND\n\n分析结论：变异导致的可观察输出差异无法被抵消。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_202 的分析, 耗时: 54.7808 秒
+
+开始分析变异体 MUT_235...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_235": "### 1. 可达性分析\n**说明理由：**  \n变异语句位于程序第6行的条件判断语句 `if (startIndex <= 0)`。根据可达性约束 `[!ArrayUtils.isEmpty(array)]`，只要输入的 `array` 不为空且 `startIndex` 满足条件，该语句即可被执行。`startIndex` 可以是任意整数值，包括小于、等于或大于0的值，因此该变异语句可达。\n\n**分析结论：**  \n变异语句可达。\n\n---\n\n### 2. 必要性分析\n**说明理由：**  \n原始条件为 `startIndex < 0`，变异后为 `startIndex <= 0`。两者在以下情况下行为不同：\n- 当 `startIndex == 0` 时，原始条件为 `false`（不进入分支），变异后条件为 `true`（进入分支）。\n- 其他情况下（如 `startIndex < 0` 或 `startIndex > 0`），两者行为一致。\n因此，变异在 `startIndex == 0` 时会改变程序状态（是否进入分支返回 `INDEX_NOT_FOUND`）。\n\n**分析结论：**  \n变异改变了程序状态，满足必要性。\n\n---\n\n### 3. 数据依赖分析\n**说明理由：**  \n变异影响的变量是 `startIndex`，其数据依赖路径如下：\n1. 若变异条件为 `true`（`startIndex <= 0`），直接返回 `INDEX_NOT_FOUND`（输出节点）。\n2. 若变异条件为 `false`，`startIndex` 会传递到后续的逻辑（调整 `startIndex` 或直接用于循环），最终可能影响返回值 `i` 或 `INDEX_NOT_FOUND`。\n\n因此，变异影响的变量 `startIndex` 可以通过数据依赖链传播到程序输出节点。\n\n**分析结论：**  \n变异影响的变量通过数据依赖链传播到输出节点。\n\n---\n\n### 4. 控制依赖分析\n**说明理由：**  \n变异语句的控制依赖路径：\n1. 若 `startIndex <= 0` 为 `true`，直接控制输出 `INDEX_NOT_FOUND`。\n2. 若为 `false`，控制后续逻辑（如循环和返回 `i` 或 `INDEX_NOT_FOUND`）。\n\n因此，变异语句通过控制流直接影响输出语句的执行。\n\n**分析结论：**  \n变异语句通过控制流影响输出语句。\n\n---\n\n### 5. 状态覆盖分析\n**说明理由：**  \n尽管变异在 `startIndex == 0` 时改变程序状态（进入分支返回 `INDEX_NOT_FOUND`），但此时的行为是否与原程序等价需进一步分析：\n- 原程序在 `startIndex == 0` 时会继续执行后续逻辑（如循环），可能返回 `i` 或 `INDEX_NOT_FOUND`。\n- 变异程序在 `startIndex == 0` 时直接返回 `INDEX_NOT_FOUND`。\n  \n因此，存在输入（如 `startIndex == 0` 且 `valueToFind` 在 `array[0]` 中）使得原程序与变异程序的输出不同（原程序返回 `0`，变异程序返回 `INDEX_NOT_FOUND`）。变异引入的错误状态未被完全覆盖。\n\n**分析结论：**  \n变异引入的错误状态未被抵消，影响最终输出。\n\n---\n\n### 最终结论\n**等价变异体判定结果：NO**。  \n变异在 `startIndex == 0` 时会导致程序行为与原程序不同，且这种差异可通过输出观察，因此不是等价变异体。"}
+完成变异体 MUT_235 的分析, 耗时: 108.7664 秒
+
+开始分析变异体 MUT_263...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_263": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `!ArrayUtils.isEmpty(array) && !(startIndex < 0)`，这是一个可满足的条件（例如 `array` 非空且 `startIndex >= 0`），因此变异语句可以被执行到。  \n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序条件为 `startIndex >= array.length`，变异后为 `startIndex == array.length`。在 `startIndex > array.length` 的情况下，原程序会进入分支而变异体不会，从而导致不同的程序状态（`startIndex` 是否被修改为 `array.length - 1`）。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤3：数据依赖\n说明理由：变异影响的变量 `startIndex` 通过数据依赖链传播到输出节点。具体路径为：  \n1. `startIndex` 被修改后会影响 `i` 的初始值（`int i = startIndex`）。  \n2. `i` 直接影响循环和返回值（`return i` 或 `return INDEX_NOT_FOUND`）。  \n因此，变异的效果可以通过数据依赖传递到输出。  \n分析结论：数据依赖链存在。\n\n### 步骤4：控制依赖\n说明理由：变异语句直接控制是否执行 `startIndex = array.length - 1`，从而影响后续循环的起始点和程序的返回值。控制依赖路径明确存在（例如变异语句的真分支直接导致 `startIndex` 的修改，进而影响输出）。  \n分析结论：控制依赖路径存在。\n\n### 步骤5：状态覆盖\n说明理由：虽然在 `startIndex == array.length` 时原程序和变异体的行为一致（均会进入分支并修正 `startIndex`），但在 `startIndex > array.length` 时，原程序会修正 `startIndex` 而变异体不会，导致后续循环的起始点不同，可能影响最终的返回值（例如是否找到 `valueToFind`）。因此，变异引入的状态差异未被完全覆盖。  \n分析结论：错误状态未被抵消。\n\n### 最终结论\n等价变异体判定结果：NO。"}
+完成变异体 MUT_263 的分析, 耗时: 77.6889 秒
+
+开始分析变异体 MUT_265...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_265": "### 步骤[可达性]：\n说明理由：变异语句所在的循环条件是`for (int i = startIndex; true; i--)`，条件是`true`，意味着循环无条件执行，变异语句总是可达的。路径约束`!ArrayUtils.isEmpty(array) && startIndex >= 0 && startIndex < array.length`表明数组非空且起始索引合法，进一步确认变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原始循环条件是`i >= 0`，变异后改为无条件循环`true`。这将导致循环永远不会终止（除非通过`return`跳出），从而可能引发无限循环或数组越界异常，显著改变了程序的控制流和潜在状态。\n分析结论：变异实际改变了程序语义，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`i`通过数据依赖链直接影响输出（`return i`或循环中的数组访问）。具体表现在：(1) `i`用于数组索引访问`array[i]`；(2) `i`作为返回值直接输出；(3) `i--`操作影响后续迭代。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异修改了循环条件，导致：(1) 原程序依赖`i >= 0`控制循环终止和输出分支；(2) 变异后循环无条件执行，所有输出语句（包括`return i`和`return INDEX_NOT_FOUND`）的控制流完全由内部条件决定。变异语句通过改变循环行为间接控制了所有输出路径。\n分析结论：变异语句通过控制流显著影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：由于变异导致循环无法终止，程序要么无限循环（无输出），要么在后续迭代中因数组越界抛出异常。这与原程序的预期输出行为（返回索引或`INDEX_NOT_FOUND`）存在本质差异，变异引入的错误状态无法被后续执行修正。\n分析结论：变异引入的错误状态未被抵消，程序最终输出行为改变。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_265 的分析, 耗时: 55.5282 秒
+
+开始分析变异体 MUT_350...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_350": "### 步骤[可达性]：\n说明理由：变异语句的条件被修改为`if (true)`，这意味着该条件总是为真，因此变异语句总是可达的。原程序中的条件`if (ArrayUtils.isEmpty(array))`依赖于输入数组`array`，但变异后不再依赖任何条件。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：变异语句将原条件`if (ArrayUtils.isEmpty(array))`修改为`if (true)`，这意味着无论输入数组`array`是否为空，变异体的行为都会与原程序不同。具体来说，原程序在数组为空时返回`INDEX_NOT_FOUND`，而变异体则直接跳过这一检查，进入后续逻辑。因此，变异确实改变了程序的状态和行为。\n分析结论：变异改变了程序状态，满足必要性。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是`array`。在变异体中，`array`的数据依赖路径仍然存在，因为`array`在`if (valueToFind == array[i])`中被使用，并通过返回值`i`或`INDEX_NOT_FOUND`传播到程序输出。然而，变异体跳过了对`array`是否为空的检查，可能导致后续逻辑直接访问`array`的元素，从而改变程序的行为。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (true)`控制了程序的控制流。如果条件为真（总是为真），则直接执行`return INDEX_NOT_FOUND;`，否则跳过该分支进入后续逻辑。因此，变异语句直接影响了程序的输出路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异体跳过了对`array`是否为空的检查，但后续逻辑仍然依赖`array`的内容。如果`array`为空，原程序会直接返回`INDEX_NOT_FOUND`，而变异体会尝试访问`array`的元素，可能导致未定义行为或不同的输出。因此，变异引入的错误状态未被修正或抵消，程序最终输出可能受到影响。\n分析结论：变异引入的错误状态未被覆盖，影响程序输出。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_350 的分析, 耗时: 63.4819 秒
+
+开始分析变异体 MUT_359...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_359": "### 步骤[可达性]：\n说明理由：变异语句的路径条件组合为 `[!ArrayUtils.isEmpty(array) && startIndex >= 0 && startIndex >= array.length]`。该条件表示数组不为空、startIndex非负且大于等于数组长度。这是一个可满足的条件（例如：`array=[true], startIndex=1`），因此变异语句可达。\n\n分析结论：变异语句可达。\n\n---\n\n### 步骤[必要性]：\n说明理由：原始表达式为 `startIndex = array.length - 1`，变异表达式为 `startIndex = array.length / 1`。对于任何满足路径条件的输入（`startIndex >= array.length`），计算结果均为 `startIndex = array.length`（因为 `array.length / 1` 和 `array.length - 1` 的值不同，除非 `array.length == 1`）。因此，实际操作中，多数情况下（`array.length > 1`）变异会改变 `startIndex` 的值，从而影响后续循环的起始点。\n\n分析结论：变异实际改变了程序状态。\n\n---\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量 `startIndex` 通过以下路径传播到输出：\n1. `startIndex` 赋值后用于初始化循环变量 `i`。\n2. `i` 的值直接影响循环是否执行以及返回的索引值（`return i` 或 `return INDEX_NOT_FOUND`）。\n3. 变异后的 `startIndex` 值不同会导致循环行为改变。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n---\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于条件分支 `startIndex >= array.length` 的 True 路径中，其后续的控制流（循环和返回语句）直接依赖于 `startIndex` 的值。例如：\n- 若 `startIndex` 从 `array.length - 1` 变异为 `array.length / 1`，会导致循环起始点差异（如 `array.length=2` 时原为 `i=1`，变异后为 `i=2`），可能跳过有效元素或提前终止循环。\n\n分析结论：变异语句通过控制流影响输出语句。\n\n---\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异导致 `startIndex` 值变化，但仅在 `array.length == 1` 时两个表达式结果相同（此时 `array.length - 1 = 0`，`array.length / 1 = 1`，但由于后续循环条件 `i >= 0`，行为不一致）。其他情况下，变异会改变循环行为（如跳过最后一个元素），从而可能影响最终输出结果。\n\n分析结论：变异引入的错误状态未被修正或抵消，最终输出可能受影响。\n\n---\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_359 的分析, 耗时: 71.9088 秒
+
+开始分析变异体 MUT_394...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_394": "### 步骤[可达性]：\n说明理由：变异体的路径条件组合为 `[!ArrayUtils.isEmpty(array), startIndex >= array.length]`。这两个条件可以同时满足，例如当数组不为空且 `startIndex` 大于或等于数组长度时。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序语句为 `startIndex = array.length - 1`，变异体为 `startIndex = array.length + 1`。在变异语句可达的情况下（即 `startIndex >= array.length`），原程序将 `startIndex` 设置为 `array.length - 1`（数组的最后一个有效索引），而变异体将其设置为 `array.length + 1`（超出数组边界）。这将导致后续循环的起始点不同：原程序从最后一个有效索引开始，而变异体可能从无效索引开始（如果 `array.length + 1 >= 0`），或者直接跳过循环（如果 `array.length + 1 < 0`）。因此，程序状态会发生改变。\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `startIndex`，其数据依赖路径为：\n1. `startIndex = array.length + 1` → `int i = startIndex` → `for (i >= 0)` → `if (valueToFind == array[i])` → `return i` 或 `i--` → 循环或 `return INDEX_NOT_FOUND`。\n变异后的 `startIndex` 直接影响循环变量 `i` 的初始值，从而可能影响循环的执行和返回值。因此，变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖。\n\n### 步骤[控制依赖]：\n说明理由：变异语句位于 `if (startIndex >= array.length)` 的分支中，其控制依赖路径为：\n1. `if (startIndex >= array.length)` → `startIndex = array.length + 1` → `int i = startIndex` → `for (i >= 0)` → 循环或返回。\n变异语句通过控制流影响循环的起始点和执行，进而影响输出语句的执行。\n分析结论：存在控制依赖。\n\n### 步骤[状态覆盖]：\n说明理由：变异体将 `startIndex` 设置为 `array.length + 1`，而原程序设置为 `array.length - 1`。对于非空数组和 `startIndex >= array.length` 的情况：\n- 原程序：循环从 `array.length - 1` 开始，检查数组元素。\n- 变异体：循环从 `array.length + 1` 开始。如果 `array.length + 1 >= 0`，则循环会尝试访问无效索引 `array[array.length + 1]`（导致异常或未定义行为）；如果 `array.length + 1 < 0`（不可能，因为数组长度非负），则循环直接跳过，返回 `INDEX_NOT_FOUND`。\n因此，变异体的行为与原程序完全不同，可能导致异常或不同的返回值（例如原程序可能找到元素，而变异体直接返回 `INDEX_NOT_FOUND`）。错误状态未被覆盖或抵消。\n分析结论：错误状态未被覆盖。\n\n### 最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_394 的分析, 耗时: 74.0138 秒
+
+开始分析变异体 MUT_415...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_415": "### 步骤[可达性]：\n说明理由：变异语句位于for循环内部，其路径条件为`!ArrayUtils.isEmpty(array) && startIndex >= 0 && startIndex < array.length && i >= 0`。这些条件均可满足（例如非空数组且合法startIndex），因此变异语句可达。  \n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原条件`valueToFind == array[i]`被替换为`false`。该变异强制使条件永远不成立，导致循环无法提前返回`i`（原程序中可能的行为），而是必然执行到最后返回`INDEX_NOT_FOUND`。这显著改变了程序的控制流和输出语义。  \n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`i`的数据依赖路径仅能通过循环控制流影响最终输出（如循环终止时返回`INDEX_NOT_FOUND`），但原依赖`i`的路径（通过`valueToFind == array[i]`直接返回`i`）已被变异阻断。由于循环终止时的输出与`i`无关，数据依赖链未传播到程序输出节点。  \n分析结论：数据依赖链缺失，无法传播至输出。\n\n### 步骤[控制依赖]：\n说明理由：变异语句`if (false)`的控制依赖路径分为：  \n1. `True`分支（理论上不可达）直接返回`i`（原逻辑被破坏）；  \n2. `False`分支继续循环，最终返回`INDEX_NOT_FOUND`。  \n尽管控制流改变，但原程序中可能返回`i`的路径被完全禁用，导致输出行为被强制导向`INDEX_NOT_FOUND`。  \n分析结论：控制依赖路径存在，但变异效果导致输出行为必然改变。\n\n### 步骤[状态覆盖]：\n说明理由：变异引入的错误状态（禁用`return i`路径）未被后续执行修正或抵消。程序输出从“可能返回`i`”变为“必然返回`INDEX_NOT_FOUND`”，可观察行为改变。  \n分析结论：不存在状态覆盖，输出明显不同。\n\n### 最终结论：\n等价变异体判定结果：NO。"}
+完成变异体 MUT_415 的分析, 耗时: 54.0695 秒
+
+开始分析变异体 MUT_436...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_436": "### 步骤1：可达性\n说明理由：变异语句的路径条件组合为 `[!ArrayUtils.isEmpty(array) && startIndex >= 0 && startIndex < array.length]`。这些条件是可以满足的，例如当 `array` 非空且 `startIndex` 在合法范围内时，变异语句可以被执行到。\n分析结论：变异语句可达。\n\n### 步骤2：必要性\n说明理由：原程序中的循环条件为 `i >= 0`，变异后为 `i == 0`。在 `startIndex > 0` 的情况下（满足 `startIndex < array.length`），原程序会执行循环体多次，而变异体仅在 `i == 0` 时执行一次（或不执行，如果 `startIndex != 0`）。这会显著改变程序的执行逻辑和状态。\n分析结论：变异实际改变了程序状态，不满足等价性。\n\n### 步骤3：数据依赖\n说明理由：变量 `i` 的数据依赖路径显示，`i` 的取值直接影响循环是否执行以及返回值（`return i` 或 `return INDEX_NOT_FOUND`）。变异改变了 `i` 的取值逻辑，因此会直接影响输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤4：控制依赖\n说明理由：变异语句（循环条件）控制了循环体和后续输出的执行。变异后，循环的执行次数和行为可能完全不同，从而影响输出语句的执行。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n### 步骤5：状态覆盖\n说明理由：变异引入的错误状态（循环条件从 `i >= 0` 改为 `i == 0`）会导致程序行为显著不同，例如可能跳过某些元素的检查或提前终止循环。这种错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态未被覆盖，影响最终输出。\n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_436 的分析, 耗时: 49.9763 秒
+
+开始分析变异体 MUT_440...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_440": "### 步骤[reachability]：\n说明理由：变异体的可达性约束条件是 `!ArrayUtils.isEmpty(array) && startIndex >= 1 && startIndex < array.length`。该条件表示数组非空且 `startIndex` 介于 1 和数组长度之间。在这种情况下，变异语句 `if (startIndex < 1)` 在 `startIndex >= 1` 的情况下始终为 false，因此变异语句可达（执行路径可以抵达该语句），但条件判断的结果与原程序不同（原程序可能在 `startIndex < 0` 时返回，而变异体在 `startIndex < 1` 时返回）。\n\n分析结论：变异语句可达，且路径条件可满足（存在输入使其被执行）。\n\n---\n\n### 步骤[necessity]：\n说明理由：原程序的条件是 `startIndex < 0`，而变异体的条件是 `startIndex < 1`。在可达路径下（`startIndex >= 1`），原程序的条件和变异体的条件均不成立（`startIndex < 0` 和 `startIndex < 1` 均为 false），因此程序的后续行为（跳过该分支）与原程序完全一致，程序状态未发生改变。\n\n分析结论：变异未实际改变程序语义（在可达路径下），属于**非必要性**变异。\n\n---\n\n### 步骤[data_dependency]：\n说明理由：由于在步骤 2 中已经确认变异未改变程序状态（即未真正影响程序行为），因此无需进一步分析数据依赖。即使变量 `startIndex` 可能通过数据依赖链传播到输出，变异并未实际改变其值或程序的控制流。\n\n分析结论：由于变异未改变程序状态，数据依赖分析无关（可跳过）。\n\n---\n\n### 步骤[control_dependency]：\n说明理由：由于变异未改变程序状态（步骤 2），控制依赖分析同样无关。变异语句的控制流分支与原程序在可达路径下一致（均为 false），因此不会影响输出语句的执行。\n\n分析结论：由于变异未改变程序状态，控制依赖分析无关（可跳过）。\n\n---\n\n### 步骤[state_overlap]：\n说明理由：在可达路径下（`startIndex >= 1`），变异体和原程序的行为完全一致（均跳过 `if` 分支）。因此，不存在错误状态需要覆盖，程序的输出与原程序完全相同。\n\n分析结论：变异体的行为与原程序完全一致，不影响输出。\n\n---\n\n### 最终结论：\n等价变异体判定结果：YES。  \n理由是：在可达路径下，变异未改变程序状态或输出行为，属于**非必要性**等价变异体。"}
+完成变异体 MUT_440 的分析, 耗时: 103.3424 秒
+
+开始分析变异体 MUT_445...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_445": "### 步骤[不可达性]：\n说明理由：变异语句的条件是 `startIndex != 0`，而原程序的条件是 `startIndex < 0`。在变异语句的路径条件组合中，`!ArrayUtils.isEmpty(array)` 是可满足的，因此变异语句可达。\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序的条件是 `startIndex < 0`，变异体的条件是 `startIndex != 0`。这两个条件对于 `startIndex` 的判定是不同的。例如，当 `startIndex = -1` 时，原程序会进入条件分支返回 `INDEX_NOT_FOUND`，而变异体也会进入条件分支返回 `INDEX_NOT_FOUND`；但当 `startIndex = 1` 时，原程序不会进入条件分支，而变异体会进入条件分支返回 `INDEX_NOT_FOUND`。因此，变异体改变了程序的状态。\n分析结论：变异改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量是 `startIndex`，其数据依赖路径确实传播到程序的输出节点。例如，`startIndex` 的值影响了循环变量的初始值 `i`，进而影响了最终的返回值 `i` 或 `INDEX_NOT_FOUND`。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句控制了程序的执行路径。变异体的条件 `startIndex != 0` 直接决定了是否进入返回 `INDEX_NOT_FOUND` 的分支，从而影响了后续循环是否执行以及最终的返回值。\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：在某些情况下（如 `startIndex = -1`），变异体和原程序的行为是一致的。但在其他情况下（如 `startIndex = 1`），变异体的行为与原程序不同，会导致程序输出不同（例如，原程序会继续执行循环，而变异体会直接返回 `INDEX_NOT_FOUND`）。\n分析结论：变异引入的错误状态未被修正或抵消，导致程序最终输出受影响。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_445 的分析, 耗时: 77.0828 秒
+
+开始分析变异体 MUT_452...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_452": "### 步骤[可达性]：\n说明理由：变异语句位于`startIndex >= array.length`条件为True的分支中，路径条件组合为`[!ArrayUtils.isEmpty(array), startIndex >=0, startIndex >= array.length]`。这些条件可以同时满足（例如非空数组、startIndex大于等于数组长度），因此变异语句可达。\n\n分析结论：变异语句可达。\n\n### 步骤[必要性]：\n说明理由：原程序赋值`startIndex = array.length - 1`，变异后为`startIndex = array.length * 1`。当`startIndex >= array.length`时，原程序将`startIndex`设为`array.length - 1`，而变异体设为`array.length`。这将导致后续for循环的初始`i`值不同（变异体比原程序大1），可能影响循环行为和返回值。\n\n分析结论：变异实际改变了程序状态。\n\n### 步骤[数据依赖]：\n说明理由：变异影响的变量`startIndex`通过以下路径传播到输出：\n1. `startIndex` -> `i` -> for循环条件`i >= 0` -> 循环体和返回值\n2. `startIndex`直接决定循环起始点，影响是否命中`valueToFind == array[i]`的判断\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n### 步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出：\n- 变异后的`startIndex`值决定循环起始索引\n- 循环索引直接影响`valueToFind == array[i]`的判断结果\n- 最终影响是返回命中索引还是`INDEX_NOT_FOUND`\n\n分析结论：变异语句通过控制流影响输出语句。\n\n### 步骤[状态覆盖]：\n说明理由：虽然变异改变了循环起始索引，但有以下关键差异：\n1. 当`startIndex = array.length *1`时：\n   - 如果`array.length == 0`，但根据可达性条件`!ArrayUtils.isEmpty(array)`排除\n   - 正常情况下会导致第一次循环访问`array[array.length]`，这将引发ArrayIndexOutOfBoundsException\n2. 原程序行为是安全地访问`array[array.length-1]`\n\n没有证据表明错误状态会被后续执行修正或抵消。\n\n分析结论：变异引入的错误状态不会被覆盖，将导致不同的程序行为（异常或不同的返回值）。\n\n### 最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_452 的分析, 耗时: 54.9598 秒
+

@@ -17,7 +17,7 @@ def extract_results(log_file_path, output_file_path):
     print(f"结果已保存到 {output_file_path}")
 
 # 使用示例
-log_file_path = 'D:\\bishe_code\\LLM4EMD\\outputs_new\\StringTokenizerSetMax_results.log'  # 替换为你的日志文件路径
-output_file_path = 'D:\\bishe_code\LLM4EMD\\result_output_new\\StringTokenizerSetMax_results'  # 替换为输出文件路径
+log_file_path = 'D:\\bishe_code\\LLM4EMD\\outputs_new\\ArrayUtilsToMap_results.log'  # 替换为你的日志文件路径
+output_file_path = 'D:\\bishe_code\LLM4EMD\\array_results\\ArrayUtilsToMap_results'  # 替换为输出文件路径
 extract_results(log_file_path, output_file_path)
 

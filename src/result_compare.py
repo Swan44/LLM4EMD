@@ -49,7 +49,6 @@ def compare_equivalence(json_file_path, txt_file_path):
         print("\n所有变异体匹配一致")
 
 
-# 使用示例
-json_file_path = 'D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjJson\\StringTokenizerSetMaxmutants.json'  # 替换为你的JSON文件路径
-txt_file_path = 'D:\\bishe_code\\LLM4EMD\\result_output_new\\StringTokenizerSetMax_results'  # 替换为你的TXT文件路径
+json_file_path = 'D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjJson\\ArrayUtilsToMapmutants.json'  # 替换为你的JSON文件路径
+txt_file_path = 'D:\\bishe_code\\LLM4EMD\\array_results\\ArrayUtilsToMap_results'  # 替换为你的TXT文件路径
 compare_equivalence(json_file_path, txt_file_path)

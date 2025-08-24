@@ -82,9 +82,27 @@ def main(program_paths, mutants_json_paths):
 if __name__ == "__main__":
     # 示例调用方式
     program_paths = [
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\StringTokenizerSetMax.java"
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\ArrayUtilsSubBoolean.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\ArrayUtilsSubByte.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\ArrayUtilsSubChar.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\ArrayUtilsSubDouble.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\ArrayUtilsSubFloat.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\ArrayUtilsSubInt.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\ArrayUtilsSubLong.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\ArrayUtilsSubObj.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\ArrayUtilsSubShort.java",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\ArrayUtilsToMap.java"
     ]
     mutants_json_paths = [
-        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\StringTokenizerSetMaxmutants.json"
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\ArrayUtilsSubBooleanmutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\ArrayUtilsSubBytemutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\ArrayUtilsSubCharmutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\ArrayUtilsSubDoublemutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\ArrayUtilsSubFloatmutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\ArrayUtilsSubIntmutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\ArrayUtilsSubLongmutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\ArrayUtilsSubObjmutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\ArrayUtilsSubShortmutants.json",
+        "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\ArrayUtilsToMapmutants.json"
     ]
     main(program_paths, mutants_json_paths)
