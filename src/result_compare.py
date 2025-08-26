@@ -50,5 +50,5 @@ def compare_equivalence(json_file_path, txt_file_path):
 
 
 json_file_path = 'D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjJson\\DefrosterMainmutants.json'  # 替换为你的JSON文件路径
-txt_file_path = '/result_output_new/DefrosterMain_results'  # 替换为你的TXT文件路径
+txt_file_path = 'D:\\bishe_code\\LLM4EMD\\result_output_new\\DefrosterMain_results'  # 替换为你的TXT文件路径
 compare_equivalence(json_file_path, txt_file_path)
