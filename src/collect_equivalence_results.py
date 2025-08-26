@@ -38,8 +38,8 @@ def setup_logging(program_path):
 
 # 主函数
 def main():
-    program_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\MathUtilsGcd.java"
-    mutants_json_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\MathUtilsGcdmutants.json"
+    program_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\DefrosterMain.java"
+    mutants_json_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\DefrosterMainmutants121.json"
 
     setup_logging(program_path)
 

@@ -1,0 +1,11 @@
+开始分析变异体 MUT_001...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_001": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件`(0 != AU8.We2_Clip15_OUT) ∧ (0 != Clip_15) ∧ (We1_BA_DEF_ev_ctr2 + We1_BA_DEF_ev_ctr3 + We1_BA_DEF_ev_ctr5 == 1024)`，该条件组合是可满足的。具体来说，`AU8.We2_Clip15_OUT`和`Clip_15`都不为0是可能的程序状态，且存在特定的计数器值组合使得`We1_BA_DEF_ev_ctr2 + We1_BA_DEF_ev_ctr3 + We1_BA_DEF_ev_ctr5 == 1024`成立。因此，变异语句（第162行的条件判断）是可达的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序的条件表达式为`We1_BA_DEF_ev_ctr2 + We1_BA_DEF_ev_ctr3 + We1_BA_DEF_ev_ctr5 == 1024`，变异体将其改为`We1_BA_DEF_ev_ctr2 + We1_BA_DEF_ev_ctr3 - We1_BA_DEF_ev_ctr5 == 1024`。在可达路径的约束条件下（即满足原始条件为真），变异操作将加法改为减法，这会导致条件表达式的值发生变化。例如，当`We1_BA_DEF_ev_ctr5`不为0时，变异后的表达式值会不同于原表达式，从而可能改变程序的控制流（即条件判断的真假结果），进而影响程序状态（如执行不同的分支）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是`We1_BA_DEF_ev_ctr2`、`We1_BA_DEF_ev_ctr3`和`We1_BA_DEF_ev_ctr5`。从数据依赖分析中可知，这些变量在变异语句（line 162）被使用，但数据依赖路径仅终止于后续的使用点（line 168的条件判断），并未找到这些变量流向程序输出（如返回值或输出变量）的路径。具体来说，程序输出（如`AU8`结构体的字段赋值或返回值）并未直接或间接依赖于这些计数器的值。变异语句的条件结果控制分支选择，但分支内赋值的变量（如`We1_BA_DEF_ev_ctr2`）仅用于后续的内部计算，并未传播到程序输出。\n分析结论：变异影响的变量没有通过数据依赖链传播到程序输出节点，数据依赖缺失。\n\n由于数据依赖缺失已足以判断该变异体为等价变异体（变异效果无法传播到输出），无需继续后续步骤。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_001 的分析, 耗时: 188.6482 秒
+
+开始分析变异体 MUT_002...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
