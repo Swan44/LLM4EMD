@@ -1,0 +1,12 @@
+MUT_004: true->NO
+MUT_007: false->YES
+MUT_011: false->YES
+MUT_020: false->YES
+MUT_021: false->YES
+MUT_022: true->NO
+MUT_032: true->NO
+MUT_051: false->YES
+MUT_061: false->YES
+MUT_001: false->YES
+MUT_033: true->NO
+MUT_054: false->YES

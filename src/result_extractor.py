@@ -17,7 +17,7 @@ def extract_results(log_file_path, output_file_path):
     print(f"结果已保存到 {output_file_path}")
 
 # 使用示例
-log_file_path = 'D:\\bishe_code\\LLM4EMD\\outputs_new\\DefrosterMain_results.log'  # 替换为你的日志文件路径
-output_file_path = 'D:\\bishe_code\\LLM4EMD\\result_output_new\\DefrosterMain_results'  # 替换为输出文件路径
+log_file_path = '/Users/swan/bishe/LLM4EMD/outputs_new/StringTokenizerThree_results.log'  # 替换为你的日志文件路径
+output_file_path = '/Users/swan/bishe/LLM4EMD/result_output_new/StringTokenizerThree_results'  # 替换为输出文件路径
 extract_results(log_file_path, output_file_path)
 

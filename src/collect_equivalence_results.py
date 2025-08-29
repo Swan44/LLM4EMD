@@ -1,9 +1,7 @@
 import json
 import time
-import subprocess
 import os
 import logging
-from datetime import datetime
 from emd_analysis import analyze_mutant
 
 
