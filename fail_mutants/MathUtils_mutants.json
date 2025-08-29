@@ -1,0 +1,146 @@
+[
+  {
+    "mutant_id": "MUT_004",
+    "difference": "@@ -418 +418 @@\n-        while ((u & 1) == 0 && (v & 1) == 0 && k < 31) { // while u and v are\n+        while ((v & 1) == 0 && k < 31) { // while u and v are",
+    "equivalence": true,
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_006",
+    "difference": "@@ -439 +439 @@\n-            if (t > 0) {\n+            if (t > -1) {",
+    "equivalence": true,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_015",
+    "difference": "@@ -429 +429 @@\n-        int t = ((u & 1) == 1) ? v : -(u / 2)/* B3 */;\n+        int t = ((u & 1) <= 1) ? v : -(u / 2)/* B3 */;",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_017",
+    "difference": "@@ -429 +429 @@\n-        int t = ((u & 1) == 1) ? v : -(u / 2)/* B3 */;\n+        int t = ((u & 1) == 1) ? v : +(u / 2)/* B3 */;",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_022",
+    "difference": "@@ -429 +429 @@\n-        int t = ((u & 1) == 1) ? v : -(u / 2)/* B3 */;\n+        int t = ((u & 1) == 1) ? v : -(u / -2)/* B3 */;",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_026",
+    "difference": "@@ -418 +418 @@\n-        while ((u & 1) == 0 && (v & 1) == 0 && k < 31) { // while u and v are\n+        while ((u & 1) == 0 && (v & 1) == 0) { // while u and v are",
+    "equivalence": true,
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_027",
+    "difference": "@@ -418 +418 @@\n-        while ((u & 1) == 0 && (v & 1) == 0 && k < 31) { // while u and v are\n+        while ((u & 1) == 0 == ((v & 1) == 0) && k < 31) { // while u and v are",
+    "equivalence": false,
+    "operator": "null"
+  },
+  {
+    "mutant_id": "MUT_045",
+    "difference": "@@ -448 +448 @@\n-        } while (t != 0);\n+        } while (t > 0);",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_057",
+    "difference": "@@ -418 +418 @@\n-        while ((u & 1) == 0 && (v & 1) == 0 && k < 31) { // while u and v are\n+        while ((u & 1) == 0 && k < 31) { // while u and v are",
+    "equivalence": true,
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_059",
+    "difference": "@@ -418 +418 @@\n-        while ((u & 1) == 0 && (v & 1) == 0 && k < 31) { // while u and v are\n+        while ((u & 1) == 0 && (v & 1) == 0 && k <= 31) { // while u and v are",
+    "equivalence": true,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_060",
+    "difference": "@@ -418 +418 @@\n-        while ((u & 1) == 0 && (v & 1) == 0 && k < 31) { // while u and v are\n+        while ((u & 1) <= 0 && (v & 1) == 0 && k < 31) { // while u and v are",
+    "equivalence": true,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_063",
+    "difference": "@@ -445 +445 @@\n-            t = (v - u) / 2;\n+            t = (v - u) / -2;",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_065",
+    "difference": "@@ -429 +429 @@\n-        int t = ((u & 1) == 1) ? v : -(u / 2)/* B3 */;\n+        int t = ((u & 1) == 1) ? v : -(u - 2)/* B3 */;",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_067",
+    "difference": "@@ -413 +413 @@\n-        if (v > 0) {\n+        if (v > -1) {",
+    "equivalence": true,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_069",
+    "difference": "@@ -429 +429 @@\n-        int t = ((u & 1) == 1) ? v : -(u / 2)/* B3 */;\n+        int t = ((u & -1) == -1) ? v : -(u / 2)/* B3 */;",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_072",
+    "difference": "@@ -418 +418 @@\n-        while ((u & 1) == 0 && (v & 1) == 0 && k < 31) { // while u and v are\n+        while (((u & 1) == 0 && (v & 1) == 0) == k < 31) { // while u and v are",
+    "equivalence": true,
+    "operator": "null"
+  },
+  {
+    "mutant_id": "MUT_079",
+    "difference": "@@ -445 +445 @@\n-            t = (v - u) / 2;\n+            t = (v - u) % 2;",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_081",
+    "difference": "@@ -413 +413 @@\n-        if (v > 0) {\n+        if (v > 1) {",
+    "equivalence": false,
+    "operator": "CR"
+  },
+  {
+    "mutant_id": "MUT_085",
+    "difference": "@@ -402 +402 @@\n-        if (u * v == 0) {\n+        if (false) {",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_093",
+    "difference": "@@ -424 +424 @@\n-        if (k == 31) {\n+        if (k <= 31) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_097",
+    "difference": "@@ -418 +418 @@\n-        while ((u & 1) == 0 && (v & 1) == 0 && k < 31) { // while u and v are\n+        while (k < 31) { // while u and v are",
+    "equivalence": true,
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_103",
+    "difference": "@@ -436 +436 @@\n-                t /= 2; // cast out twos\n+                t /= -2; // cast out twos",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_112",
+    "difference": "@@ -413 +413 @@\n-        if (v > 0) {\n+        if (false) {",
+    "equivalence": false,
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_116",
+    "difference": "@@ -424 +424 @@\n-        if (k == 31) {\n+        if (false) {",
+    "equivalence": true,
+    "operator": "CDL"
+  }
+]

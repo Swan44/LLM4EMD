@@ -1,0 +1,44 @@
+[
+  {
+    "mutant_id": "MUT_006",
+    "difference": "@@ -24 +24 @@\n-                        a[j] = mytemp1;\n+                        a[j] = mytemp1--;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_007",
+    "difference": "@@ -25 +25 @@\n-                        mytemp1 = mytemp2;\n+                        mytemp1 = mytemp2--;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_009",
+    "difference": "@@ -21 +21 @@\n-                    a[i] = number;\n+                    a[i] = number++;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_010",
+    "difference": "@@ -14 +14 @@\n-        end = a[2];\n+        end = Math.abs(a[2]);",
+    "equivalence": true,
+    "operator": "ABSI"
+  },
+  {
+    "mutant_id": "MUT_013",
+    "difference": "@@ -16 +16 @@\n-            a[3] = number;\n+            a[3] = Math.abs(number);",
+    "equivalence": true,
+    "operator": "ABSI"
+  },
+  {
+    "mutant_id": "MUT_016",
+    "difference": "@@ -19 +19 @@\n-                if (a[i] > number) {\n+                if (a[i] >= number) {",
+    "equivalence": true,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_017",
+    "difference": "@@ -24 +24 @@\n-                        a[j] = mytemp1;\n+                        a[j] = mytemp1++;",
+    "equivalence": true,
+    "operator": "AOIS"
+  }
+]

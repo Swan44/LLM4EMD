@@ -1,0 +1,14 @@
+[
+  {
+    "mutant_id": "MUT_005",
+    "difference": "@@ -6 +6 @@\n-    if(J<I) {\n+    if(J<++I) {",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_008",
+    "difference": "@@ -5 +5 @@\n-    Min = I;\n+    Min = I++;",
+    "equivalence": true,
+    "operator": "AOIS"
+  }
+]

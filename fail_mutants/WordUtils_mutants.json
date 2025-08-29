@@ -1,0 +1,104 @@
+[
+  {
+    "mutant_id": "MUT_014",
+    "difference": "@@ -73 +73 @@\n-        int delimLen = delimiters == null ? -1 : delimiters.length;\n+        int delimLen = delimiters == null ? 0 : delimiters.length;",
+    "equivalence": false,
+    "operator": "AODU"
+  },
+  {
+    "mutant_id": "MUT_033",
+    "difference": "@@ -74 +74 @@\n-        if (str == null || str.length() == 0 || delimLen == 0) {\n+        if (false || str.length() == 0 || delimLen == 0) {",
+    "equivalence": false,
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_041",
+    "difference": "@@ -74 +74 @@\n-        if (str == null || str.length() == 0 || delimLen == 0) {\n+        if (str == null || str.length() == -1 || delimLen == -1) {",
+    "equivalence": true,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_049",
+    "difference": "@@ -74 +74 @@\n-        if (str == null || str.length() == 0 || delimLen == 0) {\n+        if (str == null || str.length() == 0 || delimLen <= 0) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_053",
+    "difference": "@@ -73 +73 @@\n-        int delimLen = delimiters == null ? -1 : delimiters.length;\n+        int delimLen = delimiters == null ? 1 : delimiters.length;",
+    "equivalence": true,
+    "operator": "AODU"
+  },
+  {
+    "mutant_id": "MUT_080",
+    "difference": "@@ -74 +74 @@\n-        if (str == null || str.length() == 0 || delimLen == 0) {\n+        if (str == null || false || delimLen == 0) {",
+    "equivalence": true,
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_090",
+    "difference": "@@ -82 +82 @@\n-            if (isDelimiter(ch, delimiters)) {\n+            if (false) {",
+    "equivalence": false,
+    "operator": "VDL"
+  },
+  {
+    "mutant_id": "MUT_098",
+    "difference": "@@ -74 +74 @@\n-        if (str == null || str.length() == 0 || delimLen == 0) {\n+        if (str == null || str.length() == 0 || false) {",
+    "equivalence": false,
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_013",
+    "difference": "@@ -33 +33 @@\n-        java.lang.StringBuffer wrappedLine = new java.lang.StringBuffer( inputLineLength + 32 );\n+        java.lang.StringBuffer wrappedLine = new java.lang.StringBuffer( inputLineLength + -32 );",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_028",
+    "difference": "@@ -51 +51 @@\n-                    if (spaceToWrapAt >= 0) {\n+                    if (spaceToWrapAt == 0) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_038",
+    "difference": "@@ -33 +33 @@\n-        java.lang.StringBuffer wrappedLine = new java.lang.StringBuffer( inputLineLength + 32 );\n+        java.lang.StringBuffer wrappedLine = new java.lang.StringBuffer( inputLineLength % 32 );",
+    "equivalence": true,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_059",
+    "difference": "@@ -51 +51 @@\n-                    if (spaceToWrapAt >= 0) {\n+                    if (spaceToWrapAt > 0) {",
+    "equivalence": true,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_075",
+    "difference": "@@ -25 +25 @@\n-        if (newLineStr == null) {\n+        if (false) {",
+    "equivalence": false,
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_077",
+    "difference": "@@ -22 +22 @@\n-        if (str == null) {\n+        if (false) {",
+    "equivalence": false,
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_091",
+    "difference": "@@ -54 +54 @@\n-                        offset = spaceToWrapAt + 1;\n+                        offset = spaceToWrapAt / 1;",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_099",
+    "difference": "@@ -51 +51 @@\n-                    if (spaceToWrapAt >= 0) {\n+                    if (spaceToWrapAt >= 1) {",
+    "equivalence": true,
+    "operator": "CR"
+  },
+  {
+    "mutant_id": "MUT_103",
+    "difference": "@@ -33 +33 @@\n-        java.lang.StringBuffer wrappedLine = new java.lang.StringBuffer( inputLineLength + 32 );\n+        java.lang.StringBuffer wrappedLine = new java.lang.StringBuffer( inputLineLength - 32 );",
+    "equivalence": false,
+    "operator": "AORB"
+  }
+]

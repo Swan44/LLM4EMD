@@ -1,0 +1,74 @@
+[
+  {
+    "mutant_id": "MUT_004",
+    "difference": "@@ -1429 +1429 @@\n-\t\t\tfloat nAifsd = sifs + 2 * slot;\n+\t\t\tfloat nAifsd = sifs + 2 / slot;",
+    "equivalence": true,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_007",
+    "difference": "@@ -1416 +1416 @@\n-\t\tfor (int i = 0; i < nodesList.size(); i++) {\n+\t\tfor (int i = 0; false; i++) {",
+    "equivalence": false,
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_011",
+    "difference": "@@ -1464 +1464 @@\n-\t\t\tnmbrOfNodes++;\n+\t\t\t;",
+    "equivalence": false,
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_020",
+    "difference": "@@ -1415 +1415 @@\n-\t\tboolean nodeExists = false;\n+\t\tboolean nodeExists = true;",
+    "equivalence": false,
+    "operator": "SEOR"
+  },
+  {
+    "mutant_id": "MUT_021",
+    "difference": "@@ -1416 +1416 @@\n-\t\tfor (int i = 0; i < nodesList.size(); i++) {\n+\t\tfor (int i = 0; i != nodesList.size(); i++) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_022",
+    "difference": "@@ -1429 +1429 @@\n-\t\t\tfloat nAifsd = sifs + 2 * slot;\n+\t\t\tfloat nAifsd = sifs + 2 - slot;",
+    "equivalence": true,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_032",
+    "difference": "@@ -1429 +1429 @@\n-\t\t\tfloat nAifsd = sifs + 2 * slot;\n+\t\t\tfloat nAifsd = sifs - 2 * slot;",
+    "equivalence": true,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_051",
+    "difference": "@@ -1429 +1429 @@\n-\t\t\tfloat nAifsd = sifs + 2 * slot;\n+\t\t\tfloat nAifsd = sifs + -2 * slot;",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_061",
+    "difference": "@@ -1463 +1463 @@\n-\t\t\tnodesList.addElement(nd);\n+\t\t\t;",
+    "equivalence": false,
+    "operator": "FCDL"
+  },
+  {
+    "mutant_id": "MUT_001",
+    "difference": "@@ -1471 +1471 @@\n-\t\tfor (int i = 0; i < nodesList.size(); i++) {\n+\t\tfor (int i = 0; false; i++) {",
+    "equivalence": false,
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_033",
+    "difference": "@@ -1471 +1471 @@\n-\t\tfor (int i = 0; i < nodesList.size(); i++) {\n+\t\tfor (int i = 0; i != nodesList.size(); i++) {",
+    "equivalence": true,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_054",
+    "difference": "@@ -1479 +1479 @@\n-\t\t\tnmbrOfNodes--;\n+\t\t\t;",
+    "equivalence": false,
+    "operator": "ADL"
+  }
+]

@@ -1,0 +1,344 @@
+[
+  {
+    "mutant_id": "MUT_082",
+    "difference": "@@ -19 +19 @@\n-        this.mEpsilon = epsilon;\n+        this.mEpsilon = ++epsilon;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_001",
+    "difference": "@@ -28 +28 @@\n-        double diff = x * x - N;\n+        double diff = x * x + N;",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_002",
+    "difference": "@@ -34 +34 @@\n-                if (diff > 0) {\n+                if (diff > -1) {",
+    "equivalence": true,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_004",
+    "difference": "@@ -28 +28 @@\n-        double diff = x * x - N;\n+        double diff = -x * x - N;",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_008",
+    "difference": "@@ -42 +41,0 @@\n-        mResult = r;",
+    "equivalence": false,
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_010",
+    "difference": "@@ -32 +32 @@\n-                x = (M + x) / 2;\n+                x = (--M + x) / 2;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_011",
+    "difference": "@@ -31 +31 @@\n-                m = x;\n+                m = --x;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_019",
+    "difference": "@@ -32 +32 @@\n-                x = (M + x) / 2;\n+                x = (M + ++x) / 2;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_022",
+    "difference": "@@ -29 +29 @@\n-        while (Math.abs(diff) > mEpsilon) {\n+        while (Math.abs( diff-- ) > mEpsilon) {",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_031",
+    "difference": "@@ -36 +36 @@\n-                    x = (m + x) / 2;\n+                    x = (m + x++) / 2;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_032",
+    "difference": "@@ -34 +34 @@\n-                if (diff > 0) {\n+                if (diff++ > 0) {",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_034",
+    "difference": "@@ -28 +28 @@\n-        double diff = x * x - N;\n+        double diff = ++x * x - N;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_035",
+    "difference": "@@ -26 +26 @@\n-        double m = 1;\n+        double m = -1;",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_040",
+    "difference": "@@ -31 +31 @@\n-                m = x;\n+                m = x--;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_043",
+    "difference": "@@ -36 +36 @@\n-                    x = (m + x) / 2;\n+                    x = (m + x) + 2;",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_045",
+    "difference": "@@ -30 +30 @@\n-            if (diff < 0) {\n+            if (diff-- < 0) {",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_046",
+    "difference": "@@ -34 +34 @@\n-                if (diff > 0) {\n+                if (diff != 0) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_048",
+    "difference": "@@ -30 +30 @@\n-            if (diff < 0) {\n+            if (--diff < 0) {",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_051",
+    "difference": "@@ -30 +30 @@\n-            if (diff < 0) {\n+            if (diff++ < 0) {",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_053",
+    "difference": "@@ -29 +29 @@\n-        while (Math.abs(diff) > mEpsilon) {\n+        while (Math.abs(diff) != mEpsilon) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_054",
+    "difference": "@@ -34 +34 @@\n-                if (diff > 0) {\n+                if (--diff > 0) {",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_058",
+    "difference": "@@ -32 +32 @@\n-                x = (M + x) / 2;\n+                x = (M++ + x) / 2;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_065",
+    "difference": "@@ -39 +39 @@\n-            diff = x * x - N;\n+            diff = --x * x - N;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_072",
+    "difference": "@@ -30 +30 @@\n-            if (diff < 0) {\n+            if (diff != 0) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_073",
+    "difference": "@@ -34 +34 @@\n-                if (diff > 0) {\n+                if (true) {",
+    "equivalence": false,
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_083",
+    "difference": "@@ -28 +28 @@\n-        double diff = x * x - N;\n+        double diff = x++ * x - N;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_085",
+    "difference": "@@ -39 +39 @@\n-            diff = x * x - N;\n+            diff = x * x;",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_094",
+    "difference": "@@ -34 +34 @@\n-                if (diff > 0) {\n+                if (diff-- > 0) {",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_096",
+    "difference": "@@ -35 +35 @@\n-                    M = x;\n+                    M = --x;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_099",
+    "difference": "@@ -39 +39 @@\n-            diff = x * x - N;\n+            diff = x * --x - N;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_100",
+    "difference": "@@ -32 +32 @@\n-                x = (M + x) / 2;\n+                x = (++M + x) / 2;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_103",
+    "difference": "@@ -36 +36 @@\n-                    x = (m + x) / 2;\n+                    x = m + x - 2;",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_107",
+    "difference": "@@ -32 +32 @@\n-                x = (M + x) / 2;\n+                x = (M-- + x) / 2;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_108",
+    "difference": "@@ -28 +28 @@\n-        double diff = x * x - N;\n+        double diff = x * x-- - N;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_109",
+    "difference": "@@ -34 +34 @@\n-                if (diff > 0) {\n+                if (!(diff > 0)) {",
+    "equivalence": false,
+    "operator": "SEOI"
+  },
+  {
+    "mutant_id": "MUT_110",
+    "difference": "@@ -39 +39 @@\n-            diff = x * x - N;\n+            diff = x * x - N--;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_112",
+    "difference": "@@ -36 +36 @@\n-                    x = (m + x) / 2;\n+                    x = (m + ++x) / 2;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_113",
+    "difference": "@@ -29 +29 @@\n-        while (Math.abs(diff) > mEpsilon) {\n+        while (Math.abs(diff) != mEpsilon) {",
+    "equivalence": false,
+    "operator": "SEOR"
+  },
+  {
+    "mutant_id": "MUT_114",
+    "difference": "@@ -32 +32 @@\n-                x = (M + x) / 2;\n+                x = (M + x--) / 2;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_115",
+    "difference": "@@ -31 +31 @@\n-                m = x;\n+                m = ++x;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_119",
+    "difference": "@@ -39 +39 @@\n-            diff = x * x - N;\n+            diff = x * x + N;",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_121",
+    "difference": "@@ -28 +28 @@\n-        double diff = x * x - N;\n+        double diff = x * x++ - N;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_124",
+    "difference": "@@ -32 +32 @@\n-                x = (M + x) / 2;\n+                x = (M + x++) / 2;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_126",
+    "difference": "@@ -25 +25 @@\n-        double M = N;\n+        double M = -N;",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_135",
+    "difference": "@@ -30 +30 @@\n-            if (diff < 0) {\n+            if (diff < -1) {",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_138",
+    "difference": "@@ -27 +27 @@\n-        double r = x;\n+        double r = x--;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_143",
+    "difference": "@@ -26 +26 @@\n-        double m = 1;\n+        double m = 0;",
+    "equivalence": false,
+    "operator": "CR"
+  },
+  {
+    "mutant_id": "MUT_148",
+    "difference": "@@ -32 +32 @@\n-                x = (M + x) / 2;\n+                x = (M + --x) / 2;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_158",
+    "difference": "@@ -27 +27 @@\n-        double r = x;\n+        double r = x++;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_166",
+    "difference": "@@ -30 +30 @@\n-            if (diff < 0) {\n+            if (diff == 0) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_168",
+    "difference": "@@ -24 +24 @@\n-        double x = N;\n+        double x = -N;",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_170",
+    "difference": "@@ -34 +34 @@\n-                if (diff > 0) {\n+                if (++diff > 0) {",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_171",
+    "difference": "@@ -28 +28 @@\n-        double diff = x * x - N;\n+        double diff = x * x - N--;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_177",
+    "difference": "@@ -34,4 +33,0 @@\n-                if (diff > 0) {\n-                    M = x;\n-                    x = (m + x) / 2;\n-                }",
+    "equivalence": false,
+    "operator": "ISDL"
+  },
+  {
+    "mutant_id": "MUT_180",
+    "difference": "@@ -32 +32 @@\n-                x = (M + x) / 2;\n+                x = (M + x) / -2;",
+    "equivalence": false,
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_181",
+    "difference": "@@ -36 +36 @@\n-                    x = (m + x) / 2;\n+                    x = (m + x) % 2;",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_193",
+    "difference": "@@ -39 +39 @@\n-            diff = x * x - N;\n+            diff = x * x-- - N;",
+    "equivalence": false,
+    "operator": "AOIS"
+  }
+]

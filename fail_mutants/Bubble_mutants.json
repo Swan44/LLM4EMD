@@ -1,0 +1,32 @@
+[
+  {
+    "mutant_id": "MUT_001",
+    "difference": "@@ -12 +12 @@\n-\t\tfor(j=i+1;j<5;j++)\n+\t\tfor(j=i/1;j<5;j++)",
+    "equivalence": true,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_002",
+    "difference": "@@ -16 +16 @@\n-\t\t\t\txyz=a[i];\n+\t\t\t\txyz=a[i]--;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_004",
+    "difference": "@@ -17 +17 @@\n-\t\t\t\ta[i]=a[j];\n+\t\t\t\ta[i]=a[j]++;",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_008",
+    "difference": "@@ -12 +12 @@\n-\t\tfor(j=i+1;j<5;j++)\n+\t\tfor(j=i*1;j<5;j++)",
+    "equivalence": true,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_009",
+    "difference": "@@ -17 +17 @@\n-\t\t\t\ta[i]=a[j];\n+\t\t\t\ta[i]=a[j]--;",
+    "equivalence": true,
+    "operator": "AOIS"
+  }
+]

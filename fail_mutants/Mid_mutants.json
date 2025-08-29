@@ -1,0 +1,8 @@
+[
+  {
+    "mutant_id": "MUT_005",
+    "difference": "@@ -15 +15 @@\n-\t\t\tif (c > b) {\n+\t\t\tif (c >= b) {",
+    "equivalence": true,
+    "operator": "ROR"
+  }
+]

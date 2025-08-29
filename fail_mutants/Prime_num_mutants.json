@@ -1,0 +1,14 @@
+[
+  {
+    "mutant_id": "MUT_003",
+    "difference": "@@ -8 +8 @@\n-\t\tk=(int)Math.sqrt(m+1);\n+\t\tk=(int)Math.sqrt(m*1);",
+    "equivalence": true,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_004",
+    "difference": "@@ -8 +8 @@\n-\t\tk=(int)Math.sqrt(m+1);\n+\t\tk=(int)Math.sqrt(m/1);",
+    "equivalence": true,
+    "operator": "AORB"
+  }
+]

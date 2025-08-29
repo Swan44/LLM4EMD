@@ -1,0 +1,152 @@
+[
+  {
+    "mutant_id": "MUT_024",
+    "difference": "@@ -31 +31 @@\n-            quicksort( data, upper + 1, last );\n+            quicksort( data, upper++ + 1, last );",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_034",
+    "difference": "@@ -20 +20 @@\n-            if (lower < upper) {\n+            if (lower != upper) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_040",
+    "difference": "@@ -14 +14 @@\n-            while (bound > data[lower]) {\n+            while (bound >= data[lower]) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_070",
+    "difference": "@@ -18 +18 @@\n-                upper--;\n+                upper++;",
+    "equivalence": false,
+    "operator": "AORS"
+  },
+  {
+    "mutant_id": "MUT_117",
+    "difference": "@@ -11 +11 @@\n-        swap( data, first, (first + last) / 2 );\n+        swap( data, first, first + last - 2 );",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_127",
+    "difference": "@@ -30 +30 @@\n-        if (upper + 1 < last) {\n+        if (upper * 1 < last) {",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_131",
+    "difference": "@@ -31 +31 @@\n-            quicksort( data, upper + 1, last );\n+            quicksort( data, upper-- + 1, last );",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_143",
+    "difference": "@@ -30 +30 @@\n-        if (upper + 1 < last) {\n+        if (!(upper + 1 < last)) {",
+    "equivalence": false,
+    "operator": "SEOI"
+  },
+  {
+    "mutant_id": "MUT_153",
+    "difference": "@@ -20 +20 @@\n-            if (lower < upper) {\n+            if (~lower < upper) {",
+    "equivalence": false,
+    "operator": "LOI"
+  },
+  {
+    "mutant_id": "MUT_166",
+    "difference": "@@ -27 +27 @@\n-        if (first < upper - 1) {\n+        if (first <= upper - 1) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_173",
+    "difference": "@@ -20 +20 @@\n-            if (lower < upper) {\n+            if (lower >= upper) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_215",
+    "difference": "@@ -27 +27 @@\n-        if (first < upper - 1) {\n+        if (first < ++upper - 1) {",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_225",
+    "difference": "@@ -27 +27 @@\n-        if (first < upper - 1) {\n+        if (first < upper / 1) {",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_241",
+    "difference": "@@ -28 +28 @@\n-            quicksort( data, first, upper - 1 );\n+            quicksort( data, first--, upper - 1 );",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_299",
+    "difference": "@@ -28 +28 @@\n-            quicksort( data, first, upper - 1 );\n+            quicksort( data, first++, upper - 1 );",
+    "equivalence": true,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_314",
+    "difference": "@@ -11 +11 @@\n-        swap( data, first, (first + last) / 2 );\n+        swap( data, first, (first-- + last) / 2 );",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_195",
+    "difference": "@@ -43 +43 @@\n-                max = i;\n+                max = i--;",
+    "equivalence": false,
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_199",
+    "difference": "@@ -37 +37 @@\n-        if (data.length < 2) {\n+        if (data.length == 2) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_228",
+    "difference": "@@ -46 +46 @@\n-        swap( data, data.length - 1, max );\n+        swap( data, data.length % 1, max );",
+    "equivalence": false,
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_250",
+    "difference": "@@ -37 +37 @@\n-        if (data.length < 2) {\n+        if (false) {",
+    "equivalence": false,
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_275",
+    "difference": "@@ -37 +37 @@\n-        if (data.length < 2) {\n+        if (~data.length < 2) {",
+    "equivalence": false,
+    "operator": "LOI"
+  },
+  {
+    "mutant_id": "MUT_281",
+    "difference": "@@ -42 +42 @@\n-            if (data[max] < data[i]) {\n+            if (data[max] <= data[i]) {",
+    "equivalence": true,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_284",
+    "difference": "@@ -41 +41 @@\n-        for (int i = 1; i < data.length; i++) {\n+        for (int i = 1; i == data.length; i++) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_290",
+    "difference": "@@ -37 +37 @@\n-        if (data.length < 2) {\n+        if (data.length > 2) {",
+    "equivalence": false,
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_311",
+    "difference": "@@ -54 +53,0 @@\n-        data[j] = tmp;",
+    "equivalence": false,
+    "operator": "ADL"
+  }
+]
