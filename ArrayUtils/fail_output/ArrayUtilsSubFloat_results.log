@@ -1,0 +1,41 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/ArrayUtilsSubFloat.java
+开始分析变异体 MUT_254...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_254": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[array != null ∧ (startIndexInclusive < 0 ∨ startIndexInclusive >= 0) ∧ (endIndexExclusive > array.length ∨ endIndexExclusive <= array.length)]，该约束条件是可满足的。例如，当array不为null，startIndexInclusive为0，endIndexExclusive等于array.length时，可以满足这些条件。因此，变异语句\"if (newSize <= 1)\"是可达的。\n分析结论：变异语句可达\n\n步骤[必要性]：\n说明理由：原程序条件为\"if (newSize <= 0)\"，变异体条件为\"if (newSize <= 1)\"。当newSize = 1时，原程序条件为false（因为1 > 0），而变异体条件为true（因为1 <= 1）。这会导致程序状态改变：原程序会继续执行创建子数组的代码，而变异体会直接返回EMPTY_FLOAT_ARRAY。因此，该变异确实改变了程序语义。\n分析结论：变异改变了程序状态，满足必要性\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是newSize。根据数据依赖路径分析，newSize的值直接影响条件判断的结果，进而影响程序的输出：如果条件为true，则返回EMPTY_FLOAT_ARRAY；如果条件为false，则创建并返回子数组。变异体将条件从<=0改为<=1，会改变条件判断的结果，从而影响最终的返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点\n\n步骤[控制依赖]：\n说明理由：变异语句\"if (newSize <= 1)\"直接控制着后续的执行路径：如果条件为true，则执行return EMPTY_FLOAT_ARRAY；如果条件为false，则执行创建子数组并返回的代码。输出语句（return语句）的控制依赖于这个条件判断的结果。\n分析结论：变异语句通过控制流影响输出语句\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的行为，但这种改变在某些情况下会导致不同的输出结果。具体来说，当newSize = 1时，原程序会返回一个包含1个元素的数组，而变异体会返回空数组EMPTY_FLOAT_ARRAY。这两种返回值是不同的，且没有任何机制来修正或抵消这种差异。因此，变异引入的错误状态不会被后续执行修正或抵消。\n分析结论：变异引入的错误状态不会被修正或抵消，会导致不同的程序输出\n\n最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_254 的分析, 耗时: 88.7913 秒
+
+开始分析变异体 MUT_297...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_297": "步骤[可达性]：\n说明理由：根据提供的REACHABILITY_CONSTRAINT '[array != null]'，变异语句位于第9行的条件判断语句。该约束表示程序执行到变异语句的前提条件是array不为null。这是一个可满足的条件，因为存在array不为null的输入情况（例如array是一个非空数组）。因此，变异语句是可达的。\n分析结论：变异语句可达\n\n步骤[必要性]：\n说明理由：原程序条件为\"endIndexExclusive > array.length\"，变异体条件为\"endIndexExclusive >= array.length\"。当endIndexExclusive等于array.length时，原条件为false而变异条件为true，这会改变程序的控制流：原程序不会执行第10行的赋值语句（endIndexExclusive = array.length），而变异体会执行该赋值语句。这种控制流的改变会导致程序状态的不同，因为endIndexExclusive的值会发生变化。\n分析结论：变异实际改变了程序状态\n\n步骤[数据依赖]：\n说明理由：变异影响的变量endIndexExclusive通过数据依赖链传播到程序输出。具体路径包括：1) 当条件为true时，endIndexExclusive被赋值为array.length，然后用于计算newSize，newSize影响subarray的创建和最终的返回值；2) 当条件为false时，endIndexExclusive直接用于计算newSize，进而影响最终的输出。无论哪种情况，endIndexExclusive的值变化都会通过数据依赖传递到return语句。\n分析结论：存在数据依赖路径到输出节点\n\n步骤[控制依赖]：\n说明理由：变异语句通过控制流影响输出语句。变异语句的条件判断结果决定了是否执行第10行的赋值语句，这会影响后续的newSize计算和子数组创建。具体控制依赖路径显示，变异语句的真假分支分别导向不同的执行路径，最终都会影响到return语句的执行（无论是返回EMPTY_FLOAT_ARRAY还是返回subarray）。\n分析结论：存在控制依赖路径到输出语句\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的控制流和中间状态，但在特定情况下（当endIndexExclusive等于array.length时），变异体执行endIndexExclusive = array.length赋值后，endIndexExclusive的值与原程序保持不变（因为本来就是相等的）。这种情况下，虽然执行路径不同，但最终计算出的newSize值相同，因此程序的输出结果相同。这种状态覆盖现象使得在某些输入下，变异体与原程序的行为无法区分。\n分析结论：变异引入的错误状态在特定情况下被抵消，不影响最终输出\n\n最终结论：等价变异体判定结果：YES"}
+完成变异体 MUT_297 的分析, 耗时: 122.4721 秒
+
+开始分析变异体 MUT_301...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_301": "步骤[可达性]：\n说明理由：变异语句为第6行的条件判断\"if (false)\"，该语句本身是可达的，因为程序入口到该语句的路径条件仅为[array != null]，这是一个可满足的条件（例如array为非空数组）。虽然变异语句的条件恒为假，但语句本身可以被执行到（即程序控制流可以到达该语句位置）。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序条件为\"if (startIndexInclusive < 0)\"，变异体改为\"if (false)\"。在变异语句可达的情况下，原条件可能为真（当startIndexInclusive < 0时）或假（当startIndexInclusive >= 0时），而变异体条件恒为假。这意味着当startIndexInclusive < 0时，原程序会执行\"startIndexInclusive = 0\"的赋值操作，而变异体不会执行此操作，导致程序状态不同（startIndexInclusive的值不同）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是startIndexInclusive。从数据依赖路径分析可以看出，startIndexInclusive的值会影响newSize的计算（第12行：int newSize = endIndexExclusive - startIndexInclusive），进而影响subarray数组的创建和复制操作，最终影响返回值。具体来说，当startIndexInclusive的值不同时，newSize的值可能不同，导致返回的数组长度或内容不同。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句\"if (false)\"控制着是否执行第7行的赋值语句\"startIndexInclusive = 0\"。虽然这个赋值语句本身不直接控制输出语句，但它通过改变startIndexInclusive的值间接影响了后续的数据流。从控制依赖路径看，输出语句（return语句）依赖于前面的条件判断（如第9行和第13行的if语句），而这些条件判断又依赖于startIndexInclusive的值。\n分析结论：变异语句通过控制流间接影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异引入了程序状态改变（startIndexInclusive的值不同），但这种改变会直接传播到输出，不会被后续执行修正或抵消。例如，当startIndexInclusive < 0时，原程序会将其修正为0，而变异体不会修正，导致后续的newSize计算、数组创建和复制操作都基于不同的startIndexInclusive值，最终返回不同的数组结果。\n分析结论：变异引入的错误状态不会被覆盖，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_301 的分析, 耗时: 126.9747 秒
+
+开始分析变异体 MUT_403...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_403": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[array != null]，该条件表示数组非空，这是一个可满足的条件。程序执行到变异语句（第13行的if条件判断）之前，需要经过前置条件检查（数组非空、startIndexInclusive和endIndexExclusive的边界调整），这些条件组合是可满足的。没有逻辑矛盾表明路径不可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序条件为\"if (newSize <= 0)\"，变异体条件为\"if (newSize < 0)\"。在可达路径上，newSize = endIndexExclusive - startIndexInclusive，这是一个整数值。当newSize = 0时，原程序条件为真（0 <= 0），而变异体条件为假（0 < 0），这会导致程序状态改变：原程序会返回EMPTY_FLOAT_ARRAY，而变异体会继续执行创建子数组的代码。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是newSize。数据依赖路径显示，newSize的值直接影响第13行的条件判断结果，进而通过控制流影响程序的输出：如果条件为真，返回EMPTY_FLOAT_ARRAY；如果条件为假，则用于创建子数组并返回。变异引入的状态改变（条件判断结果不同）会通过数据依赖链传播到程序输出节点。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：控制依赖路径显示，第13行的条件语句直接控制两个输出分支：条件为真时执行第14行的return语句，条件为假时执行第17-19行的子数组创建和返回。变异语句通过控制流直接影响输出语句的执行路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异体满足了可达性、必要性、数据依赖和控制依赖条件，但在特定情况下需要分析状态覆盖。当newSize < 0时，原程序和变异体的行为一致：都返回EMPTY_FLOAT_ARRAY。当newSize = 0时，原程序返回EMPTY_FLOAT_ARRAY，而变异体创建大小为0的数组并返回，虽然返回值不同（EMPTY_FLOAT_ARRAY vs 长度为0的数组），但语义上都是表示空数组，在实际使用中可能被认为是等价的。然而，从严格的程序输出角度看，这是两个不同的对象，因此输出并不完全相同。\n分析结论：变异引入的错误状态没有被完全修正或抵消，程序最终输出可能不同。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_403 的分析, 耗时: 86.0138 秒
+
+开始分析变异体 MUT_466...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_466": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[array != null]，该条件表示程序执行到变异语句（第6行的if条件判断）之前，需要满足数组array不为空。这是一个常见的、可满足的条件，因为在实际调用中，array参数可以为非空数组。因此，变异语句是可到达的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序的条件判断为`if (startIndexInclusive < 0)`，变异体将其改为`if (startIndexInclusive <= 0)`。这两种条件在`startIndexInclusive = 0`的情况下会产生不同的结果：原程序的条件`0 < 0`为false，不会进入if分支；而变异体的条件`0 <= 0`为true，会进入if分支执行`startIndexInclusive = 0`。虽然最终都将startIndexInclusive设置为0，但程序状态（控制流路径）确实发生了改变。\n分析结论：变异改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量startIndexInclusive通过数据依赖链传播到程序输出。具体路径包括：变异条件判断的结果影响是否执行`startIndexInclusive = 0`，而startIndexInclusive的值直接影响newSize的计算（`newSize = endIndexExclusive - startIndexInclusive`），newSize又影响是否创建子数组以及子数组的大小，最终影响返回的subarray。数据依赖路径完整连接了变异节点与输出节点。\n分析结论：存在数据依赖，变异效果可通过数据依赖链传播到输出。\n\n步骤[控制依赖]：\n说明理由：变异语句（第6行的if条件判断）通过控制流直接影响后续语句的执行。其判断结果决定是否执行第7行的赋值语句，进而影响后续的数据流。控制依赖路径显示，从变异语句到最终的return语句（返回EMPTY_FLOAT_ARRAY或subarray）存在完整的控制依赖链。\n分析结论：存在控制依赖，变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的控制流（当startIndexInclusive = 0时，原程序不进入if分支，变异体进入if分支），但两种情况下最终都将startIndexInclusive的值设置为0（原程序保持0不变，变异体通过赋值设置为0）。因此，无论是否进入if分支，startIndexInclusive的最终值相同，导致后续的newSize计算、子数组创建和返回结果完全一致。变异引入的状态差异（控制流路径不同）在后续执行中被\"修正\"，最终输出未受影响。\n分析结论：错误状态被覆盖，不影响最终输出。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_466 的分析, 耗时: 136.0875 秒
+

@@ -31,9 +31,9 @@ def filter_mutants_by_id(mutant_ids_file, mutants_json_file, output_file):
 # 使用示例
 if __name__ == "__main__":
     # 文件路径
-    mutant_ids_file = "/Users/swan/bishe/LLM4EMD/mutant_list/XmlFriendlyNameCoder_list"  # 变异体编号文件
-    mutants_json_file = "/Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantsIDJson/XmlFriendlyNameCodermutants.json"  # 变异体JSON文件
-    output_file = "/Users/swan/bishe/LLM4EMD/fail_mutants/XmlFriendlyNameCoder_mutants.json"  # 输出文件
+    mutant_ids_file = "/Users/swan/bishe/LLM4EMD/QuickSort/fail_list/QuickSortSwap_list"  # 变异体编号文件
+    mutants_json_file = "/Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantsAdjDelJson/QuickSortSwapmutants.json"  # 变异体JSON文件
+    output_file = "/Users/swan/bishe/LLM4EMD/QuickSort/fail_output/QuickSortSwap_fail_mutants.json"  # 输出文件
 
     # 执行筛选
     filter_mutants_by_id(mutant_ids_file, mutants_json_file, output_file)

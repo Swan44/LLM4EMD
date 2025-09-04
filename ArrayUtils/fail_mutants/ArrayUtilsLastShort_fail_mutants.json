@@ -1,0 +1,17 @@
+[
+  {
+    "mutant_id": "MUT_001",
+    "difference": "@@ -8 +8 @@\n-        } else if (startIndex >= array.length) {\n+        } else if (startIndex == array.length) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_344",
+    "difference": "@@ -9 +9 @@\n-            startIndex = array.length - 1;\n+            startIndex = array.length - 0;",
+    "operator": "CR"
+  },
+  {
+    "mutant_id": "MUT_451",
+    "difference": "@@ -6 +6 @@\n-        if (startIndex < 0) {\n+        if (false) {",
+    "operator": "CDL"
+  }
+]

@@ -1,0 +1,112 @@
+[
+  {
+    "mutant_id": "MUT_016",
+    "difference": "@@ -17 +17 @@\n-            if (m < c) {\n+            if (m < c++) {",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_065",
+    "difference": "@@ -17 +17 @@\n-            if (m < c) {\n+            if (~m < c) {",
+    "operator": "LOI"
+  },
+  {
+    "mutant_id": "MUT_067",
+    "difference": "@@ -11 +11 @@\n-        for (int i = 0; i < delimiters.length(); i += Character.charCount( c )) {\n+        for (int i = 0; i != delimiters.length(); i += Character.charCount( c )) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_070",
+    "difference": "@@ -25 +25 @@\n-            for (int i = 0, j = 0; i < count; i++, j += Character.charCount( c )) {\n+            for (int i = 0, j = 0; i < count; i++, j += Character.charCount( --c )) {",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_095",
+    "difference": "@@ -13 +13 @@\n-            if (c >= Character.MIN_HIGH_SURROGATE && c <= Character.MAX_LOW_SURROGATE) {\n+            if (!(c >= Character.MIN_HIGH_SURROGATE) && c <= Character.MAX_LOW_SURROGATE) {",
+    "operator": "SEOI"
+  },
+  {
+    "mutant_id": "MUT_106",
+    "difference": "@@ -25 +25 @@\n-            for (int i = 0, j = 0; i < count; i++, j += Character.charCount( c )) {\n+            for (int i = 0, j = 0; i < count; i++, j += Character.charCount( c++ )) {",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_225",
+    "difference": "@@ -25 +25 @@\n-            for (int i = 0, j = 0; i < count; i++, j += Character.charCount( c )) {\n+            for (int i = 0, j = 0; i != count; i++, j += Character.charCount( c )) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_245",
+    "difference": "@@ -22 +22 @@\n-        maxDelimCodePoint = m;\n+        maxDelimCodePoint = ++m;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_250",
+    "difference": "@@ -13 +13 @@\n-            if (c >= Character.MIN_HIGH_SURROGATE && c <= Character.MAX_LOW_SURROGATE) {\n+            if (true && c <= Character.MAX_LOW_SURROGATE) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_280",
+    "difference": "@@ -27 +27 @@\n-                delimiterCodePoints[i] = c;\n+                delimiterCodePoints[i] = --c;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_317",
+    "difference": "@@ -23 +23 @@\n-        if (hasSurrogates) {\n+        if (true) {",
+    "operator": "VDL"
+  },
+  {
+    "mutant_id": "MUT_416",
+    "difference": "@@ -11 +11 @@\n-        for (int i = 0; i < delimiters.length(); i += Character.charCount( c )) {\n+        for (int i = 0; i < delimiters.length(); i += Character.charCount( c++ )) {",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_451",
+    "difference": "@@ -27 +27 @@\n-                delimiterCodePoints[i] = c;\n+                delimiterCodePoints[i] = c++;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_488",
+    "difference": "@@ -11 +11 @@\n-        for (int i = 0; i < delimiters.length(); i += Character.charCount( c )) {\n+        for (int i = 0; i < delimiters.length(); i += Character.charCount( --c )) {",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_510",
+    "difference": "@@ -13 +13 @@\n-            if (c >= Character.MIN_HIGH_SURROGATE && c <= Character.MAX_LOW_SURROGATE) {\n+            if (c == Character.MIN_HIGH_SURROGATE && c <= Character.MAX_LOW_SURROGATE) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_532",
+    "difference": "@@ -17 +17 @@\n-            if (m < c) {\n+            if (m == c) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_533",
+    "difference": "@@ -27 +27 @@\n-                delimiterCodePoints[i] = c;\n+                delimiterCodePoints[i] = ++c;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_606",
+    "difference": "@@ -27 +27 @@\n-                delimiterCodePoints[i] = c;\n+                delimiterCodePoints[i] = c--;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_669",
+    "difference": "@@ -23 +23 @@\n-        if (hasSurrogates) {\n-            delimiterCodePoints = new int[count];\n-            for (int i = 0, j = 0; i < count; i++, j += Character.charCount( c )) {\n-                c = delimiters.codePointAt( j );\n-                delimiterCodePoints[i] = c;\n-            }\n-        }",
+    "operator": "ISDL"
+  },
+  {
+    "mutant_id": "MUT_671",
+    "difference": "@@ -24 +24 @@\n-            delimiterCodePoints = new int[count];\n+            delimiterCodePoints = new int[--count];",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_681",
+    "difference": "@@ -13 +13 @@\n-            if (c >= Character.MIN_HIGH_SURROGATE && c <= Character.MAX_LOW_SURROGATE) {\n+            if (c >= ~Character.MIN_HIGH_SURROGATE && c <= Character.MAX_LOW_SURROGATE) {",
+    "operator": "LOI"
+  },
+  {
+    "mutant_id": "MUT_685",
+    "difference": "@@ -27 +27 @@\n-                delimiterCodePoints[i] = c;",
+    "operator": "ADL"
+  }
+]

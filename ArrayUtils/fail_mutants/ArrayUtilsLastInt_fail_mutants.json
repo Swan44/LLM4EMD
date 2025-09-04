@@ -1,0 +1,37 @@
+[
+  {
+    "mutant_id": "MUT_023",
+    "difference": "@@ -6 +6 @@\n-        if (startIndex < 0) {\n+        if (startIndex <= 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_028",
+    "difference": "@@ -8 +8 @@\n-        } else if (startIndex >= array.length) {\n+        } else if (true) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_108",
+    "difference": "@@ -3 +3 @@\n-        if (array == null) {\n+        if (false) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_212",
+    "difference": "@@ -6 +6 @@\n-        if (startIndex < 0) {\n+        if (startIndex < -1) {",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_214",
+    "difference": "@@ -6 +6 @@\n-        if (startIndex < 0) {\n+        if (startIndex < 1) {",
+    "operator": "CR"
+  },
+  {
+    "mutant_id": "MUT_269",
+    "difference": "@@ -11 +11 @@\n-        for (int i = startIndex; i >= 0; i--) {\n+        for (int i = startIndex; i >= -1; i--) {",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_326",
+    "difference": "@@ -9 +9 @@\n-            startIndex = array.length - 1;\n+            startIndex = array.length / 1;",
+    "operator": "AORB"
+  }
+]

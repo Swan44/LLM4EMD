@@ -1,0 +1,17 @@
+[
+  {
+    "mutant_id": "MUT_064",
+    "difference": "@@ -3 +3 @@\n-        if (array == null) {\n+        if (false) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_096",
+    "difference": "@@ -14 +14 @@\n-        if (newSize <= 0) {\n+        if (newSize <= 1) {",
+    "operator": "CR"
+  },
+  {
+    "mutant_id": "MUT_144",
+    "difference": "@@ -6 +6 @@\n-        if (startIndexInclusive < 0) {\n+        if (startIndexInclusive < -1) {",
+    "operator": "AOIU"
+  }
+]

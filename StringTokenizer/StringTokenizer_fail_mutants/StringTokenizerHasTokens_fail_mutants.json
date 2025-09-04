@@ -1,0 +1,22 @@
+[
+  {
+    "mutant_id": "MUT_009",
+    "difference": "@@ -5 +5 @@\n-        return newPosition < maxPosition;\n+        return newPosition < maxPosition++;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_113",
+    "difference": "@@ -5 +5 @@\n-        return newPosition < maxPosition;\n+        return newPosition++ < maxPosition;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_148",
+    "difference": "@@ -5 +5 @@\n-        return newPosition < maxPosition;\n+        return newPosition-- < maxPosition;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_622",
+    "difference": "@@ -5 +5 @@\n-        return newPosition < maxPosition;\n+        return newPosition < maxPosition--;",
+    "operator": "AOIS"
+  }
+]

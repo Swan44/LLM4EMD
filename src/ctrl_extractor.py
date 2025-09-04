@@ -6,14 +6,14 @@ import re
 import os
 import yaml
 
-def load_deepseek_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_configs.yaml"):
+def load_deepseek_config(config_path="/Users/swan/bishe/LLM4EMD/configs/llm_configs.yaml"):
     with open(config_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
     return config["deepseek-v3-g"]
 
 deepseek_config = load_deepseek_config()
 
-def load_gpt_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_configs.yaml"):
+def load_gpt_config(config_path="/Users/swan/bishe/LLM4EMD/configs/llm_configs.yaml"):
     with open(config_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
     return config["gpt-3.5-turbo"]
@@ -101,7 +101,8 @@ def get_ctrl_info(program_name, mutant):
 
     # 示例路径
     # mutants_dir = r"D:\bishe_code\progex_benchmark\mutant_programs\Min\mutants"
-    base_dir = r"D:\bishe_code\progex_benchmark\mutant_programs"
+    # base_dir = r"D:\bishe_code\progex_benchmark\mutant_programs"
+    base_dir = r"/Users/swan/bishe/progex_benchmark/mutant_programs"
     mutants_dir = os.path.join(base_dir, program_name, "mutants")
 
     mutant_id = mutant.get("mutant_id")  # 例如 "MUT_001"

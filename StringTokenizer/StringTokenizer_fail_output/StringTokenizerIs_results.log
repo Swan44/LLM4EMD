@@ -1,0 +1,48 @@
+开始分析变异体 MUT_006...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_006": "步骤[可达性]：\n说明理由： 变异语句位于for循环的条件部分，原条件为\"i < delimiterCodePoints.length\"，变异后为\"i > delimiterCodePoints.length\"。根据提供的可达性约束条件[i <= delimiterCodePoints.length]，初始条件i=0且delimiterCodePoints.length≥0，因此初始时i=0 ≤ delimiterCodePoints.length，变异条件\"i > delimiterCodePoints.length\"在初始状态下为false，循环体不会被执行。但是，变异语句本身（条件判断）是可达的，因为程序执行流会经过for循环的条件检查部分。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原条件\"i < delimiterCodePoints.length\"与变异条件\"i > delimiterCodePoints.length\"在语义上完全不同。当i初始值为0且delimiterCodePoints.length≥0时，原条件在大多数情况下为true（除非数组长度为0），而变异条件在大多数情况下为false（除非i>delimiterCodePoints.length）。这会导致完全不同的程序行为：原程序会进入循环体检查分隔符，而变异体可能直接跳过循环返回false。\n分析结论： 变异确实改变了程序语义，满足必要性条件。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是i。根据提供的数据依赖路径，变量i确实通过数据依赖链传播到程序输出：1) 在条件判断中影响循环是否继续；2) 在数组索引delimiterCodePoints[i]中影响是否找到匹配的分隔符；3) 最终影响返回值为true或false。变异改变了i与delimiterCodePoints.length的比较关系，这会直接影响循环行为和数据访问。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句（for循环条件）控制着整个循环体的执行。根据提供的控制依赖路径信息，循环条件直接控制着：1) 是否执行循环体内的if语句和return true语句；2) 是否执行循环后的return false语句。变异改变了循环条件，会直接影响程序的控制流路径。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异引入了错误的状态（改变了循环条件），但这种错误状态不会被后续执行修正或抵消。变异会导致循环行为完全改变：原程序会正常遍历数组检查分隔符，而变异体可能直接跳过循环（当i=0 ≤ delimiterCodePoints.length时）或者异常执行循环（当i>delimiterCodePoints.length时）。这两种情况都会导致程序返回与原程序不同的结果，没有状态覆盖现象。\n分析结论： 变异引入的错误状态不会被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_006 的分析, 耗时: 66.3822 秒
+
+开始分析变异体 MUT_339...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_339": "步骤[可达性]：\n说明理由： 变异语句位于for循环的条件部分，路径条件组合为[i >= ~delimiterCodePoints.length]。由于~操作符是按位取反，对于任意非负整数n，~n都是负数（因为Java中整数使用二进制补码表示）。delimiterCodePoints.length作为数组长度，总是非负整数，因此~delimiterCodePoints.length总是负数。循环变量i初始化为0且每次递增1，始终是非负数。因此条件i >= ~delimiterCodePoints.length（即i >= 某个负数）对于所有i >= 0的情况都恒为真。\n分析结论： 变异语句可达，因为循环条件始终为真，循环会正常执行。\n\n步骤[必要性]：\n说明理由： 原程序条件为i < delimiterCodePoints.length，变异后为i < ~delimiterCodePoints.length。由于~delimiterCodePoints.length是负数，而i从0开始递增，始终是非负数，因此条件i < ~delimiterCodePoints.length（即非负数 < 负数）恒为假。这意味着变异后的for循环实际上不会执行循环体，直接跳到循环结束后的return false语句。\n分析结论： 变异确实改变了程序语义，原程序会执行循环检查分隔符，而变异体直接返回false，程序状态发生改变。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是循环条件判断，虽然变量i有数据依赖路径连接到输出语句（return true和return false），但由于变异导致循环条件恒为假，循环体根本不会执行，因此这些数据依赖路径实际上不会被触发。\n分析结论： 虽然存在数据依赖路径，但由于循环不执行，变异的效果无法通过这些路径传播到输出。\n\n步骤[控制依赖]：\n说明理由： 变异语句（for循环条件）控制着循环体的执行。原程序中，当条件为真时执行循环体，可能返回true；当条件为假时跳出循环，返回false。变异后，条件恒为假，直接控制跳到循环结束，执行return false语句。\n分析结论： 变异语句通过控制流直接影响输出语句，变异效果可以传递至输出。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异引入了明显的语义改变（循环不执行），但这种改变直接导致了不同的程序行为：原程序会遍历检查分隔符，可能返回true或false；变异体则总是返回false。不存在任何状态覆盖或抵消机制，变异引入的错误状态会直接反映在最终输出上。\n分析结论： 变异引入的错误状态没有被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_339 的分析, 耗时: 70.5954 秒
+
+开始分析变异体 MUT_388...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_388": "步骤[可达性]：\n说明理由： 变异体信息显示该变异是删除类型（FLDL操作符），即删除了原程序中的整个for循环及其内部语句。从程序控制流分析，该变异语句（即被删除的代码块）在原始程序中是可达的，因为isDelimiter方法的输入参数codePoint可以是任何整数值，且delimiterCodePoints数组长度可能大于0，因此for循环及其内部条件判断语句都有可能被执行。REACHABILITY_CONSTRAINT为NULL也表明没有逻辑上不可达的约束条件。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序包含一个完整的for循环，用于遍历delimiterCodePoints数组并检查是否存在与codePoint相等的分隔符。如果找到匹配项，则立即返回true；如果遍历完所有元素都未找到匹配项，则返回false。变异体完全删除了这个for循环及其内部的所有语句，这意味着变异体将始终跳过查找过程，直接执行最后的return false语句。这与原程序的行为有本质区别：原程序可能返回true或false，而变异体始终返回false。这种语义改变是实质性的，会直接影响程序状态（返回值）。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 虽然变异影响的变量（delimiterCodePoints, i, codePoint）在原程序中有数据依赖路径连接到输出（return true），但变异体完全删除了使用这些变量的代码。在变异体中，这些变量不再被使用，因此它们的数据依赖链被彻底切断。变异体直接返回false，这个返回值是硬编码的常量，不依赖于任何输入变量或程序状态。\n分析结论： 变异影响的变量无法通过数据依赖链传播到程序输出节点，因为变异体根本不使用这些变量。\n\n步骤[控制依赖]：\n说明理由： 变异体删除了原程序中的控制结构（for循环和if语句），使得程序的控制流发生了根本性改变。原程序中，输出（return true或return false）控制依赖于循环和条件判断的结果。在变异体中，控制流直接到达最后的return false语句，不再受任何条件控制。虽然从语法上看，return false语句在控制上依赖于方法入口，但这种依赖关系与变异引入的改变无关。\n分析结论： 变异语句（被删除的代码）无法通过控制流影响输出语句，因为变异体中的输出是直接且无条件的。\n\n步骤[状态覆盖]：\n说明理由： 基于以上分析，变异引入了根本性的语义改变：从可能返回true或false变为始终返回false。这种错误状态没有被后续执行修正或抵消，而是直接表现为不同的程序输出。当原程序应该返回true时（即codePoint是分隔符之一），变异体仍然返回false，这会导致可观察的行为差异。\n分析结论： 变异引入的错误状态没有被覆盖，会直接影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_388 的分析, 耗时: 64.4943 秒
+
+开始分析变异体 MUT_512...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_512": "步骤[可达性]：\n说明理由： 原程序中的for循环语句（第4行）在变异体中被修改为\"for (int i = 0; i++ < delimiterCodePoints.length; i++)\"。该语句位于方法入口后，没有前置条件约束。REACHABILITY_CONSTRAINT为'NULL'，表示没有不可达的路径条件。任何调用isDelimiter方法的输入都会执行到这个for循环语句，因此变异语句是可达的。\n分析结论： 变异语句可达\n\n步骤[必要性]：\n说明理由： 原语句是\"i < delimiterCodePoints.length\"，变异语句是\"i++ < delimiterCodePoints.length\"。在第一次循环迭代时，原语句使用i的初始值0进行比较，而变异语句先执行i++（将i增加到1），然后使用增加后的值1进行比较。这会导致循环条件判断的值不同（0 vs 1），从而可能改变循环的执行次数和循环体内的i值。这种改变会影响程序状态，因为i值的变化会直接影响第5行\"delimiterCodePoints[i] == codePoint\"的判断结果。\n分析结论： 变异实际改变了程序状态，满足必要性\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量i通过数据依赖链传播到程序输出节点。数据依赖路径显示：1) i用于数组索引访问delimiterCodePoints[i]，如果匹配成功则返回true；2) i用于循环条件判断，影响是否继续循环；3) 如果循环结束未找到匹配，则返回false。变量i的值变化会直接影响第5行的条件判断结果，从而影响最终的返回值（true或false）。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点\n\n步骤[控制依赖]：\n说明理由： 控制依赖路径显示，for循环语句（第4行）控制着后续语句的执行：1) 如果循环条件为真，执行循环体内的if语句；2) 如果循环体内的if条件为真，则返回true；3) 如果循环条件为假，则跳过循环执行return false。变异修改了循环条件表达式，会直接影响循环的控制流，进而影响输出语句（return true或return false）的执行。\n分析结论： 变异语句通过控制流影响输出语句\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了循环的初始条件和执行行为，但这种改变不会被后续执行修正或抵消。变异导致第一次循环时使用i=1而不是i=0进行比较，这意味着会跳过检查delimiterCodePoints[0]是否等于codePoint。如果codePoint恰好等于delimiterCodePoints[0]，原程序会在第一次循环时返回true，而变异体会跳过这个匹配，继续检查后续元素，可能导致不同的返回结果。这种状态差异会直接传播到最终输出，不会被修正。\n分析结论： 变异引入的错误状态不会被修正或抵消，会影响程序最终输出\n\n最终结论：等价变异体判定结果：NO"}
+完成变异体 MUT_512 的分析, 耗时: 60.3636 秒
+
+开始分析变异体 MUT_524...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_524": "步骤[可达性]：\n说明理由：变异语句位于for循环内部，其路径约束为[i < delimiterCodePoints.length]。该约束在循环执行期间是可满足的（只要i在数组长度范围内），因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序使用delimiterCodePoints[i]访问数组元素，变异体使用delimiterCodePoints[i++]访问。i++操作会在访问数组元素后递增i的值，这改变了程序状态。具体来说，在变异体中，每次条件判断后i都会递增，而原程序中的i只在for循环的迭代语句中递增。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量i通过数据依赖链传播到程序输出。变异语句中的i++操作会影响后续的循环条件判断(i < delimiterCodePoints.length)和循环迭代。当i的值改变时，可能影响循环的执行次数，进而影响最终的返回值（true或false）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句通过控制流直接影响输出语句。如果delimiterCodePoints[i++] == codePoint为true，则立即返回true；如果为false，则继续循环，最终可能返回false。变异语句的控制流决策直接影响程序的输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了程序状态（i的递增时机），但这种改变不会被后续执行修正或抵消。变异体中的i++操作会导致循环变量i的递增比原程序多一次（在条件判断时额外递增），这会改变循环的执行行为，可能导致：1) 跳过某些数组元素的检查；2) 提前结束循环；3) 访问越界（如果i++导致i超过数组长度）。这些改变都会影响最终的返回值。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_524 的分析, 耗时: 50.5368 秒
+
+开始分析变异体 MUT_659...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_659": "步骤[可达性]：\n说明理由：变异语句位于for循环内部，其可达性条件为循环条件i < delimiterCodePoints.length满足。该条件在循环执行期间（i从0到delimiterCodePoints.length-1）均可满足，因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原表达式为if (delimiterCodePoints[i] == codePoint)，变异表达式为if (delimiterCodePoints[i] == codePoint--)。codePoint--是后置递减操作，在比较时使用codePoint的原始值进行比较，比较完成后codePoint的值减1。虽然比较行为本身与原表达式相同，但变异引入了codePoint值的改变，这会改变程序状态。\n分析结论：变异实际改变了程序状态（codePoint的值被修改），满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量codePoint在数据依赖路径中：1) 如果条件为真，codePoint的值通过return true语句影响程序输出；2) 如果条件为假，codePoint的值通过后续循环迭代和最终的return false语句影响程序输出。变异改变了codePoint的值，这个改变会通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句if (delimiterCodePoints[i] == codePoint--)控制着程序的分支走向：如果条件为真，则执行return true；如果条件为假，则继续循环或最终执行return false。输出语句（return true/return false）控制依赖于变异语句的判断结果。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了codePoint的值，但这种改变会影响程序的后续行为：1) 如果当前比较为真，程序立即返回true，codePoint的递减不会影响后续执行；2) 如果当前比较为假，codePoint的递减会影响后续循环迭代中的比较条件，可能导致后续迭代的比较结果发生变化，从而最终影响程序返回值。没有证据表明这种状态改变会被后续执行修正或抵消。\n分析结论：变异引入的状态改变会影响程序最终输出，不存在状态覆盖现象。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_659 的分析, 耗时: 50.7573 秒
+

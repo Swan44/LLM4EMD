@@ -1,0 +1,33 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/StringTokenizerHasTokens.java
+开始分析变异体 MUT_009...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_009": "步骤[可达性]：\n说明理由：原程序是一个简单的方法，没有复杂的条件分支。变异语句位于return语句中，是方法的最后一条语句。从方法入口到该语句的路径是直线执行，没有条件约束（REACHABILITY_CONSTRAINT为NULL），因此该变异语句总是可达的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原表达式为\"return newPosition < maxPosition;\"，变异表达式为\"return newPosition < maxPosition++;\"。变异在maxPosition后添加了后置自增运算符。在可达路径上，当执行到该语句时，maxPosition的值会被用于比较，然后自增1。这改变了程序状态（maxPosition的值增加1）和比较结果（如果newPosition等于maxPosition-1，则原表达式返回false而变异表达式返回true）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是maxPosition。数据依赖路径显示，maxPosition的值直接用于return语句的比较操作。变异后，maxPosition不仅用于比较，还会被修改（自增），这种状态改变直接影响比较结果，并通过return语句输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：控制依赖路径显示，return语句直接依赖于方法入口，没有中间控制节点。变异语句本身就是输出语句，因此它直接控制程序的输出，不需要通过其他控制流影响输出。\n分析结论：变异语句直接就是输出语句，因此必然通过控制流影响输出。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了maxPosition的值（自增1），但这种改变发生在比较操作之后。比较操作使用的是maxPosition自增前的值，因此比较结果可能发生变化（当newPosition等于maxPosition-1时）。这种状态改变没有被后续执行修正或抵消，因为方法在执行return后立即结束，没有后续语句来修正maxPosition的改变或比较结果的改变。\n分析结论：变异引入的错误状态没有被修正或抵消，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_009 的分析, 耗时: 43.0972 秒
+
+开始分析变异体 MUT_113...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_113": "步骤[可达性]：\n说明理由：原程序是一个简单的方法，没有复杂的条件分支。变异语句位于return语句中，该方法没有前置条件约束（REACHABILITY_CONSTRAINT为NULL），因此从方法入口到变异语句的路径总是可达的。任何调用hasMoreTokens()方法的输入都能执行到return newPosition++ < maxPosition;语句。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原表达式为\"return newPosition < maxPosition;\"，变异表达式为\"return newPosition++ < maxPosition;\"。后置递增运算符++会在比较完成后增加newPosition的值，这确实改变了程序状态。具体来说，变异体在每次执行时都会增加newPosition的值，而原程序不会。即使在当前执行路径下，这种状态改变也是真实存在的。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是newPosition。数据依赖路径显示：newPosition在第4行被赋值，然后在第5行被使用（在比较和递增操作中）。虽然变异后的newPosition值通过return语句返回，但需要注意的是：后置递增操作符++会在比较完成后才增加变量的值，因此比较操作使用的是递增前的newPosition值，这与原程序相同。但是，变异确实改变了newPosition变量的值（增加了1），这种状态改变可能会影响后续的方法调用。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：控制依赖路径显示，return语句直接依赖于方法入口，没有复杂的控制流结构。变异语句本身就是输出语句，直接决定了方法的返回值。因此，变异语句通过控制流直接影响输出。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异在比较完成后增加了newPosition的值，但关键的是比较操作本身使用的是递增前的值。因此，对于单次方法调用，返回的布尔值（newPosition < maxPosition）与原程序完全相同。变异引入的状态改变（newPosition值增加）不会影响当前的返回值，但会影响后续的方法调用状态。然而，从单次方法调用的角度来看，输出结果没有变化。\n分析结论：变异引入的错误状态在本次执行中被\"覆盖\"（比较使用的是原始值，递增操作不影响比较结果），导致程序最终输出未受影响。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_113 的分析, 耗时: 46.9196 秒
+
+开始分析变异体 MUT_148...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_148": "步骤[可达性]：\n说明理由：原程序为简单方法，无复杂条件分支。变异语句位于return语句，是方法最后一行，且无前置条件约束（REACHABILITY_CONSTRAINT为NULL）。任何调用hasMoreTokens()方法都会执行到第4行赋值语句和第5行return语句，因此变异语句绝对可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原表达式为\"return newPosition < maxPosition;\"，变异体为\"return newPosition-- < maxPosition;\"。后缀递减操作符\"--\"会在比较完成后递减newPosition的值，但比较操作使用的是递减前的值。虽然比较结果相同，但变异体执行后newPosition的值会比原程序少1，这改变了程序状态（newPosition变量的值）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量newPosition有明确的数据依赖路径：第4行赋值 → 第5行return语句使用。变异体在第5行修改了newPosition的值（通过后缀递减），虽然这个修改发生在比较之后，但变量值确实被改变了。由于这是方法的最后一条语句，改变后的newPosition值可能会影响后续方法调用的状态（如果该变量是实例变量且被其他方法使用）。\n分析结论：变异影响的变量通过数据依赖链连接到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：return语句是方法的最终输出语句，直接控制程序的返回值。变异体修改了return语句中的表达式，虽然比较逻辑相同，但附带了对newPosition的修改操作，这属于数据依赖而非控制依赖。从控制流角度看，return语句的执行不受其他条件控制，是必然执行的。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异体与原程序在本次方法调用中返回相同的布尔值（比较结果相同），但变异体执行后newPosition的值减少了1，这个状态改变没有被修正或抵消。在后续的方法调用中，这个改变的状态可能会影响其他方法的执行结果，导致程序整体行为发生变化。\n分析结论：变异引入的错误状态没有被修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_148 的分析, 耗时: 46.0155 秒
+
+开始分析变异体 MUT_622...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_622": "步骤[可达性]：\n说明理由：原程序中的变异语句位于return语句中，该语句是方法hasMoreTokens()的唯一返回语句。从方法入口到该return语句的路径没有条件分支（即没有if、while等控制结构），因此该路径无条件可达。REACHABILITY_CONSTRAINT为'NULL'也表明没有路径约束限制其可达性。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原语句为\"return newPosition < maxPosition;\"，变异语句为\"return newPosition < maxPosition--;\"。变异操作是在maxPosition后添加了后置递减运算符\"--\"。在可达路径上，该变异确实改变了程序状态：原语句只是读取maxPosition的值进行比较，而变异语句不仅读取maxPosition的值进行比较，还会在比较后将maxPosition的值减1。这种状态改变是实际存在的，因为maxPosition是一个字段变量，其值的改变会影响后续方法调用的状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是maxPosition。数据依赖路径显示：在line 5的return语句中，maxPosition的值被使用（用于比较），然后通过Flows关系影响到自身的返回值。虽然数据依赖路径只显示了当前语句内的依赖，但重要的是maxPosition作为一个字段变量，其状态的改变会影响后续的方法调用。在当前的return语句中，maxPosition--会先使用maxPosition的当前值进行比较，然后将maxPosition的值减1，这个减1操作会影响程序的状态。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出（返回值），存在数据依赖。\n\n步骤[控制依赖]：\n说明理由：控制依赖路径显示方法签名(boolean hasMoreTokens())控制依赖于return语句。由于该方法没有其他控制结构，return语句直接受方法体的控制。变异语句本身就是一个return语句，它直接产生程序的输出（返回值），因此变异语句与输出语句之间存在直接的控制依赖关系。\n分析结论：变异语句通过控制流直接影响输出语句，存在控制依赖。\n\n步骤[状态覆盖]：\n说明理由：虽然变异引入了状态改变（maxPosition的值减1），但这种状态改变不会影响当前的返回值。因为后置递减运算符\"--\"的特性：它会先使用变量的当前值进行表达式计算，然后再将变量值减1。因此，在\"return newPosition < maxPosition--;\"中，比较操作使用的是maxPosition的原始值，与原程序\"return newPosition < maxPosition;\"使用的值相同。减1操作只在比较完成后执行，影响的是后续的程序状态，而不是当前的返回值。因此，尽管程序状态发生了改变，但当前的返回值与原程序完全相同。\n分析结论：变异引入的错误状态被运算符的求值顺序所抵消，不影响当前输出，属于状态覆盖现象。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_622 的分析, 耗时: 52.4040 秒
+

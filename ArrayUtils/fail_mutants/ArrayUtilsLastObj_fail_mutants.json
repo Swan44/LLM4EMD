@@ -1,0 +1,22 @@
+[
+  {
+    "mutant_id": "MUT_012",
+    "difference": "@@ -6 +6 @@\n-        if (startIndex < 0) {\n+        if (startIndex <= 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_026",
+    "difference": "@@ -6 +6 @@\n-        if (startIndex < 0) {\n+        if (startIndex < -1) {",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_047",
+    "difference": "@@ -6 +6 @@\n-        if (startIndex < 0) {\n+        if (false) {",
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_079",
+    "difference": "@@ -3 +3 @@\n-        if (array == null) {\n+        if (false) {",
+    "operator": "ROD"
+  }
+]

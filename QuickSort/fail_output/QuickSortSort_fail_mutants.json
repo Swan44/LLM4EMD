@@ -1,0 +1,42 @@
+[
+  {
+    "mutant_id": "MUT_195",
+    "difference": "@@ -10 +10 @@\n-                max = i;\n+                max = i--;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_199",
+    "difference": "@@ -4 +4 @@\n-        if (data.length < 2) {\n+        if (data.length == 2) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_228",
+    "difference": "@@ -13 +13 @@\n-        swap( data, data.length - 1, max );\n+        swap( data, data.length % 1, max );",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_250",
+    "difference": "@@ -4 +4 @@\n-        if (data.length < 2) {\n+        if (false) {",
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_275",
+    "difference": "@@ -4 +4 @@\n-        if (data.length < 2) {\n+        if (~data.length < 2) {",
+    "operator": "LOI"
+  },
+  {
+    "mutant_id": "MUT_281",
+    "difference": "@@ -9 +9 @@\n-            if (data[max] < data[i]) {\n+            if (data[max] <= data[i]) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_284",
+    "difference": "@@ -8 +8 @@\n-        for (int i = 1; i < data.length; i++) {\n+        for (int i = 1; i == data.length; i++) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_290",
+    "difference": "@@ -4 +4 @@\n-        if (data.length < 2) {\n+        if (data.length > 2) {",
+    "operator": "ROR"
+  }
+]

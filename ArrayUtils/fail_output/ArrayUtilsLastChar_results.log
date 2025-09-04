@@ -1,0 +1,17 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/ArrayUtilsLastChar.java
+开始分析变异体 MUT_194...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_194": "步骤[可达性]：\n说明理由： 变异语句为第6行的条件判断\"if (false)\"，该语句始终为假，因此其真分支（第7行return语句）不可达。但变异语句本身作为代码行是可达的，因为程序入口到该语句的路径条件为(array != null) && (startIndex >= array.length)，这是一个可满足的条件组合（例如array为非空数组且startIndex大于等于数组长度）。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"if (startIndex < 0)\"，变异体改为\"if (false)\"。在可达路径的约束条件(startIndex >= array.length)下，startIndex的值大于等于0（因为array.length >= 0），所以原条件\"startIndex < 0\"始终为假，与变异后的\"false\"语义相同。变异没有改变程序在该路径下的行为。\n分析结论： 变异未实际改变程序语义，属于非必要性变异。\n\n基于必要性分析已可判定该变异体为等价变异体，无需继续后续分析步骤。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_194 的分析, 耗时: 76.4533 秒
+
+开始分析变异体 MUT_213...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_213": "步骤[可达性]：\n说明理由：变异语句为\"if (false)\"，其条件表达式恒为假。因此，无论输入参数array为何值，该条件判断的结果始终为false，导致其true分支（return INDEX_NOT_FOUND;）永远不可达。虽然变异语句本身在语法上存在，但其true分支的执行路径在逻辑上不可满足。\n分析结论：由于变异语句的true分支不可达，满足等价变异体的不可达性条件。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_213 的分析, 耗时: 57.1369 秒
+

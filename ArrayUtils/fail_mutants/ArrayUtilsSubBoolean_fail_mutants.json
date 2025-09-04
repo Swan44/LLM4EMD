@@ -1,0 +1,17 @@
+[
+  {
+    "mutant_id": "MUT_091",
+    "difference": "@@ -9 +9 @@\n-        if (endIndexExclusive > array.length) {\n+        if (endIndexExclusive >= array.length) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_111",
+    "difference": "@@ -6 +6 @@\n-        if (startIndexInclusive < 0) {\n+        if (startIndexInclusive <= 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_177",
+    "difference": "@@ -9 +9 @@\n-        if (endIndexExclusive > array.length) {\n+        if (endIndexExclusive != array.length) {",
+    "operator": "ROR"
+  }
+]

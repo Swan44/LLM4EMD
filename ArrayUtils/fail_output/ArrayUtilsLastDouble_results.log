@@ -1,0 +1,9 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/ArrayUtilsLastDouble.java
+开始分析变异体 MUT_087...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_087": "步骤[可达性]：\n说明理由： 变异语句位于第6行的条件判断，其路径条件为[!ArrayUtils.isEmpty(array) && startIndex <= 0]。该条件组合表示数组不为空且startIndex小于等于0。这个条件是可满足的，例如当array不为空且startIndex为0或负数时。因此，变异语句可达。\n分析结论： 变异语句可达，继续下一步分析。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"startIndex < 0\"，变异体条件为\"startIndex <= 0\"。在startIndex = 0的情况下，原条件为false，变异条件为true，这会导致程序执行不同的分支：原程序会跳过该条件继续执行后续代码，而变异体会进入该条件分支直接返回INDEX_NOT_FOUND。因此，变异确实改变了程序状态。\n分析结论： 变异改变了程序语义，满足必要性，继续下一步分析。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是startIndex。当变异条件为true时（startIndex <= 0），程序直接返回INDEX_NOT_FOUND，startIndex的值通过控制依赖影响输出。当变异条件为false时，startIndex的值会通过数据依赖链传播：可能被修改（startIndex = array.length - 1），然后赋值给循环变量i，最终可能通过return i或return INDEX_NOT_FOUND影响输出。因此，变异影响的变量可以通过数据依赖链传播到程序输出节点。\n分析结论： 存在数据依赖，继续下一步分析。\n\n步骤[控制依赖]：\n说明理由： 变异语句（第6行的条件判断）直接控制两个输出语句：当条件为true时，控制第7行的return INDEX_NOT_FOUND；当条件为false时，控制后续的第8-16行代码的执行，这些代码中包含了多个可能的输出语句（return i和return INDEX_NOT_FOUND）。因此，变异语句通过控制流直接影响输出语句的执行。\n分析结论： 存在控制依赖，继续下一步分析。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了程序的行为，但在某些情况下，这种改变可能被后续执行抵消。具体来说，当startIndex < 0时，原程序和变异体都会进入条件分支返回INDEX_NOT_FOUND，行为一致。但当startIndex = 0时，原程序会继续执行后续逻辑（可能找到元素返回索引或返回INDEX_NOT_FOUND），而变异体会直接返回INDEX_NOT_FOUND。这种差异是实质性的，无法通过后续执行抵消，因为变异体直接提前返回，跳过了可能的查找逻辑。\n分析结论： 变异引入的错误状态不会被后续执行修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_087 的分析, 耗时: 88.6779 秒
+

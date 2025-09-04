@@ -1,0 +1,7 @@
+[
+  {
+    "mutant_id": "MUT_440",
+    "difference": "@@ -6 +6 @@\n-        if (startIndex < 0) {\n+        if (startIndex < 1) {",
+    "operator": "CR"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "mutant_id": "MUT_039",
+    "difference": "@@ -6 +6 @@\n-        if (startIndex < 0) {\n+        if (false) {",
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_266",
+    "difference": "@@ -3 +3 @@\n-        if (ArrayUtils.isEmpty(array)) {\n+        if (false) {",
+    "operator": "VDL"
+  },
+  {
+    "mutant_id": "MUT_335",
+    "difference": "@@ -9 +9 @@\n-            startIndex = array.length - 1;\n+            startIndex = array.length / 1;",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_447",
+    "difference": "@@ -12 +12 @@\n-            if (valueToFind == array[i]) {\n+            if (valueToFind >= array[i]) {",
+    "operator": "ROR"
+  }
+]

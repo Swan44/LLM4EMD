@@ -1,0 +1,32 @@
+[
+  {
+    "mutant_id": "MUT_006",
+    "difference": "@@ -4 +4 @@\n-        for (int i = 0; i < delimiterCodePoints.length; i++) {\n+        for (int i = 0; i > delimiterCodePoints.length; i++) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_339",
+    "difference": "@@ -4 +4 @@\n-        for (int i = 0; i < delimiterCodePoints.length; i++) {\n+        for (int i = 0; i < ~delimiterCodePoints.length; i++) {",
+    "operator": "LOI"
+  },
+  {
+    "mutant_id": "MUT_388",
+    "difference": "@@ -4 +4 @@\n-        for (int i = 0; i < delimiterCodePoints.length; i++) {\n-            if (delimiterCodePoints[i] == codePoint) {\n-                return true;\n-            }\n-        }",
+    "operator": "FLDL"
+  },
+  {
+    "mutant_id": "MUT_512",
+    "difference": "@@ -4 +4 @@\n-        for (int i = 0; i < delimiterCodePoints.length; i++) {\n+        for (int i = 0; i++ < delimiterCodePoints.length; i++) {",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_524",
+    "difference": "@@ -5 +5 @@\n-            if (delimiterCodePoints[i] == codePoint) {\n+            if (delimiterCodePoints[i++] == codePoint) {",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_659",
+    "difference": "@@ -5 +5 @@\n-            if (delimiterCodePoints[i] == codePoint) {\n+            if (delimiterCodePoints[i] == codePoint--) {",
+    "operator": "AOIS"
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "mutant_id": "MUT_024",
+    "difference": "@@ -26 +26 @@\n-            quicksort( data, upper + 1, last );\n+            quicksort( data, upper++ + 1, last );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_034",
+    "difference": "@@ -15 +15 @@\n-            if (lower < upper) {\n+            if (lower != upper) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_040",
+    "difference": "@@ -9 +9 @@\n-            while (bound > data[lower]) {\n+            while (bound >= data[lower]) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_070",
+    "difference": "@@ -13 +13 @@\n-                upper--;\n+                upper++;",
+    "operator": "AORS"
+  },
+  {
+    "mutant_id": "MUT_117",
+    "difference": "@@ -6 +6 @@\n-        swap( data, first, (first + last) / 2 );\n+        swap( data, first, first + last - 2 );",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_127",
+    "difference": "@@ -25 +25 @@\n-        if (upper + 1 < last) {\n+        if (upper * 1 < last) {",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_131",
+    "difference": "@@ -26 +26 @@\n-            quicksort( data, upper + 1, last );\n+            quicksort( data, upper-- + 1, last );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_143",
+    "difference": "@@ -25 +25 @@\n-        if (upper + 1 < last) {\n+        if (!(upper + 1 < last)) {",
+    "operator": "SEOI"
+  },
+  {
+    "mutant_id": "MUT_153",
+    "difference": "@@ -15 +15 @@\n-            if (lower < upper) {\n+            if (~lower < upper) {",
+    "operator": "LOI"
+  },
+  {
+    "mutant_id": "MUT_166",
+    "difference": "@@ -22 +22 @@\n-        if (first < upper - 1) {\n+        if (first <= upper - 1) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_173",
+    "difference": "@@ -15 +15 @@\n-            if (lower < upper) {\n+            if (lower >= upper) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_215",
+    "difference": "@@ -22 +22 @@\n-        if (first < upper - 1) {\n+        if (first < ++upper - 1) {",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_225",
+    "difference": "@@ -22 +22 @@\n-        if (first < upper - 1) {\n+        if (first < upper / 1) {",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_241",
+    "difference": "@@ -23 +23 @@\n-            quicksort( data, first, upper - 1 );\n+            quicksort( data, first--, upper - 1 );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_299",
+    "difference": "@@ -23 +23 @@\n-            quicksort( data, first, upper - 1 );\n+            quicksort( data, first++, upper - 1 );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_314",
+    "difference": "@@ -6 +6 @@\n-        swap( data, first, (first + last) / 2 );\n+        swap( data, first, (first-- + last) / 2 );",
+    "operator": "AOIS"
+  }
+]

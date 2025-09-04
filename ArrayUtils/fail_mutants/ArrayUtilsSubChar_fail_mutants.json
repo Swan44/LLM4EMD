@@ -1,0 +1,37 @@
+[
+  {
+    "mutant_id": "MUT_040",
+    "difference": "@@ -6 +6 @@\n-        if (startIndexInclusive < 0) {\n+        if (startIndexInclusive < 1) {",
+    "operator": "CR"
+  },
+  {
+    "mutant_id": "MUT_229",
+    "difference": "@@ -6 +6 @@\n-        if (startIndexInclusive < 0) {\n+        if (startIndexInclusive <= 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_276",
+    "difference": "@@ -13 +13 @@\n-        if (newSize <= 0) {\n+        if (newSize < 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_356",
+    "difference": "@@ -13 +13 @@\n-        if (newSize <= 0) {\n+        if (newSize == 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_388",
+    "difference": "@@ -9 +9 @@\n-        if (endIndexExclusive > array.length) {\n+        if (endIndexExclusive >= array.length) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_416",
+    "difference": "@@ -13 +13 @@\n-        if (newSize <= 0) {\n+        if (true) {",
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_487",
+    "difference": "@@ -13 +13 @@\n-        if (newSize <= 0) {\n+        if (newSize <= 1) {",
+    "operator": "CR"
+  }
+]

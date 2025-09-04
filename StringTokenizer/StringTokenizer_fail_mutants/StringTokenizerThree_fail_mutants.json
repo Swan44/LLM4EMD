@@ -1,0 +1,47 @@
+[
+  {
+    "mutant_id": "MUT_032",
+    "difference": "@@ -10 +10 @@\n-        retDelims = returnDelims;",
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_078",
+    "difference": "@@ -5 +5 @@\n-        newPosition = -1;",
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_347",
+    "difference": "@@ -4 +4 @@\n-        currentPosition = 0;",
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_468",
+    "difference": "@@ -9 +9 @@\n-        delimiters = delim;",
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_469",
+    "difference": "@@ -8 +8 @@\n-        maxPosition = str.length();",
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_489",
+    "difference": "@@ -5 +5 @@\n-        newPosition = -1;\n+        newPosition = 1;",
+    "operator": "AODU"
+  },
+  {
+    "mutant_id": "MUT_552",
+    "difference": "@@ -11 +11 @@\n-        setMaxDelimCodePoint();",
+    "operator": "FCDL"
+  },
+  {
+    "mutant_id": "MUT_631",
+    "difference": "@@ -6 +6 @@\n-        delimsChanged = false;",
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_742",
+    "difference": "@@ -7 +7 @@\n-        this.str = str;",
+    "operator": "ADL"
+  }
+]

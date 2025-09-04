@@ -1,0 +1,57 @@
+[
+  {
+    "mutant_id": "MUT_005",
+    "difference": "@@ -4 +4 @@\n-        currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );\n+        currentPosition = newPosition >= 0 && !delimsChanged ? newPosition-- : skipDelimiters( currentPosition );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_121",
+    "difference": "@@ -4 +4 @@\n-        currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );\n+        currentPosition = newPosition++ >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_138",
+    "difference": "@@ -4 +4 @@\n-        currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );\n+        currentPosition = newPosition > 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_156",
+    "difference": "@@ -12 +12 @@\n-        return str.substring( start, currentPosition );\n+        return str.substring( start, currentPosition-- );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_254",
+    "difference": "@@ -4 +4 @@\n-        currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );\n+        currentPosition = newPosition-- >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_346",
+    "difference": "@@ -7 +7 @@\n-        if (currentPosition >= maxPosition) {\n+        if (false) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_383",
+    "difference": "@@ -4 +4 @@\n-        currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );\n+        currentPosition = newPosition >= 0 ? newPosition : skipDelimiters( currentPosition );",
+    "operator": "SEOD"
+  },
+  {
+    "mutant_id": "MUT_410",
+    "difference": "@@ -4 +4 @@\n-        currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );\n+        currentPosition = newPosition >= 0 && !delimsChanged ? newPosition++ : skipDelimiters( currentPosition );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_628",
+    "difference": "@@ -12 +12 @@\n-        return str.substring( start, currentPosition );\n+        return str.substring( start--, currentPosition );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_641",
+    "difference": "@@ -4 +4 @@\n-        currentPosition = newPosition >= 0 && !delimsChanged ? newPosition : skipDelimiters( currentPosition );\n+        currentPosition = !(newPosition >= 0 && !delimsChanged) ? newPosition : skipDelimiters( currentPosition );",
+    "operator": "SEOI"
+  },
+  {
+    "mutant_id": "MUT_711",
+    "difference": "@@ -12 +12 @@\n-        return str.substring( start, currentPosition );\n+        return str.substring( start, currentPosition++ );",
+    "operator": "AOIS"
+  }
+]

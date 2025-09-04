@@ -1,0 +1,17 @@
+[
+  {
+    "mutant_id": "MUT_157",
+    "difference": "@@ -12 +12 @@\n-            if (valueToFind == array[i]) {\n+            if (valueToFind >= array[i]) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_330",
+    "difference": "@@ -3 +3 @@\n-        if (array == null) {\n+        if (false) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_476",
+    "difference": "@@ -8 +8 @@\n-        } else if (startIndex >= array.length) {\n+        } else if (startIndex > array.length) {",
+    "operator": "ROR"
+  }
+]

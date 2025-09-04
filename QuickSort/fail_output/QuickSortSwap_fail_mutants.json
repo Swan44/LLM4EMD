@@ -1,0 +1,7 @@
+[
+  {
+    "mutant_id": "MUT_311",
+    "difference": "@@ -6 +6 @@\n-        data[j] = tmp;",
+    "operator": "ADL"
+  }
+]

@@ -28,7 +28,7 @@ EXAMPLE2_MUTANT = """{
 }"""
 
 # 1. 加载配置文件
-def load_config(config_path="D:\\bishe_code\LLM4EMD\configs\llm_configs.yaml"):
+def load_config(config_path="/Users/swan/bishe/LLM4EMD/configs/llm_configs.yaml"):
     with open(config_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
@@ -116,16 +116,14 @@ a > 0 && b > 0 && c > 0 && a != b && a != c && b != c
 注意：若某一步已足以判断该变异体为等价变异体，则不再继续后续分析步骤，直接给出最终结论。
 原程序：
 {PROGRAM}
-
 变异体信息：
 {MUTANT_INFORMATION}
-
-1. 可达性：程序到变异语句的路径条件组合为{REACHABILITY_CONSTRAINT}，请分析该变异语句是否可达。
+1. 可达性：程序到变异语句前的路径条件组合为{REACHABILITY_CONSTRAINT}，请分析该变异语句是否可达（而非变异语句是否可满足）。
 2. 必要性：原程序与变异体语句为{DIFFERENCE}，请分析在变异语句可达情况下，结合其路径约束判断该变异是否实际改变了程序状态。
 3. 数据依赖：变异语句到输出语句的数据依赖路径为{DATA_DEPENDENCY}，请分析变异影响的变量是否通过数据依赖链传播到程序输出节点。
 4. 控制依赖：变异语句到输出语句的控制依赖路径为{CTRL_DEPENDENCY}，请分析变异语句是否通过控制流影响输出语句。
 5. 状态覆盖：请结合以上信息与分析结论，分析变异引入的错误状态是否在后续执行中被修正或抵消，从而导致程序最终输出未受影响。
-
+## 注意：删除类型的变异算子是针对原程序的删除，而非对变异语句的删除。
 ## 输出格式要求
 每个步骤输出如下：
 步骤[name]：
@@ -133,7 +131,6 @@ a > 0 && b > 0 && c > 0 && a != b && a != c && b != c
 分析结论： 
 ……
 最终结论：等价变异体判定结果：YES或等价变异体判定结果：NO。
-
 """
 
     prompt = PromptTemplate.from_template(template)
@@ -197,3 +194,15 @@ def analyze_mutant(program_path, mutant):
         "CTRL_DEPENDENCY": ctrl_dependency,
     })
     return result.content
+
+'''
+if __name__ == "__main__":
+    result = analyze_mutant("/Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/ArrayUtilsLastShort.java",
+                            {
+                                "mutant_id": "MUT_001",
+                                "difference": "@@ -8 +8 @@\n-        } else if (startIndex >= array.length) {\n+        } else if (startIndex == array.length) {",
+                                "operator": "ROR"
+                            }
+                   )
+    print(result)
+'''

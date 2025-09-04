@@ -1,0 +1,67 @@
+[
+  {
+    "mutant_id": "MUT_013",
+    "difference": "@@ -5 +5 @@\n-        int currpos = currentPosition;\n+        int currpos = currentPosition++;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_046",
+    "difference": "@@ -9 +9 @@\n-                break;",
+    "operator": "OSDL"
+  },
+  {
+    "mutant_id": "MUT_130",
+    "difference": "@@ -11 +11 @@\n-            currpos = scanToken( currpos );\n+            currpos = scanToken( currpos-- );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_263",
+    "difference": "@@ -7 +7 @@\n-            currpos = skipDelimiters( currpos );\n+            currpos = skipDelimiters( currpos-- );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_362",
+    "difference": "@@ -14 +14 @@\n-        return count;\n+        return 0;",
+    "operator": "VDL"
+  },
+  {
+    "mutant_id": "MUT_430",
+    "difference": "@@ -7 +7 @@\n-            currpos = skipDelimiters( currpos );\n+            currpos = skipDelimiters( ++currpos );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_438",
+    "difference": "@@ -12 +12 @@\n-            count++;",
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_500",
+    "difference": "@@ -8 +8 @@\n-            if (currpos >= maxPosition) {\n+            if (currpos > maxPosition) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_535",
+    "difference": "@@ -8 +8 @@\n-            if (currpos >= maxPosition) {\n+            if (currpos == maxPosition) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_611",
+    "difference": "@@ -11 +11 @@\n-            currpos = scanToken( currpos );\n+            currpos = scanToken( currpos++ );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_626",
+    "difference": "@@ -11 +11 @@\n-            currpos = scanToken( currpos );\n+            currpos = scanToken( --currpos );",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_693",
+    "difference": "@@ -8 +8 @@\n-            if (currpos >= maxPosition) {\n+            if (false) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_703",
+    "difference": "@@ -5 +5 @@\n-        int currpos = currentPosition;\n+        int currpos = currentPosition--;",
+    "operator": "AOIS"
+  }
+]

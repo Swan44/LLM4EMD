@@ -1,0 +1,37 @@
+[
+  {
+    "mutant_id": "MUT_002",
+    "difference": "@@ -13 +13 @@\n-        if (newSize <= 0) {\n+        if (newSize < 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_020",
+    "difference": "@@ -9 +9 @@\n-        if (endIndexExclusive > array.length) {\n+        if (endIndexExclusive != array.length) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_161",
+    "difference": "@@ -6 +6 @@\n-        if (startIndexInclusive < 0) {\n+        if (false) {",
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_293",
+    "difference": "@@ -6 +6 @@\n-        if (startIndexInclusive < 0) {\n+        if (startIndexInclusive < -1) {",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_311",
+    "difference": "@@ -9 +9 @@\n-        if (endIndexExclusive > array.length) {\n+        if (endIndexExclusive >= array.length) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_386",
+    "difference": "@@ -13 +13 @@\n-        if (newSize <= 0) {\n+        if (newSize <= -1) {",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_393",
+    "difference": "@@ -6 +6 @@\n-        if (startIndexInclusive < 0) {\n+        if (startIndexInclusive < 1) {",
+    "operator": "CR"
+  }
+]

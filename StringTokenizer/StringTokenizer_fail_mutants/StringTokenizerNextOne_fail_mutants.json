@@ -1,0 +1,17 @@
+[
+  {
+    "mutant_id": "MUT_201",
+    "difference": "@@ -5 +5 @@\n-        delimsChanged = true;",
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_404",
+    "difference": "@@ -6 +6 @@\n-        setMaxDelimCodePoint();",
+    "operator": "FCDL"
+  },
+  {
+    "mutant_id": "MUT_686",
+    "difference": "@@ -4 +4 @@\n-        delimiters = delim;",
+    "operator": "ADL"
+  }
+]

@@ -1,0 +1,14 @@
+deepseek-v3:
+  api_key: "sk-XWMACLkkgYedy2hfxcPw84L1pmbF6XyscAHE7QRspdozsON3"
+  base_url: "https://api.chatanywhere.tech/v1"
+  model: "deepseek-v3"
+
+deepseek-v3-g:
+  api_key: "sk-cc93f24704ea4955a1cbbc549ca0a526"
+  base_url: "https://api.deepseek.com/v1"
+  model: "deepseek-chat"
+
+gpt-3.5-turbo:
+  api_key: "sk-XWMACLkkgYedy2hfxcPw84L1pmbF6XyscAHE7QRspdozsON3"
+  base_url: "https://api.chatanywhere.tech/v1"
+  model: "gpt-3.5-turbo"

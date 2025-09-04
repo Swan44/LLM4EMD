@@ -1,0 +1,25 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/ArrayUtilsSubObj.java
+开始分析变异体 MUT_064...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_064": "步骤[可达性]：\n说明理由：变异语句为\"if (false)\"，该条件恒为假，因此其真分支（return null;）永远不可达。但变异语句本身是可达的，因为程序入口到该语句没有前置条件约束（REACHABILITY_CONSTRAINT为NULL），任何输入都能执行到该语句。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原条件\"if (array == null)\"检查数组是否为null，而变异条件\"if (false)\"恒为假。这改变了程序语义：原程序在array为null时返回null，变异体则永远不会执行return null语句。因此，当array为null时，程序状态会发生改变（原程序返回null，变异体继续执行后续代码）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是array。从数据依赖路径看，array在多个地方被使用：第9行的条件判断、第10行的赋值、第13行的getClass()调用、第18行的arraycopy调用。这些使用点都位于变异语句的假分支中（因为变异条件恒为假）。当array为null时，这些使用点可能会抛出NullPointerException，而原程序会直接返回null避免这些异常。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点（可能影响输出或导致异常）。\n\n步骤[控制依赖]：\n说明理由：变异语句\"if (false)\"的控制依赖路径显示，其真分支（return null;）永远不可达，假分支控制着后续所有语句的执行。变异改变了控制流：原程序在array为null时直接返回，变异体则继续执行后续所有语句。\n分析结论：变异语句通过控制流影响输出语句（决定是否执行后续代码）。\n\n步骤[状态覆盖]：\n说明理由：当array不为null时，原程序和变异体的行为相同（都执行后续代码）。但当array为null时，原程序返回null，而变异体会继续执行后续代码，这可能导致：（1）在第9行访问array.length时抛出NullPointerException；（2）在第13行调用array.getClass()时抛出NullPointerException。这些异常会改变程序输出（从返回null变为抛出异常），错误状态没有被修正或抵消。\n分析结论：变异引入的错误状态不会被后续执行修正，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_064 的分析, 耗时: 161.7152 秒
+
+开始分析变异体 MUT_096...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_096": "步骤1：可达性\n说明理由：变异语句位于第14行的条件判断，其路径条件为array != null（由REACHABILITY_CONSTRAINT提供）。这是一个可满足的条件，因为array参数可以为非空数组。因此，变异语句可达。\n分析结论：变异语句可达。\n\n步骤2：必要性\n说明理由：原条件为\"newSize <= 0\"，变异后为\"newSize <= 1\"。当newSize = 1时，原条件判断为false（1 > 0），而变异条件判断为true（1 <= 1）。这会导致程序执行不同的分支：原程序会继续创建子数组，而变异体会返回空数组。因此，变异确实改变了程序状态。\n分析结论：变异改变了程序语义，满足必要性。\n\n步骤3：数据依赖\n说明理由：变异影响的变量newSize通过数据依赖链传播到输出节点。当条件为true时，newSize的值直接决定了返回空数组的大小（Array.newInstance(type, 0)）；当条件为false时，newSize的值决定了子数组的大小（Array.newInstance(type, newSize)）和System.arraycopy的复制长度。最终返回的subarray数组的内容和大小都依赖于newSize的值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤4：控制依赖\n说明理由：变异语句（条件判断）通过控制流直接影响输出语句。当条件为true时，控制流直接跳转到返回空数组的语句；当条件为false时，控制流继续执行创建和复制子数组的操作，最终返回子数组。因此，变异语句通过控制流影响输出语句的执行路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤5：状态覆盖\n说明理由：虽然变异改变了程序的控制流和数据值，但这种改变会直接影响最终的输出结果。当newSize = 1时，原程序返回一个包含1个元素的子数组，而变异体返回一个空数组（长度为0）。这两种输出在语义上是不同的，无法通过后续执行被修正或抵消。\n分析结论：变异引入的状态改变直接影响最终输出，不存在状态覆盖现象。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_096 的分析, 耗时: 79.8747 秒
+
+开始分析变异体 MUT_144...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_144": "步骤[可达性]：\n说明理由： 变异语句位于第6行条件判断，其可达性约束为[array != null]。该约束表示程序执行到变异语句的前提是数组不为空，这是一个可满足的条件（例如，传入非空数组即可）。因此，变异语句是可达的。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原条件为`startIndexInclusive < 0`，变异后为`startIndexInclusive < -1`。这两个条件在语义上不同：原条件在startIndexInclusive为负数时成立，而变异条件仅在startIndexInclusive小于-1时成立（即-2, -3等）。例如，当startIndexInclusive = -1时，原条件为真（-1 < 0），但变异条件为假（-1 < -1不成立）。这会改变程序的控制流，进而可能影响程序状态（如是否执行第7行的赋值语句）。\n分析结论： 变异实际改变了程序语义，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量startIndexInclusive通过数据依赖链传播到程序输出。具体路径包括：1) 影响newSize的计算（第12行），进而影响返回的数组大小；2) 直接影响System.arraycopy的源数组起始位置（第18行），进而影响返回的数组内容。因此，startIndexInclusive的值变化可以通过数据依赖传递到输出。\n分析结论： 存在数据依赖，变异效果可传播到输出。\n\n步骤[控制依赖]：\n说明理由： 变异语句（第6行的if条件）通过控制流直接影响输出语句。其控制依赖路径显示：变异语句的真假分支分别控制是否执行第7行的赋值语句（startIndexInclusive = 0），进而影响后续的数据流（如newSize的计算和数组拷贝操作）。输出语句（return语句）控制依赖于变异语句的结果。\n分析结论： 存在控制依赖，变异语句通过控制流影响输出。\n\n步骤[状态覆盖]：\n说明理由： 尽管变异改变了程序的控制流和数据流，但需要检查是否存在输入使得变异体与原程序输出相同。考虑特殊情况：当startIndexInclusive < -1时（如-2），原程序和变异体都会进入if分支，执行startIndexInclusive = 0，最终输出相同。当startIndexInclusive >= 0时，两者都不进入if分支，输出相同。但当startIndexInclusive = -1时，原程序进入if分支（执行赋值），而变异体不进入（不执行赋值），导致后续的newSize计算和数组拷贝行为不同，最终输出可能不同（例如，返回的数组起始位置不同）。因此，存在输入（startIndexInclusive = -1）使得输出不同，错误状态未被覆盖。\n分析结论： 变异引入的错误状态未被完全覆盖，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_144 的分析, 耗时: 133.3676 秒
+

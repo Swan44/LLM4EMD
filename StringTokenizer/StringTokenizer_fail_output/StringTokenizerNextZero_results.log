@@ -1,0 +1,89 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/StringTokenizerNextZero.java
+开始分析变异体 MUT_005...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_005": "步骤[可达性]：\n说明理由：变异语句位于第4行的条件表达式分支中，其可达性取决于条件\"newPosition >= 0 && !delimsChanged\"的值。根据程序上下文，newPosition在变异语句前被赋值为-1（第3行），delimsChanged被赋值为false（第2行）。因此条件\"newPosition >= 0 && !delimsChanged\"等价于\"-1 >= 0 && true\"，即\"false && true\"，最终结果为false。这意味着变异语句所在的分支（三元运算符的true分支）实际上是不可达的，程序总是会执行skipDelimiters( currentPosition )分支。\n分析结论：变异语句不可达，属于等价变异体。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_005 的分析, 耗时: 41.2603 秒
+
+开始分析变异体 MUT_121...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_121": "步骤[可达性]：\n说明理由： 变异语句位于第4行，是方法体的第一条可执行语句。从程序入口到该语句没有任何条件分支阻挡，因此该语句总是可达的。REACHABILITY_CONSTRAINT为'NULL'也表明没有不可达的路径约束条件。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序使用\"newPosition >= 0\"进行条件判断，而变异体使用\"newPosition++ >= 0\"。虽然变异体对newPosition进行了自增操作，但需要注意：1) 自增操作发生在条件判断之后（后置++）；2) 条件表达式的结果由自增前的newPosition值决定；3) 变异体在条件判断中使用的是自增后的newPosition值。在特定情况下（如newPosition初始值为0），原程序条件为true，而变异体条件可能为false（因为newPosition++后变为1，但条件判断使用的是自增前的值0，所以条件仍为true）。因此，变异确实可能改变程序状态。\n分析结论： 变异改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量newPosition通过数据依赖链传播到程序输出。具体路径：变异语句 → currentPosition → start → return语句。当条件currentPosition >= maxPosition为false时，变异会影响最终的substring输出；当条件为true时，变异会影响异常抛出的时机。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句的结果直接影响currentPosition的赋值，而currentPosition的值控制着后续的条件判断if (currentPosition >= maxPosition)。这个条件判断控制着两个不同的输出路径：抛出异常或返回substring结果。因此，变异语句通过控制流影响输出语句。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异引入了状态改变（newPosition的自增操作），但这种改变在后续执行中不会被修正或抵消。变异体在第5行将newPosition重新赋值为-1，这确实会覆盖之前自增的效果，但需要注意的是：1) 自增操作发生在第4行；2) 重新赋值发生在第5行；3) 在这两行之间，变异产生的状态改变（newPosition值的变化）已经影响了第4行条件表达式的结果和三元运算符的选择，进而影响了currentPosition的赋值。这种影响在重新赋值之前已经发生，且无法被后续的重新赋值操作所抵消。\n分析结论： 变异引入的错误状态不会被后续执行修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_121 的分析, 耗时: 64.0024 秒
+
+开始分析变异体 MUT_138...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_138": "步骤[可达性]：\n说明理由：变异语句位于第4行的条件表达式部分，该语句是方法体的第一条可执行语句，从程序入口到该语句没有任何前置条件约束（REACHABILITY_CONSTRAINT为NULL）。因此，该变异语句总是可达的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序条件为\"newPosition >= 0\"，变异体条件为\"newPosition > 0\"。当newPosition = 0时，原条件为true而变异条件为false，这会导致程序选择不同的分支：原程序会选择newPosition赋值给currentPosition，而变异体会选择skipDelimiters(currentPosition)的结果。这会改变currentPosition的值，进而影响后续的程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量newPosition通过数据依赖链传播到输出。具体路径为：变异语句计算currentPosition的值 → currentPosition用于第7行的条件判断 → 如果条件为false，currentPosition的值会赋给start → start用于最终的return语句str.substring(start, currentPosition)。因此，变异对newPosition的判定结果变化会通过currentPosition和start影响到最终的输出值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句本身是一个赋值语句，不直接控制程序分支。但变异语句计算出的currentPosition值会控制第7行的条件判断，而第7行的条件判断控制着两个不同的输出路径：抛出异常或返回子字符串。因此，变异语句通过影响currentPosition的值，间接控制了程序的输出路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了程序的状态（currentPosition的值），但这种改变会直接传播到最终的输出。当newPosition = 0时，原程序和变异体会产生不同的currentPosition值，进而导致不同的输出结果：原程序使用newPosition的值，变异体使用skipDelimiters的结果。没有证据表明这种状态差异会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态不会被后续执行修正或抵消，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_138 的分析, 耗时: 51.6069 秒
+
+开始分析变异体 MUT_156...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_156": "步骤[可达性]：\n说明理由：根据提供的REACHABILITY_CONSTRAINT [currentPosition < maxPosition]，该条件表示变异语句可达的前提是currentPosition小于maxPosition。这是一个可满足的条件，因为currentPosition和maxPosition都是程序中的变量，存在输入使得currentPosition < maxPosition成立（例如，当有更多token需要处理时）。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句为\"return str.substring(start, currentPosition);\"，变异体为\"return str.substring(start, currentPosition--);\"。变异操作是将currentPosition改为currentPosition--，这是一个后置递减操作。在Java中，currentPosition--会返回currentPosition的当前值，然后将其减1。由于substring方法的第二个参数是结束索引（不包括），所以变异前后的substring调用实际上会返回相同的子字符串，因为使用的是递减前的currentPosition值。变异只影响了currentPosition变量本身的值，但不会影响substring的结果。\n分析结论：变异没有实际改变程序状态（substring的结果相同），属于非必要性变异。\n\n由于在必要性分析中已经确定该变异没有实际改变程序语义（substring的结果相同），根据等价变异体判定规则，这已经满足等价变异体的条件（变异操作未导致程序状态改变），因此无需继续后续分析步骤。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_156 的分析, 耗时: 37.8300 秒
+
+开始分析变异体 MUT_254...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_254": "步骤[可达性]：\n说明理由：变异语句位于第4行，是方法体的第一条可执行语句。从程序入口到该语句没有任何条件分支阻挡，因此该语句总是可达的。REACHABILITY_CONSTRAINT为'NULL'也表明没有不可达的路径约束条件。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序使用\"newPosition >= 0\"进行条件判断，变异体使用\"newPosition-- >= 0\"。虽然变异体使用了后置递减操作符，但关键区别在于：在条件判断时，newPosition--的值是递减前的原始值，与\"newPosition >= 0\"的判断结果相同。变异只改变了newPosition的值（递减1），但条件判断的逻辑结果保持不变。\n分析结论：变异没有改变条件判断的逻辑结果，但改变了newPosition的值，存在程序状态改变，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量newPosition通过数据依赖链传播到输出。具体路径：变异语句中newPosition的值被用于计算currentPosition，currentPosition又用于计算start和最终的substring返回值。数据依赖分析显示newPosition的值会流向输出语句return str.substring(start, currentPosition)。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句本身不是控制语句，但它影响的条件表达式结果会控制后续的执行路径。currentPosition的值决定了第7行的if条件判断，进而控制是抛出异常还是正常返回token。变异通过影响currentPosition的值间接控制了程序的控制流。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了newPosition的值（递减1），但这种改变在后续执行中被覆盖：第6行\"newPosition = -1;\"显式地将newPosition重新赋值为-1，完全覆盖了变异引入的状态改变。无论变异是否发生，newPosition最终都会被设置为-1，因此变异引入的错误状态被后续赋值语句修正，不会影响最终的输出结果。\n分析结论：变异引入的错误状态在后续执行中被修正，不影响程序最终输出。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_254 的分析, 耗时: 62.1911 秒
+
+开始分析变异体 MUT_346...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_346": "步骤[可达性]：\n说明理由：变异语句是第7行的条件判断\"if (false)\"。该语句由原程序的\"if (currentPosition >= maxPosition)\"变异而来，将条件表达式替换为常量false。从程序入口到该变异语句的路径没有任何条件约束，因为第4-6行都是赋值语句，不包含条件分支。变异语句本身的条件\"false\"在逻辑上恒为假，这意味着该条件判断的true分支永远不可达，但变异语句本身作为代码语句是可达的（可以被执行到）。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序的条件判断\"if (currentPosition >= maxPosition)\"会根据currentPosition和maxPosition的值决定程序走向，而变异后的\"if (false)\"条件恒为假，这显著改变了程序的语义。原程序中，当currentPosition >= maxPosition时，程序会抛出异常；而变异体中，无论currentPosition和maxPosition的值如何，程序都会跳过异常抛出，继续执行后续代码。这种改变会导致程序状态发生实质性变化。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是currentPosition。根据数据依赖路径信息，currentPosition在第4行被赋值，然后流向第7行的条件判断（变异点），再通过控制依赖影响第10行的start赋值，最终通过start和currentPosition影响第12行的返回值。虽然变异语句的条件从\"currentPosition >= maxPosition\"变为\"false\"，但currentPosition的值仍然通过数据依赖链传播到输出节点（第12行的return语句）。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：根据控制依赖路径信息，变异语句\"if (false)\"控制两个分支：true分支（第8行抛出异常）和false分支（第10-12行正常返回）。由于条件恒为false，true分支永远不可执行，而false分支总是执行。这与原程序的行为不同：原程序中，当条件为true时会抛出异常，为false时正常返回。变异语句通过控制流直接影响输出语句的执行路径。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异引入了错误状态（条件判断总是false），但这种错误状态没有被后续执行修正或抵消。变异导致程序总是跳过异常抛出，执行正常返回路径，这与原程序在currentPosition < maxPosition时的行为一致，但当currentPosition >= maxPosition时，原程序会抛出异常而变异体不会，导致程序输出明显不同（正常返回值vs异常抛出）。\n分析结论：变异引入的错误状态没有被覆盖，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_346 的分析, 耗时: 52.0410 秒
+
+开始分析变异体 MUT_383...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_383": "步骤[可达性]：\n说明理由： 变异语句位于第4行，是方法体的第一条可执行语句。从程序入口到该语句的路径没有任何条件约束（之前没有条件分支），因此该语句总是可达的。REACHABILITY_CONSTRAINT中提供的[currentPosition < maxPosition]是后续第7行if语句的条件，不是到达变异语句的约束条件。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序中的表达式是\"newPosition >= 0 && !delimsChanged\"，变异体将其简化为\"newPosition >= 0\"。这两个表达式在语义上不同：原表达式要求两个条件都为真，而变异体只要求第一个条件为真。当newPosition >= 0为真但delimsChanged也为真时，原表达式结果为假（选择skipDelimiters分支），而变异体结果为真（选择newPosition分支）。这会改变currentPosition的赋值结果，从而改变程序状态。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量currentPosition通过数据依赖链传播到程序输出。从DATA_DEPENDENCY分析可以看出：变异语句赋值的currentPosition值流向第7行的条件判断，如果条件为假，则继续流向第10行的start赋值，最终在第12行的return语句中作为substring方法的参数影响输出结果。如果第7行条件为真，currentPosition的值也会影响异常抛出的行为（虽然异常也是一种输出形式）。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句本身是一个赋值语句，不是控制语句，因此它不直接控制其他语句的执行。但是，变异语句赋值的currentPosition值会影响后续第7行if语句的控制流决策。从CTRL_DEPENDENCY可以看出，第7行的条件判断控制着两个不同的输出路径：要么抛出异常，要么返回substring结果。\n分析结论： 变异语句通过影响后续控制语句的决策来间接影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了程序状态（currentPosition的值可能不同），但这种状态改变会直接传播到输出，没有被后续执行修正或抵消。当delimsChanged为true且newPosition >= 0时，原程序会选择skipDelimiters(currentPosition)分支，而变异体会选择newPosition分支，这两个分支可能产生不同的currentPosition值，进而导致不同的输出结果（不同的substring范围或不同的异常条件）。\n分析结论： 变异引入的状态改变没有被覆盖，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_383 的分析, 耗时: 61.0082 秒
+
+开始分析变异体 MUT_410...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_410": "步骤[可达性]：\n说明理由： 变异语句位于条件运算符的true分支，其可达性取决于条件(newPosition >= 0 && !delimsChanged)是否为真。该条件组合在逻辑上是可满足的，例如当newPosition >= 0且delimsChanged为false时。REACHABILITY_CONSTRAINT为NULL，表明没有不可达的路径约束。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序使用newPosition的值，而变异体使用newPosition++。newPosition++是后置自增操作，它返回newPosition的原始值，然后将newPosition加1。在条件运算符的true分支中，赋值给currentPosition的是newPosition的原始值（与原始程序相同），但变异体额外增加了newPosition的值。因此，变异确实改变了程序状态：newPosition的值增加了1。\n分析结论： 变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是newPosition。根据DATA_DEPENDENCY信息，newPosition的值通过数据依赖链传播到输出：变异语句中newPosition的值影响currentPosition的赋值，currentPosition影响start的赋值，start最终影响return str.substring(start, currentPosition)的输出。具体路径为：变异语句 → currentPosition → start → 输出语句。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 根据CTRL_DEPENDENCY信息，变异语句位于条件运算符的true分支，该分支的控制流会影响后续语句的执行。具体来说，当条件为true时，执行变异语句赋值currentPosition，然后影响后续的if条件判断(currentPosition >= maxPosition)以及可能的输出路径。变异语句通过控制流影响输出语句的执行。\n分析结论： 变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了newPosition的值（增加了1），但需要分析这是否影响最终输出。在变异语句执行后，newPosition被立即赋值为-1（第5行：newPosition = -1），这覆盖了变异产生的状态改变。无论变异是否使newPosition增加1，它都会被重置为-1。因此，变异引入的错误状态被后续赋值语句修正，不会影响最终的输出结果。\n分析结论： 变异引入的错误状态被后续执行修正，程序最终输出未受影响。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_410 的分析, 耗时: 62.1706 秒
+
+开始分析变异体 MUT_628...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_628": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[currentPosition < maxPosition]，该条件表示只有当currentPosition小于maxPosition时，才能执行到变异语句。这个条件在逻辑上是可满足的，因为存在输入使得currentPosition的值小于maxPosition。因此，变异语句是可执行的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序语句为\"return str.substring( start, currentPosition );\"，变异体语句为\"return str.substring( start--, currentPosition );\"。变异操作将start改为start--，这是一个后置递减操作，会先使用start的当前值，然后将start减1。在substring方法调用中，start--会先使用start的原始值作为substring的起始索引，然后才将start减1。由于substring调用后立即返回，且start的递减不会影响返回值（因为返回值是基于递减前的start值计算的），因此变异实际上没有改变程序的状态和输出。\n分析结论：变异未实际改变程序状态，满足必要性条件，属于等价变异体。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_628 的分析, 耗时: 32.8718 秒
+
+开始分析变异体 MUT_641...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_641": "步骤[可达性]：\n说明理由：变异语句位于第4行，是赋值语句的一部分。该语句在每次调用nextToken方法时都会执行，没有前置条件限制其可达性。REACHABILITY_CONSTRAINT为'NULL'，表明没有不可达的路径约束条件。因此，变异语句是可达的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序的条件表达式为\"newPosition >= 0 && !delimsChanged\"，变异体将其改为\"!(newPosition >= 0 && !delimsChanged)\"。根据德摩根定律，这两个表达式是逻辑等价的：\"!(A && B)\" 等价于 \"!A || !B\"。虽然语法形式不同，但语义完全相同，对于所有可能的输入值，这两个表达式都会产生相同的布尔结果，因此不会改变程序状态。\n分析结论：变异没有实际改变程序语义，属于非必要性变异。\n\n由于在必要性分析步骤中已经确定该变异体与原程序语义等价，无需继续后续分析步骤。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_641 的分析, 耗时: 42.6516 秒
+
+开始分析变异体 MUT_711...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_711": "步骤[可达性]：\n说明理由： 根据提供的可达性约束条件[currentPosition < maxPosition]，该条件表示只有当currentPosition小于maxPosition时，程序才能执行到变异语句。这个条件在逻辑上是可满足的（例如currentPosition=0, maxPosition=1），因此变异语句可达。\n分析结论： 变异语句可达，继续下一步分析。\n\n步骤[必要性]：\n说明理由： 原程序语句是\"return str.substring(start, currentPosition);\"，变异体改为\"return str.substring(start, currentPosition++);\"。关键区别在于变异体使用了后置自增操作符++。在Java中，currentPosition++会先使用currentPosition的当前值作为substring的结束索引，然后再将currentPosition的值加1。由于substring方法调用后，程序立即返回结果并结束方法执行，currentPosition的增量操作不会影响当前的返回值。substring(start, currentPosition)和substring(start, currentPosition++)返回完全相同的字符串。\n分析结论： 变异没有实际改变程序语义，substring调用的参数值完全相同，属于非必要性变异。\n\n由于在必要性步骤已经确定该变异体与原程序语义等价，无需继续后续分析步骤。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_711 的分析, 耗时: 34.1921 秒
+

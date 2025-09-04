@@ -1,0 +1,24 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/ArrayUtilsLastInt.java
+开始分析变异体 MUT_023...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_023": "步骤[可达性]：\n说明理由： 变异语句位于第6行的条件判断，路径条件为[array != null && startIndex <= 0]。该条件组合是可满足的，例如当array不为null且startIndex为0或负数时，变异语句可以被执行到。因此，变异语句是可达的。\n分析结论： 变异语句可达，继续下一步分析。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"startIndex < 0\"，变异体条件为\"startIndex <= 0\"。在startIndex = 0的情况下，原程序条件为false，变异体条件为true，这会导致程序执行不同的分支路径。具体来说，当startIndex = 0时，原程序会跳过return INDEX_NOT_FOUND语句，继续执行后续代码，而变异体会直接返回INDEX_NOT_FOUND。这种差异会改变程序的控制流和最终输出。\n分析结论： 变异确实改变了程序语义，满足必要性条件，继续下一步分析。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是startIndex。当变异条件为true时（startIndex <= 0），程序直接返回INDEX_NOT_FOUND，startIndex的值通过控制依赖影响输出。当变异条件为false时，startIndex的值会通过数据依赖链传播：startIndex → i → 返回值i或INDEX_NOT_FOUND。因此，变异影响的变量可以通过数据依赖链传播到程序输出节点。\n分析结论： 存在数据依赖关系，继续下一步分析。\n\n步骤[控制依赖]：\n说明理由： 变异语句（第6行的条件判断）直接控制着程序的执行路径。如果条件为true，程序直接返回INDEX_NOT_FOUND（第7行）；如果条件为false，程序继续执行后续的边界检查和循环查找。输出语句（第7、13、16行的return语句）都控制依赖于这个变异语句的判断结果。\n分析结论： 变异语句通过控制流影响输出语句，存在控制依赖关系，继续下一步分析。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异体改变了程序的控制流，但在某些情况下（startIndex < 0时），原程序和变异体的行为是一致的，都会返回INDEX_NOT_FOUND。然而，在startIndex = 0的情况下，原程序会继续执行后续的查找逻辑，而变异体会直接返回INDEX_NOT_FOUND。这种差异会导致不同的程序输出：原程序可能找到元素并返回索引，或者找不到而返回INDEX_NOT_FOUND；变异体则总是返回INDEX_NOT_FOUND。因此，变异引入的错误状态没有被修正或抵消，会影响程序的最终输出。\n分析结论： 不存在状态覆盖现象，变异体会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_023 的分析, 耗时: 87.1406 秒
+
+开始分析变异体 MUT_028...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_028": "步骤[可达性]：\n说明理由： 变异语句的条件为\"true\"，这是一个恒真条件。路径约束为[array != null && startIndex >= 0 && true]，其中\"true\"恒为真，因此该路径条件可满足。变异语句位于else if分支中，当array != null且startIndex >= 0时，该分支总是可达的。\n分析结论： 变异语句可达\n\n步骤[必要性]：\n说明理由： 原程序的条件是\"startIndex >= array.length\"，变异后的条件是\"true\"。在变异语句可达的情况下（array != null且startIndex >= 0），原条件可能为真或假，而变异条件恒为真。这意味着当startIndex < array.length时，原程序不会执行第9行的赋值语句，而变异体会执行该赋值语句，这会改变startIndex的值，从而影响后续的循环起始索引i。\n分析结论： 变异实际改变了程序状态，满足必要性\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是startIndex。当变异条件为真时，会执行startIndex = array.length - 1，这个修改后的startIndex值会传递给循环变量i（int i = startIndex），而i的值直接影响循环的执行和最终的返回值（return i或return INDEX_NOT_FOUND）。存在完整的数据依赖链：变异语句 → startIndex赋值 → i初始化 → 循环条件判断和返回值。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点\n\n步骤[控制依赖]：\n说明理由： 变异语句是一个条件判断，它控制着是否执行startIndex = array.length - 1这条赋值语句。这个赋值直接影响后续循环的起始位置，进而影响循环的执行路径和最终的输出结果。变异语句通过控制流影响了程序的执行路径。\n分析结论： 变异语句通过控制流影响输出语句\n\n步骤[状态覆盖]：\n说明理由： 虽然变异改变了程序状态（startIndex的值），但这种改变并没有被后续执行修正或抵消。当startIndex >= array.length时，原程序和变异体都会执行startIndex = array.length - 1，效果相同。但当startIndex < array.length时，原程序不会修改startIndex，而变异体会将其设置为array.length - 1，这会改变循环的起始位置，可能导致不同的搜索结果，从而影响最终的返回值。\n分析结论： 变异引入的错误状态没有被修正或抵消，会影响程序输出\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_028 的分析, 耗时: 88.0653 秒
+
+开始分析变异体 MUT_108...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_108": "步骤[可达性]：\n说明理由：变异语句为\"if (false)\"，该条件恒为假，因此无论输入参数array为何值，该条件判断的结果始终为false。这意味着变异语句本身是可达的（程序执行流会经过该语句），但该语句的true分支（返回INDEX_NOT_FOUND）永远不可执行。\n分析结论：变异语句可达，但true分支不可达。\n\n步骤[必要性]：\n说明理由：原程序检查\"if (array == null)\"，当array为null时返回INDEX_NOT_FOUND；变异体改为\"if (false)\"，这意味着无论array是否为null，都会跳过null检查，直接执行后续代码。当输入array为null时，原程序会返回INDEX_NOT_FOUND，而变异体会继续执行后续可能访问array的代码（如array.length或array[i]），这会导致NullPointerException，程序状态发生改变。\n分析结论：变异确实改变了程序语义，满足必要性条件。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是array。当array为null时，变异体不会像原程序那样提前返回，而是会继续执行后续需要访问array的代码。具体来说，变异体可能会执行到第8行\"startIndex >= array.length\"或第14行\"valueToFind == array[i]\"，这些语句都会访问array引用，导致NullPointerException。这种异常状态会直接传播到程序输出（抛出异常），存在数据依赖链。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句\"if (false)\"的控制依赖路径显示，其false分支会继续执行后续的多个控制流路径。当array为null时，变异体不会像原程序那样在第4行返回，而是会继续执行第6行的startIndex检查、第8行的数组长度检查等，最终可能导致异常。变异语句通过控制流影响了后续语句的执行，存在控制依赖。\n分析结论：变异语句通过控制流影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：基于以上分析，当array为null时，原程序会正常返回INDEX_NOT_FOUND，而变异体会抛出NullPointerException。这两种输出行为完全不同（返回值 vs 异常），错误状态没有被修正或抵消。虽然当array不为null时，两者的行为一致，但存在array为null的输入情况下，程序输出确实发生了变化。\n分析结论：变异引入的错误状态没有被覆盖，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_108 的分析, 耗时: 74.8876 秒

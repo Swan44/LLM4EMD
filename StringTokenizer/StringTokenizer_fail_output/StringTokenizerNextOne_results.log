@@ -1,0 +1,25 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/StringTokenizerNextOne.java
+开始分析变异体 MUT_201...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_201": "步骤[可达性]：\n说明理由：原程序中的语句\"delimsChanged = true;\"位于方法体内部，没有任何前置条件约束。方法入口参数delim不为空即可正常执行到该语句。REACHABILITY_CONSTRAINT为'NULL'，表明没有不可达的路径约束条件。因此，该变异语句是可达的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序执行\"delimsChanged = true;\"，将变量delimsChanged设置为true。变异体删除了这条语句，相当于delimsChanged保持其之前的值（可能是false或其他值）。在变异语句可达的情况下，这种删除操作确实改变了程序状态，因为delimsChanged的值从true变成了未设置的状态（取决于之前的值）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：根据DATA_DEPENDENCY信息，变量delimsChanged的数据依赖路径为：(line 5: delimsChanged = true) --[Flows delimsChanged]--> (line 6: return nextToken();)。这表明delimsChanged的值会流向nextToken()方法的调用。虽然变异删除了对delimsChanged的赋值，但delimsChanged仍然可能被nextToken()方法使用，因此变异影响的变量通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖路径。\n\n步骤[控制依赖]：\n说明理由：根据CTRL_DEPENDENCY信息，控制依赖路径为：(2: String nextToken( String delim )) -- --> (5: setMaxDelimCodePoint()) -- --> (6: return nextToken();)。变异语句\"delimsChanged = true;\"是一条赋值语句，不控制任何分支，因此它没有控制依赖关系。输出语句return nextToken();的执行不依赖于该赋值语句的真假值。\n分析结论：控制依赖缺失。\n\n步骤[状态覆盖]：\n说明理由：由于控制依赖缺失，变异语句的删除不会通过控制流影响输出语句的执行。虽然数据依赖路径存在，但需要进一步分析nextToken()方法的具体实现是否实际使用delimsChanged的值。如果nextToken()方法的行为不依赖于delimsChanged的值，或者delimsChanged的默认值（如false）与true在nextToken()方法中产生相同的效果，那么变异引入的状态改变可能被覆盖。然而，基于给定的信息，无法确定nextToken()方法的具体实现，因此不能断定状态一定被覆盖。\n分析结论：控制依赖缺失已足以判断为等价变异体。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_201 的分析, 耗时: 48.9728 秒
+
+开始分析变异体 MUT_404...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_404": "步骤[可达性]：\n说明理由：变异体删除了原程序中的语句\"setMaxDelimCodePoint();\"。从程序入口到该语句的路径条件组合为：无任何条件约束（REACHABILITY_CONSTRAINT为NULL），即该语句总是可达的。程序执行流程为：进入方法后依次执行delimiters = delim; delimsChanged = true; setMaxDelimCodePoint(); return nextToken();，变异语句位于正常执行路径上，无任何条件限制其执行。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序包含语句\"setMaxDelimCodePoint();\"，而变异体删除了该语句。该语句是一个方法调用，其功能是设置最大分隔符代码点，这会影响后续nextToken()方法的行为。删除此语句会改变程序状态，因为delimsChanged被设置为true后，如果没有调用setMaxDelimCodePoint()来重新计算分隔符，后续的nextToken()方法可能会使用旧的分隔符设置，导致不同的分词结果。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是delim，但变异操作是删除方法调用语句\"setMaxDelimCodePoint();\"，该方法不直接使用delim变量。数据依赖分析显示delim变量通过赋值给delimiters，然后通过控制依赖影响后续语句。然而，被删除的语句\"setMaxDelimCodePoint();\"并不直接依赖于delim变量，而是依赖于类字段delimiters（该字段在之前被赋值为delim）。删除此语句会影响nextToken()方法的行为，因为nextToken()依赖于正确的分隔符设置。\n分析结论：变异通过影响类状态间接影响程序输出，存在数据依赖链。\n\n步骤[控制依赖]：\n说明理由：变异语句\"setMaxDelimCodePoint();\"是一条独立的语句，不控制任何分支。控制依赖分析显示从方法入口到返回语句是一条直线控制流，所有语句都顺序执行。删除此语句不会改变控制流路径，但会改变程序状态，从而影响后续nextToken()方法的执行结果。\n分析结论：变异语句不通过控制流影响输出语句，但通过改变程序状态影响输出。\n\n步骤[状态覆盖]：\n说明理由：基于以上分析，变异体删除了重要的初始化语句\"setMaxDelimCodePoint();\"，这会导致分隔符设置不正确。当delimsChanged为true时，nextToken()方法期望已经调用了setMaxDelimCodePoint()来更新分隔符信息。如果没有调用，nextToken()可能会使用过时的分隔符设置，导致返回的分词结果与原程序不同。没有证据表明这种状态改变会在后续执行中被修正或抵消。\n分析结论：变异引入的错误状态不会被覆盖，会影响程序最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_404 的分析, 耗时: 52.7556 秒
+
+开始分析变异体 MUT_686...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_686": "步骤[可达性]：\n说明理由：原程序中的变异语句是第4行的赋值语句\"delimiters = delim;\"，变异体将其删除（ADL算子）。该语句位于方法体的起始部分，没有任何前置条件或分支约束。从方法入口到该语句的路径是直接且无条件执行的，因此路径条件恒为真，总是可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序在第4行执行\"delimiters = delim;\"，将参数delim的值赋给实例变量delimiters。变异体删除了这条语句，意味着delimiters变量不会被赋值。在Java中，实例变量有默认值（对于String类型为null），但这里的关键是delimiters变量在后续代码中被使用（在setMaxDelimCodePoint()方法中）。删除赋值语句会导致delimiters保持原来的值（可能是null或其他值），而不是传入的delim参数值，这确实改变了程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是delimiters。根据提供的数据依赖路径信息，delimiters在第4行被定义，然后流向第5行的setMaxDelimCodePoint()方法调用，最后通过控制依赖影响到第6行的return nextToken()。删除赋值语句会改变delimiters的值，而这个值会被setMaxDelimCodePoint()方法使用，进而影响nextToken()方法的执行和返回值。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句（第4行赋值语句）本身不是控制语句，但它会影响后续方法的执行。根据控制依赖路径信息，从方法入口到输出语句（return nextToken()）存在控制流路径，且变异语句位于这条路径上。虽然变异语句不直接控制分支，但它修改的状态（delimiters值）会影响setMaxDelimCodePoint()和nextToken()的行为。\n分析结论：变异语句通过数据流间接影响输出语句的执行。\n\n步骤[状态覆盖]：\n说明理由：变异删除了对delimiters的赋值，这会导致delimiters保持原来的值而不是新的delim参数值。在后续的setMaxDelimCodePoint()方法中，会使用这个错误的delimiters值来设置分隔符代码点，进而影响nextToken()方法的令牌解析行为。没有证据表明这个错误状态会在后续执行中被修正或抵消，相反，它会一直传播到最终的返回值。\n分析结论：变异引入的错误状态没有被修正或抵消，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_686 的分析, 耗时: 48.4159 秒
+

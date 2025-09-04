@@ -8,7 +8,7 @@ from emd_analysis import analyze_mutant
 # 配置日志
 def setup_logging(program_path):
     # 创建输出目录（如果不存在）
-    output_dir = r"D:\bishe_code\LLM4EMD\outputs_new"
+    output_dir = r"/Users/swan/bishe/LLM4EMD/Defroster/fail_output"
     os.makedirs(output_dir, exist_ok=True)
 
     # 从程序路径中提取原程序名称
@@ -36,8 +36,8 @@ def setup_logging(program_path):
 
 # 主函数
 def main():
-    program_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantjavadiv\\DefrosterMain.java"
-    mutants_json_path = "D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjDelJson\\DefrosterMainmutants121.json"
+    program_path = "/Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/DefrosterMain.java"
+    mutants_json_path = "/Users/swan/bishe/LLM4EMD/Defroster/fail_mutants/Defroster_fail_mutants.json"
 
     setup_logging(program_path)
 
@@ -59,8 +59,6 @@ def main():
             analysis_result = analyze_mutant(program_path, mutant)
             # 计算耗时（保留4位小数）
             time_cost = round(time.time() - start_time, 4)  # 关键行：计算耗时
-            # 存储结果
-            # results[mutant_id] = analysis_result
             # 立即写入日志
             logging.info(json.dumps({mutant_id: analysis_result}, ensure_ascii=False))
             logging.info(f"完成变异体 {mutant_id} 的分析, 耗时: {time_cost:.4f} 秒\n")
@@ -70,9 +68,6 @@ def main():
             error_msg = str(e)
 
             logging.error(f"变异体 {mutant_id} 分析失败！耗时: {time_cost:.4f} 秒，错误: {error_msg}")
-
-            # 可以选择存储错误信息，方便后续排查
-            # results[mutant_id] = {"error": error_msg}
             continue  # 继续下一个 mutant
 
 if __name__ == "__main__":

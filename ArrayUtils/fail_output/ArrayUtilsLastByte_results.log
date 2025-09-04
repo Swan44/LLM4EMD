@@ -1,0 +1,25 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/ArrayUtilsLastByte.java
+开始分析变异体 MUT_157...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_157": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[array != null && startIndex >= 0 && startIndex < array.length && i >= 0]，这些条件在程序执行过程中是可满足的。具体来说，当数组不为空，起始索引在有效范围内（0 ≤ startIndex < array.length），且循环变量i ≥ 0时，变异语句所在的循环体可以被执行到。这些条件在正常输入下是可能成立的，因此变异语句可达。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原程序的条件判断为valueToFind == array[i]，变异后为valueToFind >= array[i]。这两个条件在语义上并不等价。例如，当valueToFind > array[i]时，原条件为false而变异条件为true，这会导致控制流的分支选择不同，从而改变程序状态（即是否执行return i语句）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量valueToFind、array和i都通过数据依赖链传播到输出节点。具体来说：\n- valueToFind和array[i]的值直接决定了条件判断的结果\n- 条件判断的结果控制着是否执行return i语句\n- i的值在return i语句中直接作为返回值输出\n因此，变异引入的状态改变可以通过数据依赖链传播到程序输出。\n分析结论：存在数据依赖条件。\n\n步骤[控制依赖]：\n说明理由：变异语句（条件判断）通过控制流直接影响输出语句。当条件为true时，执行return i；当条件为false时，继续循环或最终执行return INDEX_NOT_FOUND。变异语句与输出语句之间存在明确的控制依赖关系。\n分析结论：存在控制依赖条件。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了条件判断的逻辑，但在某些特定情况下，这种改变可能不会影响最终的输出结果。具体分析：\n1. 当valueToFind == array[i]时，原条件和变异条件都为true，执行return i\n2. 当valueToFind > array[i]时，原条件为false，变异条件为true\n3. 当valueToFind < array[i]时，原条件和变异条件都为false\n\n关键观察：当valueToFind > array[i]时，变异体会提前返回当前索引i，而原程序会继续循环寻找更早的匹配项。这会导致不同的返回值：\n- 变异体返回当前索引i\n- 原程序可能返回更早的匹配索引或INDEX_NOT_FOUND\n\n因此，变异引入的状态改变没有被后续执行修正或抵消，会导致不同的程序输出。\n分析结论：不存在状态覆盖现象。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_157 的分析, 耗时: 87.4830 秒
+
+开始分析变异体 MUT_330...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_330": "步骤[可达性]：\n说明理由： 变异语句为\"if (false)\"，其条件恒为假。因此，无论输入如何，该条件判断的结果始终为false，导致其then分支（return INDEX_NOT_FOUND;）永远不可达。但是，变异语句本身（条件判断）是可达的，因为它是程序入口后的第一条语句，执行流必然经过它。\n分析结论： 变异语句可达，但它的then分支不可达。由于我们关注的是变异语句是否被执行，而不是其分支，因此变异语句本身是可达的。\n\n步骤[必要性]：\n说明理由： 原程序的条件是\"if (array == null)\"，其真值取决于输入参数array是否为null。变异后的条件是\"if (false)\"，其值恒为false。因此，对于任何输入，原程序与变异体的执行路径都会不同：当array为null时，原程序会进入then分支并提前返回INDEX_NOT_FOUND，而变异体则会跳过then分支，继续执行后续代码。这导致了程序状态的改变（例如，后续的startIndex调整和循环可能会执行）。\n分析结论： 变异实际改变了程序语义，满足了必要性条件。变异体与原程序的行为存在差异。\n\n（由于步骤2已确定变异改变了程序状态，且非等价变异体需要满足可达性、必要性、以及数据或控制依赖传播，因此继续分析步骤3和4。）\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是array（通过数据依赖分析得知）。变量array在程序中被用于循环中的条件判断\"if (valueToFind == array[i])\"。如果变异导致程序没有在array为null时提前返回，那么后续对array[i]的访问就有可能发生（当array不为null时），从而影响循环的执行结果（返回找到的索引i或未找到的INDEX_NOT_FOUND）。array的值通过数据依赖链（在条件判断中使用）传播到了程序的输出（return i; 或 return INDEX_NOT_FOUND;）。\n分析结论： 变异影响的变量array通过数据依赖链传播到了程序输出节点。存在数据依赖。\n\n步骤[控制依赖]：\n说明理由： 变异语句\"if (false)\"的结果（恒为false）直接控制了其then分支（return INDEX_NOT_FOUND;）是否执行。在原程序中，当array为null时，此then分支会被执行并导致程序提前返回。在变异体中，此then分支永远不会执行，程序控制流会继续到后续的语句（检查startIndex，调整startIndex，执行循环等）。因此，变异语句通过控制流影响了后续所有输出语句（return INDEX_NOT_FOUND; 和 return i;）的执行。\n分析结论： 变异语句通过控制流影响输出语句。存在控制依赖。\n\n步骤[状态覆盖]：\n说明理由： 基于前述分析，变异体满足了可达性、必要性，并且数据依赖与控制依赖路径均存在。变异体造成的程序状态改变（没有在array为null时提前返回）会直接传递至输出（可能执行循环并返回不同的结果）。不存在任何机制在后续执行中修正或抵消这个状态改变。例如，当输入array为null时，原程序会直接返回INDEX_NOT_FOUND，而变异体会尝试执行后续代码，这可能导致异常（对null数组进行访问）或因为startIndex的调整逻辑而返回INDEX_NOT_FOUND（但路径不同），但行为肯定不同。\n分析结论： 不存在状态覆盖现象。变异引入的状态改变会影响到最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_330 的分析, 耗时: 88.0761 秒
+
+开始分析变异体 MUT_476...
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_476": "步骤[可达性]：\n说明理由： 变异语句的条件组合为[array != null && startIndex >= 0 && startIndex > array.length]。该条件组合逻辑上可满足，例如当array.length = 5，startIndex = 6时，满足array != null && startIndex >= 0 && startIndex > array.length。因此变异语句可达。\n分析结论： 变异语句可达，继续下一步分析。\n\n步骤[必要性]：\n说明理由： 原程序条件为startIndex >= array.length，变异体条件为startIndex > array.length。在变异语句可达的路径约束下（startIndex > array.length），原条件startIndex >= array.length为真（因为startIndex > array.length蕴含startIndex >= array.length），而变异条件startIndex > array.length也为真。因此，在可达路径上，原程序和变异体的条件判断结果相同，都会执行startIndex = array.length - 1语句。变异没有改变程序状态。\n分析结论： 变异未实际改变程序语义，属于非必要性等价情况。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_476 的分析, 耗时: 65.2223 秒
+
