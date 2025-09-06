@@ -1,0 +1,47 @@
+[
+  {
+    "mutant_id": "MUT_013",
+    "difference": "@@ -15 +15 @@\n-        StringBuffer wrappedLine = new StringBuffer( inputLineLength + 32 );\n+        StringBuffer wrappedLine = new StringBuffer( inputLineLength + -32 );",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_028",
+    "difference": "@@ -33 +33 @@\n-                    if (spaceToWrapAt >= 0) {\n+                    if (spaceToWrapAt == 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_038",
+    "difference": "@@ -15 +15 @@\n-        StringBuffer wrappedLine = new StringBuffer( inputLineLength + 32 );\n+        StringBuffer wrappedLine = new StringBuffer( inputLineLength % 32 );",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_059",
+    "difference": "@@ -33 +33 @@\n-                    if (spaceToWrapAt >= 0) {\n+                    if (spaceToWrapAt > 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_075",
+    "difference": "@@ -7 +7 @@\n-        if (newLineStr == null) {\n+        if (false) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_077",
+    "difference": "@@ -4 +4 @@\n-        if (str == null) {\n+        if (false) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_091",
+    "difference": "@@ -36 +36 @@\n-                        offset = spaceToWrapAt + 1;\n+                        offset = spaceToWrapAt / 1;",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_099",
+    "difference": "@@ -33 +33 @@\n-                    if (spaceToWrapAt >= 0) {\n+                    if (spaceToWrapAt >= 1) {",
+    "operator": "CR"
+  },
+  {
+    "mutant_id": "MUT_103",
+    "difference": "@@ -15 +15 @@\n-        StringBuffer wrappedLine = new StringBuffer( inputLineLength + 32 );\n+        StringBuffer wrappedLine = new StringBuffer( inputLineLength - 32 );",
+    "operator": "AORB"
+  }
+]

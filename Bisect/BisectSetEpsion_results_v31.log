@@ -1,0 +1,49 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/BisectSetEpsion.java
+开始分析变异体 MUT_005...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_005": "步骤[可达性]：\n说明理由：原程序是一个简单的setter方法，没有条件语句。变异语句位于第4行的赋值语句，该语句是方法体中的唯一语句。从方法入口到该语句的路径没有任何条件约束（REACHABILITY_CONSTRAINT为NULL），因此该语句总是可执行的。任何调用setEpsilon方法都会执行到这条赋值语句。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原语句是`this.mEpsilon = epsilon;`，变异语句是`this.mEpsilon = --epsilon;`。原语句直接将参数epsilon的值赋给成员变量mEpsilon，而变异语句先对epsilon进行前置递减操作(--epsilon)，然后将递减后的值赋给mEpsilon。对于任何输入值，变异语句都会改变epsilon的值（减少1）并将改变后的值赋给mEpsilon，这确实改变了程序的状态。即使epsilon的原始值不影响后续输出，变异操作本身已经改变了程序状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是epsilon。数据依赖分析显示，变异语句`this.mEpsilon = --epsilon;`中，epsilon的值被使用（读取并递减），然后赋值给mEpsilon。然而，在这个简单的setter方法中，mEpsilon是类的成员变量，它的值不会在当前方法调用中立即输出。方法没有返回值（void类型），也没有其他输出语句。变异影响的变量epsilon和mEpsilon都没有通过数据依赖链传播到任何程序输出节点。\n分析结论：数据依赖缺失，变异影响的变量无法通过数据依赖链传播到程序输出。\n\n由于在步骤3（数据依赖分析）中已经确定数据依赖缺失，该变异体满足等价变异体条件，无需继续后续分析步骤。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_005 的分析, 耗时: 31.0373 秒
+
+开始分析变异体 MUT_080...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_080": "步骤[可达性]：\n说明理由：原程序是一个简单的setter方法，没有条件语句。变异语句位于第4行的赋值语句，该语句是方法体中的唯一可执行语句。从方法入口到该语句的路径没有任何条件约束（REACHABILITY_CONSTRAINT为NULL），因此该变异语句肯定能够被执行到。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原语句为\"this.mEpsilon = epsilon;\"，变异语句为\"this.mEpsilon = epsilon--;\"。后缀递减操作符\"--\"会先使用epsilon的当前值进行赋值，然后再将epsilon的值减1。因此，变异语句执行后：1) this.mEpsilon被赋值为epsilon的原始值（与原程序相同）；2) 局部变量epsilon的值被减1。虽然赋值结果相同，但程序状态确实发生了改变（局部变量epsilon的值发生了变化）。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是epsilon。数据依赖分析显示，epsilon的值通过赋值操作流向this.mEpsilon，但this.mEpsilon是实例变量，不是程序输出。程序没有返回值（void方法），唯一的\"输出\"是通过设置实例变量mEpsilon来改变对象状态。然而，变异语句中使用的epsilon是方法参数，其值的变化不会影响this.mEpsilon的赋值结果（因为使用的是后缀递减），且epsilon作为局部变量，在方法结束后其值变化不会被外部观察到。\n分析结论：变异影响的变量epsilon没有通过数据依赖链传播到可观察的程序输出（方法没有返回值，且实例变量的设置结果与原程序相同），数据依赖缺失。\n\n由于在数据依赖分析步骤中已确定变异效果无法传播到程序输出，满足等价变异体的条件（数据依赖缺失），无需继续后续分析步骤。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_080 的分析, 耗时: 29.6446 秒
+
+开始分析变异体 MUT_082...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_082": "步骤[可达性]：\n说明理由：原程序是一个简单的setter方法，没有条件语句。变异语句\"this.mEpsilon = ++epsilon;\"位于方法体内部，从方法入口到该语句的路径没有任何条件约束（REACHABILITY_CONSTRAINT为NULL），因此该变异语句总是可执行的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原语句\"this.mEpsilon = epsilon;\"直接将参数epsilon的值赋给成员变量mEpsilon。变异语句\"this.mEpsilon = ++epsilon;\"先对epsilon进行自增操作，然后将自增后的值赋给mEpsilon。这改变了程序状态：1）epsilon的值增加了1；2）mEpsilon被赋值为epsilon+1而不是epsilon。即使在没有任何路径约束的情况下，这种变异也明显改变了程序的状态。\n分析结论：变异实际改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量epsilon通过数据依赖链传播到程序输出。数据依赖分析显示：变异语句(line 4)中epsilon的值流向mEpsilon的赋值，而mEpsilon作为类的成员变量，是程序的输出（通过后续对该对象的访问）。因此，变异引入的状态改变（epsilon自增和mEpsilon值改变）可以通过数据依赖链传播到程序输出。\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句是一个简单的赋值语句，不包含任何控制结构（如if、while等）。控制依赖分析显示该语句直接依赖于方法入口，但不控制任何其他语句的执行。输出语句（成员变量mEpsilon的后续访问）不控制依赖于该变异语句。\n分析结论：变异语句不通过控制流影响输出语句，但数据依赖已存在。\n\n步骤[状态覆盖]：\n说明理由：基于前述分析，变异体满足可达性、必要性，且存在数据依赖路径。变异引入的状态改变（epsilon自增和mEpsilon值改变）没有被后续执行修正或抵消。程序没有其他语句会修改epsilon或mEpsilon的值来抵消这种改变，因此变异的效果会持续影响程序的最终状态。\n分析结论：变异引入的错误状态没有被修正或抵消，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_082 的分析, 耗时: 30.8600 秒
+
+开始分析变异体 MUT_131...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_131": "步骤[可达性]：  \n说明理由：原程序是一个简单的setter方法，无任何条件分支。变异语句\"this.mEpsilon = epsilon++;\"位于方法体的唯一赋值语句，且方法入口到该语句的路径无任何条件约束（REACHABILITY_CONSTRAINT为NULL）。因此，只要调用setEpsilon方法，该变异语句必然会被执行到。  \n分析结论：变异语句可达。  \n\n步骤[必要性]：  \n说明理由：原语句\"this.mEpsilon = epsilon;\"直接将参数epsilon的值赋给成员变量mEpsilon。变异语句\"this.mEpsilon = epsilon++;\"使用后置自增操作符，其执行过程为：先将epsilon的当前值赋给mEpsilon，然后将epsilon的值增加1。因此，变异语句执行后，成员变量mEpsilon的值与原语句相同（均为赋值前epsilon的值），但局部变量epsilon的值会增加1。这确实改变了程序状态（epsilon的值变化）。  \n分析结论：变异实际改变了程序状态（感染成立）。  \n\n步骤[数据依赖]：  \n说明理由：变异影响的变量为epsilon和this.mEpsilon。  \n- 变量epsilon：其数据依赖路径显示，它从方法参数流入变异语句，但在变异语句之后未被任何语句使用（无后续数据依赖边）。变异导致epsilon值增加1，但这个变化不会传播到程序输出（该方法无返回值，且epsilon是局部参数，其变化对外不可见）。  \n- 变量this.mEpsilon：其数据依赖路径显示，它由变异语句赋值后直接流向程序结束（无后续使用）。变异对mEpsilon的赋值值与原语句相同，因此其值未改变。  \n综上，变异所引入的状态改变（epsilon值增加）未通过数据依赖链传播到任何程序输出节点（该方法无输出，且成员变量mEpsilon的赋值未改变）。  \n分析结论：数据依赖缺失，变异效果无法传播到输出。  \n\n最终结论：等价变异体判定结果：YES。  \n\n（由于在数据依赖分析步骤已确定该变异体为等价变异体，无需进行后续控制依赖和状态覆盖分析。）"}
+完成变异体 MUT_131 的分析, 耗时: 37.5833 秒
+
+开始分析变异体 MUT_147...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_147": "步骤[可达性]：\n说明理由：原程序是一个简单的setter方法，没有条件语句。变异语句\"this.mEpsilon = -epsilon;\"位于方法体内，从方法入口到该语句的路径没有任何条件约束（REACHABILITY_CONSTRAINT为NULL），因此该变异语句总是可执行到的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原语句为\"this.mEpsilon = epsilon;\"，变异语句为\"this.mEpsilon = -epsilon;\"。对于任何输入值epsilon，这两个语句都会产生不同的程序状态：原语句将mEpsilon设置为epsilon的值，而变异语句将mEpsilon设置为epsilon的负值。除非epsilon为0（此时-0=0），否则程序状态必然改变。由于epsilon是double类型，存在大量非零值，因此该变异确实改变了程序状态。\n分析结论：变异改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量mEpsilon通过数据依赖链直接传播到程序输出点（类字段mEpsilon）。数据依赖分析显示：\"(line 4: this.mEpsilon = -epsilon) --[Flows mEpsilon]--> (程序输出点: 类字段mEpsilon)\"，说明变异后的mEpsilon值会直接影响类的状态，从而影响程序输出。\n分析结论：存在数据依赖路径，变异效果可以传播到输出。\n\n步骤[控制依赖]：\n说明理由：控制依赖分析显示：\"(2: void setEpsilon( double epsilon )) → (4: this.mEpsilon = -epsilon) → (0: exit)\"。变异语句是顺序执行的一部分，不控制任何分支，但输出语句（方法退出）控制依赖于整个方法的执行，包括变异语句。变异语句的效果会直接影响程序状态，进而影响输出。\n分析结论：存在控制依赖路径，变异效果可以传播到输出。\n\n步骤[状态覆盖]：\n说明理由：虽然变异改变了程序状态（将mEpsilon设置为负值），但在后续执行中没有任何语句会修正或抵消这个改变。该方法执行完毕后，mEpsilon字段将保持为-epsilon的值，这与原程序设置的epsilon值不同（除非epsilon=0）。因此，变异引入的状态改变会直接影响程序的输出状态（类字段的值）。\n分析结论：变异引入的错误状态没有被修正或抵消，会影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_147 的分析, 耗时: 28.0551 秒
+
+开始分析变异体 MUT_187...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_187": "步骤[可达性]：\n说明理由：原程序为setEpsilon方法，其功能是设置成员变量mEpsilon的值。变异体信息显示这是一个ADL（语句删除）类型的变异，即删除了\"this.mEpsilon = epsilon;\"这条赋值语句。从控制流分析，该方法没有前置条件约束（REACHABILITY_CONSTRAINT为NULL），任何对setEpsilon方法的调用都会执行到第4行语句的位置，因此变异语句（被删除的语句）在原程序中是可达的。\n分析结论：变异语句可达，需要继续分析。\n\n步骤[必要性]：\n说明理由：原程序执行\"this.mEpsilon = epsilon;\"会将参数epsilon的值赋给成员变量mEpsilon，从而改变程序状态（修改对象状态）。变异体删除了这条语句，导致mEpsilon的值不会被更新，程序状态保持不变。这种变异确实改变了程序的语义，因为原本应该修改的对象状态现在不会被修改了。\n分析结论：变异改变了程序状态，满足必要性条件，需要继续分析。\n\n步骤[数据依赖]：\n说明理由：数据依赖信息显示，变异影响的变量mEpsilon确实有数据依赖路径连接到输出节点（line 25: return mEpsilon）。这意味着mEpsilon的值变化会通过数据依赖链传播到程序输出。由于变异体删除了对mEpsilon的赋值，mEpsilon的值将保持原来的状态（可能是初始值或之前设置的值），而不是被设置为传入的epsilon参数值，这会影响后续使用mEpsilon的代码行为。\n分析结论：存在数据依赖路径，变异效果可以传播到输出，需要继续分析。\n\n步骤[控制依赖]：\n说明理由：控制依赖信息显示，setEpsilon方法是一个void方法，没有显式的输出语句（return语句），但方法执行本身可以视为一种输出（方法调用的副作用）。变异语句\"this.mEpsilon = epsilon;\"是一条简单的赋值语句，不包含控制流结构，其执行不受控制流条件约束，但会直接影响对象状态。虽然控制依赖分析显示从方法入口到exit的简单路径，但变异的效果通过修改对象状态来体现，这种状态变化是方法的主要输出效果。\n分析结论：变异直接影响方法的核心功能（设置对象状态），不需要复杂的控制依赖分析即可确定其影响。\n\n步骤[状态覆盖]：\n说明理由：基于以上分析，变异体删除了设置mEpsilon值的核心语句，这会导致：1）对象状态不会被更新；2）后续使用mEpsilon的代码将使用旧值而非新值。不存在任何机制来修正或抵消这种状态变化，因为这就是方法唯一的操作。变异引入的\"错误状态\"（mEpsilon未被更新）会持续存在并影响程序行为。\n分析结论：变异效果不会被覆盖或抵消，会直接影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_187 的分析, 耗时: 37.7861 秒
+

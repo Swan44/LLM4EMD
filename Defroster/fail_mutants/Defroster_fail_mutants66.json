@@ -1,0 +1,287 @@
+[
+  {
+    "mutant_id": "MUT_066",
+    "difference": "@@ -22 +22 @@\n-\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3 - 1000);\n+\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2-- - ( We1_BA_DEF_ev_ctr3 - 1000);",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_067",
+    "difference": "@@ -132 +132 @@\n-\t\t\t\t\t\tif ( request > 0 && ( error_e == 0))\n+\t\t\t\t\t\tif ( request > 0 && ( error_e-- == 0))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_069",
+    "difference": "@@ -113 +113 @@\n-\t\t\t\t\t\t\tif ( ControlElement_DEF > 0)\n+\t\t\t\t\t\t\tif ( ControlElement_DEF++ > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_070",
+    "difference": "@@ -148 +148 @@\n-\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e-- > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_071",
+    "difference": "@@ -168 +168 @@\n-\t\tif (( We1_BA_DEF_ev_ctr2 ) - ( We1_BA_DEF_ev_ctr3 ) - ( We1_BA_DEF_ev_ctr5 ) == 1024)\n+\t\tif (( We1_BA_DEF_ev_ctr2 ) - ( We1_BA_DEF_ev_ctr3 ) + ( We1_BA_DEF_ev_ctr5 ) == 1024)",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_072",
+    "difference": "@@ -126 +126 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\tif (( --We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_073",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e >= 0 ) && ( ControlElement_DEF == 0 ))",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_074",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( ++confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_076",
+    "difference": "@@ -168 +168 @@\n-\t\tif (( We1_BA_DEF_ev_ctr2 ) - ( We1_BA_DEF_ev_ctr3 ) - ( We1_BA_DEF_ev_ctr5 ) == 1024)\n+\t\tif (( We1_BA_DEF_ev_ctr2 ) - ( We1_BA_DEF_ev_ctr3 ) - ( We1_BA_DEF_ev_ctr5 ) >= 1024)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_077",
+    "difference": "@@ -22 +22 @@\n-\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3 - 1000);\n+\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * ++We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3 - 1000);",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_078",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e < 0 ) && ( ControlElement_DEF == 0 ))",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_079",
+    "difference": "@@ -126 +126 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e++ > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_080",
+    "difference": "@@ -132 +132 @@\n-\t\t\t\t\t\tif ( request > 0 && ( error_e == 0))\n+\t\t\t\t\t\tif ( request != 0 && ( error_e == 0))",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_081",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e > 0 ) && ( ControlElement_DEF == 0 ))",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_082",
+    "difference": "@@ -148 +148 @@\n-\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0++ >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_083",
+    "difference": "@@ -148 +148 @@\n-\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && ++error_e > 0 && confirmation_e > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_084",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( --ControlElement_DEF == 0 ))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_085",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( --confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_086",
+    "difference": "@@ -142 +142 @@\n-\t\t\t\t\t\tif (( request == 0) && ( error_e == 0))\n+\t\t\t\t\t\tif (( request == 0) && ( error_e-- == 0))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_087",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF-- == 0 ))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_089",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ++ControlElement_DEF == 0 ))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_090",
+    "difference": "@@ -148 +148 @@\n-\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e == 0 && confirmation_e > 0)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_092",
+    "difference": "@@ -29 +29 @@\n-\t\t\tif ( Clip_15 == 0)\n+\t\t\tif ( Clip_15 <= 0)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_095",
+    "difference": "@@ -10 +10 @@\n-\t\tif (0 != Clip_15 )\n+\t\tif (0 != Clip_15++ )",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_096",
+    "difference": "@@ -79 +79 @@\n-\t\t\t\t\t\t\tif ( ControlElement_DEF == 0)\n+\t\t\t\t\t\t\tif ( ControlElement_DEF-- == 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_097",
+    "difference": "@@ -22 +22 @@\n-\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3 - 1000);\n+\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * (-abs(We1_BA_DEF_ev_ctr2)) - ( We1_BA_DEF_ev_ctr3 - 1000);",
+    "operator": "ABSI"
+  },
+  {
+    "mutant_id": "MUT_098",
+    "difference": "@@ -22 +22 @@\n-\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3 - 1000);\n+\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * abs(We1_BA_DEF_ev_ctr2) - ( We1_BA_DEF_ev_ctr3 - 1000);",
+    "operator": "ABSI"
+  },
+  {
+    "mutant_id": "MUT_099",
+    "difference": "@@ -103 +103 @@\n-\t\t\t\t\t\tif ( ControlElement_DEF == 0)\n+\t\t\t\t\t\tif ( ControlElement_DEF <= 0)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_101",
+    "difference": "@@ -142 +142 @@\n-\t\t\t\t\t\tif (( request == 0) && ( error_e == 0))\n+\t\t\t\t\t\tif (( request-- == 0) && ( error_e == 0))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_102",
+    "difference": "@@ -22 +22 @@\n-\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3 - 1000);\n+\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 - We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3 - 1000);",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_103",
+    "difference": "@@ -126 +126 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\tif (( ++We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_104",
+    "difference": "@@ -126 +126 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e != 0 && confirmation_e > 0)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_105",
+    "difference": "@@ -23 +23 @@\n-\t\tif ( ! ( We1_BA_DEF == We1_BA_DEF_ev ))\n+\t\tif ( ! ( --We1_BA_DEF == We1_BA_DEF_ev ))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_106",
+    "difference": "@@ -22 +22 @@\n-\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3 - 1000);\n+\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3-- - 1000);",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_108",
+    "difference": "@@ -148 +148 @@\n-\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e < 0 && confirmation_e > 0)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_110",
+    "difference": "@@ -79 +79 @@\n-\t\t\t\t\t\t\tif ( ControlElement_DEF == 0)\n+\t\t\t\t\t\t\tif ( ControlElement_DEF <= 0)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_112",
+    "difference": "@@ -142 +142 @@\n-\t\t\t\t\t\tif (( request == 0) && ( error_e == 0))\n+\t\t\t\t\t\tif (( request <= 0) && ( error_e == 0))",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_113",
+    "difference": "@@ -168 +168 @@\n-\t\tif (( We1_BA_DEF_ev_ctr2 ) - ( We1_BA_DEF_ev_ctr3 ) - ( We1_BA_DEF_ev_ctr5 ) == 1024)\n+\t\tif (( We1_BA_DEF_ev_ctr2 ) + ( We1_BA_DEF_ev_ctr3 ) - ( We1_BA_DEF_ev_ctr5 ) == 1024)",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_114",
+    "difference": "@@ -148 +148 @@\n-\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e != 0 && confirmation_e > 0)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_116",
+    "difference": "@@ -126 +126 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e-- > 0 && confirmation_e > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_117",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 == ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_119",
+    "difference": "@@ -132 +132 @@\n-\t\t\t\t\t\tif ( request > 0 && ( error_e == 0))\n+\t\t\t\t\t\tif ( request > 0 && ( error_e++ == 0))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_120",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e != 0 ) && ( ControlElement_DEF == 0 ))",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_121",
+    "difference": "@@ -126 +126 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e == 0 && confirmation_e > 0)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_123",
+    "difference": "@@ -126 +126 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && --error_e > 0 && confirmation_e > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_124",
+    "difference": "@@ -22 +22 @@\n-\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3 - 1000);\n+\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 - ( --We1_BA_DEF_ev_ctr3 - 1000);",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_125",
+    "difference": "@@ -22 +22 @@\n-\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 - ( We1_BA_DEF_ev_ctr3 - 1000);\n+\t\tWe1_BA_DEF = We1_BA_DEF_ev_ctr2 * We1_BA_DEF_ev_ctr2 + ( We1_BA_DEF_ev_ctr3 - 1000);",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_126",
+    "difference": "@@ -126 +126 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && --confirmation_e > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_127",
+    "difference": "@@ -103 +103 @@\n-\t\t\t\t\t\tif ( ControlElement_DEF == 0)\n+\t\t\t\t\t\tif ( ControlElement_DEF-- == 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_130",
+    "difference": "@@ -79 +79 @@\n-\t\t\t\t\t\t\tif ( ControlElement_DEF == 0)\n+\t\t\t\t\t\t\tif ( ControlElement_DEF++ == 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_131",
+    "difference": "@@ -89 +89 @@\n-\t\t\t\t\t\t\t\tif ( ControlElement_DEF > 0)\n+\t\t\t\t\t\t\t\tif ( ControlElement_DEF != 0)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_133",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF <= 0 ))",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_134",
+    "difference": "@@ -69 +69 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e == 0 ) && ( ControlElement_DEF == 0 ))\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr1 >= ((  int ) 1000 )) && ( confirmation_e <= 0 ) && ( ControlElement_DEF == 0 ))",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_136",
+    "difference": "@@ -23 +23 @@\n-\t\tif ( ! ( We1_BA_DEF == We1_BA_DEF_ev ))\n+\t\tif ( ! ( ++We1_BA_DEF == We1_BA_DEF_ev ))",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_140",
+    "difference": "@@ -126 +126 @@\n-\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e == 0)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_141",
+    "difference": "@@ -89 +89 @@\n-\t\t\t\t\t\t\t\tif ( ControlElement_DEF > 0)\n+\t\t\t\t\t\t\t\tif ( ControlElement_DEF++ > 0)",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_143",
+    "difference": "@@ -148 +148 @@\n-\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e > 0)\n+\t\t\t\t\t\t\tif (( We1_BA_DEF_ev_ctr0 >= ((  int ) 3250 )) && error_e > 0 && confirmation_e < 0)",
+    "operator": "ROR"
+  }
+]

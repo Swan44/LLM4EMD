@@ -17,7 +17,7 @@ def extract_results(log_file_path, output_file_path):
     print(f"结果已保存到 {output_file_path}")
 
 # 使用示例
-log_file_path = '/Users/swan/bishe/LLM4EMD/outputs_new/StringTokenizerThree_results.log'  # 替换为你的日志文件路径
-output_file_path = '/Users/swan/bishe/LLM4EMD/result_output_new/StringTokenizerThree_results'  # 替换为输出文件路径
+log_file_path = '/Users/swan/bishe/LLM4EMD/Bisect/fail_output/BisectSqrt_results.log'  # 替换为你的日志文件路径
+output_file_path = '/Users/swan/bishe/LLM4EMD/fail_emd_results/BisectSqrt_results'  # 替换为输出文件路径
 extract_results(log_file_path, output_file_path)
 

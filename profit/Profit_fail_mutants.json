@@ -1,0 +1,117 @@
+[
+  {
+    "mutant_id": "MUT_003",
+    "difference": "@@ -16 +16 @@\n-          bonus=bonus2+(i-200000)*0.05;\n+          bonus=bonus2+(i++-200000)*0.05;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_004",
+    "difference": "@@ -19 +19 @@\n-                else if(i<=1000000)\n+                else if(i<1000000)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_006",
+    "difference": "@@ -12 +12 @@\n-    bonus=i*0.1;\n+    bonus=abs(i)*0.1;",
+    "operator": "ABSI"
+  },
+  {
+    "mutant_id": "MUT_008",
+    "difference": "@@ -18 +18 @@\n-              bonus=bonus4+(i-400000)*0.03;\n+              bonus=bonus4+++(i-400000)*0.03;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_010",
+    "difference": "@@ -14 +14 @@\n-      bonus=bonus1+(i-100000)*0.075;\n+      bonus=bonus1+(i%100000)*0.075;",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_012",
+    "difference": "@@ -13 +13 @@\n-    else if(i<=200000)\n+    else if(i<200000)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_013",
+    "difference": "@@ -12 +12 @@\n-    bonus=i*0.1;\n+    bonus=i--*0.1;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_014",
+    "difference": "@@ -23 +23 @@\n-return(bonus);\n+   return(abs(bonus));",
+    "operator": "ABSI"
+  },
+  {
+    "mutant_id": "MUT_015",
+    "difference": "@@ -14 +14 @@\n-      bonus=bonus1+(i-100000)*0.075;\n+      bonus=bonus1+(i++-100000)*0.075;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_021",
+    "difference": "@@ -22 +22 @@\n-                      bonus=bonus10+(i-1000000)*0.01;\n+                      bonus=bonus10--+(i-1000000)*0.01;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_022",
+    "difference": "@@ -18 +18 @@\n-              bonus=bonus4+(i-400000)*0.03;\n+              bonus=bonus4--+(i-400000)*0.03;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_023",
+    "difference": "@@ -22 +22 @@\n-                      bonus=bonus10+(i-1000000)*0.01;\n+                      bonus=bonus10+(i%1000000)*0.01;",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_024",
+    "difference": "@@ -18 +18 @@\n-              bonus=bonus4+(i-400000)*0.03;\n+              bonus=bonus4+(i---400000)*0.03;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_025",
+    "difference": "@@ -22 +22 @@\n-                      bonus=bonus10+(i-1000000)*0.01;\n+                      bonus=bonus10+(i---1000000)*0.01;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_026",
+    "difference": "@@ -16 +16 @@\n-          bonus=bonus2+(i-200000)*0.05;\n+          bonus=bonus2+(i---200000)*0.05;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_028",
+    "difference": "@@ -18 +18 @@\n-              bonus=bonus4+(i-400000)*0.03;\n+              bonus=bonus4+(i%400000)*0.03;",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_032",
+    "difference": "@@ -22 +22 @@\n-                      bonus=bonus10+(i-1000000)*0.01;\n+                      bonus=bonus10+++(i-1000000)*0.01;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_033",
+    "difference": "@@ -14 +14 @@\n-      bonus=bonus1+(i-100000)*0.075;\n+      bonus=bonus1--+(i-100000)*0.075;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_034",
+    "difference": "@@ -14 +14 @@\n-      bonus=bonus1+(i-100000)*0.075;\n+      bonus=bonus1+(i---100000)*0.075;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_037",
+    "difference": "@@ -14 +14 @@\n-      bonus=bonus1+(i-100000)*0.075;\n+      bonus=bonus1+++(i-100000)*0.075;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_038",
+    "difference": "@@ -12 +12 @@\n-    bonus=i*0.1;\n+    bonus=i++*0.1;",
+    "operator": "AOIS"
+  },
+  {
+    "mutant_id": "MUT_041",
+    "difference": "@@ -11 +11 @@\n-  if(i<=100000)\n+  if(i<100000)",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_044",
+    "difference": "@@ -18 +18 @@\n-              bonus=bonus4+(i-400000)*0.03;\n+              bonus=bonus4+(i++-400000)*0.03;",
+    "operator": "AOIS"
+  }
+]

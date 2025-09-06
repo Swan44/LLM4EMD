@@ -11,7 +11,9 @@ from src.extract_mutation_info import extract_mutation_info
 def load_deepseek_config(config_path="/Users/swan/bishe/LLM4EMD/configs/llm_configs.yaml"):
     with open(config_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
-    return config["deepseek-v3-g"]
+    # return config["deepseek-v3-g"]
+    return config["deepseek-v3"]
+    # return config["deepseek-v3"]
 
 deepseek_config = load_deepseek_config()
 
@@ -76,7 +78,7 @@ def get_reachability_path(program_name, mutant):
     # 初始化LLM
     llm = ChatOpenAI(
         api_key=deepseek_config["api_key"],
-        model="deepseek-chat",
+        model=deepseek_config["model"],
         temperature=0,
         base_url=deepseek_config["base_url"]
     )

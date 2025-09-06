@@ -1,0 +1,7 @@
+[
+  {
+    "mutant_id": "MUT_108",
+    "difference": "@@ -41 +41 @@\n-        if (trian == 1 && a + b > c) {\n+        if (trian == 1 == a + b > c) {",
+    "operator": "null"
+  }
+]

@@ -118,7 +118,7 @@ a > 0 && b > 0 && c > 0 && a != b && a != c && b != c
 {PROGRAM}
 变异体信息：
 {MUTANT_INFORMATION}
-1. 可达性：程序到变异语句前的路径条件组合为{REACHABILITY_CONSTRAINT}，请分析该变异语句是否可达（而非变异语句是否可满足）。
+1. 可达性：程序到变异语句前的路径条件组合为{REACHABILITY_CONSTRAINT}，请分析该变异语句是否可执行到（而非变异语句条件是否可满足）。
 2. 必要性：原程序与变异体语句为{DIFFERENCE}，请分析在变异语句可达情况下，结合其路径约束判断该变异是否实际改变了程序状态。
 3. 数据依赖：变异语句到输出语句的数据依赖路径为{DATA_DEPENDENCY}，请分析变异影响的变量是否通过数据依赖链传播到程序输出节点。
 4. 控制依赖：变异语句到输出语句的控制依赖路径为{CTRL_DEPENDENCY}，请分析变异语句是否通过控制流影响输出语句。
@@ -160,9 +160,9 @@ def analyze_mutant(program_path, mutant):
 
     # 初始化LLM
     llm = ChatOpenAI(
-        api_key=config["deepseek-v3-g"]["api_key"],
-        base_url=config["deepseek-v3-g"]["base_url"],
-        model="deepseek-chat",
+        api_key=config["deepseek-v3"]["api_key"],
+        base_url=config["deepseek-v3"]["base_url"],
+        model=config["deepseek-v3"]["model"],
         # api_key=config["gpt-3.5-turbo"]["api_key"],
         # base_url=config["gpt-3.5-turbo"]["base_url"],
         # model="gpt-3.5-turbo",

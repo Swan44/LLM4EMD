@@ -1,7 +1,0 @@
-[
-    {
-    "mutant_id": "MUT_388",
-    "difference": "@@ -145,5 +144,0 @@\n-        for (int i = 0; i < delimiterCodePoints.length; i++) {\n-            if (delimiterCodePoints[i] == codePoint) {\n-                return true;\n-            }\n-        }",
-    "operator": "FLDL"
-  }
-]

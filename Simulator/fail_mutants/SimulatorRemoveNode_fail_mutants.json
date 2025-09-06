@@ -1,0 +1,17 @@
+[
+  {
+    "mutant_id": "MUT_001",
+    "difference": "@@ -5 +5 @@\n-\t\tfor (int i = 0; i < nodesList.size(); i++) {\n+\t\tfor (int i = 0; false; i++) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_033",
+    "difference": "@@ -5 +5 @@\n-\t\tfor (int i = 0; i < nodesList.size(); i++) {\n+\t\tfor (int i = 0; i != nodesList.size(); i++) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_054",
+    "difference": "@@ -13 +13 @@\n-\t\t\tnmbrOfNodes--;\n+\t\t\t;",
+    "operator": "ADL"
+  }
+]

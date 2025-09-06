@@ -46,9 +46,9 @@ def process_mutants(mutant_list_file, test_result_file, truth_file, output_file)
 # 示例使用
 if __name__ == "__main__":
     # 文件路径（请根据实际情况修改）
-    mutant_list_file = "/Users/swan/bishe/LLM4EMD/mutant_list/ArrayUtils_list"  # 包含变异体编号的文件
-    test_result_file = "/Users/swan/bishe/LLM4EMD/array_results/ArrayUtils_results"  # 测试结果文件
-    truth_file = "/Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantsIDJson/ArrayUtilsmutants.json"  # 真实变异体信息文件
-    output_file = "/Users/swan/bishe/LLM4EMD/process_results/ArrayUtils.txt"  # 输出文件
+    mutant_list_file = "/Users/swan/bishe/LLM4EMD/fail_emd_results/ArrayUtils_all"  # 包含变异体编号的文件
+    test_result_file = "/Users/swan/bishe/LLM4EMD/fail_emd_results/ArrayUtils_results"  # 测试结果文件
+    truth_file = "/Users/swan/bishe/LLM4EMD/fail_mutants_equ/ArrayUtils_fail_mutants.json"  # 真实变异体信息文件
+    output_file = "/Users/swan/bishe/LLM4EMD/process_fail_results/ArrayUtils_final.txt"  # 输出文件
 
     process_mutants(mutant_list_file, test_result_file, truth_file, output_file)

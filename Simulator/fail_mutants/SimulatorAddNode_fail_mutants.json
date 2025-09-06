@@ -1,0 +1,47 @@
+[
+  {
+    "mutant_id": "MUT_004",
+    "difference": "@@ -19 +19 @@\n-\t\t\tfloat nAifsd = sifs + 2 * slot;\n+\t\t\tfloat nAifsd = sifs + 2 / slot;",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_007",
+    "difference": "@@ -6 +6 @@\n-\t\tfor (int i = 0; i < nodesList.size(); i++) {\n+\t\tfor (int i = 0; false; i++) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_011",
+    "difference": "@@ -54 +54 @@\n-\t\t\tnmbrOfNodes++;\n+\t\t\t;",
+    "operator": "ADL"
+  },
+  {
+    "mutant_id": "MUT_020",
+    "difference": "@@ -5 +5 @@\n-\t\tboolean nodeExists = false;\n+\t\tboolean nodeExists = true;",
+    "operator": "SEOR"
+  },
+  {
+    "mutant_id": "MUT_021",
+    "difference": "@@ -6 +6 @@\n-\t\tfor (int i = 0; i < nodesList.size(); i++) {\n+\t\tfor (int i = 0; i != nodesList.size(); i++) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_022",
+    "difference": "@@ -19 +19 @@\n-\t\t\tfloat nAifsd = sifs + 2 * slot;\n+\t\t\tfloat nAifsd = sifs + 2 - slot;",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_032",
+    "difference": "@@ -19 +19 @@\n-\t\t\tfloat nAifsd = sifs + 2 * slot;\n+\t\t\tfloat nAifsd = sifs - 2 * slot;",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_051",
+    "difference": "@@ -19 +19 @@\n-\t\t\tfloat nAifsd = sifs + 2 * slot;\n+\t\t\tfloat nAifsd = sifs + -2 * slot;",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_061",
+    "difference": "@@ -53 +53 @@\n-\t\t\tnodesList.addElement(nd);\n+\t\t\t;",
+    "operator": "FCDL"
+  }
+]

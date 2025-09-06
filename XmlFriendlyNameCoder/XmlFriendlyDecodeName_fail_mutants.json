@@ -1,0 +1,87 @@
+[
+  {
+    "mutant_id": "MUT_005",
+    "difference": "@@ -28 +28 @@\n-            final StringBuffer result = new StringBuffer(length + 8);\n+            final StringBuffer result = new StringBuffer(length - 8);",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_009",
+    "difference": "@@ -28 +28 @@\n-            final StringBuffer result = new StringBuffer(length + 8);\n+            final StringBuffer result = new StringBuffer(length + -8);",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_011",
+    "difference": "@@ -23 +23 @@\n-            if (i == length) {\n+            if (false) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_019",
+    "difference": "@@ -40 +40 @@\n-                } else if (c == escapeReplacementFirstChar\n+                } else if (c >= escapeReplacementFirstChar",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_022",
+    "difference": "@@ -38 +38 @@\n-                    i += dollarReplacement.length() - 1;\n+                    i += dollarReplacement.length() / 1;",
+    "operator": "AORB"
+  },
+  {
+    "mutant_id": "MUT_028",
+    "difference": "@@ -17 +17 @@\n-                if (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar) {\n+                if (c <= dollarReplacementFirstChar || c == escapeReplacementFirstChar) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_033",
+    "difference": "@@ -37 +37 @@\n-                if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)) {\n+                if (c == dollarReplacementFirstChar) {",
+    "operator": "SEOD"
+  },
+  {
+    "mutant_id": "MUT_038",
+    "difference": "@@ -6 +6 @@\n-        if (s == null) {\n+        if (false) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_040",
+    "difference": "@@ -40 +40 @@\n-                } else if (c == escapeReplacementFirstChar\n+                } else if (c <= escapeReplacementFirstChar",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_041",
+    "difference": "@@ -37 +37 @@\n-                if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)) {\n+                if (name.startsWith(dollarReplacement, i)) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_043",
+    "difference": "@@ -37 +37 @@\n-                if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)) {\n+                if (c <= dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_044",
+    "difference": "@@ -23 +23 @@\n-            if (i == length) {\n+            if (i <= length) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_051",
+    "difference": "@@ -17 +17 @@\n-                if (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar) {\n+                if (c == dollarReplacementFirstChar || c >= escapeReplacementFirstChar) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_057",
+    "difference": "@@ -14 +14 @@\n-            for (; i < length; i++ ) {\n+            for (; false; i++ ) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_060",
+    "difference": "@@ -37 +37 @@\n-                if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)) {\n+                if (c == dollarReplacementFirstChar == name.startsWith(dollarReplacement, i)) {",
+    "operator": "null"
+  },
+  {
+    "mutant_id": "MUT_061",
+    "difference": "@@ -17 +17 @@\n-                if (c == dollarReplacementFirstChar || c == escapeReplacementFirstChar) {\n+                if (c == dollarReplacementFirstChar != (c == escapeReplacementFirstChar)) {",
+    "operator": "null"
+  },
+  {
+    "mutant_id": "MUT_068",
+    "difference": "@@ -37 +37 @@\n-                if (c == dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)) {\n+                if (c >= dollarReplacementFirstChar && name.startsWith(dollarReplacement, i)) {",
+    "operator": "ROR"
+  }
+]

@@ -1,0 +1,6 @@
+MUT_010: true->NO
+MUT_056: true->NO
+MUT_060: true->NO
+MUT_061: false->YES
+MUT_117: false->YES
+MUT_118: true->NO

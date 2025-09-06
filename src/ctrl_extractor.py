@@ -9,7 +9,9 @@ import yaml
 def load_deepseek_config(config_path="/Users/swan/bishe/LLM4EMD/configs/llm_configs.yaml"):
     with open(config_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
-    return config["deepseek-v3-g"]
+    # return config["deepseek-v3-g"]
+    return config["deepseek-v3"]
+    # return config["deepseek-v3"]
 
 deepseek_config = load_deepseek_config()
 
@@ -63,9 +65,6 @@ def extract_ctrl_path(llm, ctrl_info, mutant_info):
         template=template
     )
 
-    #chain = LLMChain(llm=llm, prompt=prompt)
-    #result = chain.run(cfg_info=json.dumps(cfg_info, indent=2),
-                       #mutant_info=json.dumps(mutant_info, indent=2))
     # 使用新的 Runnable 语法
     chain = (
             {"ctrl_info": RunnablePassthrough(), "mutant_info": RunnablePassthrough()}
@@ -85,10 +84,10 @@ def extract_ctrl_path(llm, ctrl_info, mutant_info):
 def get_ctrl_info(program_name, mutant):
     # 初始化LLM
     llm = ChatOpenAI(
-        openai_api_key=deepseek_config["api_key"],
-        model="deepseek-chat",
+        api_key=deepseek_config["api_key"],
+        model=deepseek_config["model"],
         temperature=0,
-        openai_api_base=deepseek_config["base_url"]
+        base_url=deepseek_config["base_url"]
     )
     '''
     llm = ChatOpenAI(

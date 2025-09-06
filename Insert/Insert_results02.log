@@ -1,0 +1,57 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/Insert.java
+开始分析变异体 MUT_006...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_006": "步骤[1. 可达性]：\n说明理由： 变异语句位于第24行的循环体内，其可达性约束条件为[number < end ∧ i < 3 ∧ a[i] > number ∧ j < 4]。这些条件表示：输入数字number小于数组a的第3个元素a[2]（即28），当前遍历的元素索引i小于3，且当前元素a[i]大于number，同时内层循环变量j小于4。这些条件同时满足时，程序会执行到变异语句。由于这些条件没有逻辑矛盾（例如，可以找到满足条件的输入，如number=5，此时a[0]=-14<5，a[1]=6>5，满足a[i]>number），因此该路径是可实现的。\n分析结论： 变异语句可达。\n\n步骤[2. 必要性]：\n说明理由： 原语句为\"a[j] = mytemp1;\"，变异语句为\"a[j] = mytemp1--;\"。后者在执行赋值操作后，还会对mytemp1进行自减操作（即mytemp1 = mytemp1 - 1）。在变异语句可达的情况下，这种变异确实改变了程序状态：它不仅修改了数组a的元素值（与原语句相同），还额外修改了变量mytemp1的值（减少了1）。这种状态改变是实际发生的，并非语义等价。\n分析结论： 变异改变了程序状态，满足必要性。\n\n步骤[3. 数据依赖]：\n说明理由： 变异影响的变量是mytemp1和a。变量a的数据依赖路径直接连接到输出语句（第32行的System.out.printf），因为最终的输出是数组a的所有元素。变量mytemp1在循环中被使用（第28行：mytemp1 = mytemp2），其值的改变会影响后续循环中数组a的赋值操作（第24行），进而间接影响输出。因此，变异所引入的状态改变（mytemp1的减少和a[j]的赋值）可以通过数据依赖链传播到程序输出。\n分析结论： 存在数据依赖，变异效果可以传播到输出。\n\n步骤[4. 控制依赖]：\n说明理由： 变异语句位于一个循环体内，该循环的执行不影响外部的控制流（如条件分支）。输出语句（第32行）的控制依赖于最外层的循环（for (i = 0; i < 4; i++)），而不直接依赖于内层的变异语句。变异语句的执行不会改变程序的控制流路径（它总是被执行，且不影响循环的退出条件或break语句）。因此，变异语句与输出语句之间没有控制依赖关系。\n分析结论： 控制依赖缺失，变异语句不通过控制流影响输出语句。\n\n步骤[5. 状态覆盖]：\n说明理由： 尽管变异语句改变了程序状态（mytemp1减少1），但后续执行中，第28行的\"mytemp1 = mytemp2;\"会覆盖mytemp1的值（将其设置为a[j]的原始值）。在最后一次循环迭代中，mytemp1的变异效果（减少1）会被覆盖，因此不会影响最终的数组状态。然而，对于数组a的赋值操作（a[j] = mytemp1--）是立即生效的，且mytemp1的减少可能会影响同一循环周期内后续的赋值（但注意，赋值使用的是mytemp1减少前的值，因为后缀--先取值后减）。具体来说，赋值操作使用的是mytemp1的原始值，然后mytemp1减少1；这个减少后的值在下次循环中可能被使用（但下次循环中mytemp1又被mytemp2覆盖）。实际上，对于数组a的每个元素的赋值都是独立且正确的（因为使用了mytemp1的原始值），而mytemp1的变异效果最终被覆盖，因此不会影响最终的数组内容。最终输出的数组与原程序相同。\n分析结论： 变异引入的错误状态（mytemp1的减少）在后续执行中被修正（覆盖），数组a的赋值效果与原程序一致，因此程序最终输出未受影响。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_006 的分析, 耗时: 109.3499 秒
+
+开始分析变异体 MUT_007...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_007": "步骤[可达性]：\n说明理由：根据提供的可达性约束条件[(number < end) ∧ (i < 3) ∧ (a[i] > number) ∧ (j < 4)]，这些条件在程序执行过程中是可以满足的。具体来说：number < end 表示输入数字小于数组最后一个元素；i < 3 表示外层循环索引在范围内；a[i] > number 表示找到插入位置；j < 4 表示内层循环可以执行到变异语句。因此，变异语句是可以被执行到的。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：原语句为\"mytemp1 = mytemp2;\"，变异语句为\"mytemp1 = mytemp2--;\"。变异操作是后缀递减操作，这会导致两个变化：1) mytemp1被赋值为mytemp2的当前值；2) mytemp2的值随后减1。在后续的执行中，mytemp1和mytemp2的值都与原程序不同，这会改变程序状态。即使是在当前路径约束下，这种变异也会实际改变程序状态。\n分析结论：变异确实改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由：根据数据依赖分析，变异影响的变量mytemp1和mytemp2都有明确的数据依赖路径传播到程序输出。mytemp1通过赋值给a[j]，然后a数组最终被输出语句System.out.printf('%6d', a[i])使用。mytemp2的数据变化也会通过mytemp1间接影响到输出。变异引入的状态改变可以通过数据依赖链传播到程序输出节点。\n分析结论：存在数据依赖，变异状态可以传播到输出。\n\n步骤[控制依赖]：\n说明理由：根据控制依赖分析，变异语句位于内层for循环中，该循环控制依赖于外层if条件(a[i] > number)。虽然变异语句本身不直接控制输出语句的执行，但变异语句执行的结果（mytemp1和mytemp2的值变化）会影响后续的数据赋值操作，这些数据最终会影响输出。变异语句与输出语句之间存在间接的控制依赖关系。\n分析结论：存在控制依赖，变异可以通过控制流影响输出。\n\n步骤[状态覆盖]：\n说明理由：虽然变异引入了状态改变且有完整的传播路径，但需要仔细分析变异的具体影响。变异语句\"mytemp1 = mytemp2--;\"的作用是：在数组元素移位过程中，先将mytemp2的值赋给mytemp1，然后将mytemp2减1。关键在于，mytemp2的递减操作是否会影响最终的输出结果。分析整个移位过程：mytemp2来源于a[j]（数组元素），赋值给mytemp1后，mytemp1又被赋给a[j]。mytemp2的递减操作发生在这个赋值之后，且递减后的mytemp2值在后续的循环迭代中会被新的a[j]值覆盖（因为每次循环都会执行mytemp2 = a[j]），因此mytemp2的递减效果不会累积影响到最终的数组内容。最终的数组排序结果不会因为mytemp2的递减操作而改变。\n分析结论：变异引入的错误状态在后续执行中被覆盖或抵消，不影响最终输出。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_007 的分析, 耗时: 78.7487 秒
+
+开始分析变异体 MUT_009...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_009": "步骤[可达性]：\n说明理由：变异语句位于程序第21行，其可达性约束条件为[number < 28, i < 3, a[i] > number]。原程序中数组a初始化为[-14, 6, 28, 0]，因此a[i] > number约束表示当前元素大于输入number。这些条件组合是可满足的，例如当number=5，i=1时，a[1]=6>5满足条件，且number=5<28，i=1<3。因此变异语句可达。\n\n分析结论：变异语句可达\n\n步骤[必要性]：\n说明理由：原语句是\"a[i] = number;\"，变异为\"a[i] = number++;\"。该变异涉及AOIS（算符插入）操作，number++会先将number的值赋值给a[i]，然后将number的值加1。在可达的条件下，变异会实际改变程序状态：1）a[i]被赋值为number的原值（与原程序相同）；2）但number变量本身的值会增加1，这改变了程序状态。\n\n分析结论：变异实际改变了程序状态，满足必要性\n\n步骤[数据依赖]：\n说明理由：变异影响的变量number和a都有数据依赖路径传播到输出。number变量的数据依赖路径包括：1）通过影响条件判断if (a[i] > number)的控制流；2）通过后续循环中的mytemp1、mytemp2等变量影响数组a的值；3）最终影响System.out.printf输出的数组内容。变量a的数据依赖路径更直接，变异后的a[i]值会直接影响后续的输出语句。\n\n分析结论：变异影响的变量通过数据依赖链传播到程序输出节点\n\n步骤[控制依赖]：\n说明理由：变异语句处于if (a[i] > number)条件为真的分支内，该变异语句的执行会影响后续的循环操作（for j循环），而循环操作的结果直接影响最终输出的数组内容。变异语句通过控制流影响程序的执行路径和数据流动，进而影响输出语句。\n\n分析结论：变异语句通过控制流影响输出语句\n\n步骤[状态覆盖]：\n说明理由：虽然变异引入了状态改变（number值增加1），但这种改变在后续执行中不会被修正或抵消。number值的增加会影响：1）后续if (a[i] > number)等条件判断的结果；2）后续循环中涉及number的操作；3）最终输出的数组排序结果。具体来说，number增加1后，可能导致后续的排序逻辑发生变化，从而产生不同的输出数组。\n\n分析结论：变异引入的错误状态不会被后续执行修正或抵消\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_009 的分析, 耗时: 98.0919 秒
+
+开始分析变异体 MUT_010...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_010": "步骤[1：可达性]：\n说明理由：程序到变异语句前的路径条件组合为[!(i < 3) ∧ i = 3]，这意味着在for循环结束后，i的值恰好为3时，程序会执行变异语句。给定数组a的长度为4（索引0-3），且循环条件为i < 3，当i=3时循环结束，因此变异语句\"end = Math.abs(a[2])\"是可执行到的。路径条件i=3是可满足的，不存在不可达的逻辑矛盾。\n分析结论：变异语句可达。\n\n步骤[2：必要性]：\n说明理由：原程序语句为\"end = a[2]\"，变异体为\"end = Math.abs(a[2])\"。数组a[2]的值为28（从数组初始化int[] a = new int[] { -14, 6, 28, 0 }可知）。由于28是正数，Math.abs(28)的结果仍然是28，因此在这种特定情况下，变异前后的赋值语句效果相同。虽然从语法上看变异确实改变了表达式，但在当前程序的具体上下文中，由于a[2]的值为正数，变异并未实际改变程序状态。\n分析结论：变异未改变程序状态，满足必要性条件中的等价情况。\n\n由于在步骤2中已经确定该变异体在当前程序上下文中是等价的（因为a[2]的值为正数，Math.abs()操作不改变其值），不需要继续后续分析步骤，可以直接得出结论。\n\n最终结论：等价变异体判定结果：YES。"}
+完成变异体 MUT_010 的分析, 耗时: 109.9793 秒
+
+开始分析变异体 MUT_013...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_013": "步骤[可达性]：\n说明理由： 变异语句位于第16行，在条件分支if (number >= end)为true时执行。根据提供的可达性约束[number >= end]，该条件是可满足的（例如number=30，end=28）。因此，存在测试输入可以触发执行该变异语句。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原语句为\"a[3] = number;\"，变异语句为\"a[3] = Math.abs(number);\"。在变异语句可达的情况下，当number为负数时，原语句会直接将负数值赋给a[3]，而变异语句会将number的绝对值赋给a[3]，这会改变程序状态（a[3]的值不同）。例如当number=-10且满足number >= end条件时，原程序a[3]=-10，变异体a[3]=10。\n分析结论： 变异确实改变了程序状态，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是number，它有数据依赖路径到输出语句：第16行赋值给a[3]的元素，然后在第35行的输出语句中被使用（System.out.printf('%6d', a[i])）。变异对数值的改变会通过数组a传播到输出。\n分析结论： 变异影响的变量通过数据依赖链传播到程序输出节点。\n\n步骤[控制依赖]：\n说明理由： 变异语句在第16行，它位于if (number >= end)条件分支的true分支中。该变异语句的执行不会直接控制后续输出语句的执行流程，输出语句（第35行）位于所有条件分支之后，会无条件执行。但是，变异语句会影响输出语句输出的具体数值。\n分析结论： 变异语句主要通过数据依赖而非控制依赖影响输出语句。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异语句可达、改变了程序状态，且有数据依赖路径到输出，但当number为非负数时，Math.abs(number)的结果与原值number相同，此时变异不会改变程序输出。但当number为负数时，Math.abs(number)的结果与原值number不同，这会改变a[3]的值，进而改变最终的输出结果。例如number=-10时，原程序输出包含-10的数组，而变异体输出包含10的数组。\n分析结论： 存在测试用例（如number=-10且number>=end）可以区分原程序和变异体的行为，变异引入的错误状态不会被完全修正或抵消。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_013 的分析, 耗时: 53.5784 秒
+
+开始分析变异体 MUT_016...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_016": "步骤[可达性]：\n说明理由：根据REACHABILITY_CONSTRAINT提供的信息[number < end ∧ i < 3]，变异语句前的路径条件为number < end（插入的数小于数组最后一个元素）且i < 3（循环索引在范围内）。这些条件是可满足的，因为存在输入满足number < a[2]（即number < 28）且i在0到2之间（即循环前3个元素）。因此，变异语句可执行到。\n分析结论：变异语句可达。\n\n步骤[必要性]：\n说明理由：变异将条件判断从if (a[i] > number)改为if (a[i] >= number)。在变异语句可达的情况下（number < end ∧ i < 3），当a[i] == number时，原条件为false而变异条件为true，这会改变程序的控制流：原程序会跳过插入分支继续循环，而变异体会进入插入分支执行插入操作。这会导致程序状态的显著改变，包括数组a的内容和后续的排序行为。\n分析结论：变异确实改变了程序语义，满足必要性。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量为a、i、number。数据依赖分析显示这些变量都有清晰的路径传播到输出语句System.out.printf('%6d', a[i])：变量a通过数组赋值操作影响输出；变量i控制数组访问索引；变量number通过赋值操作影响数组内容。当变异改变控制流时，这些变量的值和使用方式都会受到影响，从而传播到最终输出。\n分析结论：变异影响的变量通过数据依赖链传播到输出节点。\n\n步骤[控制依赖]：\n说明理由：变异语句if (a[i] >= number)控制着后续插入操作（lines 20-31）的执行。当条件为true时，程序会执行插入操作并break跳出循环；当条件为false时，程序会继续循环或最终不执行插入。控制依赖路径清晰显示变异语句的结果直接影响后续插入操作和数组输出内容。\n分析结论：变异语句通过控制流直接影响输出语句。\n\n步骤[状态覆盖]：\n说明理由：虽然变异体在a[i] == number的情况下会进入插入分支而原程序不会，但这种行为差异不会在执行过程中被修正或抵消。当a[i] == number时，变异体会执行插入操作，这会改变数组的顺序和内容，而原程序不会进行插入。这种差异会直接反映在最终的数组输出中（通过System.out.printf输出4个数组元素），导致可观察的输出不同。\n分析结论：变异引入的状态改变不会被修正或抵消，会影响最终输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_016 的分析, 耗时: 83.8458 秒
+
+开始分析变异体 MUT_017...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_017": "步骤[可达性]：\n说明理由：变异语句位于内层循环中，其可达性约束为[number < end ∧ i < 3 ∧ a[i] > number ∧ j < 4]。该约束表示：输入数字number小于数组最后一个元素end，存在某个i使得a[i]大于number，并且j在循环范围内。这是一个可满足的条件，例如当number=5时，a=[-14, 6, 28, 0]，end=28，a[1]=6>5，且j可以从2开始循环。因此变异语句可以执行到。\n分析结论：变异语句可达\n\n步骤[必要性]：\n说明理由：原语句是`a[j] = mytemp1;`，变异语句是`a[j] = mytemp1++;`。这两种操作在语义上是不同的：原语句直接将mytemp1的值赋给a[j]，而变异语句先将mytemp1的值赋给a[j]，然后将mytemp1的值自增1。这会导致变量mytemp1的状态发生改变，从而影响后续的循环迭代和数组赋值操作。\n分析结论：变异确实改变了程序状态\n\n步骤[数据依赖]：\n说明理由：变异影响了两个变量：mytemp1和a。mytemp1在循环中被多次使用和修改，其值的变化会影响后续的数组赋值。变量a是程序的输出数组，其元素值直接通过System.out.printf输出。变异语句`a[j] = mytemp1++;`既修改了a[j]的值，也修改了mytemp1的值，而这些变化会通过数据依赖链传播到最终的输出语句。\n分析结论：存在数据依赖路径连接到输出\n\n步骤[控制依赖]：\n说明理由：变异语句位于内层for循环中，该循环的执行受外层if条件(a[i] > number)控制。输出语句是最后的数组打印循环，其执行不受变异语句的直接控制，但变异语句通过修改数组a的值间接影响了输出结果。\n分析结论：变异语句通过数据依赖而非直接控制依赖影响输出\n\n步骤[状态覆盖]：\n说明理由：虽然变异引入了状态改变（mytemp1自增和a[j]赋值），但这种改变在后续执行中不会被完全抵消。由于mytemp1在循环中被连续使用和传递，变异导致的自增操作会产生累积效应，最终导致数组a的内容与原始程序不同。具体来说，每次执行变异语句时，mytemp1会比原程序多自增1，这会改变后续mytemp2的赋值和数组元素的排列顺序。\n分析结论：变异引入的状态改变不会被后续执行完全抵消，会影响最终输出\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_017 的分析, 耗时: 72.9210 秒
+

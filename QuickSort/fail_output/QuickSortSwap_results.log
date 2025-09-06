@@ -1,0 +1,9 @@
+开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/QuickSortSwap.java
+开始分析变异体 MUT_311...
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_311": "步骤[可达性]：\n说明理由：原程序是一个简单的swap方法，没有条件语句，因此从程序入口到变异语句（第6行）的路径是无条件可达的。REACHABILITY_CONSTRAINT为'NULL'也表明没有路径约束限制该语句的执行。\n分析结论：变异语句可执行到，满足可达性条件。\n\n步骤[必要性]：\n说明理由：原程序在第6行是\"data[j] = tmp;\"，变异体删除了这条语句（ADL操作符表示删除语句）。删除赋值语句直接改变了程序状态：原程序会修改data[j]的值，而变异体不会修改data[j]的值，这会导致data数组的状态不同。\n分析结论：变异实际改变了程序状态，满足必要性条件。\n\n步骤[数据依赖]：\n说明理由：变异影响的变量是tmp，但变异是删除\"data[j] = tmp;\"语句，而不是修改tmp的值。数据依赖分析显示tmp变量有到输出节点的路径，但变异体删除了使用tmp的语句，导致tmp的值无法传播到data[j]，进而影响程序输出（通过修改传入的data数组）。\n分析结论：虽然变异影响的变量有数据依赖路径，但变异体删除了使用该变量的语句，导致数据依赖链被破坏，变异效果无法通过数据依赖传播到输出。\n\n步骤[控制依赖]：\n说明理由：控制依赖分析显示整个方法只有一个基本块，所有语句都直接控制依赖于方法入口。变异语句（第6行）与程序输出（通过修改data数组产生的副作用）之间存在控制依赖关系。\n分析结论：变异语句通过控制流影响输出，满足控制依赖条件。\n\n步骤[状态覆盖]：\n说明理由：虽然变异体删除了对data[j]的赋值操作，改变了程序状态，但这种状态改变会直接影响程序的输出（修改传入数组的内容）。没有后续的执行步骤会修正或抵消这种状态改变，因为这是方法的最后一条语句。\n分析结论：变异引入的状态改变不会被修正或抵消，会直接影响程序输出。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_311 的分析, 耗时: 34.1006 秒
+

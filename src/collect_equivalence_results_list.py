@@ -10,12 +10,12 @@ from emd_analysis import analyze_mutant
 # 配置日志
 def setup_logging(program_path):
     # 创建输出目录（如果不存在）
-    output_dir = r"/Users/swan/bishe/LLM4EMD/Triangle/fail_output"
+    output_dir = r"/Users/swan/bishe/LLM4EMD/Bisect"
     os.makedirs(output_dir, exist_ok=True)
 
     # 从程序路径中提取原程序名称
     program_name = os.path.splitext(os.path.basename(program_path))[0]
-    log_filename = os.path.join(output_dir, f"{program_name}_results.log")
+    log_filename = os.path.join(output_dir, f"{program_name}_results_v31.log")
 
     # 清除所有现有的handlers
     logging.getLogger().handlers = []
@@ -76,11 +76,9 @@ def main(program_paths, mutants_json_paths):
 if __name__ == "__main__":
     # 示例调用方式
     program_paths = [
-        "/Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/DefrosterMain.java",
-        "/Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/Triangle.java"
+        "/Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/BisectSetEpsion.java"
     ]
     mutants_json_paths = [
-        "/Users/swan/bishe/LLM4EMD/Defroster/fail_mutants/Defroster_fail_mutants59.json",
-        "/Users/swan/bishe/LLM4EMD/Triangle/fail_mutants.json"
+        "/Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantsAdjDelJson/BisectSetEpsionmutants.json"
     ]
     main(program_paths, mutants_json_paths)

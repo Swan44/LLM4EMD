@@ -1,0 +1,72 @@
+[
+  {
+    "mutant_id": "MUT_002",
+    "difference": "@@ -12 +12 @@\n-    } else if ((y >= -threshold) && (y <= threshold)) {\n+    } else if ((y >= -threshold) == (y <= threshold)) {",
+    "operator": "null"
+  },
+  {
+    "mutant_id": "MUT_010",
+    "difference": "@@ -12 +12 @@\n-    } else if ((y >= -threshold) && (y <= threshold)) {\n+    } else if ((y <= threshold)) {",
+    "operator": "AODU"
+  },
+  {
+    "mutant_id": "MUT_032",
+    "difference": "@@ -9 +9 @@\n-    if ((x >= -threshold) && (x <= threshold)) {\n+    if ((true) && (x <= threshold)) {",
+    "operator": "AODU"
+  },
+  {
+    "mutant_id": "MUT_047",
+    "difference": "@@ -12 +12 @@\n-    } else if ((y >= -threshold) && (y <= threshold)) {\n+    } else if ((y >= -threshold) && (y == threshold)) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_056",
+    "difference": "@@ -9 +9 @@\n-    if ((x >= -threshold) && (x <= threshold)) {\n+    if ((x <= threshold)) {",
+    "operator": "AODU"
+  },
+  {
+    "mutant_id": "MUT_060",
+    "difference": "@@ -12 +12 @@\n-    } else if ((y >= -threshold) && (y <= threshold)) {\n+    } else if ((y >= -threshold)) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_061",
+    "difference": "@@ -16 +16 @@\n-    double inverse  = 1 / Math.sqrt(x * x + y * y);\n+    double inverse  = -1 / Math.sqrt(x * x + y * y);",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_082",
+    "difference": "@@ -5 +5 @@\n-    if (threshold == 0) {\n+    if (threshold >= 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_092",
+    "difference": "@@ -9 +9 @@\n-    if ((x >= -threshold) && (x <= threshold)) {\n+    if (false) {",
+    "operator": "AODU"
+  },
+  {
+    "mutant_id": "MUT_100",
+    "difference": "@@ -5 +5 @@\n-    if (threshold == 0) {\n+    if (false) {",
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_109",
+    "difference": "@@ -13 +13 @@\n-      double inverse  = 1 / Math.sqrt(x * x + z * z);\n+      double inverse  = -1 / Math.sqrt(x * x + z * z);",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_113",
+    "difference": "@@ -9 +9 @@\n-    if ((x >= -threshold) && (x <= threshold)) {\n+    if ((x >= -threshold) && (x == threshold)) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_117",
+    "difference": "@@ -5 +5 @@\n-    if (threshold == 0) {\n+    if (threshold == -1) {",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_118",
+    "difference": "@@ -9 +9 @@\n-    if ((x >= -threshold) && (x <= threshold)) {\n+    if ((x >= -threshold)) {",
+    "operator": "ROD"
+  }
+]

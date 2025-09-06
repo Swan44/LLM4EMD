@@ -49,6 +49,6 @@ def compare_equivalence(json_file_path, txt_file_path):
         print("\n所有变异体匹配一致")
 
 
-json_file_path = 'D:\\bishe_code\\progex_benchmark\\mutantbench\\mutantjava\\mutantsAdjJson\\DefrosterMainmutants.json'  # 替换为你的JSON文件路径
-txt_file_path = 'D:\\bishe_code\\LLM4EMD\\result_output_new\\DefrosterMain_results'  # 替换为你的TXT文件路径
+json_file_path = '/Users/swan/bishe/LLM4EMD/fail_mutants_equ/ArrayUtils_fail_mutants.json'  # 替换为你的JSON文件路径
+txt_file_path = '/Users/swan/bishe/LLM4EMD/fail_emd_results/ArrayUtils_results'  # 替换为你的TXT文件路径
 compare_equivalence(json_file_path, txt_file_path)

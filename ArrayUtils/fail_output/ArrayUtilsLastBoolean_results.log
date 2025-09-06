@@ -1,9 +1,9 @@
 开始处理程序: /Users/swan/bishe/progex_benchmark/mutantbench/mutantjava/mutantjavadiv/ArrayUtilsLastBoolean.java
 开始分析变异体 MUT_440...
-HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
-HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
-HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
-HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
-{"MUT_440": "步骤[可达性]：\n说明理由： 变异语句的路径条件组合为[!ArrayUtils.isEmpty(array) && startIndex >= 1]。该条件表示数组不为空且startIndex大于等于1。这是一个可满足的条件，例如当array = [true, false]，startIndex = 1时，条件成立。因此，变异语句可达。\n分析结论： 变异语句可达，继续下一步分析。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"startIndex < 0\"，变异体条件为\"startIndex < 1\"。在变异语句可达的情况下（startIndex ≥ 1），原条件始终为false（因为startIndex ≥ 1 > 0），变异条件也始终为false（因为startIndex ≥ 1）。因此，在可达路径上，两个条件的布尔值相同（都为false），不会改变程序的控制流，程序状态不会发生变化。\n分析结论： 变异未实际改变程序状态，属于非必要性变异，该变异体为等价变异体。\n\n最终结论：等价变异体判定结果：YES。"}
-完成变异体 MUT_440 的分析, 耗时: 74.6144 秒
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.chatanywhere.tech/v1/chat/completions "HTTP/1.1 200 OK"
+{"MUT_440": "步骤[可达性]：\n说明理由： 变异语句为第6行的条件判断\"if (startIndex < 1)\"。根据可达性约束条件\"!(ArrayUtils.isEmpty(array)) && !(startIndex < 1) && startIndex >= array.length]\"，该条件组合逻辑上可满足。具体来说，存在输入使得：数组不为空，startIndex不小于1（即startIndex≥1），并且startIndex大于等于数组长度。这样的输入是真实存在的（例如startIndex=5，array.length=3），因此变异语句可以被执行到。\n分析结论： 变异语句可达。\n\n步骤[必要性]：\n说明理由： 原程序条件为\"if (startIndex < 0)\"，变异后为\"if (startIndex < 1)\"。在变异语句可达的条件下（startIndex≥1），原条件(startIndex<0)始终为false，而变异条件(startIndex<1)的值取决于startIndex的具体值：当startIndex=0时，变异条件为true；当startIndex≥1时，变异条件为false。因此，变异确实改变了程序的控制流，会影响程序状态。\n分析结论： 变异改变了程序语义，满足必要性。\n\n步骤[数据依赖]：\n说明理由： 变异影响的变量是startIndex。根据数据依赖路径分析，startIndex在程序中存在多条数据依赖路径：1) 直接影响第7行的返回语句；2) 通过赋值语句影响循环变量i，进而影响第13行的返回语句；3) 最终影响第16行的返回语句。具体来说，当变异条件为true时，程序直接返回INDEX_NOT_FOUND；当变异条件为false时，程序可能继续执行后续逻辑并返回不同的值。因此，变异影响的变量可以通过数据依赖链传播到程序输出节点。\n分析结论： 存在完整的数据依赖路径。\n\n步骤[控制依赖]：\n说明理由： 变异语句\"if (startIndex < 1)\"的控制依赖路径清晰：1) 当条件为true时，控制依赖第7行的返回语句；2) 当条件为false时，控制依赖后续的第8行条件判断以及可能的循环和返回语句。变异语句通过控制流直接影响程序的执行路径，进而影响最终的输出结果。\n分析结论： 存在完整的控制依赖路径。\n\n步骤[状态覆盖]：\n说明理由： 虽然变异语句改变了程序的控制流，但在特定的输入情况下，变异引入的状态改变可能被后续执行修正或抵消。然而，通过分析发现：当startIndex=0时，原程序会进入条件分支返回INDEX_NOT_FOUND，而变异体不会进入该分支，会继续执行后续逻辑，可能导致不同的返回值。没有证据表明这种状态改变会在后续执行中被完全抵消。因此，变异引入的错误状态会影响最终输出。\n分析结论： 不存在状态覆盖现象。\n\n最终结论：等价变异体判定结果：NO。"}
+完成变异体 MUT_440 的分析, 耗时: 90.8742 秒
 

@@ -1,5 +1,0 @@
-[{
-  "mutant_id" : "MUT_031",
-  "difference" : "@@ -18 +18 @@\n-        if (a <= 0 || b <= 0 || c <= 0) {\n+        if (a <= 0 || b <= 0 || c != 0) {",
-  "operator" : "ROR"
-}]

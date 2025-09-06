@@ -1,0 +1,42 @@
+[
+  {
+    "mutant_id": "MUT_014",
+    "difference": "@@ -4 +4 @@\n-        int delimLen = delimiters == null ? -1 : delimiters.length;\n+        int delimLen = delimiters == null ? 0 : delimiters.length;",
+    "operator": "AODU"
+  },
+  {
+    "mutant_id": "MUT_033",
+    "difference": "@@ -5 +5 @@\n-        if (str == null || str.length() == 0 || delimLen == 0) {\n+        if (false || str.length() == 0 || delimLen == 0) {",
+    "operator": "ROD"
+  },
+  {
+    "mutant_id": "MUT_041",
+    "difference": "@@ -5 +5 @@\n-        if (str == null || str.length() == 0 || delimLen == 0) {\n+        if (str == null || str.length() == -1 || delimLen == -1) {",
+    "operator": "AOIU"
+  },
+  {
+    "mutant_id": "MUT_049",
+    "difference": "@@ -5 +5 @@\n-        if (str == null || str.length() == 0 || delimLen == 0) {\n+        if (str == null || str.length() == 0 || delimLen <= 0) {",
+    "operator": "ROR"
+  },
+  {
+    "mutant_id": "MUT_053",
+    "difference": "@@ -4 +4 @@\n-        int delimLen = delimiters == null ? -1 : delimiters.length;\n+        int delimLen = delimiters == null ? 1 : delimiters.length;",
+    "operator": "AODU"
+  },
+  {
+    "mutant_id": "MUT_080",
+    "difference": "@@ -5 +5 @@\n-        if (str == null || str.length() == 0 || delimLen == 0) {\n+        if (str == null || false || delimLen == 0) {",
+    "operator": "CDL"
+  },
+  {
+    "mutant_id": "MUT_090",
+    "difference": "@@ -13 +13 @@\n-            if (isDelimiter(ch, delimiters)) {\n+            if (false) {",
+    "operator": "VDL"
+  },
+  {
+    "mutant_id": "MUT_098",
+    "difference": "@@ -5 +5 @@\n-        if (str == null || str.length() == 0 || delimLen == 0) {\n+        if (str == null || str.length() == 0 || false) {",
+    "operator": "CDL"
+  }
+]
